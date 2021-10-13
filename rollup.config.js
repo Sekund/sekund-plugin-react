@@ -17,7 +17,7 @@ export default {
   output: [
     {
       file: "main.js",
-      sourcemap: "yes",
+      sourcemap: null,
       format: "cjs",
       exports: "default",
       banner,

@@ -1,6 +1,7 @@
 import { ObjectId, ObjectID } from "bson";
 import { Group } from "./Group";
 import { NoteComment } from "./NoteComment";
+import PathInfo from "./PathInfo";
 import { People } from "./People";
 
 export interface Note {
@@ -13,6 +14,7 @@ export interface Note {
   path: string;
   publicLink: ObjectID;
   content: string;
+  paths: PathInfo[];
   userId: ObjectId;
 
   comments: NoteComment[];

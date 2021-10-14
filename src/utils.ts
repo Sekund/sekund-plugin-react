@@ -16,5 +16,5 @@ export function setGeneralState(appDispatch: React.Dispatch<AppAction>, gState: 
 }
 
 export function setCurrentNoteState(appDispatch: React.Dispatch<AppAction>, nState: Partial<NoteState>) {
-  appDispatch({ type: AppActionKind.SetNoteState, payload: nState });
+  appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: nState });
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
-import NotesService from "src/NotesService";
-import AppContext, { useAppContext } from "src/state/AppContext";
+import NotesService from "src/services/NoteSyncService";
+import AppContext from "src/state/AppContext";
 import AppReducer, { initialAppState } from "src/state/AppReducer";
 import SekundHomeComponent from "src/ui/SekundHomeComponent";
 import SekundView from "src/ui/SekundView";

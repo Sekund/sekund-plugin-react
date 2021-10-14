@@ -1,13 +1,13 @@
+import NotesService from "@/services/NotesService";
 import { ItemView, TFile, WorkspaceLeaf } from "obsidian";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import * as Realm from "realm-web";
 import type SekundPlugin from "src/main";
-import NotesService from "src/NotesService";
-import { AppContextType } from "src/state/AppContext";
+import NoteSyncService from "src/services/NoteSyncService";
 import { AppAction, AppActionKind } from "src/state/AppReducer";
 import SekundComponent from "src/ui/SekundComponent";
-import { getApiKeyConnection, setGeneralState, setNoteState } from "src/utils";
+import { getApiKeyConnection, setCurrentNoteState, setGeneralState } from "src/utils";
 import { PUBLIC_APIKEY, PUBLIC_APP_ID, VIEW_ICON, VIEW_TYPE } from "src/_constants";
 
 export default class SekundView extends ItemView {
@@ -15,7 +15,7 @@ export default class SekundView extends ItemView {
   private offlineListener: EventListener;
   private onlineListener: EventListener;
   private appDispatch: React.Dispatch<AppAction>;
-  private notesService: NotesService;
+  private noteSyncService: NoteSyncService;
 
   getViewType(): string {
     return VIEW_TYPE;
@@ -72,10 +72,12 @@ export default class SekundView extends ItemView {
         setGeneralState(this.appDispatch, appIdResult);
         return;
       default:
-        this.notesService = new NotesService(appIdResult, this.plugin.settings.apiKey, this.plugin.settings.subdomain, this.appDispatch);
-        await this.notesService.connect();
+        const user = await getApiKeyConnection(new Realm.App(appIdResult), this.plugin.settings.apiKey);
 
-        if (this.notesService.user) {
+        if (user) {
+          this.noteSyncService = new NoteSyncService(user, this.plugin.settings.subdomain, this.appDispatch);
+          new NotesService(user, this.plugin.settings.subdomain);
+
           setGeneralState(this.appDispatch, "allGood");
 
           this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
@@ -96,15 +98,15 @@ export default class SekundView extends ItemView {
   };
 
   public readonly handleFileOpen = async (file: TFile): Promise<void> => {
-    this.notesService.compareNotes(file);
+    this.noteSyncService.compareNotes(file);
   };
 
   public readonly handleRename = async (file: TFile): Promise<void> => {
-    this.notesService.renameNote(file);
+    this.noteSyncService.renameNote(file);
   };
 
   public readonly handleModify = async (file: TFile): Promise<void> => {
-    setNoteState(this.appDispatch, { fileSynced: false });
+    setCurrentNoteState(this.appDispatch, { fileSynced: false });
   };
 
   async onClose(): Promise<void> {

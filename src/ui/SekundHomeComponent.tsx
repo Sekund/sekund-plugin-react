@@ -1,18 +1,43 @@
-import React from "react";
-import NotesService from "src/NotesService";
+import { Note } from "@/domain/Note";
+import React, { useEffect, useState } from "react";
+import NotesService from "src/services/NotesService";
+import NoteSyncService from "src/services/NoteSyncService";
 import { useAppContext } from "src/state/AppContext";
 
 export default function SekundHomeComponent() {
   const { fileSynced, published, publishing, comparing } = useAppContext().appState.currentNoteState;
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const notes = await NotesService.instance.getNotes(Date.now(), 20);
+      setNotes(notes);
+    })();
+  }, []);
 
   function handleSync() {
     if (!publishing && !fileSynced && !comparing) {
-      NotesService.instance.syncFile();
+      NoteSyncService.instance.syncFile();
     }
   }
 
   function handleUnpublish() {
-    NotesService.instance.unpublish();
+    NoteSyncService.instance.unpublish();
+  }
+
+  function noteEntries() {
+    if (notes.length > 0) {
+      const children = [];
+      notes.map((note: Note) => {
+        children.push(
+          <div key={note._id.toString()} className="p-1">
+            {note.title}
+          </div>
+        );
+      });
+      return <div className="flex flex-col mt-2 space-y-1">{children}</div>;
+    }
+    return <div>No Notes</div>;
   }
 
   function maybeShowUnpublishButton() {
@@ -41,6 +66,7 @@ export default function SekundHomeComponent() {
         </button>
       </div>
       {maybeShowUnpublishButton()}
+      {noteEntries()}
     </div>
   );
 }

@@ -1,5 +1,7 @@
 ## This is the Obsidian Plugin for Sekund.io
 
+To use the plugin
+
 **WARNING: This plugin requires the user to have joined a team in [Sekund](https://www.sekund.io)**
 
 **for testing, please join the 'app' team at [https://app.sekund.io](https://app.sekund.io)**

@@ -10,14 +10,8 @@ export default class NotesService {
     return NotesService._instance;
   }
 
-  user: Realm.User = null;
-
-  constructor(private appId: string, private apiKey: string, private subdomain: string, private appDispatch: React.Dispatch<AppAction>) {
+  constructor(private user: Realm.User, private subdomain: string, private appDispatch: React.Dispatch<AppAction>) {
     NotesService._instance = this;
-  }
-
-  async connect() {
-    this.user = await getApiKeyConnection(new Realm.App(this.appId), this.apiKey);
   }
 
   getNotes() {

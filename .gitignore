@@ -14,3 +14,7 @@ main.js
 data.json
 
 deploy
+stage
+release/main.js
+release/styles.css
+styles.css

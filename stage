@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+SEKUND_PLUGIN_DIR=/Users/candide/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Obsidian\ notes/.obsidian/plugins/sekund/
+
+cp release/main.js $SEKUND_PLUGIN_DIR
+cp release/manifest.json $SEKUND_PLUGIN_DIR
+cp release/styles.css $SEKUND_PLUGIN_DIR

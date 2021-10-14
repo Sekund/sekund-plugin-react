@@ -12,7 +12,7 @@ export type NoteState = {
 
 export type AppState = {
   generalState: GeneralState;
-  noteState: NoteState;
+  currentNoteState: NoteState;
   remoteNote: Note;
   subdomain: string;
   currentFile: TFile;
@@ -21,7 +21,7 @@ export type AppState = {
 export const initialAppState: AppState = {
   generalState: "connecting",
   remoteNote: undefined,
-  noteState: {
+  currentNoteState: {
     published: false,
     fileSynced: false,
     publishing: false,
@@ -32,7 +32,7 @@ export const initialAppState: AppState = {
 };
 
 export enum AppActionKind {
-  SetNoteState,
+  SetCurrentNoteState,
   SetRemoteNote,
   SetCurrentFile,
   SetGeneralState,
@@ -48,9 +48,9 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
   const { type, payload } = action;
 
   switch (type) {
-    case AppActionKind.SetNoteState:
+    case AppActionKind.SetCurrentNoteState:
       const noteFlags: Partial<NoteState> = payload as Partial<NoteState>;
-      return { ...state, noteState: { ...state.noteState, ...noteFlags } };
+      return { ...state, currentNoteState: { ...state.currentNoteState, ...noteFlags } };
     case AppActionKind.SetGeneralState:
       return { ...state, generalState: payload };
     case AppActionKind.SetSubdomain:

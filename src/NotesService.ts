@@ -1,7 +1,7 @@
 import { TFile } from "obsidian";
 import * as Realm from "realm-web";
 import { AppAction, AppActionKind, AppState } from "src/state/AppReducer";
-import { getApiKeyConnection, setNoteState } from "src/utils";
+import { getApiKeyConnection, setCurrentNoteState } from "src/utils";
 
 export default class NotesService {
   private static _instance: NotesService;
@@ -35,24 +35,24 @@ export default class NotesService {
   async unpublish() {
     const { remoteNote } = this.appState;
     await this.getNotes().deleteOne({ _id: remoteNote._id });
-    setNoteState(this.appDispatch, { published: false, fileSynced: false });
+    setCurrentNoteState(this.appDispatch, { published: false, fileSynced: false });
   }
 
   async compareNotes(file: TFile) {
     const { path, stat } = file;
     this.appDispatch({ type: AppActionKind.SetCurrentFile, payload: file });
-    setNoteState(this.appDispatch, { comparing: true, published: false });
+    setCurrentNoteState(this.appDispatch, { comparing: true, published: false });
     const noteInfo = await this.getNotes().findOne({ path });
     this.appDispatch({ type: AppActionKind.SetRemoteNote, payload: noteInfo });
     const fileSynced = noteInfo && noteInfo.updated === stat.mtime;
-    setNoteState(this.appDispatch, { fileSynced, comparing: false, published: noteInfo !== null });
+    setCurrentNoteState(this.appDispatch, { fileSynced, comparing: false, published: noteInfo !== null });
     return noteInfo;
   }
 
   async syncFile() {
     const file = this.appState.currentFile;
     console.log("current file is ", file);
-    setNoteState(this.appDispatch, { publishing: true });
+    setCurrentNoteState(this.appDispatch, { publishing: true });
     const { remoteNote } = this.appState;
     await this.user.functions.upsertNote({
       path: file.path,
@@ -66,7 +66,7 @@ export default class NotesService {
     const rNote = await this.getNotes().findOne({ path: file.path });
     this.appDispatch({ type: AppActionKind.SetRemoteNote, payload: rNote });
     setTimeout(() => {
-      setNoteState(this.appDispatch, { publishing: false, published: true, fileSynced: true });
+      setCurrentNoteState(this.appDispatch, { publishing: false, published: true, fileSynced: true });
     }, 800);
   }
 }

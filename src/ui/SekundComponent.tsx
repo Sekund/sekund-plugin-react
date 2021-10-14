@@ -2,7 +2,7 @@ import * as React from "react";
 import NotesService from "src/NotesService";
 import AppContext, { useAppContext } from "src/state/AppContext";
 import AppReducer, { initialAppState } from "src/state/AppReducer";
-import SekundNoteComponent from "src/ui/SekundNoteComponent";
+import SekundHomeComponent from "src/ui/SekundHomeComponent";
 import SekundView from "src/ui/SekundView";
 
 type Props = {
@@ -32,7 +32,7 @@ const SekundComponent = ({ view }: Props) => {
           {(() => {
             switch (appState.generalState) {
               case "allGood":
-                return <SekundNoteComponent></SekundNoteComponent>;
+                return <SekundHomeComponent></SekundHomeComponent>;
               case "connecting":
                 return (
                   <>

@@ -2,8 +2,8 @@ import React from "react";
 import NotesService from "src/NotesService";
 import { useAppContext } from "src/state/AppContext";
 
-export default function SekundNoteComponent() {
-  const { fileSynced, published, publishing, comparing } = useAppContext().appState.noteState;
+export default function SekundHomeComponent() {
+  const { fileSynced, published, publishing, comparing } = useAppContext().appState.currentNoteState;
 
   function handleSync() {
     if (!publishing && !fileSynced && !comparing) {

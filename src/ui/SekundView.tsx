@@ -3,12 +3,12 @@ import { ItemView, TFile, WorkspaceLeaf } from "obsidian";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import * as Realm from "realm-web";
-import type SekundPlugin from "src/main";
-import NoteSyncService from "src/services/NoteSyncService";
-import { AppAction, AppActionKind } from "src/state/AppReducer";
-import SekundComponent from "src/ui/SekundComponent";
-import { getApiKeyConnection, setCurrentNoteState, setGeneralState } from "src/utils";
-import { PUBLIC_APIKEY, PUBLIC_APP_ID, VIEW_ICON, VIEW_TYPE } from "src/_constants";
+import type SekundPlugin from "@/main";
+import NoteSyncService from "@/services/NoteSyncService";
+import { AppAction, AppActionKind } from "@/state/AppReducer";
+import SekundComponent from "@/ui/SekundComponent";
+import { getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
+import { PUBLIC_APIKEY, PUBLIC_APP_ID, VIEW_ICON, VIEW_TYPE } from "@/_constants";
 
 export default class SekundView extends ItemView {
   plugin: SekundPlugin;

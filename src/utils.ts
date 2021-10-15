@@ -1,6 +1,5 @@
 import * as Realm from "realm-web";
-import { AppContextType } from "src/state/AppContext";
-import { AppAction, AppActionKind, GeneralState, NoteState } from "src/state/AppReducer";
+import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
 
 export async function getApiKeyConnection(realmApp: Realm.App, apiKey: string): Promise<Realm.User | null> {
   const credentials = Realm.Credentials.apiKey(apiKey);

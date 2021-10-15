@@ -1,24 +1,74 @@
 module.exports = {
   purge: { enabled: process.env.environment === "production", content: ["**/*.tsx", "src/**/*.tsx"] },
-  darkMode: false, // or 'media' or 'class'
+  darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
-      colors: {
-        "gray-4": "#2a2e3b",
-        "gray-3": "#474c59",
-        "gray-2": "#636976",
-        "gray-1": "#828794",
-        "accent-0": "#e6ccce",
-        "accent-1": "#eaa3a7",
-        "accent-2": "#e48991",
-        "accent-3": "#dc707c",
-        "accent-4": "#d55268",
-        "white-1": "#d9d3d2",
-        "white-2": "#e3dedd",
-        "white-3": "#ebe8e6",
-        "white-4": "#f4f2ef",
+      fontFamily: {
+        display: ["bely"],
+        body: ["hero-new"],
       },
-    },
+      minWidth: {
+        0: "0",
+        sm: "12rem",
+        md: "24rem",
+        lg: "36rem",
+        "1/4": "25%",
+        "1/2": "50%",
+        "3/4": "75%",
+        full: "100%",
+        400: "400px",
+      },
+      width: {
+        "1/2": ".125rem",
+      },
+      backgroundColor: {
+        "accent-0": "var(--accent-0)",
+        "accent-1": "var(--accent-1)",
+        "accent-2": "var(--accent-2)",
+        "accent-3": "var(--accent-3)",
+        "accent-4": "var(--accent-4)",
+        primary: "var(--color-bg-primary)",
+        body: "var(--color-bg-body)",
+        accent: "var(--color-bg-accent)",
+        "accent-inverted": "var(--color-text-accent)",
+        secondary: "var(--color-bg-secondary)",
+      },
+      ringColor: {
+        primary: "var(--color-bg-primary)",
+        secondary: "var(--color-bg-secondary)",
+        accent: "var(--color-text-accent)",
+        "accent-inverted": "var(--color-bg-accent)",
+      },
+      borderColor: {
+        accent: "var(--color-text-accent)",
+        "accent-inverted": "var(--color-bg-accent)",
+        themed: "var(--border)",
+      },
+      textColor: {
+        accent: "var(--color-text-accent)",
+        "accent-0": "var(--accent-0)",
+        "accent-1": "var(--accent-1)",
+        "accent-2": "var(--accent-2)",
+        "accent-3": "var(--accent-3)",
+        "accent-4": "var(--accent-4)",
+        "accent-inverted": "var(--color-bg-accent)",
+        primary: "var(--color-text-primary)",
+        disabled: "var(--color-text-disabled)",
+        placeholder: "var(--color-text-placeholder)",
+        secondary: "var(--color-text-secondary)",
+      },
+      spacing: {
+        "sait-2": "max(env(safe-area-inset-top), 0.5rem)",
+        "sair-2": "max(env(safe-area-inset-right), 0.5rem)",
+        "saib-2": "max(env(safe-area-inset-bottom), 0.5rem)",
+        "sail-2": "max(env(safe-area-inset-left), 0.5rem)",
+        "sait-4": "max(env(safe-area-inset-top), 1rem)",
+        "sair-4": "max(env(safe-area-inset-right), 1rem)",
+        "saib-4": "max(env(safe-area-inset-bottom), 1rem)",
+        "sail-4": "max(env(safe-area-inset-left), 1rem)",
+        xl: "36rem",
+      }
+    }
   },
   variants: {
     extend: {},

@@ -1,5 +1,5 @@
 import { App, TFile } from "obsidian";
-import { Note } from "src/domain/Note";
+import { Note } from "@/domain/Note";
 
 export type GeneralState = "connecting" | "noApiKey" | "noSubdomain" | "noSettings" | "noSuchSubdomain" | "offline" | "allGood" | "unknownError" | "loginError";
 

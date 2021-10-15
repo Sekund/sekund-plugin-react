@@ -1,8 +1,13 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+
+  @import 'obsidian-app.css';
+  @import 'kepano-minimal.css';
+
   .sekund {
     --gray-4: #2a2e3b;
     --gray-3: #474c59;
@@ -19,6 +24,7 @@
     --white-1: #d9d3d2;
   }
 }
+
 
 body {
   /* color: red; */

@@ -1,8 +1,8 @@
 import { Note } from "@/domain/Note";
 import React, { useEffect, useState } from "react";
-import NotesService from "src/services/NotesService";
-import NoteSyncService from "src/services/NoteSyncService";
-import { useAppContext } from "src/state/AppContext";
+import NotesService from "@/services/NotesService";
+import NoteSyncService from "@/services/NoteSyncService";
+import { useAppContext } from "@/state/AppContext";
 
 export default function SekundHomeComponent() {
   const { fileSynced, published, publishing, comparing } = useAppContext().appState.currentNoteState;

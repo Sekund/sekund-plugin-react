@@ -1,15 +1,18 @@
 import * as React from "react";
-import NotesService from "src/services/NoteSyncService";
-import AppContext from "src/state/AppContext";
-import AppReducer, { initialAppState } from "src/state/AppReducer";
-import SekundHomeComponent from "src/ui/SekundHomeComponent";
-import SekundView from "src/ui/SekundView";
+import NotesService from "@/services/NoteSyncService";
+import AppContext from "@/state/AppContext";
+import AppReducer, { initialAppState } from "@/state/AppReducer";
+import SekundHomeComponent from "@/ui/SekundHomeComponent";
+import SekundView from "@/ui/SekundView";
+import { useTranslation } from "react-i18next";
+import i18nConf from '@/i18n.config'
 
 type Props = {
-  view: SekundView;
+  view?: SekundView;
 };
 
 const SekundComponent = ({ view }: Props) => {
+  const { t, i18n, ready } = useTranslation("common", { i18n: i18nConf });
   const [appState, appDispatch] = React.useReducer(AppReducer, initialAppState);
   const appProviderState = {
     appState,
@@ -17,7 +20,9 @@ const SekundComponent = ({ view }: Props) => {
   };
 
   // allow SekundView and NotesService to mutate the state
-  view.setAppDispatch(appDispatch);
+  if (view) {
+    view.setAppDispatch(appDispatch);
+  }
   // update the NotesService's appState whenever it gets updated
   React.useEffect(() => {
     if (NotesService.instance) {
@@ -41,6 +46,7 @@ const SekundComponent = ({ view }: Props) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                       </svg>
                     </p>
+                    <div>{t('garden')}</div>
                     <p className="text-center text-white-4">Connecting to https://{appState.subdomain}.sekund.io/</p>
                     <div className="mt-4 spinner">
                       <div className="bounce1" />

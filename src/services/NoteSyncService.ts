@@ -1,7 +1,7 @@
 import { TFile } from "obsidian";
 import * as Realm from "realm-web";
-import { AppAction, AppActionKind, AppState } from "src/state/AppReducer";
-import { getApiKeyConnection, setCurrentNoteState } from "src/utils";
+import { AppAction, AppActionKind, AppState } from "@/state/AppReducer";
+import { getApiKeyConnection, setCurrentNoteState } from "@/utils";
 
 export default class NotesService {
   private static _instance: NotesService;

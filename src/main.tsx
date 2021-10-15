@@ -1,7 +1,7 @@
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
-import { addIcons } from "src/ui/icons";
-import SekundView from "src/ui/SekundView";
-import { VIEW_TYPE } from "src/_constants";
+import { addIcons } from "@/ui/icons";
+import SekundView from "@/ui/SekundView";
+import { VIEW_TYPE } from "@/_constants";
 
 interface SekundPluginSettings {
   apiKey: string;
@@ -19,6 +19,7 @@ interface ReactComponentsSettings {
 }
 
 export default class SekundPluginReact extends Plugin {
+
   settings: SekundPluginSettings;
   view: SekundView;
 

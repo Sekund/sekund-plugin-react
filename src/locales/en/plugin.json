@@ -5,12 +5,15 @@
     "noApiKey": "No API Key.",
     "noApiKeyDesc": "Sorry, you need to specify a Sekund API Key before using this plugin. Please head to your Sekund account's settings to fix that.",
     "noSettings": "No Settings.",
-    "noSettingsDesc": "Go to → Settings and specify both the ApiKey and Subdomain associated with your team/account.",
+    "noSettingsDesc": "Please go to your Sekund account, get your subdomain and API Key and paste them below (<a href='https://doc.sekund.io/onboarding'>more info</a>)\"",
     "noSubdomain": "Missing Subdomain.",
     "noSubdomainDesc": "Please specify the subdomain associated with your team/account.",
     "noSuchSubdomain": "Sorry, we could not find your specified subdomain.",
     "offline": "You are offline.",
     "offlineDesc": "Sekund needs an internet connection to function.",
     "unknownError": "Unexpected Error.",
-    "unknownErrorDesc": "Something strange just happened."
+    "unknownErrorDesc": "Something strange just happened.",
+    "subdomain": "Subdomain",
+    "Connect": "Connect",
+    "APIKey": "API Key"
 }

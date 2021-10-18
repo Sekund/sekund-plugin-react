@@ -5,12 +5,15 @@
     "noApiKey": "Geen API-sleutel.",
     "noApiKeyDesc": "Sorry, u moet een Sekund API-sleutel opgeven voordat u deze plug-in gebruikt. Ga naar de instellingen van je Sekund-account om dat op te lossen.",
     "noSettings": "Geen instellingen.",
-    "noSettingsDesc": "Ga naar → Instellingen en geef zowel de ApiKey als het subdomein op die aan uw team/account zijn gekoppeld.",
+    "noSettingsDesc": "Ga naar je Sekund-account, haal je subdomein en API-sleutel op en plak ze hieronder (<a href='https://doc.sekund.io/onboarding'>meer info</a>)\"",
     "noSubdomain": "Ontbrekend subdomein.",
     "noSubdomainDesc": "Geef het subdomein op dat aan uw team/account is gekoppeld.",
     "noSuchSubdomain": "Sorry, we konden uw opgegeven subdomein niet vinden.",
     "offline": "Je bent offline.",
     "offlineDesc": "Sekund heeft een internetverbinding nodig om te kunnen functioneren.",
     "unknownError": "Onverwachte fout.",
-    "unknownErrorDesc": "Er is zojuist iets vreemds gebeurd."
+    "unknownErrorDesc": "Er is zojuist iets vreemds gebeurd.",
+    "subdomain": "Subdomein",
+    "Connect": "Aansluiten",
+    "APIKey": "API sleutel"
 }

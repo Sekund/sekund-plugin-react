@@ -2,21 +2,22 @@ import i18nConf from '@/i18n.config';
 import NotesService from "@/services/NoteSyncService";
 import AppContext from "@/state/AppContext";
 import AppReducer, { initialAppState } from "@/state/AppReducer";
+import APIInfo from '@/ui/APIInfo';
 import SekundHomeComponent from "@/ui/SekundHomeComponent";
 import React, { useEffect, useReducer, useRef } from 'react';
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 type Props = {
-  view?: { setAppDispatch: Function};
+  view?: { setAppDispatch: Function };
 };
 
 const SekundComponent = ({ view }: Props) => {
   const { t, i18n, ready } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
   const localizedAppState = window.moment
-    ? {...initialAppState, locale: (window.moment as any).locale()}
+    ? { ...initialAppState, locale: (window.moment as any).locale() }
     : initialAppState;
-    
+
   const [appState, appDispatch] = useReducer(AppReducer, localizedAppState);
   const appProviderState = {
     appState,
@@ -29,7 +30,7 @@ const SekundComponent = ({ view }: Props) => {
   if (view) {
     view.setAppDispatch(appProviderState);
   }
-  
+
   // update the NotesService's appState whenever it gets updated
   useEffect(() => {
     i18n.changeLanguage(appState.locale)
@@ -47,21 +48,21 @@ const SekundComponent = ({ view }: Props) => {
         darkModeElement = sekundRoot.current.closest('.theme-light');
       }
       var isDark = darkModeElement.classList.contains("theme-dark");
-      sekundRoot.current.classList.add(isDark? 'dark' : 'light')
+      sekundRoot.current.classList.add(isDark ? 'dark' : 'light')
       const sekundRootElement = sekundRoot.current;
       var observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-              if(mutation.attributeName === "class"){
-                  var isDark = (mutation.target as HTMLElement).classList.contains('theme-dark');
-                  if (isDark) {
-                    sekundRootElement.classList.add('dark')
-                  } else {
-                    sekundRootElement.classList.remove('dark')
-                  }
-                }
-          });
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === "class") {
+            var isDark = (mutation.target as HTMLElement).classList.contains('theme-dark');
+            if (isDark) {
+              sekundRootElement.classList.add('dark')
+            } else {
+              sekundRootElement.classList.remove('dark')
+            }
+          }
+        });
       });
-      observer.observe(darkModeElement, {attributes: true});    
+      observer.observe(darkModeElement, { attributes: true });
     }
   }, [])
 
@@ -98,7 +99,8 @@ const SekundComponent = ({ view }: Props) => {
                       </svg>
                     </p>
                     <p className="text-center ">{t('plugin:loginError')}</p>
-                    <p className="mt-4 text-sm text-center ">{t('plugin:loginErrorDesc')}</p>
+                    <p className="text-sm text-center ">{t('plugin:loginErrorDesc')}</p>
+                    <APIInfo />
                   </>
                 );
               case "noApiKey":
@@ -110,7 +112,8 @@ const SekundComponent = ({ view }: Props) => {
                       </svg>
                     </p>
                     <p className="text-center ">{t('plugin:noApiKey')}</p>
-                    <p className="mt-4 text-sm text-center ">{t('plugin:noApiKeyDesc')}</p>
+                    <p className="text-sm text-center ">{t('plugin:noApiKeyDesc')}</p>
+                    <APIInfo />
                   </>
                 );
               case "noSettings":
@@ -122,7 +125,8 @@ const SekundComponent = ({ view }: Props) => {
                       </svg>
                     </p>
                     <p className="text-center ">{t('plugin:noSettings')}</p>
-                    <p className="mt-4 text-sm text-center ">{t('plugin:noSettingsDesc')}</p>
+                    <p className="text-sm text-center "><Trans components={{ a: <a /> }}>{t('plugin:noSettingsDesc')}</Trans></p>
+                    <APIInfo />
                   </>
                 );
               case "noSubdomain":
@@ -134,7 +138,8 @@ const SekundComponent = ({ view }: Props) => {
                       </svg>
                     </p>
                     <p className="text-center ">{t('plugin:noSubdomain')}</p>
-                    <p className="mt-4 text-sm text-center ">{t('plugin:noSubdomainDesc')}</p>
+                    <p className="mt-4 text-sm text-center "><Trans components={{ a: <a /> }}>{t('plugin:noSubdomainDesc')}</Trans></p>
+                    <APIInfo />
                   </>
                 );
               case "noSuchSubdomain":
@@ -146,6 +151,7 @@ const SekundComponent = ({ view }: Props) => {
                       </svg>
                     </p>
                     <p className="text-center ">{t('plugin:noSuchSubdomain')}</p>
+                    <APIInfo />
                   </>
                 );
               case "offline":

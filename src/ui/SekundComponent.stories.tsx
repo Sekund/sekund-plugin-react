@@ -1,10 +1,10 @@
+import { AppContextType } from '@/state/AppContext';
+import { AppActionKind, GeneralState } from '@/state/AppReducer';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import SekundComponent from './SekundComponent';
 import '/global.css';
 
-import SekundComponent from './SekundComponent';
-import { AppAction, AppActionKind, GeneralState } from '@/state/AppReducer';
-import { AppContextType } from '@/state/AppContext';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -42,6 +42,9 @@ class GeneralStateWrapper extends React.Component {
         }
         if (appContext.appState.locale !== this.locale) {
             appContext.appDispatch({ type: AppActionKind.SetLocale, payload: this.locale });
+        }
+        if (appContext.appState.plugin === undefined) {
+            appContext.appDispatch({ type: AppActionKind.SetPlugin, payload: { settings: { apiKey: "888555222777AAABBB", subdomain: "tailwind" } } });
         }
     }
 

@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import "./ObsidianButton.css"
 
 export default function ObsidianControls() {
     const [enabled, setEnabled] = useState(false);

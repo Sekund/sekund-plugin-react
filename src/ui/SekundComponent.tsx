@@ -47,22 +47,31 @@ const SekundComponent = ({ view }: Props) => {
       if (!darkModeElement) {
         darkModeElement = sekundRoot.current.closest('.theme-light');
       }
-      var isDark = darkModeElement.classList.contains("theme-dark");
-      sekundRoot.current.classList.add(isDark ? 'dark' : 'light')
-      const sekundRootElement = sekundRoot.current;
-      var observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === "class") {
-            var isDark = (mutation.target as HTMLElement).classList.contains('theme-dark');
-            if (isDark) {
-              sekundRootElement.classList.add('dark')
-            } else {
-              sekundRootElement.classList.remove('dark')
+      if (!darkModeElement) {
+        darkModeElement = document.body;
+      }
+      if (darkModeElement) {
+        var isDark = darkModeElement.classList.contains("theme-dark");
+        sekundRoot.current.classList.add(isDark ? 'dark' : 'light')
+        const sekundRootElement = sekundRoot.current;
+        var observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+              if (mutation.target) {
+                var isDark = (mutation.target as HTMLElement).classList.contains('theme-dark');
+                if (isDark) {
+                  sekundRootElement.classList.add('dark')
+                } else {
+                  sekundRootElement.classList.remove('dark')
+                }
+              }
             }
-          }
+          });
         });
-      });
-      observer.observe(darkModeElement, { attributes: true });
+        observer.observe(darkModeElement, { attributes: true });
+      } else {
+        console.log("could not find darkModeElement")
+      }
     }
   }, [])
 

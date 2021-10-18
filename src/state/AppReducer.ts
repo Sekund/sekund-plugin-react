@@ -1,5 +1,6 @@
-import { App, TFile } from "obsidian";
 import { Note } from "@/domain/Note";
+import SekundPluginReact from "@/main";
+import { Plugin_2, TFile } from "obsidian";
 
 export type GeneralState = "connecting" | "noApiKey" | "noSubdomain" | "noSettings" | "noSuchSubdomain" | "offline" | "allGood" | "unknownError" | "loginError";
 
@@ -17,6 +18,7 @@ export type AppState = {
   subdomain: string;
   currentFile: TFile;
   locale: string;
+  plugin: SekundPluginReact;
 };
 
 export const initialAppState: AppState = {
@@ -31,6 +33,7 @@ export const initialAppState: AppState = {
   subdomain: "",
   locale: "en",
   currentFile: undefined,
+  plugin: undefined,
 };
 
 export enum AppActionKind {
@@ -40,6 +43,7 @@ export enum AppActionKind {
   SetLocale,
   SetGeneralState,
   SetSubdomain,
+  SetPlugin,
 }
 
 export type AppAction = {
@@ -64,7 +68,9 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       return { ...state, currentFile: payload };
     case AppActionKind.SetLocale:
       return { ...state, locale: payload };
-  
+    case AppActionKind.SetPlugin:
+      return { ...state, plugin: payload };
+
     default:
       return state;
   }

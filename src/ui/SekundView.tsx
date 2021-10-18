@@ -135,6 +135,10 @@ export default class SekundView extends ItemView {
 
   setAppDispatch(appContext: AppContextType) {
     this.appDispatch = appContext.appDispatch;
+    if (!appContext.appState.plugin) {
+      console.log("setting plugin", this.plugin)
+      this.appDispatch({ type: AppActionKind.SetPlugin, payload: this.plugin })
+    }
   }
 
   async onOpen(): Promise<void> {

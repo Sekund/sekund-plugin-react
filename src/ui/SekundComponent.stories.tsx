@@ -4,6 +4,7 @@ import '/global.css';
 
 import SekundComponent from './SekundComponent';
 import { AppAction, AppActionKind, GeneralState } from '@/state/AppReducer';
+import { AppContextType } from '@/state/AppContext';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -16,24 +17,31 @@ export default {
 } as ComponentMeta<typeof SekundComponent>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof SekundComponent> = (args) => {
-    return <SekundComponent {...args} />
+const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
+    const wrapper = new GeneralStateWrapper(args.gState, locale)
+    return <SekundComponent view={wrapper} />
 };
 
 class GeneralStateWrapper extends React.Component {
 
-    private gState;
-    private rendered = false;
+    private gState: GeneralState;
+    private locale: string;
 
-    constructor(gState: GeneralState) {
+    constructor(gState: GeneralState, locale: string) {
         super({});
         this.gState = gState;
+        this.locale = locale;
     }
 
-    setAppDispatch(ad: React.Dispatch<AppAction>) {
-        if (!this.rendered) {
-            ad({ type: AppActionKind.SetGeneralState, payload: this.gState });
-            this.rendered = true;
+    setAppDispatch(appContext: AppContextType) {
+        if (appContext.appState.generalState !== this.gState) {
+            appContext.appDispatch({ type: AppActionKind.SetGeneralState, payload: this.gState });
+        }
+        if (appContext.appState.subdomain !== "tailwind") {
+            appContext.appDispatch({ type: AppActionKind.SetSubdomain, payload: "tailwind" });
+        }
+        if (appContext.appState.locale !== this.locale) {
+            appContext.appDispatch({ type: AppActionKind.SetLocale, payload: this.locale });
         }
     }
 
@@ -41,40 +49,40 @@ class GeneralStateWrapper extends React.Component {
 
 export const Connecting = Template.bind({});
 Connecting.args = {
-    view: new GeneralStateWrapper("connecting")
+    gState: "connecting"
 };
 
 export const LoginError = Template.bind({});
 LoginError.args = {
-    view: new GeneralStateWrapper("loginError")
+    gState: "loginError"
 };
 
 export const NoApiKey = Template.bind({});
 NoApiKey.args = {
-    view: new GeneralStateWrapper("noApiKey")
+    gState: "noApiKey"
 };
 
 export const NoSettings = Template.bind({});
 NoSettings.args = {
-    view: new GeneralStateWrapper("noSettings")
+    gState: "noSettings"
 };
 
 export const NoSubdomain = Template.bind({});
 NoSubdomain.args = {
-    view: new GeneralStateWrapper("noSubdomain")
+    gState: "noSubdomain"
 };
 
 export const NoSuchSubdomain = Template.bind({});
 NoSuchSubdomain.args = {
-    view: new GeneralStateWrapper("noSuchSubdomain")
+    gState: "noSuchSubdomain"
 };
 
 export const Offline = Template.bind({});
 Offline.args = {
-    view: new GeneralStateWrapper("offline")
+    gState: "offline"
 };
 
 export const UnknownError = Template.bind({});
 UnknownError.args = {
-    view: new GeneralStateWrapper("unknownError")
+    gState: "unknownError"
 };

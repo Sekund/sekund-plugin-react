@@ -27,6 +27,7 @@
       "**/*.ts",
       "**/*.tsx",
       "src/**/*.ts",
+      "src/**/*.json",
       "src/**/*.tsx"],
-      "exclude": ["node_modules/*"],
+      "exclude": ["node_modules/*", "src/i18n.config.js"],
   }

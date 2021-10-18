@@ -9,6 +9,7 @@ import { AppAction, AppActionKind } from "@/state/AppReducer";
 import SekundComponent from "@/ui/SekundComponent";
 import { getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
 import { PUBLIC_APIKEY, PUBLIC_APP_ID, VIEW_ICON, VIEW_TYPE } from "@/_constants";
+import { AppContextType } from "@/state/AppContext";
 
 export default class SekundView extends ItemView {
   plugin: SekundPlugin;
@@ -132,11 +133,12 @@ export default class SekundView extends ItemView {
     }
   }
 
-  setAppDispatch(appDispatch: React.Dispatch<AppAction>) {
-    this.appDispatch = appDispatch;
+  setAppDispatch(appContext: AppContextType) {
+    this.appDispatch = appContext.appDispatch;
   }
 
   async onOpen(): Promise<void> {
+    const darkMode = this.containerEl.closest('theme-dark') !== null;
     ReactDOM.render(<SekundComponent view={this} />, this.containerEl.children[1]);
     this.updateOnlineStatus();
   }

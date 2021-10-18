@@ -24,3 +24,23 @@ export const parameters = {
     lightClass: 'theme-light'
   },
 }
+export const globalTypes = {
+  locale: {
+    name: 'Locale',
+    description: 'Internationalization locale',
+    defaultValue: 'en',
+    toolbar: {
+      icon: 'globe',
+      items: [
+        { value: 'en', right: '🇺🇸', title: 'English' },
+        { value: 'fr', right: '🇫🇷', title: 'French' },
+        { value: 'nl', right: '🇳🇱', title: 'Dutch' },
+        { value: 'es', right: '🇪🇸', title: 'Spanish' },
+        { value: 'de', right: '🇩🇪', title: 'German' },
+        { value: 'it', right: '🇮🇹', title: 'Italian' },
+        { value: 'pt', right: '🇵🇹', title: 'Portuguese' },
+        { value: 'ru', right: '🇷🇺', title: 'Russian' },
+      ],
+    },
+  },
+};

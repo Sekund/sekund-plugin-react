@@ -1,0 +1,16 @@
+{
+    "connecting": "Connecting to",
+    "loginError": "Login Error.",
+    "loginErrorDesc": "Please check your API Key",
+    "noApiKey": "No API Key.",
+    "noApiKeyDesc": "Sorry, you need to specify a Sekund API Key before using this plugin. Please head to your Sekund account's settings to fix that.",
+    "noSettings": "No Settings.",
+    "noSettingsDesc": "Go to → Settings and specify both the ApiKey and Subdomain associated with your team/account.",
+    "noSubdomain": "Missing Subdomain.",
+    "noSubdomainDesc": "Please specify the subdomain associated with your team/account.",
+    "noSuchSubdomain": "Sorry, we could not find your specified subdomain.",
+    "offline": "You are offline.",
+    "offlineDesc": "Sekund needs an internet connection to function.",
+    "unknownError": "Unexpected Error.",
+    "unknownErrorDesc": "Something strange just happened."
+}

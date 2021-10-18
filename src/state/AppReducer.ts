@@ -16,6 +16,7 @@ export type AppState = {
   remoteNote: Note;
   subdomain: string;
   currentFile: TFile;
+  locale: string;
 };
 
 export const initialAppState: AppState = {
@@ -28,6 +29,7 @@ export const initialAppState: AppState = {
     comparing: false,
   },
   subdomain: "",
+  locale: "en",
   currentFile: undefined,
 };
 
@@ -35,6 +37,7 @@ export enum AppActionKind {
   SetCurrentNoteState,
   SetRemoteNote,
   SetCurrentFile,
+  SetLocale,
   SetGeneralState,
   SetSubdomain,
 }
@@ -59,7 +62,9 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       return { ...state, remoteNote: payload };
     case AppActionKind.SetCurrentFile:
       return { ...state, currentFile: payload };
-
+    case AppActionKind.SetLocale:
+      return { ...state, locale: payload };
+  
     default:
       return state;
   }

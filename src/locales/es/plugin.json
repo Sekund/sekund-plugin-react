@@ -5,7 +5,7 @@
     "noApiKey": "Sin clave API.",
     "noApiKeyDesc": "Lo sentimos, debe especificar una clave de API de Sekund antes de usar este complemento. Dirígete a la configuración de tu cuenta de Sekund para solucionarlo.",
     "noSettings": "Sin configuración.",
-    "noSettingsDesc": "Vaya a su cuenta de Sekund, obtenga su subdominio y clave API y péguelos a continuación (<a href='https://doc.sekund.io/onboarding'> más información </a>) \"",
+    "noSettingsDesc": "Vaya a su cuenta de Sekund, obtenga su subdominio y clave API y péguelos a continuación (<a href='https://doc.sekund.io/onboarding'> más información </a>)",
     "noSubdomain": "Falta el subdominio.",
     "noSubdomainDesc": "Especifique el subdominio asociado con su equipo / cuenta.",
     "noSuchSubdomain": "Lo sentimos, no pudimos encontrar el subdominio especificado.",

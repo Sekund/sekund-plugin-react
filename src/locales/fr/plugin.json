@@ -5,7 +5,7 @@
     "noApiKey": "Pas de clé d'API",
     "noApiKeyDesc": "Désolé, vous devez spécifier une clé d'API pour utiliser ce plugin. Vous la trouverez dans les réglages de votre compte Sekund",
     "noSettings": "Aucun réglage",
-    "noSettingsDesc": "Veuillez vous rendre sur votre compte Sekund, obtenir votre sous-domaine et votre clé API et les coller ci-dessous (<a href='https://doc.sekund.io/onboarding'>plus d'informations</a>)\"",
+    "noSettingsDesc": "Veuillez vous rendre sur votre compte Sekund, obtenir votre sous-domaine et votre clé API et les coller ci-dessous (<a href='https://doc.sekund.io/onboarding'>plus d'informations</a>)",
     "noSubdomain": "Pas de sous-domaine",
     "noSubdomainDesc": "Veuillez spécifier le sous-domaine associé à votre compte",
     "noSuchSubdomain": "Désolé, nous n'avons pas trouvé ce sous domaine",

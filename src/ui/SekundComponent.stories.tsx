@@ -44,7 +44,7 @@ class GeneralStateWrapper extends React.Component {
             appContext.appDispatch({ type: AppActionKind.SetLocale, payload: this.locale });
         }
         if (appContext.appState.plugin === undefined) {
-            appContext.appDispatch({ type: AppActionKind.SetPlugin, payload: { settings: { apiKey: "888555222777AAABBB", subdomain: "tailwind" } } });
+            appContext.appDispatch({ type: AppActionKind.SetPlugin, payload: { saveSettings: () => { }, settings: { apiKey: "888555222777AAABBB", subdomain: "tailwind" } } });
         }
     }
 

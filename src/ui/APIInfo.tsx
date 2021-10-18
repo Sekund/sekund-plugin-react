@@ -26,7 +26,7 @@ export default function APIInfo() {
     }
 
     return (
-        <div className="flex flex-col p-2 mt-2 space-y-2 text-left border rounded-md border-obs-modal" >
+        <div className="flex flex-col p-2 mt-4 space-y-2 text-left border rounded-md border-obs-modal" >
             <div className="text-obs-muted">{t('plugin:subdomain')}</div>
             <input ref={subdomainField} defaultValue={subdomain ? subdomain : undefined} pattern="^([a-zA-Z0-9]([-a-zA-Z0-9]{0,14}[a-zA-Z0-9])?)$" type="text" placeholder={t('plugin:subdomain')} />
             <div className="text-obs-muted">{t('plugin:APIKey')}</div>

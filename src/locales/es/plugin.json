@@ -1,3 +1,16 @@
 {
-    "connecting": "Connecting to"
+    "connecting": "Conectado a",
+    "loginError": "Error de inicio de sesión.",
+    "loginErrorDesc": "Comprueba tu clave de API",
+    "noApiKey": "Sin clave API.",
+    "noApiKeyDesc": "Lo sentimos, debe especificar una clave de API de Sekund antes de usar este complemento. Dirígete a la configuración de tu cuenta de Sekund para solucionarlo.",
+    "noSettings": "Sin configuración.",
+    "noSettingsDesc": "Vaya a → Configuración y especifique tanto la ApiKey como el Subdominio asociados con su equipo / cuenta.",
+    "noSubdomain": "Falta el subdominio.",
+    "noSubdomainDesc": "Especifique el subdominio asociado con su equipo / cuenta.",
+    "noSuchSubdomain": "Lo sentimos, no pudimos encontrar el subdominio especificado.",
+    "offline": "Estas desconectado.",
+    "offlineDesc": "Sekund necesita una conexión a Internet para funcionar.",
+    "unknownError": "Error inesperado.",
+    "unknownErrorDesc": "Algo extraño acaba de suceder."
 }

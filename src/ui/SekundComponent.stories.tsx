@@ -1,25 +1,30 @@
 import { AppContextType } from '@/state/AppContext';
 import { AppActionKind, GeneralState } from '@/state/AppReducer';
+import withConnectionStatus from '@/ui/withConnectionStatus';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
-import SekundComponent from './SekundComponent';
 import '/global.css';
 
+function AllGood() {
+    return <div>All is good</div>
+}
+
+const DummyWrappedComponent = (view: { setAppDispatch: Function }) => withConnectionStatus(view, AllGood)
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-    title: 'Main Component',
-    component: SekundComponent,
+    title: 'Connection Status',
+    component: DummyWrappedComponent,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {
         backgroundColor: { control: 'color' },
     },
-} as ComponentMeta<typeof SekundComponent>;
+} as ComponentMeta<typeof DummyWrappedComponent>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     const wrapper = new GeneralStateWrapper(args.gState, locale)
-    return <SekundComponent view={wrapper} />
+    return DummyWrappedComponent(wrapper)
 };
 
 class GeneralStateWrapper extends React.Component {

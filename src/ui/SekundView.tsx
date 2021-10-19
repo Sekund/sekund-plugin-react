@@ -1,34 +1,21 @@
+import type SekundPlugin from "@/main";
 import NotesService from "@/services/NotesService";
+import NoteSyncService from "@/services/NoteSyncService";
+import { AppContextType } from "@/state/AppContext";
+import { AppAction, AppActionKind } from "@/state/AppReducer";
+import { getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
+import { PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
 import { ItemView, TFile, WorkspaceLeaf } from "obsidian";
 import React from "react";
 import * as ReactDOM from "react-dom";
 import * as Realm from "realm-web";
-import type SekundPlugin from "@/main";
-import NoteSyncService from "@/services/NoteSyncService";
-import { AppAction, AppActionKind } from "@/state/AppReducer";
-import SekundComponent from "@/ui/SekundComponent";
-import { getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
-import { PUBLIC_APIKEY, PUBLIC_APP_ID, VIEW_ICON, VIEW_TYPE } from "@/_constants";
-import { AppContextType } from "@/state/AppContext";
 
-export default class SekundView extends ItemView {
+export default abstract class SekundView extends ItemView {
   plugin: SekundPlugin;
   private offlineListener: EventListener;
   private onlineListener: EventListener;
   private appDispatch: React.Dispatch<AppAction>;
   private noteSyncService: NoteSyncService;
-
-  getViewType(): string {
-    return VIEW_TYPE;
-  }
-
-  getDisplayText(): string {
-    return "Sekund";
-  }
-
-  getIcon(): string {
-    return VIEW_ICON;
-  }
 
   constructor(leaf: WorkspaceLeaf, plugin: SekundPlugin) {
     super(leaf);
@@ -136,14 +123,7 @@ export default class SekundView extends ItemView {
   setAppDispatch(appContext: AppContextType) {
     this.appDispatch = appContext.appDispatch;
     if (!appContext.appState.plugin) {
-      console.log("setting plugin", this.plugin)
       this.appDispatch({ type: AppActionKind.SetPlugin, payload: this.plugin })
     }
-  }
-
-  async onOpen(): Promise<void> {
-    const darkMode = this.containerEl.closest('theme-dark') !== null;
-    ReactDOM.render(<SekundComponent view={this} />, this.containerEl.children[1]);
-    this.updateOnlineStatus();
   }
 }

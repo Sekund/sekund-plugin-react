@@ -3,15 +3,10 @@ import NotesService from "@/services/NoteSyncService";
 import AppContext from "@/state/AppContext";
 import AppReducer, { initialAppState } from "@/state/AppReducer";
 import APIInfo from '@/ui/APIInfo';
-import SekundHomeComponent from "@/ui/SekundHomeComponent";
 import React, { useEffect, useReducer, useRef } from 'react';
 import { Trans, useTranslation } from "react-i18next";
 
-type Props = {
-  view?: { setAppDispatch: Function };
-};
-
-const SekundComponent = ({ view }: Props) => {
+const withConnectionStatus = (view: { setAppDispatch: Function }, WrappedComponent: any) => {
   const { t, i18n, ready } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
   const localizedAppState = window.moment
@@ -82,7 +77,7 @@ const SekundComponent = ({ view }: Props) => {
           {(() => {
             switch (appState.generalState) {
               case "allGood":
-                return <SekundHomeComponent></SekundHomeComponent>;
+                return <WrappedComponent />;
               case "connecting":
                 return (
                   <>
@@ -195,4 +190,4 @@ const SekundComponent = ({ view }: Props) => {
   );
 };
 
-export default SekundComponent;
+export default withConnectionStatus;

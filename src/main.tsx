@@ -1,7 +1,9 @@
 import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { addIcons } from "@/ui/icons";
 import SekundView from "@/ui/SekundView";
-import { VIEW_TYPE } from "@/_constants";
+import { NOTE_VIEW_TYPE, HOME_VIEW_TYPE, ViewType } from "@/_constants";
+import SekundNoteView from "@/ui/note/SekundNoteView";
+import SekundHomeView from "@/ui/home/SekundHomeView";
 
 interface SekundPluginSettings {
   apiKey: string;
@@ -27,21 +29,39 @@ export default class SekundPluginReact extends Plugin {
     await this.loadSettings();
     addIcons();
 
-    this.registerView(VIEW_TYPE, (leaf) => {
-      this.view = new SekundView(leaf, this);
+    this.registerView(NOTE_VIEW_TYPE, (leaf) => {
+      this.view = new SekundNoteView(leaf, this);
+      return this.view;
+    });
+
+    this.registerView(HOME_VIEW_TYPE, (leaf) => {
+      this.view = new SekundHomeView(leaf, this);
       return this.view;
     });
 
     this.addCommand({
-      id: "sekund-open-view",
-      name: "Open Sekund View",
+      id: "sekund-open-note-view",
+      name: "Open Sekund Note View",
       callback: async () => {
-        if (this.app.workspace.getLeavesOfType(VIEW_TYPE).length == 0) {
+        if (this.app.workspace.getLeavesOfType(NOTE_VIEW_TYPE).length == 0) {
           await this.app.workspace.getRightLeaf(false).setViewState({
-            type: VIEW_TYPE,
+            type: NOTE_VIEW_TYPE,
           });
         }
-        this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(VIEW_TYPE).first());
+        this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(NOTE_VIEW_TYPE).first());
+      },
+    });
+
+    this.addCommand({
+      id: "sekund-open-home-view",
+      name: "Open Sekund Home View",
+      callback: async () => {
+        if (this.app.workspace.getLeavesOfType(HOME_VIEW_TYPE).length == 0) {
+          await this.app.workspace.getRightLeaf(false).setViewState({
+            type: HOME_VIEW_TYPE,
+          });
+        }
+        this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(HOME_VIEW_TYPE).first());
       },
     });
 

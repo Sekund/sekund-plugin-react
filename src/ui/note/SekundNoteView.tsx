@@ -20,7 +20,7 @@ export default class SekundNoteView extends SekundView {
 
     async onOpen(): Promise<void> {
         ReactDOM.render(<SekundNoteComponent view={this} />, this.containerEl.children[1]);
-        this.updateOnlineStatus();
+        this.plugin.updateOnlineStatus();
     }
 
 }

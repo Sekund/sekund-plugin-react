@@ -57,7 +57,8 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
   switch (type) {
     case AppActionKind.SetCurrentNoteState:
       const noteFlags: Partial<NoteState> = payload as Partial<NoteState>;
-      return { ...state, currentNoteState: { ...state.currentNoteState, ...noteFlags } };
+      const result = { ...state, currentNoteState: Object.assign({}, state.currentNoteState, noteFlags) };
+      return result;
     case AppActionKind.SetGeneralState:
       return { ...state, generalState: payload };
     case AppActionKind.SetSubdomain:

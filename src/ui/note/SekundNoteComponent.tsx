@@ -47,7 +47,7 @@ const SekundHomeComponent = () => {
 }
 
 type Props = {
-  view: { setAppDispatch: Function }
+  view: { addAppDispatch: Function }
 }
 
 export default ({ view }: Props) => withConnectionStatus(view, SekundHomeComponent)

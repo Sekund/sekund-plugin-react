@@ -20,7 +20,7 @@ export default class SekundHomeView extends SekundView {
 
     async onOpen(): Promise<void> {
         ReactDOM.render(<SekundHomeComponent view={this} />, this.containerEl.children[1]);
-        this.updateOnlineStatus();
+        this.plugin.updateOnlineStatus();
     }
 
 }

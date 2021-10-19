@@ -5,8 +5,9 @@ import AppReducer, { initialAppState } from "@/state/AppReducer";
 import APIInfo from '@/ui/APIInfo';
 import React, { useEffect, useReducer, useRef } from 'react';
 import { Trans, useTranslation } from "react-i18next";
+import useDeepCompareEffect from 'use-deep-compare-effect'
 
-const withConnectionStatus = (view: { setAppDispatch: Function }, WrappedComponent: any) => {
+const withConnectionStatus = (view: { addAppDispatch: Function }, WrappedComponent: any) => {
   const { t, i18n, ready } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
   const localizedAppState = window.moment
@@ -23,11 +24,11 @@ const withConnectionStatus = (view: { setAppDispatch: Function }, WrappedCompone
 
   // allow SekundView and NotesService to mutate the state
   if (view) {
-    view.setAppDispatch(appProviderState);
+    view.addAppDispatch(appProviderState);
   }
 
   // update the NotesService's appState whenever it gets updated
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     i18n.changeLanguage(appState.locale)
     if (NotesService.instance) {
       NotesService.instance.appState = appState;

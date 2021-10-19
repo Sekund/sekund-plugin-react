@@ -6,6 +6,7 @@ addDecorator((storyFn) => <I18nextProvider i18n={i18next}>{storyFn()}</I18nextPr
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
+  layout: "fullscreen",
   controls: {
     matchers: {
       color: /(background|color)$/i,
@@ -17,29 +18,40 @@ export const parameters = {
   locales: {
     en: "English",
     fr: "Français",
-  }, 
+  },
   darkMode: {
     stylePreview: true,
-    darkClass: 'theme-dark',
-    lightClass: 'theme-light'
+    darkClass: "theme-dark",
+    lightClass: "theme-light",
   },
-}
+  viewport: {
+    viewports: {
+      verticalTab: {
+        name: "Obsidian Vertical Tab",
+        styles: {
+          width: "300px",
+          height: "100%",
+        },
+      },
+    },
+  },
+};
 export const globalTypes = {
   locale: {
-    name: 'Locale',
-    description: 'Internationalization locale',
-    defaultValue: 'en',
+    name: "Locale",
+    description: "Internationalization locale",
+    defaultValue: "en",
     toolbar: {
-      icon: 'globe',
+      icon: "globe",
       items: [
-        { value: 'en', right: '🇺🇸', title: 'English' },
-        { value: 'fr', right: '🇫🇷', title: 'French' },
-        { value: 'nl', right: '🇳🇱', title: 'Dutch' },
-        { value: 'es', right: '🇪🇸', title: 'Spanish' },
-        { value: 'de', right: '🇩🇪', title: 'German' },
-        { value: 'it', right: '🇮🇹', title: 'Italian' },
-        { value: 'pt', right: '🇵🇹', title: 'Portuguese' },
-        { value: 'ru', right: '🇷🇺', title: 'Russian' },
+        { value: "en", right: "🇺🇸", title: "English" },
+        { value: "fr", right: "🇫🇷", title: "French" },
+        { value: "nl", right: "🇳🇱", title: "Dutch" },
+        { value: "es", right: "🇪🇸", title: "Spanish" },
+        { value: "de", right: "🇩🇪", title: "German" },
+        { value: "it", right: "🇮🇹", title: "Italian" },
+        { value: "pt", right: "🇵🇹", title: "Portuguese" },
+        { value: "ru", right: "🇷🇺", title: "Russian" },
       ],
     },
   },

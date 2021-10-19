@@ -1,5 +1,6 @@
 import * as Realm from "realm-web";
 import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
+import React from "react";
 
 export async function getApiKeyConnection(realmApp: Realm.App, apiKey: string): Promise<Realm.User | null> {
   const credentials = Realm.Credentials.apiKey(apiKey);
@@ -10,10 +11,14 @@ export async function getApiKeyConnection(realmApp: Realm.App, apiKey: string): 
   }
 }
 
-export function setGeneralState(appDispatch: React.Dispatch<AppAction>, gState: GeneralState) {
-  appDispatch({ type: AppActionKind.SetGeneralState, payload: gState });
+export function dispatch(dispatchers: Array<React.Dispatch<AppAction>>, type: AppActionKind, payload: any) {
+  dispatchers.forEach((appDispatch) => appDispatch({ type, payload }));
 }
 
-export function setCurrentNoteState(appDispatch: React.Dispatch<AppAction>, nState: Partial<NoteState>) {
-  appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: nState });
+export function setGeneralState(dispatchers: Array<React.Dispatch<AppAction>>, gState: GeneralState) {
+  dispatchers.forEach((appDispatch) => appDispatch({ type: AppActionKind.SetGeneralState, payload: gState }));
+}
+
+export function setCurrentNoteState(dispatchers: Array<React.Dispatch<AppAction>>, nState: Partial<NoteState>) {
+  dispatchers.forEach((appDispatch) => appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: nState }));
 }

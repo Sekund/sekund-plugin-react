@@ -1,7 +1,7 @@
+import { AppAction, AppActionKind, AppState } from "@/state/AppReducer";
+import { dispatch, setCurrentNoteState } from "@/utils";
 import { TFile } from "obsidian";
 import * as Realm from "realm-web";
-import { AppAction, AppActionKind, AppState } from "@/state/AppReducer";
-import { getApiKeyConnection, setCurrentNoteState } from "@/utils";
 
 export default class NotesService {
   private static _instance: NotesService;
@@ -10,7 +10,7 @@ export default class NotesService {
     return NotesService._instance;
   }
 
-  constructor(private user: Realm.User, private subdomain: string, private appDispatch: React.Dispatch<AppAction>) {
+  constructor(private user: Realm.User, private subdomain: string, private dispatchers: React.Dispatch<AppAction>[]) {
     NotesService._instance = this;
   }
 
@@ -29,24 +29,23 @@ export default class NotesService {
   async unpublish() {
     const { remoteNote } = this.appState;
     await this.getNotes().deleteOne({ _id: remoteNote._id });
-    setCurrentNoteState(this.appDispatch, { published: false, fileSynced: false });
+    setCurrentNoteState(this.dispatchers, { published: false, fileSynced: false });
   }
 
   async compareNotes(file: TFile) {
     const { path, stat } = file;
-    this.appDispatch({ type: AppActionKind.SetCurrentFile, payload: file });
-    setCurrentNoteState(this.appDispatch, { comparing: true, published: false });
+    dispatch(this.dispatchers, AppActionKind.SetCurrentFile, file);
+    setCurrentNoteState(this.dispatchers, { comparing: true, published: false });
     const noteInfo = await this.getNotes().findOne({ path });
-    this.appDispatch({ type: AppActionKind.SetRemoteNote, payload: noteInfo });
+    dispatch(this.dispatchers, AppActionKind.SetRemoteNote, noteInfo);
     const fileSynced = noteInfo && noteInfo.updated === stat.mtime;
-    setCurrentNoteState(this.appDispatch, { fileSynced, comparing: false, published: noteInfo !== null });
+    setCurrentNoteState(this.dispatchers, { fileSynced, comparing: false, published: noteInfo !== null });
     return noteInfo;
   }
 
   async syncFile() {
     const file = this.appState.currentFile;
-    console.log("current file is ", file);
-    setCurrentNoteState(this.appDispatch, { publishing: true });
+    setCurrentNoteState(this.dispatchers, { publishing: true });
     const { remoteNote } = this.appState;
     await this.user.functions.upsertNote({
       path: file.path,
@@ -58,9 +57,9 @@ export default class NotesService {
       lastPublished: Date.now(),
     });
     const rNote = await this.getNotes().findOne({ path: file.path });
-    this.appDispatch({ type: AppActionKind.SetRemoteNote, payload: rNote });
+    dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
     setTimeout(() => {
-      setCurrentNoteState(this.appDispatch, { publishing: false, published: true, fileSynced: true });
+      setCurrentNoteState(this.dispatchers, { publishing: false, published: true, fileSynced: true });
     }, 800);
   }
 }

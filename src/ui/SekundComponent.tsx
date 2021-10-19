@@ -78,7 +78,7 @@ const SekundComponent = ({ view }: Props) => {
   return (
     <AppContext.Provider value={appProviderState}>
       <div ref={sekundRoot} className={`w-full main sekund`}>
-        <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+        <div className={`fixed inset-0 flex flex-col items-center justify-center ${appState.generalState === 'allGood' ? 'p-2' : 'p-8'}`}>
           {(() => {
             switch (appState.generalState) {
               case "allGood":

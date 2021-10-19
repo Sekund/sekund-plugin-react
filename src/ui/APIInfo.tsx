@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react'
 import i18nConf from '@/i18n.config';
-import { useTranslation } from "react-i18next";
 import { useAppContext } from '@/state/AppContext';
+import React, { useRef } from 'react';
+import { useTranslation } from "react-i18next";
 
 export default function APIInfo() {
 
@@ -12,7 +12,7 @@ export default function APIInfo() {
     // const settings = { apiKey: undefined, subdomain: undefined }
     const { apiKey, subdomain } = appState.plugin.settings;
 
-    const { t, i18n, ready } = useTranslation([
+    const { t } = useTranslation([
         "common", "plugin"
     ], { i18n: i18nConf });
 
@@ -26,7 +26,7 @@ export default function APIInfo() {
     }
 
     return (
-        <div className="flex flex-col p-2 mt-4 space-y-2 text-left border rounded-md border-obs-modal" >
+        <div className="flex flex-col p-2 mt-8 space-y-2 text-left border rounded-md border-obs-modal" >
             <div className="text-obs-muted">{t('plugin:subdomain')}</div>
             <input ref={subdomainField} defaultValue={subdomain ? subdomain : undefined} pattern="^([a-zA-Z0-9]([-a-zA-Z0-9]{0,14}[a-zA-Z0-9])?)$" type="text" placeholder={t('plugin:subdomain')} />
             <div className="text-obs-muted">{t('plugin:APIKey')}</div>

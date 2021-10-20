@@ -1,7 +1,7 @@
 import AppStateWrapper from '@/storybook/AppStateWrapper';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
-import SekundNoteComponent from './SekundNoteComponent';
+import SekundNoteComponentHOC, { SekundNoteComponent } from './SekundNoteComponent';
 import '/global.css';
 
 export default {
@@ -11,8 +11,11 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, args.nState, locale)
-    return <SekundNoteComponent view={wrapper} />
+    const wrapper = new AppStateWrapper(args.gState, args.nState, locale);
+
+    const InjectedNoteComponent = SekundNoteComponentHOC({ view: wrapper });
+
+    return <InjectedNoteComponent />
 };
 
 // export type NoteState = {

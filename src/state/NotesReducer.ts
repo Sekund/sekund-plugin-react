@@ -10,7 +10,7 @@ export type NotesState = {
 
 export const initialNotesState: NotesState = {
   note: undefined,
-  notes: undefined,
+  notes: [],
   hasMore: false,
   loading: false,
 };

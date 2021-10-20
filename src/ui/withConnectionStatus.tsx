@@ -1,13 +1,15 @@
-import i18nConf from '@/i18n.config';
-import NotesService from "@/services/NoteSyncService";
+import i18nConf from '../i18n.config';
 import AppContext from "@/state/AppContext";
 import AppReducer, { initialAppState } from "@/state/AppReducer";
 import APIInfo from '@/ui/APIInfo';
 import React, { useEffect, useReducer, useRef } from 'react';
 import { Trans, useTranslation } from "react-i18next";
-import useDeepCompareEffect from 'use-deep-compare-effect'
 
-const withConnectionStatus = (view: { addAppDispatch: Function }, WrappedComponent: any) => {
+type Props = {
+  view: { addAppDispatch: Function }
+}
+
+const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreProps: any) => {
   const { t, i18n, ready } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
   const localizedAppState = window.moment
@@ -21,18 +23,14 @@ const withConnectionStatus = (view: { addAppDispatch: Function }, WrappedCompone
   };
   const sekundRoot = useRef(null)
 
-
   // allow SekundView and NotesService to mutate the state
-  if (view) {
-    view.addAppDispatch(appProviderState);
+  if (props.view) {
+    props.view.addAppDispatch(appProviderState);
   }
 
   // update the NotesService's appState whenever it gets updated
-  useDeepCompareEffect(() => {
+  useEffect(() => {
     i18n.changeLanguage(appState.locale)
-    if (NotesService.instance) {
-      NotesService.instance.appState = appState;
-    }
   }, [appState]);
 
   useEffect(() => {
@@ -78,7 +76,7 @@ const withConnectionStatus = (view: { addAppDispatch: Function }, WrappedCompone
           {(() => {
             switch (appState.generalState) {
               case "allGood":
-                return <WrappedComponent />;
+                return <WrappedComponent {...props} />;
               case "connecting":
                 return (
                   <>

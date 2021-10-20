@@ -3,15 +3,15 @@ import { dispatch, setCurrentNoteState } from "@/utils";
 import { TFile } from "obsidian";
 import * as Realm from "realm-web";
 
-export default class NotesService {
-  private static _instance: NotesService;
+export default class NoteSyncService {
+  private static _instance: NoteSyncService;
   public appState: AppState;
   static get instance() {
-    return NotesService._instance;
+    return NoteSyncService._instance;
   }
 
   constructor(private user: Realm.User, private subdomain: string, private dispatchers: React.Dispatch<AppAction>[]) {
-    NotesService._instance = this;
+    NoteSyncService._instance = this;
   }
 
   getNotes() {

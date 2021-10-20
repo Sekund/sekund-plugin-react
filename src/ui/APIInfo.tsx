@@ -1,4 +1,4 @@
-import i18nConf from '@/i18n.config';
+import i18nConf from '../i18n.config';
 import { useAppContext } from '@/state/AppContext';
 import React, { useRef } from 'react';
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,7 @@ export default function APIInfo() {
             appState.plugin.settings.apiKey = apiKeyField.current.value;
             appState.plugin.saveSettings();
         }
-        appState.plugin.view?.attemptConnection(0);
+        appState.plugin.attemptConnection(0);
     }
 
     return (

@@ -8,18 +8,19 @@ function AllGood() {
     return <div>All is good</div>;
 };
 
-const DummyWrappedComponent = (view: { addAppDispatch: Function }) => withConnectionStatus(view, AllGood)
+const DummyWrappedComponent = (view: { addAppDispatch: Function }) => withConnectionStatus({ view })(AllGood)
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
     title: 'Connection Status',
-    component: DummyWrappedComponent,
-} as ComponentMeta<typeof DummyWrappedComponent>;
+    component: AllGood,
+} as ComponentMeta<typeof AllGood>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     const wrapper = new AppStateWrapper(args.gState, null, locale)
-    return DummyWrappedComponent(wrapper)
+    const WrappedComponent = DummyWrappedComponent(wrapper);
+    return <WrappedComponent />
 };
 
 export const Connecting = Template.bind({});

@@ -20,7 +20,10 @@ i18next
       useSuspense: false,
     },
     resources: {
-      en: {common: en, plugin: pluginEn}, fr: {common: fr, plugin: pluginFr}, es : {common: es, plugin: pluginEs}, nl:{common: nl, plugin: pluginNl}
+      en: { common: en, plugin: pluginEn },
+      fr: { common: fr, plugin: pluginFr },
+      es: { common: es, plugin: pluginEs },
+      nl: { common: nl, plugin: pluginNl },
     },
     ns: ["common", "plugin"],
     defaultNS: "common",

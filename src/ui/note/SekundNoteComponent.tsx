@@ -1,16 +1,24 @@
 import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import React from "react";
+import React, { useEffect } from "react";
 
-const SekundHomeComponent = () => {
-  const { fileSynced, published, publishing, comparing } = useAppContext().appState.currentNoteState;
+export const SekundNoteComponent = () => {
+  const { appState } = useAppContext();
+  const { fileSynced, published, publishing, comparing } = appState.currentNoteState;
 
   function handleSync() {
     if (!publishing && !fileSynced && !comparing) {
       NoteSyncService.instance.syncFile();
     }
   }
+
+  // update the NoteSyncService's appState whenever it gets updated
+  useEffect(() => {
+    if (NoteSyncService.instance) {
+      NoteSyncService.instance.appState = appState;
+    }
+  }, [appState]);
 
   function handleUnpublish() {
     NoteSyncService.instance.unpublish();
@@ -50,4 +58,4 @@ type Props = {
   view: { addAppDispatch: Function }
 }
 
-export default ({ view }: Props) => withConnectionStatus(view, SekundHomeComponent)
+export default (props: Props) => withConnectionStatus(props)(SekundNoteComponent)

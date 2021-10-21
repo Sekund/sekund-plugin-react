@@ -24,3 +24,7 @@ export interface Note {
     groups?: Group[];
   };
 }
+
+export function isSharing(note: Note): boolean {
+  return note.sharing && ((note.sharing.peoples && note.sharing.peoples.length > 0) || (note.sharing.groups && note.sharing.groups.length > 0));
+}

@@ -15,5 +15,14 @@
     "unknownErrorDesc": "Er is zojuist iets vreemds gebeurd.",
     "subdomain": "Subdomein",
     "Connect": "Aansluiten",
-    "APIKey": "API sleutel"
+    "APIKey": "API sleutel",
+    "update": "Update",
+    "uploadToSekund": "Uploaden naar Sekund.io",
+    "deleteFromSekund": "Verwijderen van Sekund.io",
+    "uploadToSekundDesc": "Uw notitie is beschikbaar om te delen met andere leden van uw team.",
+    "deleteFromSekundDesc": "Je notitie wordt verwijderd uit je Sekund.io-account. Uw lokale exemplaar blijft onaangeroerd.",
+    "shareDesc": "Je notitie is beschikbaar om te delen, maar je hebt deze nog met niemand gedeeld. Klik hieronder op de knop 'Delen' en kies mensen of groepen met wie je deze notitie wilt delen.",
+    "Share": "Deel",
+    "synchronizing": "Synchroniserend...",
+    "uploading": "Uploaden..."
 }

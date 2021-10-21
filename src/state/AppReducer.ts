@@ -1,4 +1,5 @@
 import { Note } from "@/domain/Note";
+import { People } from "@/domain/People";
 import SekundPluginReact from "@/main";
 import { Plugin_2, TFile } from "obsidian";
 
@@ -8,7 +9,8 @@ export type NoteState = {
   published: boolean; // exists in Sekund
   fileSynced: boolean; // exists and synched
   publishing: boolean;
-  comparing: boolean;
+  fetching: boolean;
+  synchronizing: boolean;
 };
 
 export type AppState = {
@@ -19,6 +21,7 @@ export type AppState = {
   currentFile: TFile;
   locale: string;
   plugin: SekundPluginReact;
+  userProfile: People;
 };
 
 export const initialAppState: AppState = {
@@ -28,12 +31,14 @@ export const initialAppState: AppState = {
     published: false,
     fileSynced: false,
     publishing: false,
-    comparing: false,
+    fetching: false,
+    synchronizing: false,
   },
   subdomain: "",
   locale: "en",
   currentFile: undefined,
   plugin: undefined,
+  userProfile: undefined,
 };
 
 export enum AppActionKind {
@@ -43,6 +48,7 @@ export enum AppActionKind {
   SetLocale,
   SetGeneralState,
   SetSubdomain,
+  SetUserProfile,
   SetPlugin,
 }
 
@@ -71,6 +77,8 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       return { ...state, locale: payload };
     case AppActionKind.SetPlugin:
       return { ...state, plugin: payload };
+    case AppActionKind.SetUserProfile:
+      return { ...state, userProfile: payload };
 
     default:
       return state;

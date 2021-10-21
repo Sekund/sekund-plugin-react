@@ -15,5 +15,14 @@
     "unknownErrorDesc": "Algo extraño acaba de suceder.",
     "subdomain": "Subdominio",
     "Connect": "Conectar",
-    "APIKey": "Clave API"
+    "APIKey": "Clave API",
+    "update": "Actualizar",
+    "uploadToSekund": "Subir a Sekund.io",
+    "deleteFromSekund": "Eliminar de Sekund.io",
+    "uploadToSekundDesc": "Su nota estará disponible para compartir con otros miembros de su equipo.",
+    "deleteFromSekundDesc": "Su nota se eliminará de su cuenta de Sekund.io. Su copia local permanecerá intacta.",
+    "shareDesc": "Tu nota está disponible para compartir, pero aún no la has compartido con nadie. Haz clic en el botón \"Compartir\" a continuación y elige las personas o grupos con los que quieras compartir esta nota.",
+    "Share": "Cuota",
+    "synchronizing": "Sincronizando...",
+    "uploading": "Subiendo ..."
 }

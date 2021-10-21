@@ -1,16 +1,28 @@
+import { Group } from "@/domain/Group";
+import { isSharing } from "@/domain/Note";
+import { People } from "@/domain/People";
+import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
+import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export const SekundNoteComponent = () => {
   const { appState } = useAppContext();
-  const { fileSynced, published, publishing, comparing } = appState.currentNoteState;
+  const { fileSynced, published, publishing, fetching, synchronizing } = appState.currentNoteState;
+  const { t } = useTranslation("plugin");
+  const { remoteNote } = appState;
 
   function handleSync() {
-    if (!publishing && !fileSynced && !comparing) {
+    if (!publishing && !fileSynced && !fetching) {
       NoteSyncService.instance.syncFile();
     }
+  }
+
+  function handleShare() {
   }
 
   // update the NoteSyncService's appState whenever it gets updated
@@ -18,40 +30,157 @@ export const SekundNoteComponent = () => {
     if (NoteSyncService.instance) {
       NoteSyncService.instance.appState = appState;
     }
-  }, [appState]);
+  }, [appState.currentNoteState]);
 
   function handleUnpublish() {
     NoteSyncService.instance.unpublish();
   }
 
-  function maybeShowUnpublishButton() {
+  function uploadButtonLabel() {
+    if (publishing) {
+      return t("plugin:uploading");
+    }
     if (published) {
-      return (
-        <div className="inline-flex flex-col justify-center w-full mt-4 text-center">
-          <button type="button" className="inline-flex items-center justify-center px-3 py-2 text-sm font-medium leading-4 bg-transparent rounded-md shadow-sm text-accent-4 hover:bg-accent-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-4" onClick={() => handleUnpublish()} style={{ border: "1px solid" }}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="ml-2">Un-publish</span>
-          </button>
-        </div>
-      );
-    } else return null;
+      return t('plugin.update');
+    }
+    return t('plugin:uploadToSekund');
   }
 
-  return (
-    <div className="w-full h-full">
-      <div className="inline-flex flex-col justify-center w-full text-center">
-        <button type="button" className={`inline-flex items-center justify-center px-4 py-2 text-sm font-medium border border-accent-4 rounded-md shadow-sm focus:outline-none ${comparing || fileSynced ? "hover:bg-gray-1 bg-gray-1 text-gray-4" : "bg-accent-0 text-accent-4 hover:bg-accent-2"} ${comparing || publishing ? "animate-pulse" : ""}`} onClick={() => handleSync()} style={{ border: "solid 1px" }}>
+  function uploadButtonDesc() {
+    if (!publishing && !fetching)
+      return t('plugin:uploadToSekundDesc');
+    return "";
+  }
+
+  function uploadButton() {
+    return (
+      <div className="flex flex-col items-center p-2">
+        <button onClick={handleSync} className={`flex items-center  ${fetching || publishing ? "animate-pulse" : ""}`}>
           <svg xmlns="http://www.w3.org/2000/svg" className={`w-6 h-6 ${publishing ? "animate-bounce" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
-          <span className="ml-2">{published ? "Sync Note" : "Publish Note"}</span>
+          <span className="ml-1">{uploadButtonLabel()}</span>
         </button>
+        <span className="p-2 mt-2 text-xs text-center text-obs-muted">{uploadButtonDesc()}</span>
+      </div>)
+  }
+
+  function sharingGroups(groups: Group[]) {
+    return (
+      <div className="flex p-1 -space-x-1 overflow-hidden">
+        {groups.map((group, idx) => {
+          return <React.Fragment key={idx}>{groupAvatar(group)}</React.Fragment>;
+        })}
       </div>
-      {maybeShowUnpublishButton()}
+    );
+  }
+
+  function sharing() {
+    const sharing = remoteNote.sharing;
+    let children = [];
+    console.log("sharing", sharing)
+    if (sharing && sharing.groups && sharing.groups.length > 0) {
+      children.push(
+        <div key="sharing.groups" className="flex -space-x-1 overflow-hidden">
+          {sharingGroups(sharing.groups)}
+        </div>
+      );
+    }
+    if (sharing && sharing.peoples && sharing.peoples.length > 0) {
+      if (sharing.groups && sharing.groups.length > 0) {
+        children.push(<span key="sharing.plus">+</span>);
+      }
+      children.push(
+        <div key="sharing.people" className="flex -space-x-1 overflow-hidden">
+          {sharing.peoples.map((people, idx) => {
+            return <React.Fragment key={idx}>{peopleAvatar(people, 5)}</React.Fragment>;
+          })}
+        </div>
+      );
+    }
+    children.push(
+      <a key="sharing.edit" className="ml-1">
+        <DotsHorizontalIcon className="w-4 h-4" />
+      </a>
+    );
+    if (children.length > 1) {
+      return (
+        <div onClick={handleShare} className="flex items-center flex-shrink-0 cursor-pointer">
+          {children}
+        </div>
+      );
+    }
+    return (
+      // <a className="cursor-pointer" key="sharing.share" onClick={noSharing ? undefined : () => setShowSharingModal(true)}>
+      //   Share...
+      // </a>
+      <button type="button" key="sharing.share">
+        Share
+      </button>
+    );
+  }
+
+  if (fetching) {
+    return <div className="fixed inset-0 animate-pulse bg-obs-primary-alt">
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <div className="mt-4 spinner">
+          <div className="bounce1" />
+          <div className="bounce2" />
+          <div className="bounce3" />
+        </div>
+      </div>
     </div>
-  );
+  }
+
+  if (!published) {
+    return (
+      <div className="fixed inset-0">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          {uploadButton()}
+        </div>
+      </div>
+    );
+  } else {
+
+    const footerTextColor = fetching ? 'text-obs-faint' : 'text-obs-muted';
+    const children = [];
+
+    if (fileSynced) {
+      children.push('(Up to date)')
+    } else {
+
+      children.push(
+        <div className={`flex items-center justify-center space-x-1 ${footerTextColor}`} >
+          <svg className={`w-4 h-4 ${synchronizing ? 'animate-spin' : ''}`} viewBox="0 0 42.676513671875 46.36460876464844" width="42.676513671875" height="46.36460876464844" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="currentColor" >
+            <path fillRule="evenodd" d="M 4.209 45.954 C 5.744 45.954 6.988 44.71 6.988 43.175 L 6.988 37.336 C 17.065 47.615 34.427 43.775 39.229 30.205 C 39.998 28.209 38.318 26.128 36.205 26.46 C 35.168 26.622 34.311 27.355 33.99 28.354 C 30.421 38.443 17.269 40.884 10.317 32.748 C 10.125 32.525 9.941 32.294 9.764 32.059 L 18.104 32.059 C 20.244 32.059 21.581 29.743 20.511 27.89 C 20.015 27.03 19.098 26.501 18.104 26.501 L 4.209 26.501 C 2.674 26.501 1.43 27.745 1.43 29.28 L 1.43 43.175 C 1.43 44.71 2.674 45.954 4.209 45.954 Z M 4.231 20.784 C 5.679 21.295 7.266 20.536 7.777 19.089 C 11.347 9 24.498 6.559 31.45 14.694 C 31.642 14.918 31.826 15.148 32.003 15.384 L 23.663 15.384 C 21.523 15.384 20.186 17.7 21.256 19.553 C 21.753 20.413 22.67 20.942 23.663 20.942 L 37.558 20.942 C 39.093 20.942 40.338 19.698 40.338 18.163 L 40.338 4.268 C 40.338 2.128 38.022 0.791 36.169 1.861 C 35.309 2.357 34.779 3.275 34.779 4.268 L 34.779 10.107 C 24.702 -0.172 7.34 3.668 2.539 17.238 C 2.028 18.685 2.787 20.273 4.234 20.784 Z" clipRule="evenodd" transform="matrix(-1, 0, 0, -1, 41.7680015563965, 47.43833541870118)" />
+          </svg>
+          <span>{synchronizing ? 'Synchronizing...' : 'Sync'}</span>
+        </div>
+      )
+    }
+
+    if (remoteNote && isSharing(remoteNote)) {
+      children.push(sharing())
+    }
+
+    return (<>
+      {remoteNote && !isSharing(remoteNote) ?
+        <div className="fixed inset-0">
+          <div className="flex flex-col items-center justify-center w-full h-full p-2">
+            <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
+            <button onClick={handleShare}>{t('plugin:Share')}</button>
+          </div>
+        </div>
+        : <NoteComments />}
+      <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>
+        <div className="flex items-center justify-between px-2 text-sm">{children}</div>
+        <a className={`flex items-center justify-center p-1 text-sm text-center cursor-pointer ${footerTextColor}`} onClick={handleUnpublish}>
+          <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
+          {t('plugin:deleteFromSekund')}
+        </a>
+      </div>
+    </>)
+  }
 }
 
 type Props = {

@@ -15,5 +15,14 @@
     "unknownErrorDesc": "Something strange just happened.",
     "subdomain": "Subdomain",
     "Connect": "Connect",
-    "APIKey": "API Key"
+    "APIKey": "API Key",
+    "update": "Update",
+    "uploadToSekund": "Upload to Sekund.io",
+    "deleteFromSekund": "Delete from Sekund.io",
+    "uploadToSekundDesc": "Your note will be available for sharing with other members of your team.",
+    "deleteFromSekundDesc": "Your note will be removed from your Sekund.io account. Your local copy will remain untouched.",
+    "shareDesc": "Your note is available for sharing, but you haven't shared it with anyone yet. Hit the 'Share' button below and pick people or groups with whom you want to share this note.",
+    "Share": "Share",
+    "synchronizing": "Synchronizing...",
+    "uploading": "Uploading..."
 }

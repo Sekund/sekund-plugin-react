@@ -15,5 +15,14 @@
     "unknownErrorDesc": "Quelque chose d'étrange vient de se produire.",
     "subdomain": "Sous-domaine",
     "Connect": "Se connecter",
-    "APIKey": "Clé d'API"
+    "APIKey": "Clé d'API",
+    "update": "Mettre à jour",
+    "uploadToSekund": "Télécharger sur Sekund.io",
+    "deleteFromSekund": "Supprimer de Sekund.io",
+    "uploadToSekundDesc": "Votre note pourra être partagée avec d'autres membres de votre équipe.",
+    "deleteFromSekundDesc": "Votre note sera supprimée de votre compte Sekund.io. Votre copie locale restera intacte.",
+    "shareDesc": "Votre note est disponible pour le partage, mais vous ne l'avez encore partagée avec personne. Cliquez sur le bouton « Partager » ci-dessous et choisissez les personnes ou les groupes avec lesquels vous souhaitez partager cette note.",
+    "Share": "Partager",
+    "synchronizing": "Synchronisation en cours...",
+    "uploading": "Téléchargement..."
 }

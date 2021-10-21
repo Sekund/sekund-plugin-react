@@ -81,17 +81,10 @@ module.exports = {
         secondary: "var(--color-text-secondary)",
       },
       spacing: {
-        "sait-2": "max(env(safe-area-inset-top), 0.5rem)",
-        "sair-2": "max(env(safe-area-inset-right), 0.5rem)",
-        "saib-2": "max(env(safe-area-inset-bottom), 0.5rem)",
-        "sail-2": "max(env(safe-area-inset-left), 0.5rem)",
-        "sait-4": "max(env(safe-area-inset-top), 1rem)",
-        "sair-4": "max(env(safe-area-inset-right), 1rem)",
-        "saib-4": "max(env(safe-area-inset-bottom), 1rem)",
-        "sail-4": "max(env(safe-area-inset-left), 1rem)",
-        xl: "36rem",
-      }
-    }
+        "1px": "1px",
+        "2px": "2px",
+      },
+    },
   },
   variants: {
     extend: {},

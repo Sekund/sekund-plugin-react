@@ -12,13 +12,13 @@ const DummyWrappedComponent = (view: { addAppDispatch: Function }) => withConnec
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-    title: 'Connection Status',
+    title: 'Sekund/Connection Status',
     component: AllGood,
 } as ComponentMeta<typeof AllGood>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, null, locale)
+    const wrapper = new AppStateWrapper(args.gState, null, null, locale)
     const WrappedComponent = DummyWrappedComponent(wrapper);
     return <WrappedComponent />
 };

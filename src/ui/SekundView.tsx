@@ -1,5 +1,4 @@
 import type SekundPlugin from "@/main";
-import NoteSyncService from "@/services/NoteSyncService";
 import { AppContextType } from "@/state/AppContext";
 import { AppActionKind } from "@/state/AppReducer";
 import { ItemView, WorkspaceLeaf } from "obsidian";
@@ -7,7 +6,6 @@ import * as ReactDOM from "react-dom";
 
 export default abstract class SekundView extends ItemView {
   plugin: SekundPlugin;
-  private noteSyncService: NoteSyncService;
 
   constructor(leaf: WorkspaceLeaf, plugin: SekundPlugin) {
     super(leaf);

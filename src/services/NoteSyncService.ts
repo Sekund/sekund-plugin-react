@@ -35,17 +35,17 @@ export default class NoteSyncService {
   async compareNotes(file: TFile) {
     const { path, stat } = file;
     dispatch(this.dispatchers, AppActionKind.SetCurrentFile, file);
-    setCurrentNoteState(this.dispatchers, { comparing: true, published: false });
+    setCurrentNoteState(this.dispatchers, { fetching: true, published: false });
     const noteInfo = await this.getNotes().findOne({ path });
     dispatch(this.dispatchers, AppActionKind.SetRemoteNote, noteInfo);
     const fileSynced = noteInfo && noteInfo.updated === stat.mtime;
-    setCurrentNoteState(this.dispatchers, { fileSynced, comparing: false, published: noteInfo !== null });
+    setCurrentNoteState(this.dispatchers, { fileSynced, fetching: false, published: noteInfo !== null });
     return noteInfo;
   }
 
   async syncFile() {
     const file = this.appState.currentFile;
-    setCurrentNoteState(this.dispatchers, { publishing: true });
+    setCurrentNoteState(this.dispatchers, this.appState.currentNoteState.published ? { publishing: true } : { synchronizing: true });
     const { remoteNote } = this.appState;
     await this.user.functions.upsertNote({
       path: file.path,
@@ -59,7 +59,7 @@ export default class NoteSyncService {
     const rNote = await this.getNotes().findOne({ path: file.path });
     dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
     setTimeout(() => {
-      setCurrentNoteState(this.dispatchers, { publishing: false, published: true, fileSynced: true });
+      setCurrentNoteState(this.dispatchers, { publishing: false, published: true, fileSynced: true, synchronizing: false });
     }, 800);
   }
 }

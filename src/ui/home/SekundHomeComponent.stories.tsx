@@ -7,13 +7,13 @@ import SekundHomeComponentHOC, { SekundHomeComponent } from './SekundHomeCompone
 import '/global.css';
 
 export default {
-    title: 'Home',
+    title: 'Sekund/Home',
     component: SekundHomeComponent,
 } as ComponentMeta<typeof SekundHomeComponent>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, args.nState, locale);
+    const wrapper = new AppStateWrapper(args.gState, args.nState, null, locale);
     const notesService = {
         getNotes: (oldest: number, limit: number) => args.notes
     } as NotesService;

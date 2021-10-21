@@ -9,6 +9,7 @@
     "noImplicitAny": false,
     "moduleResolution": "node",
     "importHelpers": true,
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["src/*"]

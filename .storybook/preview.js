@@ -34,6 +34,7 @@ export const parameters = {
         },
       },
     },
+    defaultViewport: "verticalTab",
   },
 };
 export const globalTypes = {

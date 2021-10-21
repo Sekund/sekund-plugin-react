@@ -20,7 +20,7 @@ export default class SekundHomeView extends SekundView {
     }
 
     async onOpen(): Promise<void> {
-        const props = { view: this, notesService: NotesService.instance }
+        const props = { view: this, notesService: undefined }
         const InjectedHomeComponent = SekundHomeComponent(props);
         ReactDOM.render(<InjectedHomeComponent />, this.containerEl.children[1]);
         this.plugin.updateOnlineStatus();

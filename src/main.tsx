@@ -1,5 +1,6 @@
-import NotesService from "@/services/NoteSyncService";
+import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
+import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind } from "@/state/AppReducer";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
@@ -22,6 +23,7 @@ const DEFAULT_SETTINGS: SekundPluginSettings = {
 
 export default class SekundPluginReact extends Plugin {
 
+  user: Realm.User;
   settings: SekundPluginSettings;
   dispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
   private offlineListener: EventListener;
@@ -123,13 +125,20 @@ export default class SekundPluginReact extends Plugin {
         setGeneralState(Object.values(this.dispatchers), appIdResult);
         return;
       default:
-        const user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
+        this.user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
 
-        if (user) {
-          setGeneralState(Object.values(this.dispatchers), "allGood");
+        if (this.user) {
 
-          new NoteSyncService(user, this.settings.subdomain, Object.values(this.dispatchers));
-          new NotesService(user, this.settings.subdomain, Object.values(this.dispatchers));
+          const dispatchers = Object.values(this.dispatchers);
+
+          new UsersService(this.user, this.settings.subdomain);
+          new NoteSyncService(this.user, this.settings.subdomain, Object.values(this.dispatchers));
+          new NotesService(this.user, this.settings.subdomain);
+
+          const userProfile = await UsersService.instance.fetchUser();
+
+          dispatch(dispatchers, AppActionKind.SetUserProfile, userProfile)
+          setGeneralState(dispatchers, "allGood");
 
           this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
           this.registerEvent(this.app.vault.on("modify", this.handleModify));

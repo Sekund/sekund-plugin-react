@@ -1,98 +1,83 @@
-import { Note } from "@/domain/Note";
 import { getAvatar } from "@/helpers/avatars";
 import { isVisible } from "@/helpers/visibility";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
-import { useEventsContext } from "@/state/EventsContext";
-import { EventsActionKind } from "@/state/EventsReducer";
-import { useNotesContext } from "@/state/NotesContext";
-import { NotesActionKind } from "@/state/NotesReducer";
+import { AppActionKind } from "@/state/AppReducer";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 export default function NoteComments() {
-  const { appState } = useAppContext();
+  const { appState, appDispatch } = useAppContext();
   const { userProfile, plugin, remoteNote } = appState;
 
   const guestImage = userProfile.image;
   const guestName = userProfile.name;
   const guestEmail = userProfile.email;
-  // const { notesState, notesDispatch } = useNotesContext();
-  const { eventsState, eventsDispatch } = useEventsContext();
   const sendButton = useRef<HTMLButtonElement>(null);
   const [areaText, setAreaText] = useState("");
 
   const localComments = remoteNote?.comments || [];
 
-  // useEffect(() => {
-  //   if (!eventsState.event || !remoteNote) {
-  //     return;
-  //   }
-  //   const evt = eventsState.event;
-  //   switch (evt.type) {
-  //     case "addComment":
-  //       if (evt.data.noteId.equals(remoteNote._id)) {
-  //         if (evt.updateTime > remoteNote.updated) {
-  //           const updtNote = {
-  //             ...remoteNote,
-  //             comments: [...(remoteNote.comments || []), evt.data],
-  //           };
-  //           notesDispatch({
-  //             type: NotesActionKind.SetNote,
-  //             payload: updtNote,
-  //           });
-  //           updateNote(updtNote as Note);
-  //         }
-  //         eventsDispatch({ type: EventsActionKind.Consume, payload: null });
-  //       }
-  //       break;
-  //     case "removeComment":
-  //       if (evt.data.noteId.equals(notesState.note?._id)) {
-  //         if (evt.updateTime > notesState.note.updated) {
-  //           const updtNote = {
-  //             ...notesState.note,
-  //             comments: notesState.note?.comments.filter((c) => !(c.updated === evt.data.updated && c.created === evt.data.created)),
-  //           };
-  //           notesDispatch({
-  //             type: NotesActionKind.SetNote,
-  //             payload: updtNote,
-  //           });
-  //           updateNote(updtNote as Note);
-  //         }
-  //         eventsDispatch({ type: EventsActionKind.Consume, payload: null });
-  //       }
-  //       break;
-  //     case "editComment":
-  //       if (evt.data.noteId.equals(notesState.note?._id)) {
-  //         if (evt.updateTime > notesState.note.updated) {
-  //           const { text, commentIdx } = evt.data;
-  //           const updtNote = {
-  //             ...notesState.note,
-  //             comments: notesState.note?.comments.map((c, index) => (index === commentIdx ? { ...c, text } : c)),
-  //           };
-  //           notesDispatch({
-  //             type: NotesActionKind.SetNote,
-  //             payload: updtNote,
-  //           });
-  //           updateNote(updtNote as Note);
-  //         }
-  //         eventsDispatch({ type: EventsActionKind.Consume, payload: null });
-  //       }
-  //       break;
-  //   }
-  // }, [eventsState.event]);
+  useEffect(() => {
+    if (!appState.event || !remoteNote) {
+      return;
+    }
+    const evt = appState.event;
+    switch (evt.type) {
+      case "addComment":
+        if (evt.data.noteId.equals(appState.remoteNote._id)) {
+          if (evt.updateTime > remoteNote.updated) {
+            const updtNote = {
+              ...appState.remoteNote,
+              comments: [...(remoteNote.comments || []), evt.data],
+            };
+            appDispatch({
+              type: AppActionKind.SetRemoteNote,
+              payload: updtNote,
+            });
+          }
+        }
+        break;
+      case "removeComment":
+        if (evt.data.noteId.equals(appState.remoteNote?._id)) {
+          if (evt.updateTime > appState.remoteNote.updated) {
+            const updtNote = {
+              ...appState.remoteNote,
+              comments: appState.remoteNote?.comments.filter((c) => !(c.updated === evt.data.updated && c.created === evt.data.created)),
+            };
+            appDispatch({
+              type: AppActionKind.SetRemoteNote,
+              payload: updtNote,
+            });
+          }
+        }
+        break;
+      case "editComment":
+        if (evt.data.noteId.equals(appState.remoteNote?._id)) {
+          if (evt.updateTime > appState.remoteNote.updated) {
+            const { text, commentIdx } = evt.data;
+            const updtNote = {
+              ...appState.remoteNote,
+              comments: appState.remoteNote?.comments.map((c, index) => (index === commentIdx ? { ...c, text } : c)),
+            };
+            appDispatch({
+              type: AppActionKind.SetRemoteNote,
+              payload: updtNote,
+            });
+          }
+        }
+        break;
+    }
+  }, [appState.event]);
 
-  // function updateNote(updtNote: Note) {
-  //   notesDispatch({ type: NotesActionKind.UpdateNote, payload: updtNote });
-  // }
 
   async function addComment() {
-    // if (notesState.note) {
-    //   const textarea = document.getElementById("comment") as HTMLTextAreaElement;
-    //   NotesService.instance.addNoteComment(notesState.note._id, textarea.value, plugin.user.customData._id);
-    //   textarea.value = "";
-    // }
+    if (appState.remoteNote) {
+      const textarea = document.getElementById("comment") as HTMLTextAreaElement;
+      NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin.getCurrentUser().customData._id);
+      textarea.value = "";
+    }
   }
 
   function handleKeydown(e: KeyboardEvent) {

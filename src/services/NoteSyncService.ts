@@ -1,3 +1,5 @@
+import { Note } from "@/domain/Note";
+import NotesService from "@/services/NotesService";
 import { AppAction, AppActionKind, AppState } from "@/state/AppReducer";
 import { dispatch, setCurrentNoteState } from "@/utils";
 import { TFile } from "obsidian";
@@ -36,11 +38,18 @@ export default class NoteSyncService {
     const { path, stat } = file;
     dispatch(this.dispatchers, AppActionKind.SetCurrentFile, file);
     setCurrentNoteState(this.dispatchers, { fetching: true, published: false });
-    const noteInfo = await this.getNotes().findOne({ path });
-    dispatch(this.dispatchers, AppActionKind.SetRemoteNote, noteInfo);
-    const fileSynced = noteInfo && noteInfo.updated === stat.mtime;
-    setCurrentNoteState(this.dispatchers, { fileSynced, fetching: false, published: noteInfo !== null });
-    return noteInfo;
+    const rNote = await this.getNoteByPath(file.path);
+    dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
+    const fileSynced = rNote && rNote.updated === stat.mtime;
+    setCurrentNoteState(this.dispatchers, { fileSynced, fetching: false, published: rNote !== null });
+    return rNote;
+  }
+
+  async getNoteByPath(path: string): Promise<Note> {
+    // TODO: add a NotesService method to fetch a note by path directly
+    const noteByPath = await this.getNotes().findOne({ path });
+    const rNote = await NotesService.instance.getNote(noteByPath._id.toString());
+    return rNote;
   }
 
   async syncFile() {
@@ -56,7 +65,7 @@ export default class NoteSyncService {
       firstPublished: remoteNote && remoteNote.firstPublished ? remoteNote.firstPublished : Date.now(),
       lastPublished: Date.now(),
     });
-    const rNote = await this.getNotes().findOne({ path: file.path });
+    const rNote = await this.getNoteByPath(file.path);
     dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
     setTimeout(() => {
       setCurrentNoteState(this.dispatchers, { publishing: false, published: true, fileSynced: true, synchronizing: false });

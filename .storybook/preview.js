@@ -1,6 +1,17 @@
 import { i18next } from "./i18next.js";
 import { I18nextProvider } from "react-i18next";
 import { addDecorator } from "@storybook/react";
+import TimeAgo from "javascript-time-ago";
+
+import en from "javascript-time-ago/locale/en.json";
+import es from "javascript-time-ago/locale/es.json";
+import fr from "javascript-time-ago/locale/fr.json";
+import nl from "javascript-time-ago/locale/nl.json";
+
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(fr);
+TimeAgo.addLocale(nl);
+TimeAgo.addLocale(es);
 
 addDecorator((storyFn) => <I18nextProvider i18n={i18next}>{storyFn()}</I18nextProvider>);
 
@@ -49,10 +60,10 @@ export const globalTypes = {
         { value: "fr", right: "🇫🇷", title: "French" },
         { value: "nl", right: "🇳🇱", title: "Dutch" },
         { value: "es", right: "🇪🇸", title: "Spanish" },
-        { value: "de", right: "🇩🇪", title: "German" },
-        { value: "it", right: "🇮🇹", title: "Italian" },
-        { value: "pt", right: "🇵🇹", title: "Portuguese" },
-        { value: "ru", right: "🇷🇺", title: "Russian" },
+        // { value: "de", right: "🇩🇪", title: "German" },
+        // { value: "it", right: "🇮🇹", title: "Italian" },
+        // { value: "pt", right: "🇵🇹", title: "Portuguese" },
+        // { value: "ru", right: "🇷🇺", title: "Russian" },
       ],
     },
   },

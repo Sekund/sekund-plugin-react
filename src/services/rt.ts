@@ -1,6 +1,7 @@
-import { EventsAction, EventsActionKind } from "@/state/EventsReducer";
+import { AppAction, AppActionKind } from "@/state/AppReducer";
+import { dispatch } from "@/utils";
 
-export default async function watchEvents(eventsDispatch: React.Dispatch<EventsAction>, subdomain: string, user: Realm.User) {
+export default async function watchEvents(dispatchers: React.Dispatch<AppAction>[], subdomain: string, user: Realm.User) {
   const events = user.mongoClient("mongodb-atlas").db(subdomain).collection("events");
   if (events) {
     console.log("watching events...");
@@ -9,7 +10,7 @@ export default async function watchEvents(eventsDispatch: React.Dispatch<EventsA
         switch (change.operationType) {
           case "insert": {
             const { documentKey, fullDocument } = change;
-            eventsDispatch({ type: EventsActionKind.SetEvent, payload: fullDocument });
+            dispatch(dispatchers, AppActionKind.SetEvent, fullDocument);
             break;
           }
         }

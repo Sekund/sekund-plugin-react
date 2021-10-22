@@ -22,6 +22,7 @@ export type AppState = {
   locale: string;
   plugin: SekundPluginReact;
   userProfile: People;
+  event: any;
 };
 
 export const initialAppState: AppState = {
@@ -39,6 +40,7 @@ export const initialAppState: AppState = {
   currentFile: undefined,
   plugin: undefined,
   userProfile: undefined,
+  event: undefined,
 };
 
 export enum AppActionKind {
@@ -50,6 +52,7 @@ export enum AppActionKind {
   SetSubdomain,
   SetUserProfile,
   SetPlugin,
+  SetEvent,
 }
 
 export type AppAction = {
@@ -79,6 +82,8 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       return { ...state, plugin: payload };
     case AppActionKind.SetUserProfile:
       return { ...state, userProfile: payload };
+    case AppActionKind.SetEvent:
+      return { ...state, event: payload };
 
     default:
       return state;

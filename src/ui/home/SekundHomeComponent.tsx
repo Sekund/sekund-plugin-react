@@ -1,25 +1,15 @@
 import { Note } from "@/domain/Note";
+import { NoteComment } from "@/domain/NoteComment";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import React, { useEffect, useReducer } from "react";
-import { ChatAlt2Icon, HomeIcon, MenuIcon, PlusIcon, UserGroupIcon, UserIcon } from "@heroicons/react/solid";
-import ReactTimeAgo from "react-time-ago";
-import { useTranslation } from "react-i18next";
-import TimeAgo from 'javascript-time-ago'
-
-import en from 'javascript-time-ago/locale/en.json'
-import es from 'javascript-time-ago/locale/es.json'
-import fr from 'javascript-time-ago/locale/fr.json'
-import nl from 'javascript-time-ago/locale/nl.json'
+import { ChatAlt2Icon, UserGroupIcon, UserIcon } from "@heroicons/react/solid";
 import { TFile } from "obsidian";
-
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(fr)
-TimeAgo.addLocale(nl)
-TimeAgo.addLocale(es)
+import React, { useEffect, useReducer } from "react";
+import { useTranslation } from "react-i18next";
+import ReactTimeAgo from "react-time-ago";
 
 type Props = {
   view: { addAppDispatch: Function };
@@ -28,7 +18,7 @@ type Props = {
 
 export const SekundHomeComponent = ({ notesService }: Props) => {
   const { i18n } = useTranslation();
-  const { appState } = useAppContext();
+  const { appState, appDispatch } = useAppContext();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
   const notesProviderState = {
     notesState,
@@ -48,6 +38,25 @@ export const SekundHomeComponent = ({ notesService }: Props) => {
       fetchNotes();
     }
   }, [appState.generalState])
+
+  useEffect(() => {
+    if (!appState.event) {
+      return;
+    }
+    const evt = appState.event;
+    switch (evt.type) {
+      case "addComment":
+        let anote = notes.filter(n => n._id.equals(evt.data.noteId))[0];
+        notesDispatch({ type: NotesActionKind.UpdateNote, payload: { ...anote, comments: [...anote.comments, {} as NoteComment] } })
+        break;
+      case "removeComment":
+        const rnote = notes.filter(n => n._id.equals(evt.data.noteId))[0];
+        rnote.comments.splice(-1);
+        notesDispatch({ type: NotesActionKind.UpdateNote, payload: { ...rnote } })
+        break;
+    }
+  }, [appState.event]);
+
 
   function openFileAtPath(path: string) {
     const file = appState.plugin.app.vault.getAbstractFileByPath(path);

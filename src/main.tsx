@@ -10,6 +10,18 @@ import { HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/
 import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en.json'
+import es from 'javascript-time-ago/locale/es.json'
+import fr from 'javascript-time-ago/locale/fr.json'
+import nl from 'javascript-time-ago/locale/nl.json'
+import watchEvents from "@/services/rt";
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(fr)
+TimeAgo.addLocale(nl)
+TimeAgo.addLocale(es)
 
 interface SekundPluginSettings {
   apiKey: string;
@@ -23,9 +35,9 @@ const DEFAULT_SETTINGS: SekundPluginSettings = {
 
 export default class SekundPluginReact extends Plugin {
 
-  user: Realm.User;
   settings: SekundPluginSettings;
   dispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
+  private authenticatedUsers: { [subdomain: string]: Realm.User } = {};
   private offlineListener: EventListener;
   private onlineListener: EventListener;
 
@@ -79,6 +91,10 @@ export default class SekundPluginReact extends Plugin {
     });
   }
 
+  public getCurrentUser() {
+    return this.authenticatedUsers[this.settings.subdomain];
+  }
+
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
@@ -125,15 +141,18 @@ export default class SekundPluginReact extends Plugin {
         setGeneralState(Object.values(this.dispatchers), appIdResult);
         return;
       default:
-        this.user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
+        const user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
 
-        if (this.user) {
+        if (!this.authenticatedUsers[this.settings.subdomain]) {
+          this.authenticatedUsers[this.settings.subdomain] = user;
 
           const dispatchers = Object.values(this.dispatchers);
 
-          new UsersService(this.user, this.settings.subdomain);
-          new NoteSyncService(this.user, this.settings.subdomain, Object.values(this.dispatchers));
-          new NotesService(this.user, this.settings.subdomain);
+          new UsersService(this.authenticatedUsers[this.settings.subdomain], this.settings.subdomain);
+          new NoteSyncService(this.authenticatedUsers[this.settings.subdomain], this.settings.subdomain, dispatchers);
+          new NotesService(this.authenticatedUsers[this.settings.subdomain], this.settings.subdomain);
+
+          watchEvents(dispatchers, this.settings.subdomain, this.authenticatedUsers[this.settings.subdomain]);
 
           const userProfile = await UsersService.instance.fetchUser();
 
@@ -149,8 +168,10 @@ export default class SekundPluginReact extends Plugin {
           // delay calling the backend for a bit as it seems to result in
           // network errors sometimes
           setTimeout(() => this.handleFileOpen(this.app.workspace.getActiveFile()), 2000);
-        } else {
+        } else if (!user) {
           setGeneralState(Object.values(this.dispatchers), "loginError");
+        } else {
+          console.log("duplicate authentication attempt")
         }
 
         break;
@@ -176,6 +197,7 @@ export default class SekundPluginReact extends Plugin {
 
   updateOnlineStatus() {
     if (!navigator.onLine) {
+      Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
       setGeneralState(Object.values(this.dispatchers), "offline");
     }
 

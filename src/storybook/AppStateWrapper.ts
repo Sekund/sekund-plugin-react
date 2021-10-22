@@ -22,14 +22,14 @@ export default class GeneralStateWrapper extends React.Component {
     if (appContext.appState.generalState !== this.gState) {
       appContext.appDispatch({ type: AppActionKind.SetGeneralState, payload: this.gState });
     }
-    if (appContext.appState.subdomain !== "tailwind") {
-      appContext.appDispatch({ type: AppActionKind.SetSubdomain, payload: "tailwind" });
+    if (appContext.appState.subdomain !== "storybook") {
+      appContext.appDispatch({ type: AppActionKind.SetSubdomain, payload: "storybook" });
     }
     if (appContext.appState.locale !== this.locale) {
       appContext.appDispatch({ type: AppActionKind.SetLocale, payload: this.locale });
     }
     if (appContext.appState.plugin === undefined) {
-      appContext.appDispatch({ type: AppActionKind.SetPlugin, payload: { saveSettings: () => {}, settings: { apiKey: "888555222777AAABBB", subdomain: "tailwind" } } });
+      appContext.appDispatch({ type: AppActionKind.SetPlugin, payload: { saveSettings: () => {}, settings: { apiKey: "888555222777AAABBB", subdomain: "storybook" } } });
     }
     if (this.nState && this.noteStateDiffers(this.nState, appContext.appState.currentNoteState)) {
       appContext.appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: this.nState });

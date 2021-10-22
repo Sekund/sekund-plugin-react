@@ -182,7 +182,7 @@ const allNotesMock = [
     path: "lfxxwylmwgh.jnoqvbypaeisv.zoszfwkdqqy",
     content: "Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.\n\nMauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.",
     publicLink: { $oid: "61716443fc13ae4ad300001c" },
-    sharing: { peoples: [{ _id: "6171606afc13ae1f35000009" }, { _id: "6171606afc13ae1f35000009" }, { _id: "6171606afc13ae1f3500000b" }, { _id: "6171606afc13ae1f35000005" }, { _id: "6171606afc13ae1f3500000d" }], groups: [] },
+    sharing: { peoples: [{ _id: "6171606afc13ae1f35000009" }, { _id: "6171606afc13ae1f3500000b" }, { _id: "6171606afc13ae1f35000005" }, { _id: "6171606afc13ae1f3500000d" }], groups: [] },
     userId: { $oid: "6171606afc13ae1f35000000" },
     comments: [
       { text: "Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.", author: { $oid: "6171606afc13ae1f35000001" }, created: 1600259739000, updated: 1604172666000 },

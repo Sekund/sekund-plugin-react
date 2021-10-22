@@ -4,10 +4,11 @@ import { People } from "@/domain/People";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
+import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const SekundNoteComponent = () => {
@@ -15,14 +16,12 @@ export const SekundNoteComponent = () => {
   const { fileSynced, published, publishing, fetching, synchronizing } = appState.currentNoteState;
   const { t } = useTranslation("plugin");
   const { remoteNote } = appState;
+  const [showSharingModal, setShowSharingModal] = useState(false);
 
   function handleSync() {
     if (!publishing && !fileSynced && !fetching) {
       NoteSyncService.instance.syncFile();
     }
-  }
-
-  function handleShare() {
   }
 
   // update the NoteSyncService's appState whenever it gets updated
@@ -78,7 +77,6 @@ export const SekundNoteComponent = () => {
   function sharing() {
     const sharing = remoteNote.sharing;
     let children = [];
-    console.log("sharing", sharing)
     if (sharing && sharing.groups && sharing.groups.length > 0) {
       children.push(
         <div key="sharing.groups" className="flex -space-x-1 overflow-hidden">
@@ -105,20 +103,27 @@ export const SekundNoteComponent = () => {
     );
     if (children.length > 1) {
       return (
-        <div onClick={handleShare} className="flex items-center flex-shrink-0 cursor-pointer">
+        <div key="sharing.share" onClick={() => setShowSharingModal(true)} className="flex items-center flex-shrink-0 cursor-pointer">
           {children}
         </div>
       );
     }
     return (
-      // <a className="cursor-pointer" key="sharing.share" onClick={noSharing ? undefined : () => setShowSharingModal(true)}>
-      //   Share...
-      // </a>
-      <button type="button" key="sharing.share">
+      <button key="sharing.share" type="button">
         Share
       </button>
     );
   }
+
+  function renderSharingDialog() {
+    if (showSharingModal) {
+      return <SharingModal open={showSharingModal} setOpen={setShowSharingModal} note={remoteNote}></SharingModal>;
+    } else {
+      return null;
+    }
+  }
+
+  // render
 
   if (fetching) {
     return <div className="fixed inset-0 animate-pulse bg-obs-primary-alt">
@@ -146,11 +151,11 @@ export const SekundNoteComponent = () => {
     const children = [];
 
     if (fileSynced) {
-      children.push('(Up to date)')
+      children.push(<span key="uptd">(Up to date)</span>)
     } else {
 
       children.push(
-        <div className={`flex items-center justify-center space-x-1 ${footerTextColor}`} >
+        <div key="sync" className={`flex items-center justify-center space-x-1 ${footerTextColor}`} >
           <svg className={`w-4 h-4 ${synchronizing ? 'animate-spin' : ''}`} viewBox="0 0 42.676513671875 46.36460876464844" width="42.676513671875" height="46.36460876464844" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="currentColor" >
             <path fillRule="evenodd" d="M 4.209 45.954 C 5.744 45.954 6.988 44.71 6.988 43.175 L 6.988 37.336 C 17.065 47.615 34.427 43.775 39.229 30.205 C 39.998 28.209 38.318 26.128 36.205 26.46 C 35.168 26.622 34.311 27.355 33.99 28.354 C 30.421 38.443 17.269 40.884 10.317 32.748 C 10.125 32.525 9.941 32.294 9.764 32.059 L 18.104 32.059 C 20.244 32.059 21.581 29.743 20.511 27.89 C 20.015 27.03 19.098 26.501 18.104 26.501 L 4.209 26.501 C 2.674 26.501 1.43 27.745 1.43 29.28 L 1.43 43.175 C 1.43 44.71 2.674 45.954 4.209 45.954 Z M 4.231 20.784 C 5.679 21.295 7.266 20.536 7.777 19.089 C 11.347 9 24.498 6.559 31.45 14.694 C 31.642 14.918 31.826 15.148 32.003 15.384 L 23.663 15.384 C 21.523 15.384 20.186 17.7 21.256 19.553 C 21.753 20.413 22.67 20.942 23.663 20.942 L 37.558 20.942 C 39.093 20.942 40.338 19.698 40.338 18.163 L 40.338 4.268 C 40.338 2.128 38.022 0.791 36.169 1.861 C 35.309 2.357 34.779 3.275 34.779 4.268 L 34.779 10.107 C 24.702 -0.172 7.34 3.668 2.539 17.238 C 2.028 18.685 2.787 20.273 4.234 20.784 Z" clipRule="evenodd" transform="matrix(-1, 0, 0, -1, 41.7680015563965, 47.43833541870118)" />
           </svg>
@@ -168,7 +173,7 @@ export const SekundNoteComponent = () => {
         <div className="fixed inset-0">
           <div className="flex flex-col items-center justify-center w-full h-full p-2">
             <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
-            <button onClick={handleShare}>{t('plugin:Share')}</button>
+            <button onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
           </div>
         </div>
         : <NoteComments />}
@@ -179,6 +184,7 @@ export const SekundNoteComponent = () => {
           {t('plugin:deleteFromSekund')}
         </a>
       </div>
+      {renderSharingDialog()}
     </>)
   }
 }

@@ -1,10 +1,14 @@
+import SekundPluginReact from "@/main";
+import ServerlessService from "@/services/ServerlessService";
+import { callFunction } from "@/services/ServiceUtils";
 import { ObjectId } from "bson";
 import { Group } from "../domain/Group";
 import { People } from "../domain/People";
 
-export default class PeoplesService {
+export default class PeoplesService extends ServerlessService {
   private static _instance: PeoplesService;
-  constructor(private user: Realm.User, private subdomain: string) {
+  constructor(plugin: SekundPluginReact) {
+    super(plugin);
     PeoplesService._instance = this;
   }
 
@@ -13,7 +17,7 @@ export default class PeoplesService {
   }
 
   async getUserGroups(): Promise<Group[]> {
-    return this.user.functions.getGroups();
+    return callFunction(this.plugin, "getGroups");
   }
 
   async getUserNetworkStats(): Promise<{ nPeoples: number; nGroups: number }> {
@@ -21,7 +25,7 @@ export default class PeoplesService {
   }
 
   async getRawPeoples(): Promise<People[]> {
-    const { sharingNotes, sharedNotes } = await this.user.functions.peoples();
+    const { sharingNotes, sharedNotes } = await callFunction(this.plugin, "peoples");
 
     const sharing: Array<{ sharing: { peoples: ObjectId[] } }> = sharingNotes;
     const shared: Array<{ userId: ObjectId }> = sharedNotes;
@@ -75,7 +79,7 @@ export default class PeoplesService {
   async getPeoples(): Promise<People[]> {
     const peoples: Array<People> = await this.getRawPeoples();
 
-    const atlasUsers = this.user.mongoClient("mongodb-atlas").db(this.subdomain).collection("users");
+    const atlasUsers = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("users");
     const users = await atlasUsers?.find({ _id: { $in: peoples.map((p) => p._id) } });
 
     const peopleData: Array<People> = peoples.map((p) => {
@@ -95,7 +99,7 @@ export default class PeoplesService {
   }
 
   async getPeople(pid: string): Promise<People> {
-    const { user, sharingNotes, sharedNotes } = await this.user.functions.people(pid);
+    const { user, sharingNotes, sharedNotes } = await callFunction(this.plugin, "people", [pid]);
 
     const people = {
       _id: user._id,

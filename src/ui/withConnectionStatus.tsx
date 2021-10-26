@@ -21,14 +21,13 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
     appState,
     appDispatch,
   };
-  const sekundRoot = useRef(null)
+  const sekundRoot = useRef<HTMLDivElement>(null)
 
   // allow SekundView and NotesService to mutate the state
   if (props.view) {
     props.view.addAppDispatch(appProviderState);
   }
 
-  // update the NotesService's appState whenever it gets updated
   useEffect(() => {
     i18n.changeLanguage(appState.locale)
   }, [appState.locale]);

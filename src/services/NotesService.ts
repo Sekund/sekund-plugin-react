@@ -2,10 +2,14 @@ import { ObjectID } from "bson";
 import { Note } from "../domain/Note";
 import { People } from "../domain/People";
 import { Group } from "@/domain/Group";
+import { callFunction } from "@/services/ServiceUtils";
+import ServerlessService from "@/services/ServerlessService";
+import SekundPluginReact from "@/main";
 
-export default class NotesService {
+export default class NotesService extends ServerlessService {
   private static _instance: NotesService;
-  constructor(private user: Realm.User, private subdomain: string) {
+  constructor(plugin: SekundPluginReact) {
+    super(plugin);
     NotesService._instance = this;
   }
 
@@ -14,15 +18,15 @@ export default class NotesService {
   }
 
   async getNote(noteId: string): Promise<Note | undefined> {
-    return await this.user.functions.getNote(noteId);
+    return await callFunction(this.plugin, "getNote", [noteId]);
   }
 
   notesColl() {
-    return this.user.mongoClient("mongodb-atlas").db(this.subdomain).collection("notes");
+    return this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("notes");
   }
 
   async getNotes(oldest: number, limit: number): Promise<Note[]> {
-    return await this.user.functions.userNotes(oldest, limit);
+    return await callFunction(this.plugin, "userNotes", [oldest, limit]);
   }
 
   async hasMoreNotes(last: Note): Promise<number> {
@@ -70,7 +74,7 @@ export default class NotesService {
   }
 
   async removeComment(noteId: ObjectID, created: number, updated: number) {
-    return await this.user.functions.removeComment(noteId, created, updated);
+    return await callFunction(this.plugin, "removeComment", [noteId, created, updated]);
   }
 
   /**
@@ -80,22 +84,22 @@ export default class NotesService {
    * @param comment
    */
   async addNoteComment(noteId: ObjectID, comment: string, author: string) {
-    return await this.user.functions.addComment(noteId, comment, author);
+    return await callFunction(this.plugin, "addComment", [noteId, comment, author]);
   }
 
   async editComment(noteId: ObjectID, comment: string, created: number, updated: number) {
-    return await this.user.functions.editComment(noteId, comment, created, updated);
+    return await callFunction(this.plugin, "editComment", [noteId, comment, created, updated]);
   }
 
   async getSharedNotes(people: string) {
-    return await this.user.functions.sharedNotes(people);
+    return await callFunction(this.plugin, "sharedNotes", [people]);
   }
 
   async getSharingNotes(people: string) {
-    return await this.user.functions.sharingNotes(people);
+    return await callFunction(this.plugin, "sharingNotes", [people]);
   }
 
   async getGroupNotes(groupId: string) {
-    return await this.user.functions.groupNotes(groupId);
+    return await callFunction(this.plugin, "groupNotes", [groupId]);
   }
 }

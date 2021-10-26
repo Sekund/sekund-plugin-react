@@ -4,6 +4,7 @@ import React from 'react';
 import SekundNoteComponentHOC, { SekundNoteComponent } from './SekundNoteComponent';
 import '/global.css';
 import notes from "@/mockdata/NotesMock";
+import { TFile } from 'obsidian';
 
 export default {
     title: 'Sekund/Note',
@@ -12,7 +13,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, locale);
+    const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale);
 
     const InjectedNoteComponent = SekundNoteComponentHOC({ view: wrapper });
 
@@ -22,35 +23,41 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 export const Unpublished = Template.bind({});
 Unpublished.args = {
     gState: "allGood",
-    nState: { published: false }
+    nState: { fileSynced: false, fetching: false, published: false },
+    localFile: {} as TFile
 };
 
 export const PublishedAndSynced = Template.bind({});
 PublishedAndSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
-    note: notes[10]
+    note: notes[10],
+    localFile: {} as TFile
+
 };
 
 export const PublishedNotSharing = Template.bind({});
 PublishedNotSharing.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
-    note: { ...notes[10], sharing: {} }
+    note: { ...notes[10], sharing: {} },
+    localFile: {} as TFile
 };
 
 export const PublishedSharingNoComments = Template.bind({});
 PublishedSharingNoComments.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
-    note: { ...notes[10], comments: [] }
+    note: { ...notes[10], comments: [] },
+    localFile: {} as TFile
 };
 
 export const PublishedAndNotSynced = Template.bind({});
 PublishedAndNotSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: false },
-    note: notes[10]
+    note: notes[10],
+    localFile: {} as TFile
 };
 
 export const Publishing = Template.bind({});
@@ -62,13 +69,22 @@ Publishing.args = {
 export const FetchingRemoteNote = Template.bind({});
 FetchingRemoteNote.args = {
     gState: "allGood",
-    nState: { fetching: true }
+    nState: { fetching: true },
+    localFile: {} as TFile
 };
 
 export const Synchronizing = Template.bind({});
 Synchronizing.args = {
     gState: "allGood",
-    nState: { published: true, synchronizing: true }
+    nState: { published: true, synchronizing: true },
+    localFile: {} as TFile
+};
+
+export const NoLocalFile = Template.bind({});
+NoLocalFile.args = {
+    gState: "allGood",
+    nState: { published: true },
+    localFile: null
 };
 
 

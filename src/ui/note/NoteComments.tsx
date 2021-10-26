@@ -5,28 +5,31 @@ import { useAppContext } from "@/state/AppContext";
 import { AppActionKind } from "@/state/AppReducer";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import React, { Fragment, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import TextareaAutosize from "react-textarea-autosize";
 
 export default function NoteComments() {
   const { appState, appDispatch } = useAppContext();
+  const { t } = useTranslation(["common", "plugin"]);
   const { userProfile, plugin, remoteNote } = appState;
 
-  const guestImage = userProfile.image;
-  const guestName = userProfile.name;
-  const guestEmail = userProfile.email;
+  const guestImage = userProfile?.image;
+  const guestName = userProfile?.name;
+  const guestEmail = userProfile?.email;
   const sendButton = useRef<HTMLButtonElement>(null);
   const [areaText, setAreaText] = useState("");
 
   const localComments = remoteNote?.comments || [];
 
   useEffect(() => {
+    const { remoteNote } = appState;
     if (!appState.event || !remoteNote) {
       return;
     }
     const evt = appState.event;
     switch (evt.type) {
       case "addComment":
-        if (evt.data.noteId.equals(appState.remoteNote._id)) {
+        if (evt.data.noteId.equals(remoteNote._id)) {
           if (evt.updateTime > remoteNote.updated) {
             const updtNote = {
               ...appState.remoteNote,
@@ -41,7 +44,7 @@ export default function NoteComments() {
         break;
       case "removeComment":
         if (evt.data.noteId.equals(appState.remoteNote?._id)) {
-          if (evt.updateTime > appState.remoteNote.updated) {
+          if (evt.updateTime > remoteNote.updated) {
             const updtNote = {
               ...appState.remoteNote,
               comments: appState.remoteNote?.comments.filter((c) => !(c.updated === evt.data.updated && c.created === evt.data.created)),
@@ -55,7 +58,7 @@ export default function NoteComments() {
         break;
       case "editComment":
         if (evt.data.noteId.equals(appState.remoteNote?._id)) {
-          if (evt.updateTime > appState.remoteNote.updated) {
+          if (evt.updateTime > remoteNote.updated) {
             const { text, commentIdx } = evt.data;
             const updtNote = {
               ...appState.remoteNote,
@@ -75,7 +78,7 @@ export default function NoteComments() {
   async function addComment() {
     if (appState.remoteNote) {
       const textarea = document.getElementById("comment") as HTMLTextAreaElement;
-      NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin.getCurrentUser().customData._id);
+      NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin?.user.customData._id);
       textarea.value = "";
     }
   }
@@ -122,10 +125,10 @@ export default function NoteComments() {
       </div>
       <div className="flex justify-end w-full pt-2">
         <button onClick={() => clearComment()} type="button">
-          Cancel
+          {t('clear')}
         </button>
         <button ref={sendButton} onClick={addComment} type="button">
-          Send
+          {t('send')}
         </button>
       </div>
     </div>

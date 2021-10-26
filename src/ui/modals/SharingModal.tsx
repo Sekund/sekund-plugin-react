@@ -10,6 +10,7 @@ import { useAppContext } from "@/state/AppContext";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import React, { Fragment, useEffect, useRef, useState } from "react";
+import { GroupBase } from "react-select";
 import AsyncSelect from "react-select/async";
 import Select from "react-select/dist/declarations/src/Select";
 
@@ -27,7 +28,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   const { userProfile } = appState;
   const [selectedUserOrGroup, setSelectedUserOrGroup] = useState<People | Group | null>(null);
   const forceUpdate = () => setState(state + 1);
-  const selectInput = useRef<Select>();
+  const selectInput = useRef<any>();
 
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
@@ -47,7 +48,9 @@ export default function SharingModal({ open, setOpen, note }: Props) {
 
   async function loadOptions(inputValue: string): Promise<SelectOption[]> {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
-    const found = await UsersService.instance.findUsers(inputValue.toLowerCase(), [...alreadySharing, userProfile._id]);
+    if (userProfile) { alreadySharing.push(userProfile._id) }
+    const found = await UsersService.instance
+      .findUsers(inputValue.toLowerCase(), alreadySharing);
     return found;
   }
 
@@ -78,7 +81,9 @@ export default function SharingModal({ open, setOpen, note }: Props) {
         await NotesService.instance.addSharingGroup(note._id, selectedUserOrGroup as Group);
         note.sharing?.groups?.push(selectedUserOrGroup as Group);
       }
-      selectInput.current.clearValue();
+      if (selectInput.current) {
+        selectInput.current.clearValue();
+      }
       forceUpdate();
     }
   }

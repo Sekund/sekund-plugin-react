@@ -16,12 +16,12 @@ export type NoteState = {
 export type AppState = {
   generalState: GeneralState;
   currentNoteState: NoteState;
-  remoteNote: Note;
+  remoteNote: Note | undefined;
   subdomain: string;
-  currentFile: TFile;
+  currentFile: TFile | undefined;
   locale: string;
-  plugin: SekundPluginReact;
-  userProfile: People;
+  plugin: SekundPluginReact | undefined;
+  userProfile: People | undefined;
   event: any;
 };
 

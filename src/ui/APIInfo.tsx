@@ -2,14 +2,18 @@ import i18nConf from '../i18n.config';
 import { useAppContext } from '@/state/AppContext';
 import React, { useRef } from 'react';
 import { useTranslation } from "react-i18next";
+import { ExclamationIcon } from '@heroicons/react/solid';
 
 export default function APIInfo() {
 
     const { appState } = useAppContext();
-    const subdomainField = useRef<HTMLInputElement>()
-    const apiKeyField = useRef<HTMLInputElement>()
+    const subdomainField = useRef<any>()
+    const apiKeyField = useRef<any>()
 
     // const settings = { apiKey: undefined, subdomain: undefined }
+    if (!appState.plugin) {
+        return <ExclamationIcon className="w-6 h-6" />
+    }
     const { apiKey, subdomain } = appState.plugin.settings;
 
     const { t } = useTranslation([
@@ -17,12 +21,12 @@ export default function APIInfo() {
     ], { i18n: i18nConf });
 
     function saveSettings() {
-        if (subdomainField.current && apiKeyField.current) {
+        if (subdomainField.current && apiKeyField.current && appState.plugin) {
             appState.plugin.settings.subdomain = subdomainField.current.value;
             appState.plugin.settings.apiKey = apiKeyField.current.value;
             appState.plugin.saveSettings();
         }
-        appState.plugin.attemptConnection(0);
+        appState.plugin?.attemptConnection();
     }
 
     return (

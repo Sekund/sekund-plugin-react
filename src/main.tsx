@@ -1,7 +1,7 @@
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
 import UsersService from "@/services/UsersService";
-import { AppAction, AppActionKind } from "@/state/AppReducer";
+import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
@@ -35,11 +35,12 @@ const DEFAULT_SETTINGS: SekundPluginSettings = {
 
 export default class SekundPluginReact extends Plugin {
 
-  settings: SekundPluginSettings;
+  settings: SekundPluginSettings = {} as SekundPluginSettings;
   dispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
-  private authenticatedUsers: { [subdomain: string]: Realm.User } = {};
-  private offlineListener: EventListener;
-  private onlineListener: EventListener;
+  private registeredEvents = false;
+  private authenticatedUsers: { [subdomain: string]: Realm.User | null } = {};
+  private offlineListener?: EventListener;
+  private onlineListener?: EventListener;
 
   async onload() {
     await this.loadSettings();
@@ -62,7 +63,10 @@ export default class SekundPluginReact extends Plugin {
             type: NOTE_VIEW_TYPE,
           });
         }
-        this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(NOTE_VIEW_TYPE).first());
+        const firstLeaf = this.app.workspace.getLeavesOfType(NOTE_VIEW_TYPE).first();
+        if (firstLeaf) {
+          this.app.workspace.revealLeaf(firstLeaf);
+        }
       },
     });
 
@@ -75,7 +79,10 @@ export default class SekundPluginReact extends Plugin {
             type: HOME_VIEW_TYPE,
           });
         }
-        this.app.workspace.revealLeaf(this.app.workspace.getLeavesOfType(HOME_VIEW_TYPE).first());
+        const leaf = this.app.workspace.getLeavesOfType(HOME_VIEW_TYPE).first();
+        if (leaf) {
+          this.app.workspace.revealLeaf(leaf);
+        }
       },
     });
 
@@ -103,6 +110,17 @@ export default class SekundPluginReact extends Plugin {
     await this.saveData(this.settings);
   }
 
+  public get user(): Realm.User {
+    const user = this.authenticatedUsers[this.settings.subdomain];
+    if (user) {
+      return user;
+    } else throw new Error("Attempt to access unexisting user")
+  }
+
+  public get subdomain(): string {
+    return this.settings.subdomain;
+  }
+
   private async getRealmAppId(): Promise<string | "noSubdomain" | "noSuchSubdomain"> {
     if (this.settings.subdomain && this.settings.subdomain !== "") {
       const publicUser = await getApiKeyConnection(new Realm.App(PUBLIC_APP_ID), PUBLIC_APIKEY);
@@ -120,14 +138,17 @@ export default class SekundPluginReact extends Plugin {
     return "noSubdomain";
   }
 
-  public readonly attemptConnection = async (attempts: number) => {
+  public readonly attemptConnection = async (): Promise<GeneralState> => {
+    console.log("attempting connection");
+
     if (!this.settings.apiKey || this.settings.apiKey === "") {
       if (!this.settings.subdomain || this.settings.subdomain === "") {
         setGeneralState(Object.values(this.dispatchers), "noSettings");
+        return 'noSettings'
       } else {
         setGeneralState(Object.values(this.dispatchers), "noApiKey");
+        return 'noApiKey';
       }
-      return;
     }
 
     dispatch(Object.values(this.dispatchers), AppActionKind.SetSubdomain, this.settings.subdomain);
@@ -139,29 +160,34 @@ export default class SekundPluginReact extends Plugin {
       case "noSubdomain": // this could be redundant since we already checked for the subdomain
       case "noSuchSubdomain":
         setGeneralState(Object.values(this.dispatchers), appIdResult);
-        return;
+        return appIdResult;
       default:
         const user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
 
-        if (!this.authenticatedUsers[this.settings.subdomain]) {
+        if (user) {
+          console.log("successful login")
+
           this.authenticatedUsers[this.settings.subdomain] = user;
 
           const dispatchers = Object.values(this.dispatchers);
 
-          new UsersService(this.authenticatedUsers[this.settings.subdomain], this.settings.subdomain);
-          new NoteSyncService(this.authenticatedUsers[this.settings.subdomain], this.settings.subdomain, dispatchers);
-          new NotesService(this.authenticatedUsers[this.settings.subdomain], this.settings.subdomain);
+          new UsersService(this);
+          new NoteSyncService(this, dispatchers);
+          new NotesService(this);
 
-          watchEvents(dispatchers, this.settings.subdomain, this.authenticatedUsers[this.settings.subdomain]);
+          watchEvents(dispatchers, this.settings.subdomain, user);
 
           const userProfile = await UsersService.instance.fetchUser();
 
           dispatch(dispatchers, AppActionKind.SetUserProfile, userProfile)
           setGeneralState(dispatchers, "allGood");
 
-          this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
-          this.registerEvent(this.app.vault.on("modify", this.handleModify));
-          this.registerEvent(this.app.vault.on("rename", this.handleRename));
+          if (!this.registeredEvents) {
+            this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
+            this.registerEvent(this.app.vault.on("modify", this.handleModify));
+            this.registerEvent(this.app.vault.on("rename", this.handleRename));
+            this.registeredEvents = true;
+          }
           // this.registerEvent(this.app.vault.on('delete',
           // this.handleDelete));
 
@@ -170,17 +196,18 @@ export default class SekundPluginReact extends Plugin {
           setTimeout(() => this.handleFileOpen(this.app.workspace.getActiveFile()), 2000);
         } else if (!user) {
           setGeneralState(Object.values(this.dispatchers), "loginError");
-        } else {
-          console.log("duplicate authentication attempt")
+          return 'loginError';
         }
 
         break;
     }
+    return 'allGood'
   };
 
-
-  public readonly handleFileOpen = async (file: TFile): Promise<void> => {
-    NoteSyncService.instance.compareNotes(file);
+  public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
+    if (file) {
+      NoteSyncService.instance.compareNotes(file);
+    }
   };
 
   public readonly handleRename = async (file: TFile): Promise<void> => {
@@ -195,7 +222,7 @@ export default class SekundPluginReact extends Plugin {
     this.dispatchers[viewType] = dispatcher;
   }
 
-  updateOnlineStatus() {
+  async updateOnlineStatus() {
     if (!navigator.onLine) {
       Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
       setGeneralState(Object.values(this.dispatchers), "offline");
@@ -207,12 +234,13 @@ export default class SekundPluginReact extends Plugin {
     if (this.offlineListener) {
       window.removeEventListener("offline", this.offlineListener);
     }
-    window.addEventListener("online", (this.onlineListener = () => setTimeout(() => this.attemptConnection(0), 2000)));
-    window.addEventListener("offline", (this.offlineListener = () => this.updateOnlineStatus()));
 
     if (navigator.onLine) {
-      this.attemptConnection(0);
+      await this.attemptConnection();
     }
+
+    window.addEventListener("online", (this.onlineListener = () => setTimeout(() => this.attemptConnection(), 100)));
+    window.addEventListener("offline", (this.offlineListener = () => this.updateOnlineStatus()));
   }
 }
 
@@ -226,7 +254,7 @@ class SekundSettingsTab extends PluginSettingTab {
 
   hide(): void {
     this.plugin.loadSettings();
-    setTimeout(() => this.plugin.attemptConnection(0), 100);
+    setTimeout(() => this.plugin.attemptConnection(), 100);
   }
 
   display(): void {

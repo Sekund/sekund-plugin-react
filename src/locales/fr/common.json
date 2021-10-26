@@ -38,5 +38,6 @@
     "tryItOut": "Essayer",
     "new_group": "Nouveau Groupe",
     "sendMagicLink": "Envoyer le lien magique",
-    "yourEmailAddress": "Votre adresse électronique"
+    "yourEmailAddress": "Votre adresse électronique",
+    "clear": "Effacer"
 }

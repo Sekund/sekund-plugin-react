@@ -2,6 +2,7 @@ import { Note } from "@/domain/Note";
 import { NoteComment } from "@/domain/NoteComment";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
+import { AppActionKind } from "@/state/AppReducer";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";
@@ -11,12 +12,12 @@ import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
-type Props = {
+export type HomeComponentProps = {
   view: { addAppDispatch: Function };
-  notesService: NotesService;
+  notesService: NotesService | undefined;
 }
 
-export const SekundHomeComponent = ({ notesService }: Props) => {
+export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
   const { i18n } = useTranslation();
   const { appState, appDispatch } = useAppContext();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -28,19 +29,21 @@ export const SekundHomeComponent = ({ notesService }: Props) => {
   const { notes } = notesState;
 
   async function fetchNotes() {
+    if (!notesService) {
+      notesService = NotesService.instance;
+    }
     const notes = await notesService.getNotes(Date.now(), 30);
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: notes });
   }
 
   useEffect(() => {
     if (appState.generalState === "allGood") {
-      if (!notesService) notesService = NotesService.instance;
       fetchNotes();
     }
   }, [appState.generalState])
 
   useEffect(() => {
-    if (!appState.event) {
+    if (!appState.event || !notes) {
       return;
     }
     const evt = appState.event;
@@ -59,16 +62,18 @@ export const SekundHomeComponent = ({ notesService }: Props) => {
 
 
   function openFileAtPath(path: string) {
-    const file = appState.plugin.app.vault.getAbstractFileByPath(path);
-    if (file) {
+    const file = appState.plugin?.app.vault.getAbstractFileByPath(path);
+    console.log("setting current file to ", file);
+    if (file && appState.plugin?.app.workspace.activeLeaf) {
       appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
     } else {
-      // TODO: add a warning
+      console.log("non existing")
+      appDispatch({ type: AppActionKind.SetCurrentFile, payload: undefined })
     }
   }
 
   function stats(note: Note) {
-    const children = [];
+    const children: Array<JSX.Element> = [];
     if (note.sharing.peoples && note.sharing.peoples.length > 0) {
       children.push(<div key="sppls" className="flex items-center"><UserIcon className="w-4 h-4" />{note.sharing.peoples.length}</div>)
     }
@@ -83,7 +88,7 @@ export const SekundHomeComponent = ({ notesService }: Props) => {
 
   return (<NotesContext.Provider value={notesProviderState}>
     <div className="flex flex-col w-full overflow-auto space-y-2px">
-      {notes.map((note: Note) => (
+      {notes?.map((note: Note) => (
         <React.Fragment key={note._id.toString()}>
           <div className="flex flex-col px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt"
             onClick={() => openFileAtPath(note.path)}>
@@ -101,4 +106,4 @@ export const SekundHomeComponent = ({ notesService }: Props) => {
   </NotesContext.Provider>)
 }
 
-export default (props: Props) => withConnectionStatus(props)(SekundHomeComponent)
+export default (props: HomeComponentProps) => withConnectionStatus(props)(SekundHomeComponent)

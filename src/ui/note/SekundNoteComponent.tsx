@@ -1,13 +1,12 @@
 import { Group } from "@/domain/Group";
 import { isSharing } from "@/domain/Note";
-import { People } from "@/domain/People";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
+import { DotsHorizontalIcon, ExclamationIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,10 +14,11 @@ export const SekundNoteComponent = () => {
   const { appState } = useAppContext();
   const { fileSynced, published, publishing, fetching, synchronizing } = appState.currentNoteState;
   const { t } = useTranslation("plugin");
-  const { remoteNote } = appState;
+  const { remoteNote, currentFile } = appState;
   const [showSharingModal, setShowSharingModal] = useState(false);
 
   function handleSync() {
+    console.log("handleSync Handler")
     if (!publishing && !fileSynced && !fetching) {
       NoteSyncService.instance.syncFile();
     }
@@ -29,7 +29,7 @@ export const SekundNoteComponent = () => {
     if (NoteSyncService.instance) {
       NoteSyncService.instance.appState = appState;
     }
-  }, [appState.currentNoteState]);
+  }, [appState.currentNoteState, appState.currentFile]);
 
   function handleUnpublish() {
     NoteSyncService.instance.unpublish();
@@ -74,9 +74,8 @@ export const SekundNoteComponent = () => {
     );
   }
 
-  function sharing() {
-    const sharing = remoteNote.sharing;
-    let children = [];
+  function sharing(sharing) {
+    let children: Array<JSX.Element> = [];
     if (sharing && sharing.groups && sharing.groups.length > 0) {
       children.push(
         <div key="sharing.groups" className="flex -space-x-1 overflow-hidden">
@@ -116,7 +115,7 @@ export const SekundNoteComponent = () => {
   }
 
   function renderSharingDialog() {
-    if (showSharingModal) {
+    if (showSharingModal && remoteNote) {
       return <SharingModal open={showSharingModal} setOpen={setShowSharingModal} note={remoteNote}></SharingModal>;
     } else {
       return null;
@@ -124,6 +123,8 @@ export const SekundNoteComponent = () => {
   }
 
   // render
+
+  console.log("current file", currentFile);
 
   if (fetching) {
     return <div className="fixed inset-0 animate-pulse bg-obs-primary-alt">
@@ -145,10 +146,18 @@ export const SekundNoteComponent = () => {
         </div>
       </div>
     );
-  } else {
+  } else if (!currentFile) {
 
+    return <div className="fixed inset-0">
+      <div className="flex flex-col items-center justify-center w-full h-full p-2">
+        <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t('plugin:deleteFromSekundDesc')}</span>
+        <button onClick={handleUnpublish} className="flex items-center"><TrashIcon className="w-4 h-4 mr-1" />{t('plugin:deleteFromSekund')}</button>
+      </div>
+    </div>
+
+  } else {
     const footerTextColor = fetching ? 'text-obs-faint' : 'text-obs-muted';
-    const children = [];
+    const children: Array<JSX.Element> = [];
 
     if (fileSynced) {
       children.push(<span key="uptd">(Up to date)</span>)
@@ -165,7 +174,7 @@ export const SekundNoteComponent = () => {
     }
 
     if (remoteNote && isSharing(remoteNote)) {
-      children.push(sharing())
+      children.push(sharing(remoteNote.sharing))
     }
 
     return (<>

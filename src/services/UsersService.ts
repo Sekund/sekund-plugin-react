@@ -1,10 +1,15 @@
 import { People } from "@/domain/People";
 import { SelectOption } from "@/domain/Types";
 import { ObjectId } from "bson";
+import { callFunction } from "@/services/ServiceUtils";
+import ServerlessService from "@/services/ServerlessService";
+import SekundPluginReact from "@/main";
 
-export default class UsersService {
+export default class UsersService extends ServerlessService {
   private static _instance: UsersService;
-  constructor(private user: Realm.User, private subdomain: string) {
+
+  constructor(plugin: SekundPluginReact) {
+    super(plugin);
     UsersService._instance = this;
   }
 
@@ -13,24 +18,24 @@ export default class UsersService {
   }
 
   async findUsers(letters: string, userIds: ObjectId[]): Promise<SelectOption[]> {
-    const found: { users: any[]; groups: any[] } = (await this.user.functions.findUsersAndGroups(letters, userIds)) || {};
+    const found: { users: any[]; groups: any[] } = (await callFunction(this.plugin, "findUsersAndGroups", [letters, userIds])) || {};
     return found.users.map((user) => ({ label: user.name || user.email, value: { ...user, type: "user" } })).concat(found.groups.map((group) => ({ label: `${group.name} (Group)`, value: { ...group, type: "group" } })));
   }
 
   async fetchUser(): Promise<Record<string, unknown> | undefined> {
-    const atlasUsers = this.user.mongoClient("mongodb-atlas").db(this.subdomain).collection("users");
+    const atlasUsers = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("users");
     if (atlasUsers) {
-      const found = await atlasUsers.findOne({ _id: new ObjectId(this.user.customData._id) });
+      const found = await atlasUsers.findOne({ _id: new ObjectId(this.plugin.user.customData._id) });
       return found;
     }
     return undefined;
   }
 
   async saveUser(p: People) {
-    const atlasUsers = this.user.mongoClient("mongodb-atlas").db(this.subdomain).collection("users");
+    const atlasUsers = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("users");
     const pNonNullValues = Object.entries(p).reduce((a: any, [k, v]) => (v == null ? a : ((a[k] = v), a)), {});
     if (atlasUsers) {
-      const found = await atlasUsers.updateOne({ _id: new ObjectId(this.user.customData._id) }, { $set: { ...pNonNullValues } }, { upsert: true });
+      const found = await atlasUsers.updateOne({ _id: new ObjectId(this.plugin.user.customData._id) }, { $set: { ...pNonNullValues } }, { upsert: true });
     }
   }
 }

@@ -1,7 +1,7 @@
 {
     "apiKey": "API sleutel",
     "cancel": "Annuleren",
-    "close": "Sluiten",
+    "close": "Dichtbij",
     "copied": "gekopieerd!",
     "copy": "Kopiëren",
     "emailAddress": "E-mailadres",
@@ -38,5 +38,6 @@
     "tryItOut": "Probeer",
     "new_group": "Nieuwe Groep",
     "sendMagicLink": "Stuur magische link",
-    "yourEmailAddress": "Uw e-mail adres"
+    "yourEmailAddress": "Uw e-mail adres",
+    "clear": "Afvegen"
 }

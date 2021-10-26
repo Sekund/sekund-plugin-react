@@ -2,6 +2,7 @@ import notes from "@/mockdata/NotesMock";
 import NotesService from '@/services/NotesService';
 import AppStateWrapper from '@/storybook/AppStateWrapper';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { TFile } from "obsidian";
 import React from 'react';
 import SekundHomeComponentHOC, { SekundHomeComponent } from './SekundHomeComponent';
 import '/global.css';
@@ -13,7 +14,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, args.nState, null, locale);
+    const wrapper = new AppStateWrapper(args.gState, args.nState, null, {} as TFile, locale);
     const notesService = {
         getNotes: (oldest: number, limit: number) => args.notes
     } as NotesService;

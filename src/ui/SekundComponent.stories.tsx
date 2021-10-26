@@ -1,6 +1,7 @@
 import AppStateWrapper from '@/storybook/AppStateWrapper';
 import withConnectionStatus from '@/ui/withConnectionStatus';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { TFile } from 'obsidian';
 import React from 'react';
 import '/global.css';
 
@@ -18,7 +19,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, null, null, locale)
+    const wrapper = new AppStateWrapper(args.gState, null, null, {} as TFile, locale)
     const WrappedComponent = DummyWrappedComponent(wrapper);
     return <WrappedComponent />
 };

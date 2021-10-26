@@ -1,8 +1,14 @@
 import "obsidian";
 
+type FSEvent = "file-open" | "modify" | "rename";
+
 declare module "obsidian" {
   interface Workspace {
-    on(name: "react-components:component-updated", callback: () => void): EventRef;
+    on(name: FSEvent, callback: (file: TFile) => Promise<void>): EventRef;
+  }
+
+  interface Vault {
+    on(name: FSEvent, callback: (file: TFile) => Promise<void>): EventRef;
   }
 
   interface MarkdownPostProcessorContext {

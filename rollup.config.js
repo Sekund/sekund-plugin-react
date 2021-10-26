@@ -18,7 +18,7 @@ export default {
   output: [
     {
       file: "main.js",
-      sourcemap: true,
+      sourcemap: "inline",
       format: "cjs",
       exports: "default",
       banner,
@@ -38,7 +38,7 @@ export default {
         insertAt: "top",
       },
     }),
-    typescript(),
+    typescript({ sourceMap: false }),
     nodeResolve({ browser: true }),
     commonjs(),
     nodePolyfills(),

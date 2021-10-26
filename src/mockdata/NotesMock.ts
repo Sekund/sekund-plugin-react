@@ -452,6 +452,7 @@ export default allNotesMock.map((nd: any) => {
   return {
     ...nd,
     _id: new ObjectID(nd._id.$oid),
+    image: `http://next.sekund.io${nd.image}`,
     comments,
   } as Note;
 });

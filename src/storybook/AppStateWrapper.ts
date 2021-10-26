@@ -1,20 +1,23 @@
 import { Note } from "@/domain/Note";
 import { AppContextType } from "@/state/AppContext";
-import { AppActionKind, GeneralState, initialAppState, NoteState } from "@/state/AppReducer";
+import { AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
 import ObjectID from "bson-objectid";
+import { TFile } from "obsidian";
 import React from "react";
 
 export default class GeneralStateWrapper extends React.Component {
-  private gState: GeneralState;
-  private nState: Partial<NoteState>;
+  private gState: GeneralState | null;
+  private nState: Partial<NoteState> | null;
   private locale: string;
-  private note: Note;
+  private note: Note | null;
+  private localFile: TFile | null;
 
-  constructor(gState: GeneralState, nState: Partial<NoteState>, note: Note, locale: string) {
+  constructor(gState: GeneralState | null, nState: Partial<NoteState> | null, note: Note | null, localFile: TFile | null, locale: string) {
     super({});
     this.gState = gState;
     this.locale = locale;
     this.nState = nState;
+    this.localFile = localFile;
     this.note = note;
   }
 
@@ -40,9 +43,12 @@ export default class GeneralStateWrapper extends React.Component {
     if (!appContext.appState.userProfile) {
       appContext.appDispatch({ type: AppActionKind.SetUserProfile, payload: { _id: new ObjectID(), image: "/avatars/1.jpeg", name: "Candide Kemmler", email: "hi@sekund.io" } });
     }
+    if (appContext.appState.currentFile !== this.localFile) {
+      appContext.appDispatch({ type: AppActionKind.SetCurrentFile, payload: this.localFile });
+    }
   }
 
-  remoteNotesDiffer(note: Note, remoteNote: Note) {
+  remoteNotesDiffer(note: Note, remoteNote: Note | undefined) {
     if ((note && !remoteNote) || (remoteNote && !note)) {
       return true;
     }

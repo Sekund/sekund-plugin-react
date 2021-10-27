@@ -10,7 +10,7 @@ type Props = {
 }
 
 const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreProps: any) => {
-  const { t, i18n, ready } = useTranslation(["common", "plugin"], { i18n: i18nConf });
+  const { t, i18n } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
   const localizedAppState = window.moment
     ? { ...initialAppState, locale: (window.moment as any).locale() }
@@ -83,7 +83,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
                     </svg>
                   </div>
-                  <div className="text-center ">{t('plugin:connecting')} https://{appState.subdomain}.sekund.io/</div>
+                  <div className="text-center ">{t('plugin:connecting')} https://{appState.plugin?.settings.subdomain}.sekund.io/</div>
                   <div className="mt-4 spinner">
                     <div className="bounce1" />
                     <div className="bounce2" />

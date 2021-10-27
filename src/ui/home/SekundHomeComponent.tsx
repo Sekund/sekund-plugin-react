@@ -1,8 +1,8 @@
 import { Note } from "@/domain/Note";
 import { NoteComment } from "@/domain/NoteComment";
 import NotesService from "@/services/NotesService";
+import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
-import { AppActionKind } from "@/state/AppReducer";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";
@@ -61,14 +61,13 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
   }, [appState.event]);
 
 
-  function openFileAtPath(path: string) {
-    const file = appState.plugin?.app.vault.getAbstractFileByPath(path);
-    console.log("setting current file to ", file);
+  function openNoteFile(note: Note) {
+    const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
     if (file && appState.plugin?.app.workspace.activeLeaf) {
       appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
     } else {
-      console.log("non existing")
-      appDispatch({ type: AppActionKind.SetCurrentFile, payload: undefined })
+      console.log("non existing");
+      NoteSyncService.instance.noFile(note);
     }
   }
 
@@ -91,7 +90,7 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
       {notes?.map((note: Note) => (
         <React.Fragment key={note._id.toString()}>
           <div className="flex flex-col px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt"
-            onClick={() => openFileAtPath(note.path)}>
+            onClick={() => openNoteFile(note)}>
             <div>
               {note.title.replace(".md", "")}
             </div>

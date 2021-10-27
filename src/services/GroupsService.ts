@@ -3,7 +3,6 @@ import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
 import { ObjectId } from "bson";
-import * as Realm from "realm-web";
 
 export default class GroupsService extends ServerlessService {
   private static _instance: GroupsService;

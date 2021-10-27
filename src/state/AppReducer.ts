@@ -1,6 +1,7 @@
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import SekundPluginReact from "@/main";
+import GlobalState from "@/state/GlobalState";
 import { Plugin_2, TFile } from "obsidian";
 
 export type GeneralState = "connecting" | "noApiKey" | "noSubdomain" | "noSettings" | "noSuchSubdomain" | "offline" | "allGood" | "unknownError" | "loginError";
@@ -17,7 +18,6 @@ export type AppState = {
   generalState: GeneralState;
   currentNoteState: NoteState;
   remoteNote: Note | undefined;
-  subdomain: string;
   currentFile: TFile | undefined;
   locale: string;
   plugin: SekundPluginReact | undefined;
@@ -35,7 +35,6 @@ export const initialAppState: AppState = {
     fetching: false,
     synchronizing: false,
   },
-  subdomain: "",
   locale: "en",
   currentFile: undefined,
   plugin: undefined,
@@ -49,7 +48,6 @@ export enum AppActionKind {
   SetCurrentFile,
   SetLocale,
   SetGeneralState,
-  SetSubdomain,
   SetUserProfile,
   SetPlugin,
   SetEvent,
@@ -63,29 +61,36 @@ export type AppAction = {
 export default function AppReducer(state: AppState, action: AppAction): AppState {
   const { type, payload } = action;
 
+  let newState: AppState;
+  const trace = new Error().stack;
   switch (type) {
     case AppActionKind.SetCurrentNoteState:
       const noteFlags: Partial<NoteState> = payload as Partial<NoteState>;
       const result = { ...state, currentNoteState: Object.assign({}, state.currentNoteState, noteFlags) };
-      return result;
+      newState = result;
+      break;
     case AppActionKind.SetGeneralState:
-      return { ...state, generalState: payload };
-    case AppActionKind.SetSubdomain:
-      return { ...state, subdomain: payload };
+      newState = { ...state, generalState: payload };
+      break;
     case AppActionKind.SetRemoteNote:
-      return { ...state, remoteNote: payload };
+      newState = { ...state, remoteNote: payload };
+      break;
     case AppActionKind.SetCurrentFile:
-      return { ...state, currentFile: payload };
+      newState = { ...state, currentFile: payload };
+      break;
     case AppActionKind.SetLocale:
-      return { ...state, locale: payload };
+      newState = { ...state, locale: payload };
+      break;
     case AppActionKind.SetPlugin:
-      return { ...state, plugin: payload };
+      newState = { ...state, plugin: payload };
+      break;
     case AppActionKind.SetUserProfile:
-      return { ...state, userProfile: payload };
-    case AppActionKind.SetEvent:
-      return { ...state, event: payload };
-
+      newState = { ...state, userProfile: payload };
+      break;
     default:
-      return state;
+      newState = state;
   }
+
+  GlobalState.instance.appState = newState;
+  return newState;
 }

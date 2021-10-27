@@ -25,9 +25,6 @@ export default class GeneralStateWrapper extends React.Component {
     if (appContext.appState.generalState !== this.gState) {
       appContext.appDispatch({ type: AppActionKind.SetGeneralState, payload: this.gState });
     }
-    if (appContext.appState.subdomain !== "storybook") {
-      appContext.appDispatch({ type: AppActionKind.SetSubdomain, payload: "storybook" });
-    }
     if (appContext.appState.locale !== this.locale) {
       appContext.appDispatch({ type: AppActionKind.SetLocale, payload: this.locale });
     }

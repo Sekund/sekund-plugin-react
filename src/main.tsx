@@ -7,16 +7,15 @@ import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
 import { dispatch, getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
 import { HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en.json';
+import es from 'javascript-time-ago/locale/es.json';
+import fr from 'javascript-time-ago/locale/fr.json';
+import nl from 'javascript-time-ago/locale/nl.json';
 import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
-import TimeAgo from 'javascript-time-ago'
 
-import en from 'javascript-time-ago/locale/en.json'
-import es from 'javascript-time-ago/locale/es.json'
-import fr from 'javascript-time-ago/locale/fr.json'
-import nl from 'javascript-time-ago/locale/nl.json'
-import watchEvents from "@/services/rt";
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(fr)
@@ -88,6 +87,8 @@ export default class SekundPluginReact extends Plugin {
 
     this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
+
+    this.updateOnlineStatus();
   }
 
   refreshPanes() {
@@ -138,6 +139,33 @@ export default class SekundPluginReact extends Plugin {
     return "noSubdomain";
   }
 
+  private readonly updateOnlineStatus = async () => {
+    if (!navigator.onLine) {
+      Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
+      setGeneralState(Object.values(this.dispatchers), "offline");
+    }
+
+    if (this.onlineListener) {
+      window.removeEventListener("online", this.onlineListener);
+    }
+    if (this.offlineListener) {
+      window.removeEventListener("offline", this.offlineListener);
+    }
+
+    if (navigator.onLine) {
+      console.log("navigator is online, attempting connection")
+      await this.attemptConnection();
+    }
+
+    window.addEventListener("online", (this.onlineListener = () => setTimeout(() => {
+      this.attemptConnection();
+    }, 1000)));
+
+    window.addEventListener("offline", (this.offlineListener = () => {
+      this.updateOnlineStatus()
+    }));
+  }
+
   public readonly attemptConnection = async (): Promise<GeneralState> => {
     console.log("attempting connection");
 
@@ -151,7 +179,6 @@ export default class SekundPluginReact extends Plugin {
       }
     }
 
-    dispatch(Object.values(this.dispatchers), AppActionKind.SetSubdomain, this.settings.subdomain);
     setGeneralState(Object.values(this.dispatchers), "connecting");
 
     const appIdResult = await this.getRealmAppId();
@@ -175,8 +202,6 @@ export default class SekundPluginReact extends Plugin {
           new NoteSyncService(this, dispatchers);
           new NotesService(this);
 
-          watchEvents(dispatchers, this.settings.subdomain, user);
-
           const userProfile = await UsersService.instance.fetchUser();
 
           dispatch(dispatchers, AppActionKind.SetUserProfile, userProfile)
@@ -193,7 +218,7 @@ export default class SekundPluginReact extends Plugin {
 
           // delay calling the backend for a bit as it seems to result in
           // network errors sometimes
-          setTimeout(() => this.handleFileOpen(this.app.workspace.getActiveFile()), 2000);
+          setTimeout(() => this.handleFileOpen(this.app.workspace.getActiveFile()), 100);
         } else if (!user) {
           setGeneralState(Object.values(this.dispatchers), "loginError");
           return 'loginError';
@@ -206,6 +231,7 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
     if (file) {
+      console.log("ah! handling file open: " + file.name)
       NoteSyncService.instance.compareNotes(file);
     }
   };
@@ -221,27 +247,6 @@ export default class SekundPluginReact extends Plugin {
   addDispatcher(dispatcher: React.Dispatch<AppAction>, viewType: string) {
     this.dispatchers[viewType] = dispatcher;
   }
-
-  async updateOnlineStatus() {
-    if (!navigator.onLine) {
-      Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
-      setGeneralState(Object.values(this.dispatchers), "offline");
-    }
-
-    if (this.onlineListener) {
-      window.removeEventListener("online", this.onlineListener);
-    }
-    if (this.offlineListener) {
-      window.removeEventListener("offline", this.offlineListener);
-    }
-
-    if (navigator.onLine) {
-      await this.attemptConnection();
-    }
-
-    window.addEventListener("online", (this.onlineListener = () => setTimeout(() => this.attemptConnection(), 100)));
-    window.addEventListener("offline", (this.offlineListener = () => this.updateOnlineStatus()));
-  }
 }
 
 class SekundSettingsTab extends PluginSettingTab {
@@ -254,6 +259,7 @@ class SekundSettingsTab extends PluginSettingTab {
 
   hide(): void {
     this.plugin.loadSettings();
+    console.log("hiding settings pane, attempting connection...")
     setTimeout(() => this.plugin.attemptConnection(), 100);
   }
 

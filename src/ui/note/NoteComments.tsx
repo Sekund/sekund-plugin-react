@@ -3,6 +3,7 @@ import { isVisible } from "@/helpers/visibility";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import { AppActionKind } from "@/state/AppReducer";
+import GlobalState from "@/state/GlobalState";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,62 +19,46 @@ export default function NoteComments() {
   const guestEmail = userProfile?.email;
   const sendButton = useRef<HTMLButtonElement>(null);
   const [areaText, setAreaText] = useState("");
+  let gen: AsyncGenerator<Realm.Services.MongoDB.ChangeEvent<any>, any, unknown>;
 
   const localComments = remoteNote?.comments || [];
 
   useEffect(() => {
-    const { remoteNote } = appState;
-    if (!appState.event || !remoteNote) {
-      return;
+    console.log("putting watcher in place...");
+    (async () => {
+      const { remoteNote } = appState;
+      if (appState.plugin && remoteNote) {
+        const events = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
+        if (events) {
+          gen = events.watch([{ $match: { _id: remoteNote._id } }]);
+          for await (const change of gen) {
+            // from this moment on, changes to this filtered collection
+            // will call `handleNoteChange` until the call to
+            // `gen.return(undefined)` when this component gets unmounted.
+            // This means that even though we may have switched note, the
+            // state could very well corrupted with an old note, so we have
+            // to check that the note update is for the current one (see
+            // below).
+            handleNoteChange(change, remoteNote._id.toString());
+          }
+        }
+      }
+    })()
+    return () => {
+      gen.return(undefined);
     }
-    const evt = appState.event;
-    switch (evt.type) {
-      case "addComment":
-        if (evt.data.noteId.equals(remoteNote._id)) {
-          if (evt.updateTime > remoteNote.updated) {
-            const updtNote = {
-              ...appState.remoteNote,
-              comments: [...(remoteNote.comments || []), evt.data],
-            };
-            appDispatch({
-              type: AppActionKind.SetRemoteNote,
-              payload: updtNote,
-            });
-          }
-        }
-        break;
-      case "removeComment":
-        if (evt.data.noteId.equals(appState.remoteNote?._id)) {
-          if (evt.updateTime > remoteNote.updated) {
-            const updtNote = {
-              ...appState.remoteNote,
-              comments: appState.remoteNote?.comments.filter((c) => !(c.updated === evt.data.updated && c.created === evt.data.created)),
-            };
-            appDispatch({
-              type: AppActionKind.SetRemoteNote,
-              payload: updtNote,
-            });
-          }
-        }
-        break;
-      case "editComment":
-        if (evt.data.noteId.equals(appState.remoteNote?._id)) {
-          if (evt.updateTime > remoteNote.updated) {
-            const { text, commentIdx } = evt.data;
-            const updtNote = {
-              ...appState.remoteNote,
-              comments: appState.remoteNote?.comments.map((c, index) => (index === commentIdx ? { ...c, text } : c)),
-            };
-            appDispatch({
-              type: AppActionKind.SetRemoteNote,
-              payload: updtNote,
-            });
-          }
-        }
-        break;
-    }
-  }, [appState.event]);
+  }, []);
 
+  async function handleNoteChange(change: Realm.Services.MongoDB.ChangeEvent<any>, noteId: string) {
+    // check if this note change is for the current note and not for an old
+    // one. 
+    const currentRemoteNote = GlobalState.instance.appState.remoteNote;
+    if (currentRemoteNote && currentRemoteNote._id.toString() === noteId) {
+      console.log("handling note change")
+      const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
+      appDispatch({ type: AppActionKind.SetRemoteNote, payload: { ...updtNote } })
+    }
+  }
 
   async function addComment() {
     if (appState.remoteNote) {

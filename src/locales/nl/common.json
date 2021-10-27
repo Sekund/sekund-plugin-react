@@ -39,5 +39,10 @@
     "new_group": "Nieuwe Groep",
     "sendMagicLink": "Stuur magische link",
     "yourEmailAddress": "Uw e-mail adres",
-    "clear": "Afvegen"
+    "clear": "Afvegen",
+    "edit": "Bewerking",
+    "delete": "Verwijderen",
+    "update": "Update",
+    "uptodate": "Actueel",
+    "updating": "Updaten"
 }

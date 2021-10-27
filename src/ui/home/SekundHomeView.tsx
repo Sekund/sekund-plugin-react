@@ -1,4 +1,3 @@
-import NotesService from "@/services/NotesService";
 import SekundHomeComponent, { HomeComponentProps } from "@/ui/home/SekundHomeComponent";
 import SekundView from "@/ui/SekundView";
 import { HOME_VIEW_ICON, HOME_VIEW_TYPE } from "@/_constants";
@@ -23,7 +22,6 @@ export default class SekundHomeView extends SekundView {
         const props = { view: this, notesService: undefined } as HomeComponentProps;
         const InjectedHomeComponent = SekundHomeComponent(props);
         ReactDOM.render(<InjectedHomeComponent />, this.containerEl.children[1]);
-        this.plugin.updateOnlineStatus();
     }
 
 }

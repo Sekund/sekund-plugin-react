@@ -22,7 +22,6 @@ export default class SekundNoteView extends SekundView {
         const props = { view: this }
         const InjectedNoteComponent = SekundNoteComponent(props);
         ReactDOM.render(<InjectedNoteComponent />, this.containerEl.children[1]);
-        this.plugin.updateOnlineStatus();
     }
 
 }

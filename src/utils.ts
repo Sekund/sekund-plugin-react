@@ -22,3 +22,12 @@ export function setGeneralState(dispatchers: Array<React.Dispatch<AppAction>>, g
 export function setCurrentNoteState(dispatchers: Array<React.Dispatch<AppAction>>, nState: Partial<NoteState>) {
   dispatchers.forEach((appDispatch) => appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: nState }));
 }
+
+export function isObjectEmpty(object: Record<string, unknown>): boolean {
+  for (const property in object) {
+    // if any enumerable property is found object is not empty
+    return false;
+  }
+
+  return true;
+}

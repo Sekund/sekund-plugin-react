@@ -39,5 +39,10 @@
     "new_group": "New Group",
     "sendMagicLink": "Send Magic Link",
     "yourEmailAddress": "Your Email Address",
-    "clear": "Clear"
+    "clear": "Clear",
+    "edit": "Edit",
+    "delete": "Delete",
+    "update": "Update",
+    "uptodate": "Up-to-date",
+    "updating": "Updating"
 }

@@ -231,7 +231,6 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
     if (file) {
-      console.log("ah! handling file open: " + file.name)
       NoteSyncService.instance.compareNotes(file);
     }
   };

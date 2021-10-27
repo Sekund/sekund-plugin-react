@@ -24,13 +24,13 @@ export default function NoteComments() {
   const localComments = remoteNote?.comments || [];
 
   useEffect(() => {
-    console.log("putting watcher in place...");
+    console.log("putting note watcher in place...");
     (async () => {
       const { remoteNote } = appState;
       if (appState.plugin && remoteNote) {
-        const events = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
-        if (events) {
-          gen = events.watch([{ $match: { _id: remoteNote._id } }]);
+        const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
+        if (notes) {
+          gen = notes.watch([{ $match: { _id: remoteNote._id } }]);
           for await (const change of gen) {
             // from this moment on, changes to this filtered collection
             // will call `handleNoteChange` until the call to

@@ -3,6 +3,7 @@ import { NoteComment } from "@/domain/NoteComment";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
+import { AppActionKind } from "@/state/AppReducer";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";
@@ -25,6 +26,7 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
     notesState,
     notesDispatch,
   };
+  let gen: AsyncGenerator<Realm.Services.MongoDB.ChangeEvent<any>, any, unknown>;
 
   const { notes } = notesState;
 
@@ -32,7 +34,7 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
     if (!notesService) {
       notesService = NotesService.instance;
     }
-    const notes = await notesService.getNotes(Date.now(), 30);
+    const notes = await notesService.getNotes(Date.now(), 10000);
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: notes });
   }
 
@@ -43,30 +45,33 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
   }, [appState.generalState])
 
   useEffect(() => {
-    if (!appState.event || !notes) {
-      return;
+    console.log("putting notes watcher in place...");
+    (async () => {
+      if (appState.plugin) {
+        const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
+        if (notes) {
+          gen = notes.watch();
+          for await (const change of gen) {
+            handleNotesChange(change);
+          }
+        }
+      }
+    })()
+    return () => {
+      gen.return(undefined);
     }
-    const evt = appState.event;
-    switch (evt.type) {
-      case "addComment":
-        let anote = notes.filter(n => n._id.equals(evt.data.noteId))[0];
-        notesDispatch({ type: NotesActionKind.UpdateNote, payload: { ...anote, comments: [...anote.comments, {} as NoteComment] } })
-        break;
-      case "removeComment":
-        const rnote = notes.filter(n => n._id.equals(evt.data.noteId))[0];
-        rnote.comments.splice(-1);
-        notesDispatch({ type: NotesActionKind.UpdateNote, payload: { ...rnote } })
-        break;
-    }
-  }, [appState.event]);
+  }, []);
 
+  async function handleNotesChange(change: Realm.Services.MongoDB.ChangeEvent<any>) {
+    const updtNotes = await NotesService.instance.getNotes(Date.now(), 10000);
+    notesDispatch({ type: NotesActionKind.ResetNotes, payload: updtNotes });
+  }
 
   function openNoteFile(note: Note) {
     const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
     if (file && appState.plugin?.app.workspace.activeLeaf) {
       appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
     } else {
-      console.log("non existing");
       NoteSyncService.instance.noFile(note);
     }
   }

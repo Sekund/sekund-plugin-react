@@ -90,7 +90,7 @@ export default function NoteComments() {
   }
 
   return (
-    <div className="px-2 mb-16 ">
+    <div className="px-2 mt-1 mb-16">
       <div className="flex flex-col space-y-4">
         {localComments?.map((noteComment) => {
           return (

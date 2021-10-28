@@ -5,7 +5,7 @@ import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { ChatAlt2Icon, UserGroupIcon, UserIcon } from "@heroicons/react/solid";
+import { ChatAlt2Icon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import { TFile } from "obsidian";
 import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
@@ -77,7 +77,7 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
   function stats(note: Note) {
     const children: Array<JSX.Element> = [];
     if (note.sharing.peoples && note.sharing.peoples.length > 0) {
-      children.push(<div key="sppls" className="flex items-center"><UserIcon className="w-4 h-4" />{note.sharing.peoples.length}</div>)
+      children.push(<div key="sppls" className="flex items-center"><UsersIcon className="w-4 h-4" />{note.sharing.peoples.length}</div>)
     }
     if (note.sharing.groups && note.sharing.groups.length > 0) {
       children.push(<div key="sgps" className="flex items-center"><UserGroupIcon className="w-4 h-4" />{note.sharing.groups.length}</div>)

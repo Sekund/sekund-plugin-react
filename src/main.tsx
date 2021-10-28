@@ -1,5 +1,7 @@
+import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
+import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import SekundHomeView from "@/ui/home/SekundHomeView";
@@ -204,6 +206,8 @@ export default class SekundPluginReact extends Plugin {
           new UsersService(this);
           new NoteSyncService(this, dispatchers);
           new NotesService(this);
+          new PeoplesService(this);
+          new GroupsService(this);
 
           const userProfile = await UsersService.instance.fetchUser();
 

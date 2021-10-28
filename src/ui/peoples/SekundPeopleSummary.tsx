@@ -17,7 +17,7 @@ export default function SekundPeopleSummary({ people }: Props) {
             children.push(
                 <button className="px-2" key="shing" title={t('plugin:yourShares')}>
                     <div className="flex items-center">
-                        <ArrowSmUpIcon className="w-4 h-4"></ArrowSmUpIcon> ({people?.sharing})
+                        <ArrowSmUpIcon className="w-4 h-4"></ArrowSmUpIcon> {people?.sharing}
                     </div>
                 </button>
             );
@@ -29,7 +29,7 @@ export default function SekundPeopleSummary({ people }: Props) {
             children.push(
                 <button className="px-2" key="shrd" title={t('plugin:theirShares')}>
                     <div className="flex items-center">
-                        <ArrowSmDownIcon className="w-4 h-4"></ArrowSmDownIcon> ({people?.shared})
+                        <ArrowSmDownIcon className="w-4 h-4"></ArrowSmDownIcon> {people?.shared}
                     </div>
                 </button>
             );

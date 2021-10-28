@@ -37,7 +37,7 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
   // render
 
   if (peoples && peoples.length > 0) {
-    return <div className="flex flex-col mt-4 space-y-2 w-xl">
+    return <div className="flex flex-col space-y-2px w-xl">
       {peoples.map((people: People) => {
         return (
           <SekundPeopleSummary key={people._id.toString()} people={people}></SekundPeopleSummary>

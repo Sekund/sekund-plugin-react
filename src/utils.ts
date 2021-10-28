@@ -31,3 +31,5 @@ export function isObjectEmpty(object: Record<string, unknown>): boolean {
 
   return true;
 }
+
+export type Constructor<T = {}> = new (...args: any[]) => T;

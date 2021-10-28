@@ -5,8 +5,9 @@ import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
-import { dispatch, getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
-import { HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
+import SekundView from "@/ui/SekundView";
+import { Constructor, dispatch, getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
+import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
 import es from 'javascript-time-ago/locale/es.json';
@@ -45,50 +46,51 @@ export default class SekundPluginReact extends Plugin {
     await this.loadSettings();
     addIcons();
 
-    this.registerView(NOTE_VIEW_TYPE, (leaf) => {
-      return new SekundNoteView(leaf, this);
-    });
+    this.registerViews([
+      { type: NOTE_VIEW_TYPE, View: SekundNoteView },
+      { type: HOME_VIEW_TYPE, View: SekundHomeView },
+    ])
 
-    this.registerView(HOME_VIEW_TYPE, (leaf) => {
-      return new SekundHomeView(leaf, this);
-    });
+    this.addCommands([
+      { id: "sekund-open-note-view", name: "Open Sekund Note View", type: NOTE_VIEW_TYPE },
+      { id: "sekund-open-home-view", name: "Open Sekund Home View", type: HOME_VIEW_TYPE },
+      // { id: "sekund-open-peoples-view", name: "Open Sekund Peoples View", type: PEOPLES_VIEW_TYPE },
+      // { id: "sekund-open-groups-view", name: "Open Sekund Groups View", type: GROUPS_VIEW_TYPE }
+    ]);
 
-    this.addCommand({
-      id: "sekund-open-note-view",
-      name: "Open Sekund Note View",
-      callback: async () => {
-        if (this.app.workspace.getLeavesOfType(NOTE_VIEW_TYPE).length == 0) {
-          await this.app.workspace.getRightLeaf(false).setViewState({
-            type: NOTE_VIEW_TYPE,
-          });
-        }
-        const firstLeaf = this.app.workspace.getLeavesOfType(NOTE_VIEW_TYPE).first();
-        if (firstLeaf) {
-          this.app.workspace.revealLeaf(firstLeaf);
-        }
-      },
-    });
-
-    this.addCommand({
-      id: "sekund-open-home-view",
-      name: "Open Sekund Home View",
-      callback: async () => {
-        if (this.app.workspace.getLeavesOfType(HOME_VIEW_TYPE).length == 0) {
-          await this.app.workspace.getRightLeaf(false).setViewState({
-            type: HOME_VIEW_TYPE,
-          });
-        }
-        const leaf = this.app.workspace.getLeavesOfType(HOME_VIEW_TYPE).first();
-        if (leaf) {
-          this.app.workspace.revealLeaf(leaf);
-        }
-      },
-    });
 
     this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
 
     this.updateOnlineStatus();
+  }
+
+  registerViews(specs: { type: string, View: Constructor<SekundView> }[]) {
+    for (const spec of specs) {
+      const { type, View } = spec;
+      this.registerView(type, (leaf) => new View(leaf, this));
+    }
+  }
+
+  addCommands(specs: { id: string, name: string, type: string }[]) {
+    for (const spec of specs) {
+      const { id, name, type } = spec;
+      this.addCommand({
+        id,
+        name,
+        callback: async () => {
+          if (this.app.workspace.getLeavesOfType(type).length == 0) {
+            await this.app.workspace.getRightLeaf(false).setViewState({
+              type,
+            });
+          }
+          const firstLeaf = this.app.workspace.getLeavesOfType(type).first();
+          if (firstLeaf) {
+            this.app.workspace.revealLeaf(firstLeaf);
+          }
+        },
+      });
+    }
   }
 
   refreshPanes() {

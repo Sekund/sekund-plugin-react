@@ -24,5 +24,9 @@
     "shareDesc": "Your note is available for sharing, but you haven't shared it with anyone yet. Hit the 'Share' button below and pick people or groups with whom you want to share this note.",
     "Share": "Share",
     "synchronizing": "Synchronizing...",
-    "uploading": "Uploading..."
+    "uploading": "Uploading...",
+    "yourShares": "Notes that your are sharing with this person",
+    "theirShares": "Notes that this person is sharing with you",
+    "noOne": "Whoops... There is no one here.",
+    "noOneDesc": "Either share something with someone or ask someone to share something with you."
 }

@@ -9,7 +9,7 @@ export type PeoplesState = {
 };
 
 export const initialPeoplesState: PeoplesState = {
-  peoples: undefined,
+  peoples: [],
   groups: undefined,
   nPeoples: 0,
   nGroups: 0,

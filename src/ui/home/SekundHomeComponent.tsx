@@ -1,9 +1,7 @@
 import { Note } from "@/domain/Note";
-import { NoteComment } from "@/domain/NoteComment";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
-import { AppActionKind } from "@/state/AppReducer";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";

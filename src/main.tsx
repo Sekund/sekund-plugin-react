@@ -5,6 +5,7 @@ import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
+import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import SekundView from "@/ui/SekundView";
 import { Constructor, dispatch, getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
 import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
@@ -49,12 +50,13 @@ export default class SekundPluginReact extends Plugin {
     this.registerViews([
       { type: NOTE_VIEW_TYPE, View: SekundNoteView },
       { type: HOME_VIEW_TYPE, View: SekundHomeView },
+      { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
     ])
 
     this.addCommands([
       { id: "sekund-open-note-view", name: "Open Sekund Note View", type: NOTE_VIEW_TYPE },
       { id: "sekund-open-home-view", name: "Open Sekund Home View", type: HOME_VIEW_TYPE },
-      // { id: "sekund-open-peoples-view", name: "Open Sekund Peoples View", type: PEOPLES_VIEW_TYPE },
+      { id: "sekund-open-peoples-view", name: "Open Sekund Peoples View", type: PEOPLES_VIEW_TYPE },
       // { id: "sekund-open-groups-view", name: "Open Sekund Groups View", type: GROUPS_VIEW_TYPE }
     ]);
 

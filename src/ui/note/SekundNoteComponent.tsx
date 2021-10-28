@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 export const SekundNoteComponent = () => {
   const { appState } = useAppContext();
   const { fileSynced, published, publishing, fetching, synchronizing } = appState.currentNoteState;
-  const { t } = useTranslation("plugin");
+  const { t } = useTranslation(["common", "plugin"]);
   const { remoteNote, currentFile } = appState;
   const [showSharingModal, setShowSharingModal] = useState(false);
 

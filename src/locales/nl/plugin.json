@@ -24,5 +24,9 @@
     "shareDesc": "Je notitie is beschikbaar om te delen, maar je hebt deze nog met niemand gedeeld. Klik hieronder op de knop 'Delen' en kies mensen of groepen met wie je deze notitie wilt delen.",
     "Share": "Deel",
     "synchronizing": "Synchroniserend...",
-    "uploading": "Uploaden..."
+    "uploading": "Uploaden...",
+    "yourShares": "Merkt op dat je deelt met deze persoon",
+    "theirShares": "Merkt op dat deze persoon iets met je deelt",
+    "noOne": "Oeps... Er is hier niemand.",
+    "noOneDesc": "Deel iets met iemand of vraag iemand om iets met je te delen."
 }

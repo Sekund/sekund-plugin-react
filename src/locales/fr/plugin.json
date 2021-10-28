@@ -24,5 +24,9 @@
     "shareDesc": "Votre note est disponible pour le partage, mais vous ne l'avez encore partagée avec personne. Cliquez sur le bouton « Partager » ci-dessous et choisissez les personnes ou les groupes avec lesquels vous souhaitez partager cette note.",
     "Share": "Partager",
     "synchronizing": "Synchronisation en cours...",
-    "uploading": "Téléchargement..."
+    "uploading": "Téléchargement...",
+    "yourShares": "Notes que vous partagez avec cette personne",
+    "theirShares": "Notes que cette personne partage avec vous",
+    "noOne": "Oups... Il n'y a personne ici.",
+    "noOneDesc": "Partagez quelque chose avec quelqu'un ou demandez à quelqu'un de partager quelque chose avec vous."
 }

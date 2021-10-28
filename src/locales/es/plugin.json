@@ -24,5 +24,9 @@
     "shareDesc": "Tu nota está disponible para compartir, pero aún no la has compartido con nadie. Haz clic en el botón \"Compartir\" a continuación y elige las personas o grupos con los que quieras compartir esta nota.",
     "Share": "Cuota",
     "synchronizing": "Sincronizando...",
-    "uploading": "Subiendo ..."
+    "uploading": "Subiendo ...",
+    "yourShares": "Notas que estás compartiendo con esta persona",
+    "theirShares": "Notas que esta persona comparte contigo",
+    "noOne": "Ups ... No hay nadie aquí.",
+    "noOneDesc": "Comparta algo con alguien o pídale a alguien que comparta algo con usted."
 }

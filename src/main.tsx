@@ -4,6 +4,9 @@ import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
+import GlobalState from "@/state/GlobalState";
+import GeneralStateWrapper from "@/storybook/AppStateWrapper";
+import SekundGroupsView from "@/ui/groups/SekundGroupsView";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
@@ -53,13 +56,14 @@ export default class SekundPluginReact extends Plugin {
       { type: NOTE_VIEW_TYPE, View: SekundNoteView },
       { type: HOME_VIEW_TYPE, View: SekundHomeView },
       { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
+      { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
     ])
 
     this.addCommands([
       { id: "sekund-open-note-view", name: "Open Sekund Note View", type: NOTE_VIEW_TYPE },
       { id: "sekund-open-home-view", name: "Open Sekund Home View", type: HOME_VIEW_TYPE },
       { id: "sekund-open-peoples-view", name: "Open Sekund Peoples View", type: PEOPLES_VIEW_TYPE },
-      // { id: "sekund-open-groups-view", name: "Open Sekund Groups View", type: GROUPS_VIEW_TYPE }
+      { id: "sekund-open-groups-view", name: "Open Sekund Groups View", type: GROUPS_VIEW_TYPE }
     ]);
 
 
@@ -172,6 +176,13 @@ export default class SekundPluginReact extends Plugin {
   }
 
   public readonly attemptConnection = async (): Promise<GeneralState> => {
+
+    // if (GlobalState.instance.appState.generalState === "connecting") {
+    //   return "connecting";
+    // }
+
+    setGeneralState(Object.values(this.dispatchers), "connecting");
+
     console.log("attempting connection");
 
     if (!this.settings.apiKey || this.settings.apiKey === "") {
@@ -184,7 +195,6 @@ export default class SekundPluginReact extends Plugin {
       }
     }
 
-    setGeneralState(Object.values(this.dispatchers), "connecting");
 
     const appIdResult = await this.getRealmAppId();
 

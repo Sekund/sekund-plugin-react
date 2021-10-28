@@ -108,7 +108,7 @@ export default function NoteComments() {
           <TextareaAutosize onChange={(e) => setAreaText(e.target.value)} onKeyDown={(e: any) => handleKeydown(e)} onHeightChange={ensureSendVisible} minRows={2} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 border rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300" aria-describedby="message-max" defaultValue={""} />
         </div>
       </div>
-      <div className="flex justify-end w-full pt-2">
+      <div className="flex justify-end w-full mt-1">
         <button onClick={() => clearComment()} type="button">
           {t('clear')}
         </button>

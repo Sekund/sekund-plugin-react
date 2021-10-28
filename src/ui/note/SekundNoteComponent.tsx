@@ -5,6 +5,7 @@ import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
+import Loader from "@/ui/utils/Loader";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
@@ -119,11 +120,7 @@ export const SekundNoteComponent = () => {
   if (fetching) {
     return <div className="fixed inset-0 animate-pulse bg-obs-primary-alt">
       <div className="flex flex-col items-center justify-center w-full h-full">
-        <div className="mt-4 spinner">
-          <div className="bounce1" />
-          <div className="bounce2" />
-          <div className="bounce3" />
-        </div>
+        <Loader className="h-20" />
       </div>
     </div>
   }

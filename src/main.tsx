@@ -61,8 +61,6 @@ export default class SekundPluginReact extends Plugin {
 
     this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
-
-    this.updateOnlineStatus();
   }
 
   registerViews(specs: { type: string, View: Constructor<SekundView> }[]) {
@@ -141,7 +139,8 @@ export default class SekundPluginReact extends Plugin {
     return "noSubdomain";
   }
 
-  private readonly updateOnlineStatus = async () => {
+  public readonly updateOnlineStatus = async () => {
+    console.log("update online status")
     if (!navigator.onLine) {
       Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
       setGeneralState(Object.values(this.dispatchers), "offline");

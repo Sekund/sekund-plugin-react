@@ -4,6 +4,7 @@ import AppReducer, { initialAppState } from "@/state/AppReducer";
 import APIInfo from '@/ui/APIInfo';
 import React, { useEffect, useReducer, useRef } from 'react';
 import { Trans, useTranslation } from "react-i18next";
+import Loader from '@/ui/utils/Loader';
 
 type Props = {
   view: { addAppDispatch: Function }
@@ -84,11 +85,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                     </svg>
                   </div>
                   <div className="text-center ">{t('plugin:connecting')} https://{appState.plugin?.settings.subdomain}.sekund.io/</div>
-                  <div className="mt-4 spinner">
-                    <div className="bounce1" />
-                    <div className="bounce2" />
-                    <div className="bounce3" />
-                  </div>
+                  <Loader className="h-20" />
                 </div>
               );
             case "loginError":

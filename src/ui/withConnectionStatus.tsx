@@ -4,7 +4,7 @@ import AppReducer, { initialAppState } from "@/state/AppReducer";
 import APIInfo from '@/ui/APIInfo';
 import React, { useEffect, useReducer, useRef } from 'react';
 import { Trans, useTranslation } from "react-i18next";
-import Loader from '@/ui/utils/Loader';
+import Loader from '@/ui/common/Loader';
 import GlobalState from '@/state/GlobalState';
 
 type Props = {

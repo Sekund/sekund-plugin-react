@@ -5,7 +5,7 @@ import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
-import Loader from "@/ui/utils/Loader";
+import Loader from "@/ui/common/Loader";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";

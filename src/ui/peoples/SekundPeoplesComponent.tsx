@@ -46,16 +46,20 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
   }
 
   if (peoples && peoples.length > 0) {
-    return <div className="flex flex-col space-y-2px w-xl">
-      {peoples.map((people: People) => {
-        return (
-          <SekundPeopleSummary key={people._id.toString()}
-            people={people}
-            displayShared={displayShared}
-            displaySharing={displaySharing} />
-        );
-      })}
-    </div>
+    return (
+      <>
+        <div className="flex flex-col space-y-2px w-xl">
+          {peoples.map((people: People) => {
+            return (
+              <SekundPeopleSummary key={people._id.toString()}
+                people={people}
+                displayShared={displayShared}
+                displaySharing={displaySharing} />
+            );
+          })}
+        </div>
+
+      </>)
   } else return (
     <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>

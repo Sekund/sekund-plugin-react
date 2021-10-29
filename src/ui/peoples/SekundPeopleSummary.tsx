@@ -26,9 +26,6 @@ export default function SekundPeopleSummary({ people, displayShared, displayShar
             );
         }
         if (people.shared > 0) {
-            if (children.length > 0) {
-                children.push(<span key="sep" className="ml-1"></span>);
-            }
             children.push(
                 <button onClick={() => displayShared(people._id)} className="px-2" key="shrd" title={t('plugin:theirShares')}>
                     <div className="flex items-center">
@@ -39,14 +36,14 @@ export default function SekundPeopleSummary({ people, displayShared, displayShar
         }
         return children;
     }
-    return (<div className="flex flex-col px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary">
+    return (<div className="flex items-center justify-between px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary">
         <div className="flex items-center">
             <div className="flex-shrink-0">{peopleAvatar(people, 10)}</div>
             <div className="flex-1 min-w-0 ml-2 focus:outline-none">
-                <p className="text-sm font-medium text-primary">{people.name || people.email}</p>
+                <p className="text-sm font-medium truncate text-primary">{people.name || people.email}</p>
             </div>
         </div>
-        <div className="flex items-center mt-2">{sharingStats()}</div>
+        <div className="flex items-center">{sharingStats()}</div>
     </div>
 
     )

@@ -56,7 +56,9 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
       }
     })()
     return () => {
-      gen.return(undefined);
+      if (gen) {
+        gen.return(undefined);
+      }
     }
   }, []);
 

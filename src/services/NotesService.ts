@@ -1,10 +1,10 @@
-import { ObjectID } from "bson";
 import { Note } from "../domain/Note";
 import { People } from "../domain/People";
 import { Group } from "@/domain/Group";
 import { callFunction } from "@/services/ServiceUtils";
 import ServerlessService from "@/services/ServerlessService";
 import SekundPluginReact from "@/main";
+import ObjectID from "bson-objectid";
 
 export default class NotesService extends ServerlessService {
   private static _instance: NotesService;

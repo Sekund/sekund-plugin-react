@@ -5,6 +5,7 @@ import { useAppContext } from "@/state/AppContext";
 import { AppActionKind } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
+import ObjectID from "bson-objectid";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TextareaAutosize from "react-textarea-autosize";
@@ -24,10 +25,10 @@ export default function NoteComments() {
   const localComments = remoteNote?.comments || [];
 
   useEffect(() => {
-    console.log("putting note watcher in place...");
     (async () => {
       const { remoteNote } = appState;
-      if (appState.plugin && remoteNote) {
+      if (appState.plugin && appState.plugin.user && remoteNote) {
+        console.log("putting note watcher in place...");
         const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
         if (notes) {
           gen = notes.watch([{ $match: { _id: remoteNote._id } }]);
@@ -36,25 +37,27 @@ export default function NoteComments() {
             // will call `handleNoteChange` until the call to
             // `gen.return(undefined)` when this component gets unmounted.
             // This means that even though we may have switched note, the
-            // state could very well corrupted with an old note, so we have
+            // state could be corrupted with an old note, so we have
             // to check that the note update is for the current one (see
             // below).
-            handleNoteChange(change, remoteNote._id.toString());
+            const docKey = (change as any).documentKey;
+            handleNoteChange(change, docKey._id as ObjectID);
           }
         }
       }
     })()
     return () => {
-      gen.return(undefined);
+      if (gen) {
+        gen.return(undefined);
+      }
     }
   }, []);
 
-  async function handleNoteChange(change: Realm.Services.MongoDB.ChangeEvent<any>, noteId: string) {
+  async function handleNoteChange(change: Realm.Services.MongoDB.ChangeEvent<any>, noteId: ObjectID) {
     // check if this note change is for the current note and not for an old
     // one. 
     const currentRemoteNote = GlobalState.instance.appState.remoteNote;
-    if (currentRemoteNote && currentRemoteNote._id.toString() === noteId) {
-      console.log("handling note change")
+    if (currentRemoteNote && currentRemoteNote._id.equals(noteId)) {
       const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
       appDispatch({ type: AppActionKind.SetRemoteNote, payload: { ...updtNote } })
     }

@@ -26,7 +26,7 @@ export type AppState = {
 };
 
 export const initialAppState: AppState = {
-  generalState: "connecting",
+  generalState: "offline",
   remoteNote: undefined,
   currentNoteState: {
     published: false,

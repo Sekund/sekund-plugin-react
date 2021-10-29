@@ -1,4 +1,4 @@
-import { ObjectId } from "bson";
+import ObjectID from "bson-objectid";
 import { Note } from "../domain/Note";
 
 export type NotesState = {
@@ -63,7 +63,7 @@ export default function NotesReducer(state: NotesState, action: NotesAction): No
       };
 
     case NotesActionKind.RemoveNote:
-      const noteId = payload as ObjectId;
+      const noteId = payload as ObjectID;
 
       return {
         ...state,

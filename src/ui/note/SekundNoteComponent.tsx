@@ -125,16 +125,16 @@ export const SekundNoteComponent = () => {
     </div>
   }
 
-  if (!currentFile) {
+  // if (!currentFile) {
 
-    return <div className="fixed inset-0">
-      <div className="flex flex-col items-center justify-center w-full h-full p-2">
-        <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t('plugin:deleteFromSekundDesc')}</span>
-        <button onClick={handleUnpublish} className="flex items-center"><TrashIcon className="w-4 h-4 mr-1" />{t('plugin:deleteFromSekund')}</button>
-      </div>
-    </div>
+  //   return <div className="fixed inset-0">
+  //     <div className="flex flex-col items-center justify-center w-full h-full p-2">
+  //       <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t('plugin:deleteFromSekundDesc')}</span>
+  //       <button onClick={handleUnpublish} className="flex items-center"><TrashIcon className="w-4 h-4 mr-1" />{t('plugin:deleteFromSekund')}</button>
+  //     </div>
+  //   </div>
 
-  }
+  // }
 
   if (!published) {
 

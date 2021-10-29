@@ -1,4 +1,4 @@
-import { ObjectId, ObjectID } from "bson";
+import ObjectID from "bson-objectid";
 import { Group } from "./Group";
 import { NoteComment } from "./NoteComment";
 import PathInfo from "./PathInfo";
@@ -15,7 +15,7 @@ export interface Note {
   publicLink: ObjectID;
   content: string;
   paths: PathInfo[];
-  userId: ObjectId;
+  userId: ObjectID;
 
   comments: NoteComment[];
 

@@ -28,5 +28,8 @@
     "yourShares": "Merkt op dat je deelt met deze persoon",
     "theirShares": "Merkt op dat deze persoon iets met je deelt",
     "noOne": "Oeps... Er is hier niemand.",
-    "noOneDesc": "Deel iets met iemand of vraag iemand om iets met je te delen."
+    "noOneDesc": "Deel iets met iemand of vraag iemand om iets met je te delen.",
+    "noGroups": "Oeps... Je hebt nog geen groepen.",
+    "noGroupsDesc": "Maak er zelf een of herinner anderen eraan u aan hun groepen toe te voegen.",
+    "mastery": "Meesterschap"
 }

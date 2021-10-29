@@ -36,7 +36,7 @@ export default function SekundPeopleSummary({ people }: Props) {
         }
         return children;
     }
-    return (<div className="flex flex-col px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt">
+    return (<div className="flex flex-col px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary">
         <div className="flex items-center">
             <div className="flex-shrink-0">{peopleAvatar(people, 10)}</div>
             <div className="flex-1 min-w-0 ml-2 focus:outline-none">

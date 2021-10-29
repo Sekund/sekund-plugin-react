@@ -26,7 +26,6 @@ export default function APIInfo() {
             appState.plugin.settings.apiKey = apiKeyField.current.value;
             appState.plugin.saveSettings();
         }
-        console.log("saving settings in APIInfo, attempting connection...")
         appState.plugin?.attemptConnection();
     }
 

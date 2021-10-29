@@ -75,7 +75,7 @@ export default function NoteCommentComponent({ comment }: Props) {
 
   function commentActions(noteComment: NoteComment) {
     if (!guestId) { return null }
-    if (noteComment.author._id.equals(guestId)) {
+    if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
           <Popover.Button className="relative p-1 rounded-full cursor-pointer hover:bg-primary">

@@ -33,7 +33,7 @@ export default class NoteSyncService extends ServerlessService {
     }
   }
 
-  async noFile(note: Note) {
+  async noLocalFile(note: Note) {
     dispatch(this.dispatchers, AppActionKind.SetRemoteNote, note);
     dispatch(this.dispatchers, AppActionKind.SetCurrentFile, undefined);
   }
@@ -42,14 +42,15 @@ export default class NoteSyncService extends ServerlessService {
     const { path, stat } = file;
     dispatch(this.dispatchers, AppActionKind.SetCurrentFile, file);
     setCurrentNoteState(this.dispatchers, { fetching: true, published: false });
-    const rNote = await this.getNoteByPath(file.path);
-    dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
+    const rNote = await this.getNoteByPath(path);
     const fileSynced = rNote && rNote.updated === stat.mtime;
     setCurrentNoteState(this.dispatchers, { fileSynced, fetching: false, published: !!rNote });
   }
 
   async getNoteByPath(path: string): Promise<Note | undefined> {
-    return await callFunction(this.plugin, "getNoteByPath", [path]);
+    const nbp = await callFunction(this.plugin, "getNoteByPath", [path]);
+    dispatch(this.dispatchers, AppActionKind.SetRemoteNote, nbp);
+    return nbp;
   }
 
   async syncFile() {

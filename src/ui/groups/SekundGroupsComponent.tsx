@@ -40,19 +40,10 @@ export const SekundGroupsComponent = ({ peoplesService }: GroupsComponentProps) 
     return <div className="flex flex-col space-y-2px w-xl">
       {groups.map((group: Group) => {
         return (
-          <div className="flex items-center justify-between w-auto max-w-xl mx-auto mb-4 sm:w-xl lg:px-8">
-            <div>
-              <div className="sm:flex sm:items-end sm:space-x-5">
-                <div className="flex">{groupAvatar(group, 10)}</div>
-                <div className="flex-col justify-between space-y-4 sm:flex-1 sm:min-w-0 sm:flex sm:justify-end sm:pb-1">
-                  <div className="flex-1 min-w-0 mt-3 sm:hidden md:block">
-                    <h1 className="text-2xl font-bold truncate text-primary">{group.name}</h1>
-                  </div>
-                </div>
-              </div>
-              <div className="flex-1 hidden min-w-0 mt-6 sm:block md:hidden">
-                <h1 className="text-2xl font-bold truncate text-primary">{group.name}</h1>
-              </div>
+          <div key={group._id.toString()} className="flex items-center justify-between w-full mx-auto bg-obs-primary-alt hover:bg-obs-tertiary">
+            <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer">
+              <div className="flex">{groupAvatar(group, 10)}</div>
+              <div className="truncate text-md text-primary">{group.name}</div>
             </div>
             <div className="flex p-1 -space-x-1 overflow-hidden">
               {group.peoples.map((people) => {
@@ -66,8 +57,8 @@ export const SekundGroupsComponent = ({ peoplesService }: GroupsComponentProps) 
   } else return (
     <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
-      <div className="text-center ">{t('plugin:noOne')}</div>
-      <div className="mt-2 text-sm text-center ">{t('plugin:noOneDesc')}</div>
+      <div className="text-center ">{t('plugin:noGroups')}</div>
+      <div className="mt-2 text-sm text-center ">{t('plugin:noGroupsDesc')}</div>
     </div>)
 
 }

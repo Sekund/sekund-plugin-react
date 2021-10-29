@@ -12,7 +12,7 @@ export default class SekundPeoplesView extends SekundView {
     }
 
     getDisplayText(): string {
-        return "Sekund Peoples";
+        return "Sekund Groups";
     }
 
     getIcon(): string {

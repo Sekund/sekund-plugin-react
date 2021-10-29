@@ -18,7 +18,7 @@ export type HomeComponentProps = {
 
 export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
   const { i18n } = useTranslation();
-  const { appState, appDispatch } = useAppContext();
+  const { appState } = useAppContext();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
   const notesProviderState = {
     notesState,
@@ -43,9 +43,9 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
   }, [appState.generalState])
 
   useEffect(() => {
-    console.log("putting notes watcher in place...");
     (async () => {
-      if (appState.plugin) {
+      if (appState.plugin && appState.plugin.user) {
+        console.log("putting notes watcher in place...");
         const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
         if (notes) {
           gen = notes.watch();
@@ -65,12 +65,13 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: updtNotes });
   }
 
-  function openNoteFile(note: Note) {
+  async function openNoteFile(note: Note) {
     const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
     if (file && appState.plugin?.app.workspace.activeLeaf) {
       appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
     } else {
-      NoteSyncService.instance.noFile(note);
+      const rNote = NoteSyncService.instance.getNoteByPath(note.path);
+      NoteSyncService.instance.noLocalFile(note);
     }
   }
 
@@ -92,7 +93,7 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
     <div className="flex flex-col w-full overflow-auto space-y-2px">
       {notes?.map((note: Note) => (
         <React.Fragment key={note._id.toString()}>
-          <div className="flex flex-col px-3 py-2 text-sm cursor-pointer bg-obs-primary-alt"
+          <div className="flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary"
             onClick={() => openNoteFile(note)}>
             <div>
               {note.title.replace(".md", "")}

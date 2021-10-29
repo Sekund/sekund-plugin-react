@@ -177,13 +177,11 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly attemptConnection = async (): Promise<GeneralState> => {
 
-    // if (GlobalState.instance.appState.generalState === "connecting") {
-    //   return "connecting";
-    // }
+    if (GlobalState.instance.appState.generalState === "connecting") {
+      return "connecting";
+    }
 
     setGeneralState(Object.values(this.dispatchers), "connecting");
-
-    console.log("attempting connection");
 
     if (!this.settings.apiKey || this.settings.apiKey === "") {
       if (!this.settings.subdomain || this.settings.subdomain === "") {
@@ -275,7 +273,6 @@ class SekundSettingsTab extends PluginSettingTab {
 
   hide(): void {
     this.plugin.loadSettings();
-    console.log("hiding settings pane, attempting connection...")
     setTimeout(() => this.plugin.attemptConnection(), 100);
   }
 

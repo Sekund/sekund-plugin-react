@@ -73,11 +73,9 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   async function addSelectedUserOrGroup() {
     if (selectedUserOrGroup !== null) {
       if ((selectedUserOrGroup as any).type === "user") {
-        console.log("adding sharing user");
         await NotesService.instance.addSharingPeople(note._id, selectedUserOrGroup as People);
         note.sharing?.peoples?.push(selectedUserOrGroup as People);
       } else {
-        console.log("adding sharing group");
         await NotesService.instance.addSharingGroup(note._id, selectedUserOrGroup as Group);
         note.sharing?.groups?.push(selectedUserOrGroup as Group);
       }

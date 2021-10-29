@@ -1,7 +1,12 @@
+import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
+import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
+import NotesContext from "@/state/NotesContext";
+import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
+import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import SekundPeopleSummary from "@/ui/peoples/SekundPeopleSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { EmojiSadIcon } from "@heroicons/react/solid";
@@ -18,6 +23,11 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
   const { appState } = useAppContext();
   const { t } = useTranslation("plugin");
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
+  const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
+  const notesProviderState = {
+    notesState,
+    notesDispatch,
+  };
 
   const { peoples } = peoplesState;
 
@@ -35,19 +45,27 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
     }
   }, [appState.generalState])
 
-  // render
-
-  function displaySharing(peopleId: ObjectID) {
-
+  function openNoteFile(note: Note) {
+    console.log("should open note ")
   }
 
-  function displayShared(peopleId: ObjectID) {
+  async function displaySharing(peopleId: ObjectID) {
+    const sharingNotes = await NotesService.instance.getSharingNotes(peopleId.toString());
+    notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharingNotes })
+  }
 
+  async function displayShared(peopleId: ObjectID) {
+    const sharedNotes = await NotesService.instance.getSharedNotes(peopleId.toString());
+    notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharedNotes })
+  }
+
+  function noteClicked(note: Note) {
+    console.log("note was clicked");
   }
 
   if (peoples && peoples.length > 0) {
     return (
-      <>
+      <NotesContext.Provider value={notesProviderState}>
         <div className="flex flex-col space-y-2px w-xl">
           {peoples.map((people: People) => {
             return (
@@ -58,8 +76,8 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
             );
           })}
         </div>
-
-      </>)
+        <NoteSummariesPanel handleNoteClicked={noteClicked} />
+      </NotesContext.Provider>)
   } else return (
     <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>

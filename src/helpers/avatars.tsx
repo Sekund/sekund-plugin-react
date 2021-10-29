@@ -34,5 +34,5 @@ export function peopleAvatar(people: People, size = 6) {
 }
 
 export function avatarImage(image: string, size = 6) {
-  return <Avatar src={image} size={`${size * 0.25}rem`} round={true}></Avatar>;
+  return <img src={image} className={`h-${size} w-${size} rounded-full`}></img>;
 }

@@ -3,7 +3,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import React from 'react';
 import SekundNoteComponentHOC, { SekundNoteComponent } from './SekundNoteComponent';
 import '/global.css';
-import notes from "@/mockdata/NotesMock";
+import notes, { someNote } from "@/mockdata/NotesMock";
 import { TFile } from 'obsidian';
 
 export default {
@@ -31,7 +31,7 @@ export const PublishedAndSynced = Template.bind({});
 PublishedAndSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
-    note: notes[10],
+    note: someNote,
     localFile: {} as TFile
 
 };
@@ -40,7 +40,7 @@ export const PublishedNotSharing = Template.bind({});
 PublishedNotSharing.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
-    note: { ...notes[10], sharing: {} },
+    note: { ...someNote, sharing: {} },
     localFile: {} as TFile
 };
 
@@ -48,7 +48,7 @@ export const PublishedSharingNoComments = Template.bind({});
 PublishedSharingNoComments.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
-    note: { ...notes[10], comments: [] },
+    note: { ...someNote, comments: [] },
     localFile: {} as TFile
 };
 
@@ -56,7 +56,7 @@ export const PublishedAndNotSynced = Template.bind({});
 PublishedAndNotSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: false },
-    note: notes[10],
+    note: someNote,
     localFile: {} as TFile
 };
 

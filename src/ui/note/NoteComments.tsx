@@ -53,11 +53,11 @@ export default function NoteComments() {
     }
   }, []);
 
-  async function handleNoteChange(change: Realm.Services.MongoDB.ChangeEvent<any>, noteId: ObjectID) {
+  async function handleNoteChange(change: Realm.Services.MongoDB.ChangeEvent<any>, changedNoteId: ObjectID) {
     // check if this note change is for the current note and not for an old
     // one. 
     const currentRemoteNote = GlobalState.instance.appState.remoteNote;
-    if (currentRemoteNote && currentRemoteNote._id.equals(noteId)) {
+    if (currentRemoteNote && currentRemoteNote._id.equals(changedNoteId)) {
       const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
       appDispatch({ type: AppActionKind.SetRemoteNote, payload: { ...updtNote } })
     }
@@ -92,6 +92,7 @@ export default function NoteComments() {
     setAreaText((textarea.value = ""));
   }
 
+
   return (
     <div className="px-2 mt-1 mb-16">
       <div className="flex flex-col space-y-4">
@@ -112,7 +113,7 @@ export default function NoteComments() {
         </div>
       </div>
       <div className="flex justify-end w-full mt-1">
-        <button onClick={() => clearComment()} type="button">
+        <button className={areaText === '' ? 'text-obs-faint' : 'text-obs-normal'} onClick={areaText === '' ? undefined : clearComment} type="button">
           {t('clear')}
         </button>
         <button ref={sendButton} onClick={addComment} type="button">

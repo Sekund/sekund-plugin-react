@@ -424,15 +424,15 @@ const users = [
   { _id: { $oid: "6171606afc13ae1f35000006" }, name: "Cassy Jovis", image: "/avatars/20.jpeg", email: "cjovisj@wiley.com", createdAt: 1611478865000, updatedAt: 1620836559000 },
 ];
 
-export default allNotesMock.map((nd: any) => {
+const convertNote = (nd: any) => {
   const comments = nd.comments
     .map((c) => {
       const author = users.filter((u) => {
-        const found = u._id.$oid === c.author.$oid;
+        const found = u._id.$oid === c.author._id;
         return found;
       })[0];
       if (author) {
-        return { ...c, author };
+        return { ...c, author: { ...author, _id: new ObjectID(author._id.$oid) } };
       }
     })
     .filter((c) => c !== undefined);
@@ -455,4 +455,28 @@ export default allNotesMock.map((nd: any) => {
     image: `http://next.sekund.io${nd.image}`,
     comments,
   } as Note;
+};
+
+export default allNotesMock.map(convertNote);
+
+export const someNote = convertNote({
+  _id: { $oid: "61716443fc13ae4ad3000025" },
+  created: 1615613439000,
+  updated: 1618198058000,
+  title: "Father and Guns (De père en flic)",
+  path: "nwwnvsvmxty.fjybabbkfkdiz.xkotwixfbnx",
+  content: "Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.\n\nIn hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.\n\nAliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.",
+  sharing: { peoples: [{ _id: "6171606afc13ae1f35000002" }], groups: [] },
+  userId: { $oid: "6171606afc13ae1f35000000" },
+  comments: [
+    { text: "Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.", author: { _id: "6171606afc13ae1f35000005" }, created: 1608509862000, updated: 1614841912000 },
+    { text: "Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.", author: { _id: "6171606afc13ae1f35000006" }, created: 1615698683000, updated: 1626504348000 },
+    { text: "Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.", author: { _id: "6171606afc13ae1f35000002" }, created: 1601884460000, updated: 1605855532000 },
+    { text: "In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.", author: { _id: "6171606afc13ae1f35000001" }, created: 1612579165000, updated: 1614353628000 },
+    { text: "Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.", author: { _id: "6171606afc13ae1f35000007" }, created: 1605387176000, updated: 1615438906000 },
+    { text: "Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui.", author: { _id: "6171606afc13ae1f35000012" }, created: 1627887367000, updated: 1619182239000 },
+    { text: "Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.", author: { _id: "6171606afc13ae1f3500000b" }, created: 1608932429000, updated: 1627493071000 },
+    { text: "Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.", author: { _id: "6171606afc13ae1f35000001" }, created: 1611296550000, updated: 1616840688000 },
+    { text: "Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.", author: { _id: "6171606afc13ae1f35000010" }, created: 1624525604000, updated: 1622750908000 },
+  ],
 });

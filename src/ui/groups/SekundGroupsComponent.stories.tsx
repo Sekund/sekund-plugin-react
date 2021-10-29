@@ -7,6 +7,7 @@ import SekundGroupsComponentHOC, { SekundGroupsComponent } from './SekundGroupsC
 import '/global.css';
 import ObjectId from 'bson-objectid';
 import { users } from "@/mockdata/Users";
+import ObjectID from "bson-objectid";
 
 export default {
     title: 'Sekund/Groups',
@@ -29,6 +30,7 @@ const now = Date.now();
 
 const groups = [
     {
+        _id: new ObjectID(),
         name: "Pads lovers",
         created: now,
         updated: now,
@@ -36,6 +38,7 @@ const groups = [
         userId: new ObjectId("6150c1ef14be465c39539ccf"),
     },
     {
+        _id: new ObjectID(),
         name: "Pernambuco",
         created: now,
         updated: now,

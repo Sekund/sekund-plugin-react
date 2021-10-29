@@ -5,6 +5,7 @@ import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/
 import SekundPeopleSummary from "@/ui/peoples/SekundPeopleSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { EmojiSadIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -36,11 +37,22 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
 
   // render
 
+  function displaySharing(peopleId: ObjectID) {
+
+  }
+
+  function displayShared(peopleId: ObjectID) {
+
+  }
+
   if (peoples && peoples.length > 0) {
     return <div className="flex flex-col space-y-2px w-xl">
       {peoples.map((people: People) => {
         return (
-          <SekundPeopleSummary key={people._id.toString()} people={people}></SekundPeopleSummary>
+          <SekundPeopleSummary key={people._id.toString()}
+            people={people}
+            displayShared={displayShared}
+            displaySharing={displaySharing} />
         );
       })}
     </div>
@@ -50,7 +62,6 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
       <div className="text-center ">{t('plugin:noOne')}</div>
       <div className="mt-2 text-sm text-center ">{t('plugin:noOneDesc')}</div>
     </div>)
-
 }
 
 export default (props: PeoplesComponentProps) => withConnectionStatus(props)(SekundPeoplesComponent)

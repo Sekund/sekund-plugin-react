@@ -2,7 +2,7 @@ import { Group } from "@/domain/Group";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
-import { ObjectId } from "bson";
+import ObjectID from "bson-objectid";
 
 export default class GroupsService extends ServerlessService {
   private static _instance: GroupsService;
@@ -21,7 +21,7 @@ export default class GroupsService extends ServerlessService {
     return result[0];
   }
 
-  async deleteGroup(groupId: ObjectId) {
+  async deleteGroup(groupId: ObjectID) {
     const result: any = await callFunction(this.plugin, "deleteGroup", [groupId]);
     return result;
   }

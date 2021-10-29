@@ -169,8 +169,6 @@ export const SekundNoteComponent = () => {
       children.push(sharing(remoteNote.sharing))
     }
 
-    console.log("remoteNote", remoteNote)
-
     return (<>
       {remoteNote && !isSharing(remoteNote) ?
         <div className="fixed inset-0">

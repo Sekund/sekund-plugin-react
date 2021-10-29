@@ -1,7 +1,7 @@
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
-import { ObjectId } from "bson";
+import ObjectID from "bson-objectid";
 import { Group } from "../domain/Group";
 import { People } from "../domain/People";
 
@@ -27,12 +27,12 @@ export default class PeoplesService extends ServerlessService {
   async getRawPeoples(): Promise<People[]> {
     const { sharingNotes, sharedNotes } = await callFunction(this.plugin, "peoples");
 
-    const sharing: Array<{ sharing: { peoples: ObjectId[] } }> = sharingNotes;
-    const shared: Array<{ userId: ObjectId }> = sharedNotes;
+    const sharing: Array<{ sharing: { peoples: ObjectID[] } }> = sharingNotes;
+    const shared: Array<{ userId: ObjectID }> = sharedNotes;
 
     const peoples: Array<People> = [];
 
-    const getPeople = (id: ObjectId): Partial<People | null> => {
+    const getPeople = (id: ObjectID): Partial<People | null> => {
       const found = peoples.filter((p) => p._id.equals(id));
       return found.length > 0 ? found[0] : null;
     };

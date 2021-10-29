@@ -1,13 +1,16 @@
 import { People } from "@/domain/People";
 import { peopleAvatar } from "@/helpers/avatars";
 import { ArrowSmDownIcon, ArrowSmUpIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 type Props = {
     people: People
+    displayShared: (id: ObjectID) => void
+    displaySharing: (id: ObjectID) => void
 }
 
-export default function SekundPeopleSummary({ people }: Props) {
+export default function SekundPeopleSummary({ people, displayShared, displaySharing }: Props) {
 
     const { t } = useTranslation(["plugin"]);
 
@@ -15,7 +18,7 @@ export default function SekundPeopleSummary({ people }: Props) {
         const children: Array<JSX.Element> = [];
         if (people.sharing > 0) {
             children.push(
-                <button className="px-2" key="shing" title={t('plugin:yourShares')}>
+                <button onClick={() => displaySharing(people._id)} className="px-2" key="shing" title={t('plugin:yourShares')}>
                     <div className="flex items-center">
                         <ArrowSmUpIcon className="w-4 h-4"></ArrowSmUpIcon> {people?.sharing}
                     </div>
@@ -27,7 +30,7 @@ export default function SekundPeopleSummary({ people }: Props) {
                 children.push(<span key="sep" className="ml-1"></span>);
             }
             children.push(
-                <button className="px-2" key="shrd" title={t('plugin:theirShares')}>
+                <button onClick={() => displayShared(people._id)} className="px-2" key="shrd" title={t('plugin:theirShares')}>
                     <div className="flex items-center">
                         <ArrowSmDownIcon className="w-4 h-4"></ArrowSmDownIcon> {people?.shared}
                     </div>

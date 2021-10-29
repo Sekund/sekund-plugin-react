@@ -1,4 +1,4 @@
-import { ObjectID } from "bson";
+import ObjectID from "bson-objectid";
 
 export type PeopleId = Pick<People, "name" | "image" | "email" | "_id">;
 

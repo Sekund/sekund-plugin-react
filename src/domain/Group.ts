@@ -1,4 +1,4 @@
-import { ObjectID } from "bson";
+import ObjectID from "bson-objectid";
 import { People } from "./People";
 
 export interface Group {

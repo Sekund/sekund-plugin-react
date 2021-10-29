@@ -1,4 +1,4 @@
-import { ObjectId } from "bson";
+import ObjectID from "bson-objectid";
 import { People } from "../domain/People";
 
 const allPeoplesMock = [
@@ -49,9 +49,9 @@ const allPeoplesMock = [
 
 export default allPeoplesMock.map((pd: any) => {
   return {
-    _id: new ObjectId(pd._id.$oid),
+    _id: new ObjectID(pd._id.$oid),
     ...pd,
   } as People;
 });
 
-export const someone = { _id: new ObjectId("6131eb9cfc13ae20180004ac"), name: "Celene Chadderton", image: "/avatars/4.jpeg", email: "cchadderton14@yolasite.com", createdAt: new Date("2021-08-27T04:28:08Z"), updatedAt: new Date("2021-08-29T05:04:21Z"), shared: 8, sharing: 5 };
+export const someone = { _id: new ObjectID("6131eb9cfc13ae20180004ac"), name: "Celene Chadderton", image: "/avatars/4.jpeg", email: "cchadderton14@yolasite.com", createdAt: new Date("2021-08-27T04:28:08Z"), updatedAt: new Date("2021-08-29T05:04:21Z"), shared: 8, sharing: 5 };

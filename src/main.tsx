@@ -148,7 +148,6 @@ export default class SekundPluginReact extends Plugin {
   }
 
   public readonly updateOnlineStatus = async () => {
-    console.log("update online status")
     if (!navigator.onLine) {
       Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
       setGeneralState(Object.values(this.dispatchers), "offline");
@@ -162,7 +161,6 @@ export default class SekundPluginReact extends Plugin {
     }
 
     if (navigator.onLine) {
-      console.log("navigator is online, attempting connection")
       await this.attemptConnection();
     }
 
@@ -205,8 +203,6 @@ export default class SekundPluginReact extends Plugin {
         const user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
 
         if (user) {
-          console.log("successful login")
-
           this.authenticatedUsers[this.settings.subdomain] = user;
 
           const dispatchers = Object.values(this.dispatchers);

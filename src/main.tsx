@@ -1,3 +1,4 @@
+import EventsWatcherService from "@/services/EventsWatcherService";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
@@ -174,6 +175,11 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly attemptConnection = async (): Promise<GeneralState> => {
 
+    const authUser = this.authenticatedUsers[this.settings.subdomain];
+    if (authUser && authUser.isLoggedIn) {
+      return "allGood";
+    }
+
     if (GlobalState.instance.appState.generalState === "connecting") {
       return "connecting";
     }
@@ -211,6 +217,7 @@ export default class SekundPluginReact extends Plugin {
           new NotesService(this);
           new PeoplesService(this);
           new GroupsService(this);
+          new EventsWatcherService(this);
 
           const userProfile = await UsersService.instance.fetchUser();
 

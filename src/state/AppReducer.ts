@@ -12,6 +12,7 @@ export type NoteState = {
 	publishing: boolean;
 	fetching: boolean;
 	synchronizing: boolean;
+	isShared: boolean;
 };
 
 export type AppState = {
@@ -34,6 +35,7 @@ export const initialAppState: AppState = {
 		publishing: false,
 		fetching: false,
 		synchronizing: false,
+		isShared: false,
 	},
 	locale: "en",
 	currentFile: undefined,

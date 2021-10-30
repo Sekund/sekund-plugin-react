@@ -2,6 +2,7 @@ import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
+import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
@@ -78,7 +79,7 @@ export const SekundGroupsComponent = ({ peoplesService }: GroupsComponentProps) 
   }
 
   function noteClicked(note: Note) {
-    console.log("note was clicked");
+    NoteSyncService.instance.syncDown(note);
   }
 
   function groupMembers(group: Group): JSX.Element {

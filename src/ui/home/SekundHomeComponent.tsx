@@ -65,12 +65,20 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
 	}
 
 	async function openNoteFile(note: Note) {
+		console.log("looking to open file at path: " + note.path)
 		const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
-		if (file && appState.plugin?.app.workspace.activeLeaf) {
-			appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
+		if (file) {
+			console.log("found local file")
+			if (appState.plugin?.app.workspace.activeLeaf) {
+				console.log("activeLeaf is live, opening file...")
+				appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
+			} else {
+				console.log("no active leaf")
+			}
 		} else {
+			console.log("no local file, downloading remote note")
 			const rNote = NoteSyncService.instance.getNoteByPath(note.path);
-			NoteSyncService.instance.noLocalFile(note);
+			NoteSyncService.instance.syncDown(note);
 		}
 	}
 

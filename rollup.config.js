@@ -4,6 +4,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import nodePolyfills from "rollup-plugin-polyfill-node";
 import postcss from "rollup-plugin-postcss";
+const polyfill = require("rollup-plugin-polyfill");
 
 const isProd = process.env.BUILD === "production";
 
@@ -41,6 +42,6 @@ export default {
 		typescript({ sourceMap: false }),
 		nodeResolve({ browser: true }),
 		commonjs(),
-		nodePolyfills(),
+		nodePolyfills("path"),
 	],
 };

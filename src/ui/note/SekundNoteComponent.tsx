@@ -10,6 +10,8 @@ import withConnectionStatus from "@/ui/withConnectionStatus";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import EventsContext, { useEventsContext } from "@/state/EventsContext";
+import EventsReducer, { initialEventsState } from "@/state/EventsReducer";
 
 export const SekundNoteComponent = () => {
   const { appState } = useAppContext();
@@ -17,6 +19,8 @@ export const SekundNoteComponent = () => {
   const { t } = useTranslation(["common", "plugin"]);
   const { remoteNote, currentFile } = appState;
   const [showSharingModal, setShowSharingModal] = useState(false);
+  const [eventsState, eventsDispatch] = React.useReducer(EventsReducer, initialEventsState);
+  const eventsProviderState = { eventsState, eventsDispatch };
 
   function handleSync() {
     if (!publishing && !fileSynced && !fetching) {
@@ -116,6 +120,7 @@ export const SekundNoteComponent = () => {
   }
 
   // render
+  console.log("notestate", appState.currentFile, appState.currentNoteState, appState.remoteNote)
 
   if (fetching) {
     return <div className="fixed inset-0 animate-pulse bg-obs-primary-alt">
@@ -125,16 +130,16 @@ export const SekundNoteComponent = () => {
     </div>
   }
 
-  // if (!currentFile) {
+  if (!currentFile) {
 
-  //   return <div className="fixed inset-0">
-  //     <div className="flex flex-col items-center justify-center w-full h-full p-2">
-  //       <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t('plugin:deleteFromSekundDesc')}</span>
-  //       <button onClick={handleUnpublish} className="flex items-center"><TrashIcon className="w-4 h-4 mr-1" />{t('plugin:deleteFromSekund')}</button>
-  //     </div>
-  //   </div>
+    return <div className="fixed inset-0">
+      <div className="flex flex-col items-center justify-center w-full h-full p-2">
+        <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t('plugin:deleteFromSekundDesc')}</span>
+        <button onClick={handleUnpublish} className="flex items-center"><TrashIcon className="w-4 h-4 mr-1" />{t('plugin:deleteFromSekund')}</button>
+      </div>
+    </div>
 
-  // }
+  }
 
   if (!published) {
 
@@ -169,24 +174,25 @@ export const SekundNoteComponent = () => {
       children.push(sharing(remoteNote.sharing))
     }
 
-    return (<>
-      {remoteNote && !isSharing(remoteNote) ?
-        <div className="fixed inset-0">
-          <div className="flex flex-col items-center justify-center w-full h-full p-2">
-            <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
-            <button onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
+    return (
+      <EventsContext.Provider value={eventsProviderState}>
+        {remoteNote && !isSharing(remoteNote) ?
+          <div className="fixed inset-0">
+            <div className="flex flex-col items-center justify-center w-full h-full p-2">
+              <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
+              <button onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
+            </div>
           </div>
+          : <NoteComments />}
+        <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>
+          <div className="flex items-center justify-between px-2 text-sm">{children}</div>
+          <a className={`flex items-center justify-center p-1 text-sm text-center cursor-pointer ${footerTextColor}`} onClick={handleUnpublish}>
+            <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
+            {t('plugin:deleteFromSekund')}
+          </a>
         </div>
-        : <NoteComments />}
-      <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>
-        <div className="flex items-center justify-between px-2 text-sm">{children}</div>
-        <a className={`flex items-center justify-center p-1 text-sm text-center cursor-pointer ${footerTextColor}`} onClick={handleUnpublish}>
-          <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
-          {t('plugin:deleteFromSekund')}
-        </a>
-      </div>
-      {renderSharingDialog()}
-    </>)
+        {renderSharingDialog()}
+      </EventsContext.Provider>)
   }
 }
 

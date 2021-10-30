@@ -1,6 +1,7 @@
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import NotesService from "@/services/NotesService";
+import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
@@ -45,10 +46,6 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
     }
   }, [appState.generalState])
 
-  function openNoteFile(note: Note) {
-    console.log("should open note ")
-  }
-
   async function displaySharing(peopleId: ObjectID) {
     const sharingNotes = await NotesService.instance.getSharingNotes(peopleId.toString());
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharingNotes })
@@ -60,7 +57,7 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
   }
 
   function noteClicked(note: Note) {
-    console.log("note was clicked");
+    NoteSyncService.instance.syncDown(note);
   }
 
   if (peoples && peoples.length > 0) {

@@ -14,33 +14,33 @@ if you want to view the source visit the plugins github repository
 `;
 
 export default {
-  input: "src/main.tsx",
-  output: [
-    {
-      file: "main.js",
-      sourcemap: "inline",
-      format: "cjs",
-      exports: "default",
-      banner,
-      compact: true,
-    },
-  ],
-  external: ["obsidian"],
-  plugins: [
-    json(),
-    postcss({
-      config: {
-        path: "./postcss.config.js",
-      },
-      extensions: [".css"],
-      minimize: true,
-      inject: {
-        insertAt: "top",
-      },
-    }),
-    typescript({ sourceMap: false }),
-    nodeResolve({ browser: true }),
-    commonjs(),
-    nodePolyfills(),
-  ],
+	input: "src/main.tsx",
+	output: [
+		{
+			file: "main.js",
+			sourcemap: "inline",
+			format: "cjs",
+			exports: "default",
+			banner,
+			compact: true,
+		},
+	],
+	external: ["obsidian"],
+	plugins: [
+		json(),
+		postcss({
+			config: {
+				path: "./postcss.config.js",
+			},
+			extensions: [".css"],
+			minimize: true,
+			inject: {
+				insertAt: "top",
+			},
+		}),
+		typescript({ sourceMap: false }),
+		nodeResolve({ browser: true }),
+		commonjs(),
+		nodePolyfills(),
+	],
 };

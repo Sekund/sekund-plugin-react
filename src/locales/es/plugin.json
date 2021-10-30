@@ -31,5 +31,12 @@
     "noOneDesc": "Comparte algo con alguien o pídele a alguien que comparta algo contigo.",
     "noGroups": "Ups ... Todavía no tienes ningún grupo.",
     "noGroupsDesc": "Crea tú uno o recuerdá a los demás que lo agreguen a sus grupos.",
-    "mastery": "Maestría"
+    "mastery": "Maestría",
+    "shareWithWhom": "¿Con quién quieres compartir esta nota?",
+    "setSharingOptions": "Establecer las opciones de compartición",
+    "groupName": "Nombre del grupo",
+    "groupMembers": "Miembros del grupo",
+    "editGroup": "Editar grupo",
+    "addGroup": "Nuevo grupo",
+    "chooseUser": "Elija un usuario"
 }

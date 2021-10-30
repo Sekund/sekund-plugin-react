@@ -3,6 +3,7 @@ import { useNotesContext } from '@/state/NotesContext';
 import { NotesActionKind } from '@/state/NotesReducer';
 import NoteSummaryComponent from '@/ui/common/NoteSummaryComponent';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
 	handleNoteClicked: (note: Note) => void;
@@ -10,18 +11,18 @@ type Props = {
 
 export default function NoteSummariesPanel({ handleNoteClicked }: Props) {
 
+	const { t } = useTranslation();
+
 	const { notesState, notesDispatch } = useNotesContext();
 
 	const { notes } = notesState;
 
-	console.log("notes", notes);
-
 	if (notes && notes.length > 0) {
 		return (
-			<div className="absolute inset-0 flex flex-col w-full h-full bg-obs-primary">
+			<div className="fixed inset-0 flex flex-col w-full h-full bg-obs-primary">
 				<div className="flex items-center h-8 px-2">
 					<span className="font-medium text-obs-primary"
-						onClick={() => notesDispatch({ type: NotesActionKind.ResetNotes, payload: [] })}>← Back</span>
+						onClick={() => notesDispatch({ type: NotesActionKind.ResetNotes, payload: [] })}>← {t('back')}</span>
 				</div>
 				<div className="flex flex-col w-full overflow-auto space-y-2px">
 					{notes?.map((note: Note) => (

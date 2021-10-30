@@ -31,5 +31,12 @@
     "noOneDesc": "Either share something with someone or ask someone to share something with you.",
     "noGroups": "Whoops... You don't have any groups yet.",
     "noGroupsDesc": "Either create one yourself or remind others to add you to their groups.",
-    "mastery": "Mastery"
+    "mastery": "Mastery",
+    "shareWithWhom": "With whom do you want to share this note?",
+    "setSharingOptions": "Set sharing options",
+    "groupName": "Group name",
+    "groupMembers": "Group members",
+    "editGroup": "Edit group",
+    "addGroup": "New group",
+    "chooseUser": "Choose a user"
 }

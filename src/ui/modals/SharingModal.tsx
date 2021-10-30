@@ -1,27 +1,27 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import { SelectOption } from "@/domain/Types";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
+import { setHandleDisplay } from "@/helpers/obsidian";
 import NotesService from "@/services/NotesService";
 import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { GroupBase } from "react-select";
+import { useTranslation } from "react-i18next";
 import AsyncSelect from "react-select/async";
-import Select from "react-select/dist/declarations/src/Select";
+import reactSelectObsidianTheme from '@/helpers/reactSelect'
 
 type Props = {
   open: boolean;
   setOpen: (v: boolean) => void;
   note: Note;
 };
-/* This example requires Tailwind CSS v2.0+ */
 
 export default function SharingModal({ open, setOpen, note }: Props) {
+  const { t } = useTranslation(["common", "plugin"]);
   const { sharing } = note;
   const [state, setState] = useState(0);
   const { appState } = useAppContext();
@@ -33,13 +33,6 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
   useEffect(() => {
-    function setHandleDisplay(value) {
-      const resizeHandles: HTMLCollectionOf<Element> = document.getElementsByClassName("workspace-leaf-resize-handle");
-      for (let i = 0; i < resizeHandles.length; i++) {
-        const handle = (resizeHandles.item(i) as HTMLElement);
-        handle.style.display = value;
-      }
-    }
     setHandleDisplay('none');
     return () => {
       setHandleDisplay('');
@@ -94,7 +87,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       const { groups } = sharing;
       groups?.forEach((g, idx) =>
         children.push(
-          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-secondary">
+          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-tertiary">
             {groupAvatar(g)}
             <span className="ml-1">{g.name}</span>
             <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
@@ -134,20 +127,21 @@ export default function SharingModal({ open, setOpen, note }: Props) {
             <div className="inline-block px-4 pt-5 pb-4 text-left align-bottom transition-all transform rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 bg-obs-primary">
               <div className="fixed top-0 right-0 hidden pt-4 pr-4 sm:block">
                 <button type="button" className="flex flex-col justify-center text-gray-400 rounded-md bg-primary hover:text-secondary focus:outline-none" onClick={() => setOpen(false)}>
-                  <span className="sr-only">Close</span>
+                  <span className="sr-only">{t('close')}</span>
                   <XIcon className="w-6 h-6" aria-hidden="true" />
                 </button>
               </div>
               <div>
-                <div className="text-lg font-medium leading-6 text-primary">Set Sharing Options</div>
+                <div className="text-lg font-medium leading-6 text-primary">{t("setSharingOptions")}</div>
                 <div className="max-w-xl mt-2 text-sm text-secondary">
-                  <p>With whom do you want to share this note?</p>
+                  <p>{t('plugin:shareWithWhom')}</p>
                 </div>
                 <div className="mt-5 sm:flex sm:items-center">
                   <div className="w-full sm:max-w-xs">
                     <AsyncSelect
                       ref={selectInput}
                       placeholder="Choose a user or a group"
+                      styles={reactSelectObsidianTheme}
                       className="w-full text-sm bg-primary text-obs-normal"
                       loadOptions={loadOptions}
                       onChange={(v: any) => {
@@ -158,7 +152,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
                     />
                   </div>
                   <button className="inline-flex items-center justify-center w-full h-full px-4 py-2 mt-3 font-medium border rounded-md shadow-sm bg-accent hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onClick={() => addSelectedUserOrGroup()}>
-                    Add
+                    {t('add')}
                   </button>
                 </div>
               </div>

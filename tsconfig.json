@@ -1,23 +1,23 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "module": "ESNext",
-    "target": "es6",
-    "strict": true,
-    "allowJs": false,
-    "noImplicitAny": false,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "lib": ["dom", "es5", "scripthost", "es2015", "DOM.Iterable", "ESNext"],
-    "jsx": "react"
-  },
-  "include": ["**/*.ts", "**/*.tsx", "src/**/*.ts", "src/**/*.json", "src/**/*.tsx"],
-  "exclude": ["node_modules/*", "¨**.*.stories.tsx"]
+	"compilerOptions": {
+		"baseUrl": ".",
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"module": "ESNext",
+		"target": "es6",
+		"strict": true,
+		"allowJs": false,
+		"noImplicitAny": false,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"lib": ["dom", "es5", "scripthost", "es2015", "DOM.Iterable", "ESNext"],
+		"jsx": "react"
+	},
+	"include": ["**/*.ts", "**/*.tsx", "src/**/*.ts", "src/**/*.json", "src/**/*.tsx", "src/helpers/reactSelect.js"],
+	"exclude": ["node_modules/*", "¨**.*.stories.tsx"]
 }

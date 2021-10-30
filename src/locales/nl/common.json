@@ -44,5 +44,9 @@
     "delete": "Verwijderen",
     "update": "Update",
     "uptodate": "Actueel",
-    "updating": "Updaten"
+    "updating": "Updaten",
+    "back": "Terug",
+    "you": "Jij",
+    "add": "Toevoegen",
+    "create": "Maak"
 }

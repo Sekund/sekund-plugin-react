@@ -106,7 +106,7 @@ export default function NoteComments() {
       </div>
       <div className={`sm:col-span-2 ${localComments.length > 0 ? 'mt-8' : ''}`}>
         <label htmlFor="message" className="flex items-center h-10 space-x-2">
-          <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>You</span>
+          <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>{t('you')}</span>
         </label>
         <div className="mt-1">
           <TextareaAutosize onChange={(e) => setAreaText(e.target.value)} onKeyDown={(e: any) => handleKeydown(e)} onHeightChange={ensureSendVisible} minRows={2} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 border rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300" aria-describedby="message-max" defaultValue={""} />

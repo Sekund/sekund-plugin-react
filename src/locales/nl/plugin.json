@@ -31,5 +31,12 @@
     "noOneDesc": "Deel iets met iemand of vraag iemand om iets met je te delen.",
     "noGroups": "Oeps... Je hebt nog geen groepen.",
     "noGroupsDesc": "Maak er zelf een of herinner anderen eraan u aan hun groepen toe te voegen.",
-    "mastery": "Meesterschap"
+    "mastery": "Meesterschap",
+    "shareWithWhom": "Met wie wil je dit briefje delen?",
+    "setSharingOptions": "Opties voor delen instellen",
+    "groupName": "Naam van de groep",
+    "groupMembers": "Leden van de groep",
+    "editGroup": "Groep bewerken",
+    "addGroup": "Nieuwe groep",
+    "chooseUser": "Kies een gebruiker"
 }

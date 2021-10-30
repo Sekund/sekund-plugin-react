@@ -5,7 +5,6 @@ import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
-import GeneralStateWrapper from "@/storybook/AppStateWrapper";
 import SekundGroupsView from "@/ui/groups/SekundGroupsView";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";

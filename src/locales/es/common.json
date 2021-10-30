@@ -44,5 +44,9 @@
     "delete": "Cancelar",
     "update": "Actualizar",
     "uptodate": "Actualizado",
-    "updating": "Actualizando"
+    "updating": "Actualizando",
+    "back": "Volver",
+    "you": "Tú",
+    "add": "Añadir",
+    "create": "Crear"
 }

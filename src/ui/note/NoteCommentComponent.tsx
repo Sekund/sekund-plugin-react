@@ -8,18 +8,19 @@ import { DotsHorizontalIcon, PencilIcon, TrashIcon } from "@heroicons/react/soli
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TextareaAutosize from "react-textarea-autosize";
+import ReactTimeAgo from "react-time-ago";
+import Markdown from "markdown-to-jsx";
 
 type Props = {
   comment: NoteComment;
 };
 
 export default function NoteCommentComponent({ comment }: Props) {
-  const { t } = useTranslation(["common", "plugin"]);
+  const { t, i18n } = useTranslation(["common", "plugin"]);
   const { appState } = useAppContext();
   const { userProfile, remoteNote } = appState;
 
   const [editMode, setEditMode] = useState(false);
-  // const { notesState } = useNotesContext();
   const [userComment, setUserComment] = useState<string | null>(null);
   const area = useRef<HTMLDivElement>(null);
 
@@ -68,9 +69,9 @@ export default function NoteCommentComponent({ comment }: Props) {
 
   function commentText() {
     if (editMode) {
-      return <TextareaAutosize minRows={2} onHeightChange={ensureAreaBottomVisible} onKeyDown={(e: any) => handleKeydown(e)} onChange={(evt) => setUserComment(evt.target.value)} className="p-1 text-gray-800 input" defaultValue={comment.text}></TextareaAutosize>;
+      return <TextareaAutosize minRows={2} onHeightChange={ensureAreaBottomVisible} onKeyDown={(e: any) => handleKeydown(e)} onChange={(evt) => setUserComment(evt.target.value)} className="p-1 mt-1 mr-4 input" defaultValue={comment.text}></TextareaAutosize>;
     }
-    return comment.text;
+    return <Markdown>{comment.text}</Markdown>;
   }
 
   function commentActions(noteComment: NoteComment) {
@@ -78,8 +79,8 @@ export default function NoteCommentComponent({ comment }: Props) {
     if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
-          <Popover.Button className="relative p-1 rounded-full cursor-pointer hover:bg-primary">
-            <DotsHorizontalIcon className="w-6 h-6"></DotsHorizontalIcon>
+          <Popover.Button className="relative flex items-center justify-center w-4 h-4 rounded-full cursor-pointer max-h-4 max-w-4 hover:bg-primary">
+            <DotsHorizontalIcon style={{ minWidth: '1rem' }}></DotsHorizontalIcon>
           </Popover.Button>
 
           <Popover.Panel className="absolute z-30 mt-24 rounded-lg cursor-pointer bg-obs-primary-alt">
@@ -103,9 +104,13 @@ export default function NoteCommentComponent({ comment }: Props) {
   const { image, name, email } = comment.author;
 
   return (
-    <div key={comment.created} className="flex">
+    <div key={comment.created} className="flex items-start">
       <div className="flex-shrink-0">{getAvatar(name, image, email, 8)}</div>
-      <div ref={area} className={`flex flex-col px-3 pt-3 pb-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}>
+      <div ref={area} className={`flex flex-col px-3 pt-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}>
+        <div className="flex items-center mb-2 space-x-2 ">
+          <ReactTimeAgo className="text-obs-muted" date={+comment.created} locale={i18n.language} />
+          {commentActions(comment)}
+        </div>
         {commentText()}
         {editMode ? (
           <div className="flex items-center justify-end w-full mt-2 text-xs nowrap">
@@ -120,7 +125,7 @@ export default function NoteCommentComponent({ comment }: Props) {
           </div>
         ) : null}
       </div>
-      {commentActions(comment)}
+
     </div>
   );
 }

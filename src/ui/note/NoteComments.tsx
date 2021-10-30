@@ -94,17 +94,8 @@ export default function NoteComments() {
 
 
   return (
-    <div className="px-2 mt-1 mb-16">
-      <div className="flex flex-col space-y-4">
-        {localComments?.map((noteComment) => {
-          return (
-            <Fragment key={noteComment.created}>
-              <NoteCommentComponent comment={noteComment}></NoteCommentComponent>
-            </Fragment>
-          );
-        })}
-      </div>
-      <div className={`sm:col-span-2 ${localComments.length > 0 ? 'mt-8' : ''}`}>
+    <div className="px-2 mt-1">
+      <div className={`sm:col-span-2`}>
         <label htmlFor="message" className="flex items-center h-10 space-x-2">
           <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>{t('you')}</span>
         </label>
@@ -112,13 +103,22 @@ export default function NoteComments() {
           <TextareaAutosize onChange={(e) => setAreaText(e.target.value)} onKeyDown={(e: any) => handleKeydown(e)} onHeightChange={ensureSendVisible} minRows={2} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 border rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300" aria-describedby="message-max" defaultValue={""} />
         </div>
       </div>
-      <div className="flex justify-end w-full mt-1">
+      <div className="flex justify-end w-full mt-2">
         <button className={areaText === '' ? 'text-obs-faint' : 'text-obs-normal'} onClick={areaText === '' ? undefined : clearComment} type="button">
           {t('clear')}
         </button>
         <button ref={sendButton} onClick={addComment} type="button">
           {t('send')}
         </button>
+      </div>
+      <div className="flex flex-col mt-4 space-y-4">
+        {localComments?.map((noteComment) => {
+          return (
+            <Fragment key={noteComment.created}>
+              <NoteCommentComponent comment={noteComment}></NoteCommentComponent>
+            </Fragment>
+          );
+        })}
       </div>
     </div>
   );

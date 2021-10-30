@@ -100,7 +100,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       const { peoples } = sharing;
       peoples?.forEach((p) =>
         children.push(
-          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-secondary">
+          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-tertiary">
             {peopleAvatar(p)}
             <span className="ml-2 whitespace-nowrap">{`${p.name || p.email}`}</span>
             <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
@@ -132,7 +132,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
                 </button>
               </div>
               <div>
-                <div className="text-lg font-medium leading-6 text-primary">{t("setSharingOptions")}</div>
+                <div className="text-lg font-medium leading-6 text-primary">{t("plugin:setSharingOptions")}</div>
                 <div className="max-w-xl mt-2 text-sm text-secondary">
                   <p>{t('plugin:shareWithWhom')}</p>
                 </div>

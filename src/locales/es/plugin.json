@@ -38,5 +38,6 @@
     "groupMembers": "Miembros del grupo",
     "editGroup": "Editar grupo",
     "addGroup": "Nuevo grupo",
-    "chooseUser": "Elija un usuario"
+    "chooseUser": "Elija un usuario",
+    "groupNameDesc": "Escribe aquí..."
 }

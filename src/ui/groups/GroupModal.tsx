@@ -157,7 +157,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
                   <p>{t('plugin:groupName')}:</p>
                 </div>
                 <div className="mt-3 sm:flex sm:items-center">
-                  <input onChange={(evt) => setGroupName(evt.target.value)} defaultValue={group ? group.name : ""} className="w-full text-gray-800 input" type="text" />
+                  <input onChange={(evt) => setGroupName(evt.target.value)} defaultValue={group ? group.name : ""} className="w-full text-gray-800 input" type="text" placeholder={t('plugin:groupNameDesc')} />
                 </div>
                 <div className="max-w-xl mt-4 text-sm text-secondary">
                   <p>{t('plugin:groupMembers')}:</p>

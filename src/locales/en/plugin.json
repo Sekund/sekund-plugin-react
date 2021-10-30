@@ -38,5 +38,6 @@
     "groupMembers": "Group members",
     "editGroup": "Edit group",
     "addGroup": "New group",
-    "chooseUser": "Choose a user"
+    "chooseUser": "Choose a user",
+    "groupNameDesc": "Type here..."
 }

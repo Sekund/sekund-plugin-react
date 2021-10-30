@@ -112,7 +112,7 @@ export default function NoteComments() {
         </button>
       </div>
       <div className="flex flex-col mt-4 space-y-4">
-        {localComments?.map((noteComment) => {
+        {localComments?.sort((a, b) => (a.created > b.created) ? -1 : 1).map((noteComment) => {
           return (
             <Fragment key={noteComment.created}>
               <NoteCommentComponent comment={noteComment}></NoteCommentComponent>

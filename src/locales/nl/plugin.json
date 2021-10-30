@@ -38,5 +38,6 @@
     "groupMembers": "Leden van de groep",
     "editGroup": "Groep bewerken",
     "addGroup": "Nieuwe groep",
-    "chooseUser": "Kies een gebruiker"
+    "chooseUser": "Kies een gebruiker",
+    "groupNameDesc": "Type hier..."
 }

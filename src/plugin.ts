@@ -1,6 +1,5 @@
 import { EventRef, Plugin, TFolder, WorkspaceLeaf, Command, Notice } from 'obsidian';
 import { COLLAPSE_ALL_ICON } from './constants';
-import { FileExplorerItem } from './interfaces';
 
 export class CollapseAllPlugin extends Plugin {
   async onload(): Promise<void> {

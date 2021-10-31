@@ -99,15 +99,7 @@ export class CollapseAllPlugin extends Plugin {
     if (!button) {
       button = this.getCollapseButton(explorer);
     }
-    if (button && forceAllCollapsed === undefined) {
-      const items = this.getExplorerItems(explorer);
-      const allCollapsed = this.foldersAreCollapsed(items);
-      button.innerHTML = allCollapsed ? EXPAND_ALL_ICON : COLLAPSE_ALL_ICON;
-      button.setAttribute(
-        'aria-label',
-        allCollapsed ? 'Expand all' : 'Collapse all'
-      );
-    } else if (button) {
+    if (button) {
       button.innerHTML = forceAllCollapsed
         ? EXPAND_ALL_ICON
         : COLLAPSE_ALL_ICON;

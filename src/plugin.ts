@@ -23,7 +23,7 @@ export class ManuallyRevealActiveFilePlugin extends Plugin {
   }
 
   onunload(): void {
-    // Remove all collapse buttons
+    // Remove all reveal buttons
     const explorers = this.getFileExplorers();
     explorers.forEach((exp) => {
       this.removeRevealButton(exp);
@@ -58,7 +58,7 @@ export class ManuallyRevealActiveFilePlugin extends Plugin {
   }
 
   /**
-   * Remove the collapse button from a given file explorer leaf.
+   * Remove the reveal button from a given file explorer leaf.
    */
   private removeRevealButton(explorer: WorkspaceLeaf): void {
     const button = this.getRevealButton(explorer);
@@ -95,7 +95,7 @@ export class ManuallyRevealActiveFilePlugin extends Plugin {
   }
 
   /**
-   * Get the collapse button for a given file explorer, if it exists
+   * Get the reveal button for a given file explorer, if it exists
    */
   private getRevealButton(explorer: WorkspaceLeaf): HTMLDivElement | null {
     return explorer.view.containerEl.querySelector(

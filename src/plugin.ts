@@ -126,14 +126,4 @@ export class CollapseAllPlugin extends Plugin {
     );
   }
 
-  /**
-   * Ensures given explorer item is a folder and not the root or a note
-   */
-  private explorerItemIsFolder(item: FileExplorerItem): boolean {
-    return (
-      item.file instanceof TFolder &&
-      item.file.path !== '/' &&
-      item.collapsed !== undefined
-    );
-  }
 }

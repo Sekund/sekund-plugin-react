@@ -21,17 +21,6 @@ export class CollapseAllPlugin extends Plugin {
         });
       })
     );
-
-    // Update icon when files are opened
-    this.registerEvent(
-      this.app.workspace.on('file-open', () => {
-        const explorers = this.getFileExplorers();
-        explorers.forEach((exp) => {
-          this.updateButtonIcon(exp);
-        });
-      })
-    );
-
   }
 
   onunload(): void {

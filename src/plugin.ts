@@ -43,7 +43,7 @@ export class CollapseAllPlugin extends Plugin {
       return null;
     }
 
-    const existingButton = this.getCollapseButton(explorer);
+    const existingButton = this.getRevealButton(explorer);
     if (existingButton) {
       return;
     }
@@ -61,7 +61,7 @@ export class CollapseAllPlugin extends Plugin {
    * Remove the collapse button from a given file explorer leaf.
    */
   private removeRevealButton(explorer: WorkspaceLeaf): void {
-    const button = this.getCollapseButton(explorer);
+    const button = this.getRevealButton(explorer);
     if (button) {
       button.remove();
     }
@@ -97,7 +97,7 @@ export class CollapseAllPlugin extends Plugin {
   /**
    * Get the collapse button for a given file explorer, if it exists
    */
-  private getCollapseButton(explorer: WorkspaceLeaf): HTMLDivElement | null {
+  private getRevealButton(explorer: WorkspaceLeaf): HTMLDivElement | null {
     return explorer.view.containerEl.querySelector(
       '.collapse-all-plugin-button'
     );

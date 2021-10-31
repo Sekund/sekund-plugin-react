@@ -1,5 +1,5 @@
 {
-  "name": "obsidian-collapse-all-plugin",
+  "name": "obsidian-manually-reveal-active-file",
   "version": "1.2.0",
   "description": "This plugin adds a button to collapse all folders in the file explorer.",
   "main": "main.js",

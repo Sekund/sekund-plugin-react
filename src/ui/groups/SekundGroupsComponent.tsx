@@ -2,7 +2,6 @@ import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
-import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
@@ -19,9 +18,10 @@ import { useTranslation } from "react-i18next";
 export type GroupsComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
+  syncDown: (path: string) => void,
 }
 
-export const SekundGroupsComponent = ({ peoplesService }: GroupsComponentProps) => {
+export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsComponentProps) => {
   const { appState } = useAppContext();
   const { t } = useTranslation();
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
@@ -79,7 +79,7 @@ export const SekundGroupsComponent = ({ peoplesService }: GroupsComponentProps) 
   }
 
   function noteClicked(note: Note) {
-    NoteSyncService.instance.syncDown(note);
+    syncDown(note.path);
   }
 
   function groupMembers(group: Group): JSX.Element {
@@ -129,6 +129,9 @@ export const SekundGroupsComponent = ({ peoplesService }: GroupsComponentProps) 
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
       <div className="text-center ">{t('plugin:noGroups')}</div>
       <div className="mt-2 text-sm text-center ">{t('plugin:noGroupsDesc')}</div>
+      <button onClick={createGroup} className="flex items-center mt-2">
+        <PlusIcon className="w-4 h-4 mr-1" />{t('new_group')}
+      </button>
     </div>)
 
 }

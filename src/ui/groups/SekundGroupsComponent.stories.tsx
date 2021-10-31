@@ -21,7 +21,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
         getUserGroups: () => args.groups
     } as PeoplesService;
 
-    const InjectedHomeComponent = SekundGroupsComponentHOC({ view: wrapper, peoplesService });
+    const InjectedHomeComponent = SekundGroupsComponentHOC({ view: wrapper, peoplesService, syncDown: (path: string) => { } });
 
     return <InjectedHomeComponent />
 };

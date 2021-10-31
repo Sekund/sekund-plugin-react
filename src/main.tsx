@@ -22,7 +22,7 @@ import nl from 'javascript-time-ago/locale/nl.json';
 import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
-
+import i18next from '@/i18n.config';
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(fr)
@@ -59,11 +59,13 @@ export default class SekundPluginReact extends Plugin {
       { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
     ])
 
+    const locale = window.moment ? (window.moment as any).locale() : 'en';
+
     this.addCommands([
-      { id: "sekund-open-note-view", name: "Open Sekund Note View", type: NOTE_VIEW_TYPE },
-      { id: "sekund-open-home-view", name: "Open Sekund Home View", type: HOME_VIEW_TYPE },
-      { id: "sekund-open-peoples-view", name: "Open Sekund Peoples View", type: PEOPLES_VIEW_TYPE },
-      { id: "sekund-open-groups-view", name: "Open Sekund Groups View", type: GROUPS_VIEW_TYPE }
+      { id: "sekund-open-note-view", name: i18next.t("plugin:openChatView"), type: NOTE_VIEW_TYPE },
+      { id: "sekund-open-home-view", name: i18next.t("plugin:openHomeView"), type: HOME_VIEW_TYPE },
+      { id: "sekund-open-peoples-view", name: i18next.t("plugin:openPeoplesView"), type: PEOPLES_VIEW_TYPE },
+      { id: "sekund-open-groups-view", name: i18next.t("plugin:openGroupsView"), type: GROUPS_VIEW_TYPE }
     ]);
 
 

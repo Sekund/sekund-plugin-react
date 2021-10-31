@@ -124,7 +124,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                     </svg>
                   </div>
                   <div className="text-center ">{t('plugin:noSettings')}</div>
-                  <div className="mt-2 text-sm text-center "><Trans components={{ a: <a /> }}>{t('plugin:noSettingsDesc')}</Trans></div>
+                  <div className="mt-2 text-sm text-center ulink"><Trans components={{ a: <a /> }}>{t('plugin:noSettingsDesc')}</Trans></div>
                   <APIInfo />
                 </div>
               );

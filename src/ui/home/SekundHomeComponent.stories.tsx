@@ -19,7 +19,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
         getNotes: (oldest: number, limit: number) => args.notes
     } as NotesService;
 
-    const InjectedHomeComponent = SekundHomeComponentHOC({ view: wrapper, notesService });
+    const InjectedHomeComponent = SekundHomeComponentHOC({ view: wrapper, notesService, syncDown: (path: string) => { } });
 
     return <InjectedHomeComponent />
 };

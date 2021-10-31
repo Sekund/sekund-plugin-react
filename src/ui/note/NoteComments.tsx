@@ -68,7 +68,9 @@ export default function NoteComments() {
   // }
 
   useEffect(() => {
-    EventsWatcherService.instance.watchEvents(eventsDispatch);
+    if (EventsWatcherService.instance) {
+      EventsWatcherService.instance.watchEvents(eventsDispatch);
+    }
   }, [])
 
   useEffect(() => {

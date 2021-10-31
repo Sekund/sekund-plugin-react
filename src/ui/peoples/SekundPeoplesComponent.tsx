@@ -1,7 +1,6 @@
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import NotesService from "@/services/NotesService";
-import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
@@ -57,7 +56,7 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
   }
 
   function noteClicked(note: Note) {
-    NoteSyncService.instance.syncDown(note);
+    // NoteSyncService.instance.syncDown(note);
   }
 
   if (peoples && peoples.length > 0) {

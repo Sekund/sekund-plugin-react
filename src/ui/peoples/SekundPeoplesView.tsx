@@ -1,3 +1,4 @@
+import i18next from "@/i18n.config";
 import SekundPeoplesComponent, { PeoplesComponentProps } from "@/ui/peoples/SekundPeoplesComponent";
 import SekundView from "@/ui/SekundView";
 import { PEOPLES_VIEW_ICON, PEOPLES_VIEW_TYPE } from "@/_constants";
@@ -11,7 +12,7 @@ export default class SekundPeoplesView extends SekundView {
     }
 
     getDisplayText(): string {
-        return "Sekund Peoples";
+        return `Sekund: ${i18next.t("plugin:openPeoplesView")}`;
     }
 
     getIcon(): string {

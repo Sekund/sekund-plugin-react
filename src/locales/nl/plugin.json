@@ -5,7 +5,7 @@
     "noApiKey": "Geen API-sleutel.",
     "noApiKeyDesc": "Sorry, u moet een Sekund API-sleutel opgeven voordat u deze plug-in gebruikt. Ga naar de instellingen van je Sekund-account om dat op te lossen.",
     "noSettings": "Geen instellingen.",
-    "noSettingsDesc": "Ga naar je Sekund-account, haal je subdomein en API-sleutel op en plak ze hieronder (<a href='https://doc.sekund.io/onboarding'>meer info</a>)",
+    "noSettingsDesc": "Ga naar uw Sekund account, krijg uw subdomein en API-sleutel en plak ze hieronder. U kunt een gratis testaccount <a href=\"https://app.sekund.io/\">hier</a> aanmaken.",
     "noSubdomain": "Ontbrekend subdomein.",
     "noSubdomainDesc": "Geef het subdomein op dat aan uw team/account is gekoppeld.",
     "noSuchSubdomain": "Sorry, we konden uw opgegeven subdomein niet vinden.",
@@ -39,5 +39,9 @@
     "editGroup": "Groep bewerken",
     "addGroup": "Nieuwe groep",
     "chooseUser": "Kies een gebruiker",
-    "groupNameDesc": "Type hier..."
+    "groupNameDesc": "Type hier...",
+    "openHomeView": "Home",
+    "openPeoplesView": "Contacten",
+    "openGroupsView": "Groepen",
+    "openChatView": "Chat"
 }

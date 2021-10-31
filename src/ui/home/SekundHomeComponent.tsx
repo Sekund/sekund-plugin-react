@@ -1,6 +1,5 @@
 import { Note } from "@/domain/Note";
 import NotesService from "@/services/NotesService";
-import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
@@ -12,9 +11,10 @@ import React, { useEffect, useReducer } from "react";
 export type HomeComponentProps = {
 	view: { addAppDispatch: Function };
 	notesService: NotesService | undefined;
+	syncDown: (path: string) => void,
 }
 
-export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
+export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentProps) => {
 	const { appState } = useAppContext();
 	const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
 	const notesProviderState = {
@@ -77,8 +77,7 @@ export const SekundHomeComponent = ({ notesService }: HomeComponentProps) => {
 			}
 		} else {
 			console.log("no local file, downloading remote note")
-			const rNote = NoteSyncService.instance.getNoteByPath(note.path);
-			NoteSyncService.instance.syncDown(note);
+			syncDown(note.path)
 		}
 	}
 

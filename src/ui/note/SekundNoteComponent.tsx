@@ -1,7 +1,6 @@
 import { Group } from "@/domain/Group";
 import { isSharing } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
-import NoteSyncService from "@/services/NoteSyncService";
 import { useAppContext } from "@/state/AppContext";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
@@ -13,7 +12,14 @@ import { useTranslation } from "react-i18next";
 import EventsContext, { useEventsContext } from "@/state/EventsContext";
 import EventsReducer, { initialEventsState } from "@/state/EventsReducer";
 
-export const SekundNoteComponent = () => {
+
+type Props = {
+  view: { addAppDispatch: Function }
+  syncUp: () => void;
+  unpublish: () => void;
+}
+
+export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
   const { appState } = useAppContext();
   const { fileSynced, published, publishing, fetching, synchronizing } = appState.currentNoteState;
   const { t } = useTranslation(["common", "plugin"]);
@@ -24,12 +30,12 @@ export const SekundNoteComponent = () => {
 
   function handleSync() {
     if (!publishing && !fileSynced && !fetching) {
-      NoteSyncService.instance.syncFile();
+      syncUp();
     }
   }
 
   function handleUnpublish() {
-    NoteSyncService.instance.unpublish();
+    unpublish();
   }
 
   function uploadButtonLabel() {
@@ -194,10 +200,6 @@ export const SekundNoteComponent = () => {
         {renderSharingDialog()}
       </EventsContext.Provider>)
   }
-}
-
-type Props = {
-  view: { addAppDispatch: Function }
 }
 
 export default (props: Props) => withConnectionStatus(props)(SekundNoteComponent)

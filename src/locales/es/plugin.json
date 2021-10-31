@@ -5,7 +5,7 @@
     "noApiKey": "Ninguna clave de API.",
     "noApiKeyDesc": "Lo sentimos, debes especificar una clave de API de Sekund antes de usar este plugin. Dirígete a la configuración de tu cuenta de Sekund para solucionarlo.",
     "noSettings": "Ningún ajuste.",
-    "noSettingsDesc": "Véte a tu cuenta de Sekund, obtiene tu subdominio y clave de API y pégalos a continuación (<a href='https://doc.sekund.io/onboarding'> más información </a>)",
+    "noSettingsDesc": "Por favor, ve a tu cuenta de Sekund, obtén tu subdominio y tu API Key y pégalos abajo. Puedes crear una cuenta de prueba gratuita <a href=\"https://app.sekund.io/\">aquí</a>.",
     "noSubdomain": "Falta el subdominio.",
     "noSubdomainDesc": "Especifica el subdominio asociado con tu equipo / cuenta.",
     "noSuchSubdomain": "Lo sentimos, no pudimos encontrar el subdominio especificado.",
@@ -39,5 +39,9 @@
     "editGroup": "Editar grupo",
     "addGroup": "Nuevo grupo",
     "chooseUser": "Elija un usuario",
-    "groupNameDesc": "Escribe aquí..."
+    "groupNameDesc": "Escribe aquí...",
+    "openHomeView": "Home",
+    "openPeoplesView": "Contactos",
+    "openGroupsView": "Grupos",
+    "openChatView": "Chat"
 }

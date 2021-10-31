@@ -83,7 +83,7 @@ export class ManuallyRevealActiveFilePlugin extends Plugin {
     button.innerHTML = MANUALLY_REVEAL_ACTIVE_FILE_ICON;
     button.setAttribute(
         'aria-label',
-        'Collapse all'
+        'Reveal active file'
     );
   }
 

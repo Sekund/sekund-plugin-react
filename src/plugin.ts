@@ -50,7 +50,7 @@ export class CollapseAllPlugin extends Plugin {
 
     const newIcon = document.createElement('div');
     this.setButtonProperties(newIcon);
-    newIcon.className = 'nav-action-button collapse-all-plugin-button';
+    newIcon.className = 'nav-action-button manually-reveal-active-file-button';
     this.registerDomEvent(newIcon, 'click', () => {
       this.onButtonClick(explorer);
     });
@@ -99,7 +99,7 @@ export class CollapseAllPlugin extends Plugin {
    */
   private getRevealButton(explorer: WorkspaceLeaf): HTMLDivElement | null {
     return explorer.view.containerEl.querySelector(
-      '.collapse-all-plugin-button'
+      '.manually-reveal-active-file-button'
     );
   }
 

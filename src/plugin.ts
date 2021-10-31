@@ -49,7 +49,7 @@ export class CollapseAllPlugin extends Plugin {
     }
 
     const newIcon = document.createElement('div');
-    this.updateButtonIcon(newIcon);
+    this.setButtonProperties(newIcon);
     newIcon.className = 'nav-action-button collapse-all-plugin-button';
     this.registerDomEvent(newIcon, 'click', () => {
       this.onButtonClick(explorer);
@@ -77,11 +77,7 @@ export class CollapseAllPlugin extends Plugin {
     }
   }
 
-  /**
-   * Update icon.
-   * Providing the forceAllCollapsed parameter will skip checking and assume that state
-   */
-  private updateButtonIcon(
+  private setButtonProperties(
       button: HTMLElement
   ): void {
     button.innerHTML = COLLAPSE_ALL_ICON;

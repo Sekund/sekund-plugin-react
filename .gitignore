@@ -12,3 +12,6 @@ main.js
 
 # obsidian
 data.json
+
+# local scripts to aid development
+test_on_mac.sh

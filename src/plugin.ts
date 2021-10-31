@@ -1,5 +1,5 @@
 import { EventRef, Plugin, TFolder, WorkspaceLeaf, Command, Notice } from 'obsidian';
-import { COLLAPSE_ALL_ICON, EXPAND_ALL_ICON } from './constants';
+import { COLLAPSE_ALL_ICON } from './constants';
 import { FileExplorerItem } from './interfaces';
 
 export class CollapseAllPlugin extends Plugin {
@@ -88,7 +88,7 @@ export class CollapseAllPlugin extends Plugin {
   }
 
   /**
-   * Update icon for given explorer/button to collapse/expand all.
+   * Update icon.
    * Providing the forceAllCollapsed parameter will skip checking and assume that state
    */
   private updateButtonIcon(
@@ -100,12 +100,10 @@ export class CollapseAllPlugin extends Plugin {
       button = this.getCollapseButton(explorer);
     }
     if (button) {
-      button.innerHTML = forceAllCollapsed
-        ? EXPAND_ALL_ICON
-        : COLLAPSE_ALL_ICON;
+      button.innerHTML = COLLAPSE_ALL_ICON;
       button.setAttribute(
         'aria-label',
-        forceAllCollapsed ? 'Expand all' : 'Collapse all'
+        'Collapse all'
       );
     }
   }

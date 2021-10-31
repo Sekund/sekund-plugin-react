@@ -8,12 +8,11 @@ under settings, go to “Community plugins” and look for the little folder ico
      style="width: 350px"/>
 
 This should open the plugins folder for the vault you have currently open.
-Now please download the Sekund plugin from [this location](https://sekund.s3.amazonaws.com/sekund-react.zip)
+Now please download the Sekund plugin from [this location](https://sekund.s3.amazonaws.com/sekund-obsidian-plugin.zip)
 
-Unzipping it will result in a folder called sekund with 3 files in it (manifest.json, main.js and styles.css). Drop this folder in your vault’s plugin folder.
-**WARNING: This plugin requires the user to have joined a team in [Sekund](https://www.sekund.io)**
+Unzipping it will result in a folder called `sekund-obsidian-plugin` with 3 files in it (manifest.json, main.js and styles.css). Drop this folder in your vault’s plugin folder.
 
-**for testing, please join the 'app' team at [https://app.sekund.io](https://app.sekund.io)**
+**now, for testing, please join the 'app' team at [https://app.sekund.io](https://app.sekund.io)**
 
 **If you want your own team, please contact this plugin's author**
 
@@ -22,24 +21,32 @@ Once your account is created, please copy your API key to the clipboard, like so
 <img src="screenshots/APIkey.png"
      style="width: 350px" />
 
-Then go to your Sekund plugin Options, and paste it in the ad hoc field, along with your team's subdomain:
+Finally, type "Sekund" at the Obsidian's command prompt, and choose one of the four options:
 
-<img src="screenshots/sekundprefs-1.0.1.png"
-     style="width:  450px" />
+<img src="https://user-images.githubusercontent.com/41804/139598527-1c5010b4-04f7-4ad9-a22c-7284c5cb893a.png" style="width: 500px"/>
 
-Finally, open the Sekund Tab using the "Open Sekund View" command:
+You will be invited to enter your subdomain and API key.
 
-<img src="screenshots/command.png"
-     style="width:  550px" />
+Once logged in, please explore the four different tabs available in Sekund: Home, Peoples, Groups and Chat.
 
-<strong>Well Done!</strong>
+## Home
 
-Now, depending on your note's presence and status in Sekund, you can either Publish, Sync or Un-publish any note from your Vault.
+<img src="https://user-images.githubusercontent.com/41804/139598588-13ca0ad2-dfb5-4fc0-a269-261a59f2150d.png" style="width: 200px"/>
 
-To share it with other Sekund users or groups, go to Sekund and hit the "Share" button!
+The home view will simply display all the notes that you have uploaded to Sekund and possibly shared with either peoples or groups. If there are comments, the number of comments is also shown.
 
-<img src="screenshots/publish.png"
-     style="width:  350px" />
+## Chat
 
-<img src="screenshots/sync.png"
-     style="width:  350px;" />
+<img src="https://user-images.githubusercontent.com/41804/139598661-553838ba-ec6e-4232-99f5-6d2af72f3c29.png" style="width: 200px">
+
+## Groups
+
+<img src="https://user-images.githubusercontent.com/41804/139598760-b99854e0-d9a1-4235-8899-635da7f5addb.png" style="width: 200px">
+
+## Peoples
+
+<img src="https://user-images.githubusercontent.com/41804/139598798-8ccb0930-787d-4fd7-bee5-c5d411d7136f.png" style="width: 200px">
+
+This view will let you separately see the notes that you have shared with people and those that people have shared with you. Clicking on any note in the subsequent view will download it to your vault.
+
+

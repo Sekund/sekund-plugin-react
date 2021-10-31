@@ -26,7 +26,7 @@ export class CollapseAllPlugin extends Plugin {
     // Remove all collapse buttons
     const explorers = this.getFileExplorers();
     explorers.forEach((exp) => {
-      this.removeCollapseButton(exp);
+      this.removeRevealButton(exp);
     });
   }
 
@@ -60,7 +60,7 @@ export class CollapseAllPlugin extends Plugin {
   /**
    * Remove the collapse button from a given file explorer leaf.
    */
-  private removeCollapseButton(explorer: WorkspaceLeaf): void {
+  private removeRevealButton(explorer: WorkspaceLeaf): void {
     const button = this.getCollapseButton(explorer);
     if (button) {
       button.remove();

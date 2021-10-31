@@ -1,3 +1,3 @@
-import { CollapseAllPlugin } from './src/plugin';
+import { ManuallyRevealActiveFilePlugin } from './src/plugin';
 
-export default CollapseAllPlugin;
+export default ManuallyRevealActiveFilePlugin;

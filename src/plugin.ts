@@ -88,23 +88,6 @@ export class CollapseAllPlugin extends Plugin {
   }
 
   /**
-   * Collapse or expand all folders for the given file explorer
-   */
-  private collapseOrExpandAll(
-    explorer: WorkspaceLeaf,
-    collapsed: boolean
-  ): void {
-    if (explorer) {
-      const items = this.getExplorerItems(explorer);
-      items.forEach((item) => {
-        if (this.explorerItemIsFolder(item) && item.collapsed !== collapsed) {
-          item.setCollapsed(collapsed);
-        }
-      });
-    }
-  }
-
-  /**
    * Update icon for given explorer/button to collapse/expand all.
    * Providing the forceAllCollapsed parameter will skip checking and assume that state
    */

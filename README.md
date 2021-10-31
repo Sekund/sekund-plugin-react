@@ -45,10 +45,12 @@ The home view will simply display all the notes that you have uploaded to Sekund
 
 <img src="https://user-images.githubusercontent.com/41804/139598760-b99854e0-d9a1-4235-8899-635da7f5addb.png" style="width: 200px">
 
+After clicking an a Group's name, you will see a list just like the Home view. Clicking on any note will then download it to your vault and open it in the currently active editor.
+
 ## Peoples
 
 <img src="https://user-images.githubusercontent.com/41804/139598798-8ccb0930-787d-4fd7-bee5-c5d411d7136f.png" style="width: 200px">
 
-This view will let you separately see the notes that you have shared with people and those that people have shared with you. Clicking on any note in the subsequent view will download it to your vault.
+This view will let you separately see the notes that you have shared with people and those that people have shared with you. Clicking on any note in the subsequent view will download it to your vault and open it in the currently active editor.
 
 

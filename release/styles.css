@@ -545,8 +545,6 @@ video {
 
 @import "obsidian-app.css";
 
-@import "kepano-minimal.css";
-
 .sekund {
   --gray-4: #2a2e3b;
   --gray-3: #474c59;
@@ -1407,10 +1405,6 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body {
-  /* color: red; */
-}
-
 button {
   background-color: var(--background-button);
   color: var(--text-normal);
@@ -1430,6 +1424,10 @@ button {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+.ulink a {
+  text-decoration: underline;
 }
 
 @media (min-width: 640px) {

@@ -134,7 +134,7 @@ export default function NoteComments() {
           <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>{t('you')}</span>
         </label>
         <div className="mt-1">
-          <TextareaAutosize onChange={(e) => setAreaText(e.target.value)} onKeyDown={(e: any) => handleKeydown(e)} onHeightChange={ensureSendVisible} minRows={2} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 border rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 border-warm-gray-300" aria-describedby="message-max" defaultValue={""} />
+          <TextareaAutosize onChange={(e) => setAreaText(e.target.value)} onKeyDown={(e: any) => handleKeydown(e)} onHeightChange={ensureSendVisible} style={{ fontSize: "1rem" }} minRows={2} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 border rounded-md shadow-sm " aria-describedby="message-max" defaultValue={""} />
         </div>
       </div>
       <div className="flex justify-end w-full mt-2">

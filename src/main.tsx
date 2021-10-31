@@ -73,6 +73,14 @@ export default class SekundPluginReact extends Plugin {
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
   }
 
+  onunload(): void {
+    [NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE].forEach(t => {
+      this.app.workspace
+        .getLeavesOfType(t)
+        .forEach((leaf) => leaf.detach());
+    })
+  }
+
   registerViews(specs: { type: string, View: Constructor<SekundView> }[]) {
     for (const spec of specs) {
       const { type, View } = spec;
@@ -276,7 +284,7 @@ class SekundSettingsTab extends PluginSettingTab {
   }
 
   hide(): void {
-    this.plugin.loadSettings();
+    this.plugin.saveSettings();
     setTimeout(() => this.plugin.attemptConnection(), 100);
   }
 

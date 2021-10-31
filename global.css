@@ -4,7 +4,6 @@
 
 @layer base {
 	@import "obsidian-app.css";
-	@import "kepano-minimal.css";
 
 	.sekund {
 		--gray-4: #2a2e3b;

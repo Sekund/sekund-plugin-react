@@ -97,8 +97,6 @@ export default function NoteComments() {
     }
   }, [eventsState.event]);
 
-
-
   async function addComment() {
     if (appState.remoteNote) {
       const textarea = document.getElementById("comment") as HTMLTextAreaElement;

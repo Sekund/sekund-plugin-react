@@ -7,7 +7,7 @@ export class CollapseAllPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => {
       const explorers = this.getFileExplorers();
       explorers.forEach((exp) => {
-        this.addCollapseButton(exp);
+        this.addRevealButton(exp);
       });
     });
 
@@ -16,7 +16,7 @@ export class CollapseAllPlugin extends Plugin {
       this.app.workspace.on('layout-change', () => {
         const explorers = this.getFileExplorers();
         explorers.forEach((exp) => {
-          this.addCollapseButton(exp);
+          this.addRevealButton(exp);
         });
       })
     );
@@ -31,10 +31,10 @@ export class CollapseAllPlugin extends Plugin {
   }
 
   /**
-   * Adds the collapse button to a file explorer leaf.
+   * Adds the reveal button to a file explorer leaf.
    * Returns the newly created button element or the old one if already there.
    */
-  private addCollapseButton(explorer: WorkspaceLeaf): void {
+  private addRevealButton(explorer: WorkspaceLeaf): void {
     const container = explorer.view.containerEl as HTMLDivElement;
     const navContainer = container.querySelector(
       'div.nav-buttons-container'

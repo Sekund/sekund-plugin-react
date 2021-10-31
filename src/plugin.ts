@@ -49,7 +49,7 @@ export class CollapseAllPlugin extends Plugin {
     }
 
     const newIcon = document.createElement('div');
-    this.updateButtonIcon(explorer, newIcon);
+    this.updateButtonIcon(newIcon);
     newIcon.className = 'nav-action-button collapse-all-plugin-button';
     this.registerDomEvent(newIcon, 'click', () => {
       this.onButtonClick(explorer);
@@ -82,19 +82,13 @@ export class CollapseAllPlugin extends Plugin {
    * Providing the forceAllCollapsed parameter will skip checking and assume that state
    */
   private updateButtonIcon(
-    explorer: WorkspaceLeaf,
-    button: HTMLElement
+      button: HTMLElement
   ): void {
-    if (!button) {
-      button = this.getCollapseButton(explorer);
-    }
-    if (button) {
-      button.innerHTML = COLLAPSE_ALL_ICON;
-      button.setAttribute(
+    button.innerHTML = COLLAPSE_ALL_ICON;
+    button.setAttribute(
         'aria-label',
         'Collapse all'
-      );
-    }
+    );
   }
 
   /**

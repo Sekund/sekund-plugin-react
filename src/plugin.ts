@@ -83,8 +83,7 @@ export class CollapseAllPlugin extends Plugin {
    */
   private updateButtonIcon(
     explorer: WorkspaceLeaf,
-    button?: HTMLElement,
-    forceAllCollapsed?: boolean
+    button?: HTMLElement
   ): void {
     if (!button) {
       button = this.getCollapseButton(explorer);

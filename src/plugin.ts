@@ -55,15 +55,6 @@ export class CollapseAllPlugin extends Plugin {
       this.onButtonClick(explorer);
     });
     navContainer.appendChild(newIcon);
-
-    // Register click handler on explorer to toggle button icon
-    const handler = () => {
-      this.updateButtonIcon(explorer, newIcon);
-    };
-    explorer.view.containerEl.on('click', '.nav-folder-title', handler);
-    this.register(() => {
-      explorer.view.containerEl.off('click', '.nav-folder-title', handler);
-    });
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Plugin, WorkspaceLeaf} from 'obsidian';
-import { COLLAPSE_ALL_ICON } from './constants';
+import { MANUALLY_REVEAL_ACTIVE_FILE_ICON } from './constants';
 
 export class CollapseAllPlugin extends Plugin {
   async onload(): Promise<void> {
@@ -80,7 +80,7 @@ export class CollapseAllPlugin extends Plugin {
   private setButtonProperties(
       button: HTMLElement
   ): void {
-    button.innerHTML = COLLAPSE_ALL_ICON;
+    button.innerHTML = MANUALLY_REVEAL_ACTIVE_FILE_ICON;
     button.setAttribute(
         'aria-label',
         'Collapse all'

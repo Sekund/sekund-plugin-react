@@ -1,5 +1,7 @@
 ## This is the Obsidian Plugin for Sekund.io
 
+#### NB: this plugin's components are documented in a dedicated storybook available <a href="https://sekund.github.io/sekund-plugin-react/?path=/story/sekund-home--some-notes&globals=locale:en" target="_blank">here</a>
+
 Here’s what you have to do.
 
 under settings, go to “Community plugins” and look for the little folder icon:

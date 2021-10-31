@@ -23,10 +23,6 @@
 	}
 }
 
-body {
-	/* color: red; */
-}
-
 button {
 	background-color: var(--background-button);
 	color: var(--text-normal);

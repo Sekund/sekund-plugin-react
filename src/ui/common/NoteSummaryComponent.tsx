@@ -1,5 +1,7 @@
 import { Note } from "@/domain/Note"
+import { useAppContext } from "@/state/AppContext";
 import { ChatAlt2Icon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
@@ -11,6 +13,9 @@ type Props = {
 
 export default function NoteSummaryComponent({ note, handleNoteClicked }: Props) {
 	const { i18n } = useTranslation();
+	const { appState } = useAppContext();
+
+	const { remoteNote } = appState;
 
 	function stats(note: Note) {
 		const children: Array<JSX.Element> = [];
@@ -26,9 +31,8 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 		return <div className="flex items-center space-x-1 text-obs-muted">{children}</div>
 	}
 
-
 	return (
-		<div className="flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary"
+		<div className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${note._id.equals(remoteNote?._id || new ObjectID()) ? 'bg-obs-tertiary' : ''}`}
 			onClick={() => handleNoteClicked(note)}>
 			<div>
 				{note.title.replace(".md", "")}

@@ -19,7 +19,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
         getPeoples: () => args.peoples
     } as PeoplesService;
 
-    const InjectedHomeComponent = SekundPeoplesComponentHOC({ view: wrapper, peoplesService });
+    const InjectedHomeComponent = SekundPeoplesComponentHOC({ view: wrapper, peoplesService, syncDown: (path: string) => { } });
 
     return <InjectedHomeComponent />
 };

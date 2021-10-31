@@ -17,9 +17,10 @@ import { useTranslation } from "react-i18next";
 export type PeoplesComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
+  syncDown: (path: string) => void,
 }
 
-export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps) => {
+export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComponentProps) => {
   const { appState } = useAppContext();
   const { t } = useTranslation("plugin");
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
@@ -56,7 +57,7 @@ export const SekundPeoplesComponent = ({ peoplesService }: PeoplesComponentProps
   }
 
   function noteClicked(note: Note) {
-    // NoteSyncService.instance.syncDown(note);
+    syncDown(note.path);
   }
 
   if (peoples && peoples.length > 0) {

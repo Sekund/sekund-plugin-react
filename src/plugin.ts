@@ -99,22 +99,6 @@ export class CollapseAllPlugin extends Plugin {
   }
 
   /**
-   * Collapse all open folders in the given file explorer
-   */
-  private collapseAll(explorer: WorkspaceLeaf): void {
-    this.collapseOrExpandAll(explorer, true);
-    this.updateButtonIcon(explorer, undefined, true);
-  }
-
-  /**
-   * Expand all collapsed folders in the given file explorer
-   */
-  private expandAll(explorer: WorkspaceLeaf): void {
-    this.collapseOrExpandAll(explorer, false);
-    this.updateButtonIcon(explorer, undefined, false);
-  }
-
-  /**
    * Collapse or expand all folders for the given file explorer
    */
   private collapseOrExpandAll(

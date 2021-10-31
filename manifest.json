@@ -1,7 +1,7 @@
 {
   "id": "obsidian-manually-reveal-active-file",
   "name": "Manually Reveal Active File",
-  "version": "1.2.0",
+  "version": "0.0.1",
   "minAppVersion": "0.12.10",
   "description": "This plugin adds a button to the top of the File Explorer, to reveal the active file.",
   "author": "Clare Macrae",

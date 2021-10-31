@@ -127,15 +127,6 @@ export class CollapseAllPlugin extends Plugin {
   }
 
   /**
-   * Get all `fileItems` on explorer view. This property is not documented.
-   */
-  private getExplorerItems(explorer: WorkspaceLeaf): FileExplorerItem[] {
-    return Object.values(
-      (explorer.view as any).fileItems
-    ) as FileExplorerItem[];
-  }
-
-  /**
    * Ensures given explorer item is a folder and not the root or a note
    */
   private explorerItemIsFolder(item: FileExplorerItem): boolean {
@@ -143,15 +134,6 @@ export class CollapseAllPlugin extends Plugin {
       item.file instanceof TFolder &&
       item.file.path !== '/' &&
       item.collapsed !== undefined
-    );
-  }
-
-  /**
-   * Returns true if every folder in the given items (files and folders) is collapsed
-   */
-  private foldersAreCollapsed(items: FileExplorerItem[]): boolean {
-    return items.every(
-      (i) => !this.explorerItemIsFolder(i) || i.collapsed === true
     );
   }
 }

@@ -1,4 +1,4 @@
-import { EventRef, Plugin, TFolder, WorkspaceLeaf } from 'obsidian';
+import { EventRef, Plugin, TFolder, WorkspaceLeaf, Command, Notice } from 'obsidian';
 import { COLLAPSE_ALL_ICON, EXPAND_ALL_ICON } from './constants';
 import { FileExplorerItem } from './interfaces';
 
@@ -93,13 +93,8 @@ export class CollapseAllPlugin extends Plugin {
    */
   private onButtonClick(explorer: WorkspaceLeaf): void {
     if (explorer) {
-      const items = this.getExplorerItems(explorer);
-      const allCollapsed = this.foldersAreCollapsed(items);
-      if (allCollapsed) {
-        this.expandAll(explorer);
-      } else {
-        this.collapseAll(explorer);
-      }
+      //@ts-ignore
+      this.app.commands.executeCommandById('file-explorer:reveal-active-file');
     }
   }
 

@@ -78,7 +78,7 @@ export class CollapseAllPlugin extends Plugin {
   }
 
   /**
-   * Collapses or expands all folders in the given file explorer
+   * Reveal the active file in the given file explorer
    */
   private onButtonClick(explorer: WorkspaceLeaf): void {
     if (explorer) {

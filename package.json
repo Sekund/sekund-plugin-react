@@ -1,7 +1,7 @@
 {
   "name": "obsidian-manually-reveal-active-file",
   "version": "0.0.1",
-  "description": "This plugin adds a button to collapse all folders in the file explorer.",
+  "description": "This plugin adds a button to the top of the File Explorer, to reveal the active file.",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",

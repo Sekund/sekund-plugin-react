@@ -32,35 +32,6 @@ export class CollapseAllPlugin extends Plugin {
       })
     );
 
-    // Add collapse command to palette
-    this.addCommand({
-      id: 'collapse-all-collapse',
-      name: 'Collapse all open folders in all file explorers',
-      icon: 'double-up-arrow-glyph',
-      callback: () => {
-        const explorers = this.getFileExplorers();
-        if (explorers) {
-          explorers.forEach((exp) => {
-            this.collapseAll(exp);
-          });
-        }
-      }
-    });
-
-    // Add expand command to palette
-    this.addCommand({
-      id: 'collapse-all-expand',
-      name: 'Expand closed folders in all file explorers',
-      icon: 'double-down-arrow-glyph',
-      callback: () => {
-        const explorers = this.getFileExplorers();
-        if (explorers) {
-          explorers.forEach((exp) => {
-            this.expandAll(exp);
-          });
-        }
-      }
-    });
   }
 
   onunload(): void {

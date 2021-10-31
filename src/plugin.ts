@@ -1,4 +1,4 @@
-import { EventRef, Plugin, TFolder, WorkspaceLeaf, Command, Notice } from 'obsidian';
+import { Plugin, WorkspaceLeaf} from 'obsidian';
 import { COLLAPSE_ALL_ICON } from './constants';
 
 export class CollapseAllPlugin extends Plugin {

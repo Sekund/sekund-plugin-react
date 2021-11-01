@@ -57,9 +57,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   }
 
   async function addSelectedUser() {
-    // selectInput.current.clearValue();
     const selectElement = selectInput.current as HTMLSelectElement;
-    console.log("selected value is ", selectElement.value);
     const selectedUser = await PeoplesService.instance.getPeople(selectElement.value);
     setLocalGroup({ ...localGroup, peoples: [...localGroup.peoples, selectedUser] });
     selectElement.value = 'none';

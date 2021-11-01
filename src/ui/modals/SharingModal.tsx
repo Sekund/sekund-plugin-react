@@ -4,7 +4,9 @@ import { People } from "@/domain/People";
 import { SelectOption } from "@/domain/Types";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import { setHandleDisplay } from "@/helpers/obsidian";
+import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
+import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { XIcon } from "@heroicons/react/solid";
@@ -23,25 +25,27 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   const [state, setState] = useState(0);
   const { appState } = useAppContext();
   const { userProfile } = appState;
-  const [selectedUserOrGroup, setSelectedUserOrGroup] = useState<People | Group | null>(null);
   const forceUpdate = () => setState(state + 1);
+  const [sharingOptions, setSharingOptions] = useState<SelectOption[]>([]);
   const selectInput = useRef<any>();
 
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
   useEffect(() => {
     setHandleDisplay('none');
+    loadOptions("")
     return () => {
       setHandleDisplay('');
     }
   }, [open])
 
-  async function loadOptions(inputValue: string): Promise<SelectOption[]> {
+  async function loadOptions(inputValue: string) {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
     if (userProfile) { alreadySharing.push(userProfile._id) }
     const found = await UsersService.instance
       .findUsers(inputValue.toLowerCase(), alreadySharing);
-    return found;
+    console.log("loaded sharing options", found);
+    setSharingOptions(found)
   }
 
   async function removeGroup(g: Group) {
@@ -56,24 +60,20 @@ export default function SharingModal({ open, setOpen, note }: Props) {
     forceUpdate();
   }
 
-  function selectUserOrGroup(v: People | Group) {
-    setSelectedUserOrGroup(v);
-  }
-
   async function addSelectedUserOrGroup() {
-    if (selectedUserOrGroup !== null) {
-      if ((selectedUserOrGroup as any).type === "user") {
-        await NotesService.instance.addSharingPeople(note._id, selectedUserOrGroup as People);
-        note.sharing?.peoples?.push(selectedUserOrGroup as People);
-      } else {
-        await NotesService.instance.addSharingGroup(note._id, selectedUserOrGroup as Group);
-        note.sharing?.groups?.push(selectedUserOrGroup as Group);
-      }
-      if (selectInput.current) {
-        selectInput.current.clearValue();
-      }
-      forceUpdate();
+    const selectElement = selectInput.current as HTMLSelectElement;
+    const [type, id] = selectElement.value.split("-");
+    if (type === "user") {
+      const people = await PeoplesService.instance.getPeople(id);
+      await NotesService.instance.addSharingPeople(note._id, people);
+      note.sharing?.peoples?.push(people);
+    } else {
+      const group = await GroupsService.instance.fetchGroup(id);
+      await NotesService.instance.addSharingGroup(note._id, group);
+      note.sharing?.groups?.push(group);
     }
+    selectElement.value = "none";
+    forceUpdate();
   }
 
   function shares() {
@@ -84,9 +84,9 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       const { groups } = sharing;
       groups?.forEach((g, idx) =>
         children.push(
-          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-tertiary">
+          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
             {groupAvatar(g)}
-            <span className="ml-1">{g.name}</span>
+            <span className="ml-2 truncate">{g.name}</span>
             <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
           </div>
         )
@@ -97,15 +97,15 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       const { peoples } = sharing;
       peoples?.forEach((p) =>
         children.push(
-          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-tertiary">
+          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
             {peopleAvatar(p)}
-            <span className="ml-2 whitespace-nowrap">{`${p.name || p.email}`}</span>
+            <span className="ml-2 truncate whitespace-nowrap">{`${p.name || p.email}`}</span>
             <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
           </div>
         )
       );
     }
-    return <div className="flex flex-wrap">{children}</div>;
+    return <div className="flex flex-wrap truncate">{children}</div>;
   }
 
   return (
@@ -122,16 +122,17 @@ export default function SharingModal({ open, setOpen, note }: Props) {
           <p>{t('plugin:shareWithWhom')}</p>
         </div>
         <div className="flex items-center mt-3 space-x-2">
-          <select
-            ref={selectInput}
-            className="self-start flex-grow dropdown"
-            onChange={(v: any) => {
-              if (v) {
-                selectUserOrGroup(v.value);
-              }
-            }}
-          >
-          </select>
+          <div className="self-start flex-grow overflow-hidden truncate">
+            <select
+              ref={selectInput}
+              className="min-w-full pl-2 pr-4 truncate dropdown"
+            >
+              <option key="none" value="none">--</option>
+              {sharingOptions.map((option: SelectOption) => (
+                <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>{option.label}</option>
+              ))}
+            </select>
+          </div>
           <button onClick={() => addSelectedUserOrGroup()}>
             {t('add')}
           </button>

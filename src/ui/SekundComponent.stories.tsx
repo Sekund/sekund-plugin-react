@@ -3,6 +3,7 @@ import withConnectionStatus from '@/ui/withConnectionStatus';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { TFile } from 'obsidian';
 import React from 'react';
+import '@/styles/obsidian-app.css'
 import '/global.css';
 
 function AllGood() {

@@ -11,7 +11,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import AsyncSelect from "react-select/async";
+// import AsyncSelect from "react-select/async";
 import reactSelectObsidianTheme from '@/helpers/reactSelect'
 
 type Props = {
@@ -138,18 +138,16 @@ export default function SharingModal({ open, setOpen, note }: Props) {
                 </div>
                 <div className="mt-5 sm:flex sm:items-center">
                   <div className="w-full sm:max-w-xs">
-                    <AsyncSelect
+                    <select
                       ref={selectInput}
-                      placeholder="Choose a user or a group"
-                      styles={reactSelectObsidianTheme}
                       className="w-full text-sm bg-primary text-obs-normal"
-                      loadOptions={loadOptions}
                       onChange={(v: any) => {
                         if (v) {
                           selectUserOrGroup(v.value);
                         }
                       }}
-                    />
+                    >
+                    </select>
                   </div>
                   <button className="inline-flex items-center justify-center w-full h-full px-4 py-2 mt-3 font-medium border rounded-md shadow-sm bg-accent hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onClick={() => addSelectedUserOrGroup()}>
                     {t('add')}

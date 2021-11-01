@@ -1,11 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.sekund {
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
 
-@layer base {
-	@import "obsidian-app.css";
-
-	.sekund {
+	@layer base {
 		--gray-4: #2a2e3b;
 		--gray-3: #474c59;
 		--gray-2: #636976;
@@ -22,7 +20,7 @@
 	}
 }
 
-button {
+.sekund button {
 	background-color: var(--background-button);
 	color: var(--text-normal);
 	border: 1px solid var(--background-modifier-border);
@@ -40,6 +38,6 @@ button {
 	user-select: none;
 }
 
-.ulink a {
+.sekund .ulink a {
 	text-decoration: underline;
 }

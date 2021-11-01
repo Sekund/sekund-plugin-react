@@ -13,7 +13,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import AsyncSelect from "react-select/async";
+// import AsyncSelect from "react-select/async";
 import reactSelectObsidianTheme from '@/helpers/reactSelect'
 
 type Props = {
@@ -59,7 +59,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
 
   async function addSelectedUser() {
     if (selectedUser !== null) {
-      selectInput.current.clearValue();
+      // selectInput.current.clearValue();
       setLocalGroup({ ...localGroup, peoples: [...localGroup.peoples, selectedUser] });
     }
   }
@@ -164,18 +164,16 @@ export default function GroupModal({ open, setOpen, group }: Props) {
                 </div>
                 <div className="mt-3 sm:flex sm:items-center">
                   <div className="w-full sm:max-w-xs">
-                    <AsyncSelect
+                    <select
                       ref={selectInput}
-                      placeholder={t('plugin:chooseUser')}
                       className="w-full"
-                      loadOptions={loadOptions}
-                      styles={reactSelectObsidianTheme}
                       onChange={(v: any) => {
                         if (v) {
                           setSelectedUser(v.value);
                         }
                       }}
-                    />
+                    >
+                    </select>
                   </div>
                   <button className={`inline-flex items-center px-4 ml-3 py-2 border h-full text-sm font-medium rounded-md shadow-sm cursor-pointer ${selectedUser ? "bg-accent hover:bg-accent border" : "bg-transparent text-disabled border"} focus:outline-none`} onClick={() => addSelectedUser()}>
                     {t('add')}

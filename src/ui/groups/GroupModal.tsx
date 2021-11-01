@@ -97,7 +97,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
     const { peoples } = localGroup;
     peoples.forEach((p) =>
       children.push(
-        <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 rounded-md bg-obs-tertiary truncate">
+        <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
           {peopleAvatar(p)}
           <span className="ml-2 truncate">{`${p.name || p.email}`}</span>
           <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
@@ -153,7 +153,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
           <div className="flex items-center mt-3 space-x-2">
             <div className="self-start flex-grow overflow-hidden truncate">
               <select
-                className="pl-2 pr-4 truncate dropdown"
+                className="min-w-full pl-2 pr-4 truncate dropdown"
                 ref={selectInput}
               >
                 <>

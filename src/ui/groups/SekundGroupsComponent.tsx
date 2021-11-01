@@ -85,7 +85,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id)
     return (<div className="flex p-1 -space-x-1 overflow-hidden" onClick={editAllowed ? () => editGroup(group) : undefined}>
-      <div className="flex flex-row items-center space-x-1">
+      <div className="flex flex-row items-center -space-x-1">
         {group.peoples.map((people) => {
           return <React.Fragment key={people._id?.toString()}>{peopleAvatar(people)}</React.Fragment>;
         })}

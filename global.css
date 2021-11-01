@@ -41,3 +41,7 @@
 .sekund .ulink a {
 	text-decoration: underline;
 }
+
+.sekund {
+	--titlebar-height: 0px;
+}

@@ -40,6 +40,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.15.8",
 		"@babel/standalone": "^7.14.0",
+		"@etchteam/storybook-addon-css-variables-theme": "^1.0.2",
 		"@rollup/plugin-commonjs": "^18.0.0",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^11.2.1",

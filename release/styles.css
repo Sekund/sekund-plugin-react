@@ -1,417 +1,568 @@
-/**
-Use a better box model (opinionated).
-*/
-  .sekund *,
-.sekund ::before,
-.sekund ::after {
-    box-sizing: border-box;
+.sekund .container {
+    width: 100%
   }
-  /**
-Use a more readable tab size (opinionated).
-*/
-  .sekund html {
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-       tab-size: 4;
+  @media (min-width: 640px) {
+    .sekund .container {
+      max-width: 640px
+    }
   }
-  /**
-1. Correct the line height in all browsers.
-2. Prevent adjustments of font size after orientation changes in iOS.
-*/
-  .sekund html {
-    line-height: 1.15; /* 1 */
-    -webkit-text-size-adjust: 100%; /* 2 */
+  @media (min-width: 768px) {
+    .sekund .container {
+      max-width: 768px
+    }
   }
-  /**
-Remove the margin in all browsers.
-*/
-  .sekund body {
-    margin: 0;
+  @media (min-width: 1024px) {
+    .sekund .container {
+      max-width: 1024px
+    }
   }
-  /**
-Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
-*/
-  .sekund body {
-    font-family:
-		system-ui,
-		-apple-system, /* Firefox supports this but not yet `system-ui` */
-		'Segoe UI',
-		Roboto,
-		Helvetica,
-		Arial,
-		sans-serif,
-		'Apple Color Emoji',
-		'Segoe UI Emoji';
+  @media (min-width: 1280px) {
+    .sekund .container {
+      max-width: 1280px
+    }
   }
-  /**
-1. Add the correct height in Firefox.
-2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
-*/
-  .sekund hr {
-    height: 0; /* 1 */
-    color: inherit; /* 2 */
+  @media (min-width: 1536px) {
+    .sekund .container {
+      max-width: 1536px
+    }
   }
-  /**
-Add the correct text decoration in Chrome, Edge, and Safari.
-*/
-  .sekund abbr[title] {
-    -webkit-text-decoration: underline dotted;
-            text-decoration: underline dotted;
-  }
-  /**
-Add the correct font weight in Edge and Safari.
-*/
-  .sekund b,
-.sekund strong {
-    font-weight: bolder;
-  }
-  /**
-1. Improve consistency of default fonts in all browsers. (https://github.com/sindresorhus/modern-normalize/issues/3)
-2. Correct the odd 'em' font sizing in all browsers.
-*/
-  .sekund code,
-.sekund kbd,
-.sekund samp,
-.sekund pre {
-    font-family:
-		ui-monospace,
-		SFMono-Regular,
-		Consolas,
-		'Liberation Mono',
-		Menlo,
-		monospace; /* 1 */
-    font-size: 1em; /* 2 */
-  }
-  /**
-Add the correct font size in all browsers.
-*/
-  .sekund small {
-    font-size: 80%;
-  }
-  /**
-Prevent 'sub' and 'sup' elements from affecting the line height in all browsers.
-*/
-  .sekund sub,
-.sekund sup {
-    font-size: 75%;
-    line-height: 0;
-    position: relative;
-    vertical-align: baseline;
-  }
-  /*
-Text-level semantics
-====================
-*/
-  .sekund sub {
-    bottom: -0.25em;
-  }
-  /*
-Grouping content
-================
-*/
-  .sekund sup {
-    top: -0.5em;
-  }
-  /**
-1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
-2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
-*/
-  .sekund table {
-    text-indent: 0; /* 1 */
-    border-color: inherit; /* 2 */
-  }
-  /**
-1. Change the font styles in all browsers.
-2. Remove the margin in Firefox and Safari.
-*/
-  .sekund button,
-.sekund input,
-.sekund optgroup,
-.sekund select,
-.sekund textarea {
-    font-family: inherit; /* 1 */
-    font-size: 100%; /* 1 */
-    line-height: 1.15; /* 1 */
-    margin: 0; /* 2 */
-  }
-  /**
-Remove the inheritance of text transform in Edge and Firefox.
-1. Remove the inheritance of text transform in Firefox.
-*/
-  .sekund button,
-.sekund select { /* 1 */
-    text-transform: none;
-  }
-  /**
-Correct the inability to style clickable types in iOS and Safari.
-*/
-  .sekund button,
-.sekund [type='button'] {
-    -webkit-appearance: button;
-  }
-  /**
-Remove the padding so developers are not caught out when they zero out 'fieldset' elements in all browsers.
-*/
-  .sekund legend {
+  .sekund .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0
   }
-  /**
-Add the correct vertical alignment in Chrome and Firefox.
-*/
-  .sekund progress {
-    vertical-align: baseline;
+  .sekund .static {
+    position: static
   }
-  /*
-Add the correct display in Chrome and Safari.
-*/
-  .sekund summary {
-    display: list-item;
+  .sekund .fixed {
+    position: fixed
   }
-  /**
- * Removes the default spacing and border for appropriate elements.
- */
-  .sekund blockquote,
-.sekund dl,
-.sekund dd,
-.sekund h1,
-.sekund h2,
-.sekund h3,
-.sekund h4,
-.sekund h5,
-.sekund h6,
-.sekund hr,
-.sekund figure,
-.sekund p,
-.sekund pre {
-    margin: 0;
+  .sekund .absolute {
+    position: absolute
   }
-  /**
- * Manually forked from SUIT CSS Base: https://github.com/suitcss/base
- * A thin layer on top of normalize.css that provides a starting point more
- * suitable for web applications.
- */
-  .sekund button {
-    background-color: transparent;
-    background-image: none;
+  .sekund .relative {
+    position: relative
   }
-  /*
-Interactive
-===========
-*/
-  .sekund fieldset {
-    margin: 0;
-    padding: 0;
+  .sekund .inset-0 {
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px
   }
-  /**
-1. Correct the inability to style clickable types in iOS and Safari.
-2. Change font properties to 'inherit' in Safari.
-*/
-  .sekund ol,
-.sekund ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .sekund .top-0 {
+    top: 0px
   }
-  /**
- * 1. Use the user's configured `sans` font-family (with Tailwind's default
- *    sans-serif font stack as a fallback) as a sane default.
- * 2. Use Tailwind's default "normal" line-height so the user isn't forced
- *    to override it to ensure consistency even when using the default theme.
- */
-  .sekund html {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 1 */
-    line-height: 1.5; /* 2 */
+  .sekund .right-0 {
+    right: 0px
   }
-  /**
- * Inherit font-family and line-height from `html` so users can set them as
- * a class directly on the `html` element.
- */
-  .sekund body {
-    font-family: inherit;
-    line-height: inherit;
+  .sekund .bottom-0 {
+    bottom: 0px
   }
-  /**
- * 1. Prevent padding and border from affecting element width.
- *
- *    We used to set this in the html element and inherit from
- *    the parent element for everything else. This caused issues
- *    in shadow-dom-enhanced elements like <details> where the content
- *    is wrapped by a div with box-sizing set to `content-box`.
- *
- *    https://github.com/mozdevs/cssremedy/issues/4
- *
- *
- * 2. Allow adding a border to an element by just adding a border-width.
- *
- *    By default, the way the browser specifies that an element should have no
- *    border is by setting it's border-style to `none` in the user-agent
- *    stylesheet.
- *
- *    In order to easily add borders to elements by just setting the `border-width`
- *    property, we change the default border-style for all elements to `solid`, and
- *    use border-width to hide them instead. This way our `border` utilities only
- *    need to set the `border-width` property instead of the entire `border`
- *    shorthand, making our border utilities much more straightforward to compose.
- *
- *    https://github.com/tailwindcss/tailwindcss/pull/116
- */
-  .sekund *,
-.sekund ::before,
-.sekund ::after {
-    box-sizing: border-box; /* 1 */
-    border-width: 0; /* 2 */
-    border-style: solid; /* 2 */
-    border-color: currentColor; /* 2 */
+  .sekund .left-0 {
+    left: 0px
   }
-  /*
- * Ensure horizontal rules are visible by default
- */
-  .sekund hr {
-    border-top-width: 1px;
+  .sekund .z-30 {
+    z-index: 30
   }
-  /**
- * Undo the `border-style: none` reset that Normalize applies to images so that
- * our `border-{width}` utilities have the expected effect.
- *
- * The Normalize reset is unnecessary for us since we default the border-width
- * to 0 on all elements.
- *
- * https://github.com/tailwindcss/tailwindcss/issues/362
- */
-  .sekund img {
-    border-style: solid;
+  .sekund .m-0 {
+    margin: 0px
   }
-  /**
- * Tailwind custom reset styles
- */
-  .sekund textarea {
-    resize: vertical;
+  .sekund .m-2 {
+    margin: 0.5rem
   }
-  /**
-Remove the inner padding in Chrome and Safari on macOS.
-*/
-  .sekund input::-moz-placeholder, .sekund textarea::-moz-placeholder {
-    opacity: 1;
-    color: #9ca3af;
+  .sekund .mx-auto {
+    margin-left: auto;
+    margin-right: auto
   }
-  .sekund input:-ms-input-placeholder, .sekund textarea:-ms-input-placeholder {
-    opacity: 1;
-    color: #9ca3af;
+  .sekund .mt-1 {
+    margin-top: 0.25rem
   }
-  .sekund input::placeholder,
-.sekund textarea::placeholder {
-    opacity: 1;
-    color: #9ca3af;
+  .sekund .mt-2 {
+    margin-top: 0.5rem
   }
-  /**
-1. Correct the odd appearance in Chrome and Safari.
-2. Correct the outline style in Safari.
-*/
-  .sekund button {
-    cursor: pointer;
+  .sekund .mt-3 {
+    margin-top: 0.75rem
   }
-  /**
- * Override legacy focus reset from Normalize with modern Firefox focus styles.
- *
- * This is actually an improvement over the new defaults in Firefox in our testing,
- * as it triggers the better focus styles even for links, which still use a dotted
- * outline in Firefox by default.
- */
-  .sekund table {
-    border-collapse: collapse;
+  .sekund .mt-4 {
+    margin-top: 1rem
   }
-  /**
-Correct the cursor style of increment and decrement buttons in Safari.
-*/
-  .sekund h1,
-.sekund h2,
-.sekund h3,
-.sekund h4,
-.sekund h5,
-.sekund h6 {
-    font-size: inherit;
-    font-weight: inherit;
+  .sekund .mt-5 {
+    margin-top: 1.25rem
   }
-  /**
- * Reset links to optimize for opt-in styling instead of
- * opt-out.
- */
-  .sekund a {
-    color: inherit;
-    text-decoration: inherit;
+  .sekund .mt-8 {
+    margin-top: 2rem
   }
-  /**
- * Reset form element properties that are easy to forget to
- * style explicitly so you don't inadvertently introduce
- * styles that deviate from your design system. These styles
- * supplement a partial reset that is already applied by
- * normalize.css.
- */
-  .sekund button,
-.sekund input,
-.sekund optgroup,
-.sekund select,
-.sekund textarea {
-    padding: 0;
-    line-height: inherit;
-    color: inherit;
+  .sekund .mt-24 {
+    margin-top: 6rem
   }
-  /**
- * Use the configured 'mono' font family for elements that
- * are expected to be rendered with a monospace font, falling
- * back to the system monospace stack if there is no configured
- * 'mono' font family.
- */
-  .sekund pre,
-.sekund code,
-.sekund kbd,
-.sekund samp {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  .sekund .mr-1 {
+    margin-right: 0.25rem
   }
-  /**
- * 1. Make replaced elements `display: block` by default as that's
- *    the behavior you want almost all of the time. Inspired by
- *    CSS Remedy, with `svg` added as well.
- *
- *    https://github.com/mozdevs/cssremedy/issues/14
- * 
- * 2. Add `vertical-align: middle` to align replaced elements more
- *    sensibly by default when overriding `display` by adding a
- *    utility like `inline`.
- *
- *    This can trigger a poorly considered linting error in some
- *    tools but is included by design.
- * 
- *    https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210
- */
-  .sekund img,
-.sekund svg,
-.sekund video,
-.sekund canvas,
-.sekund audio,
-.sekund iframe,
-.sekund embed,
-.sekund object {
-    display: block; /* 1 */
-    vertical-align: middle; /* 2 */
+  .sekund .mr-4 {
+    margin-right: 1rem
   }
-  /**
- * Constrain images and videos to the parent width and preserve
- * their intrinsic aspect ratio.
- *
- * https://github.com/mozdevs/cssremedy/issues/14
- */
-  .sekund img,
-.sekund video {
-    max-width: 100%;
-    height: auto;
+  .sekund .mr-2px {
+    margin-right: 2px
   }
-  /**
- * Ensure the default browser behavior of the `hidden` attribute.
- */
+  .sekund .mb-1 {
+    margin-bottom: 0.25rem
+  }
+  .sekund .mb-2 {
+    margin-bottom: 0.5rem
+  }
+  .sekund .ml-1 {
+    margin-left: 0.25rem
+  }
+  .sekund .ml-2 {
+    margin-left: 0.5rem
+  }
+  .sekund .block {
+    display: block
+  }
+  .sekund .inline-block {
+    display: inline-block
+  }
+  .sekund .flex {
+    display: flex
+  }
+  .sekund .inline-flex {
+    display: inline-flex
+  }
+  .sekund .table {
+    display: table
+  }
+  .sekund .grid {
+    display: grid
+  }
+  .sekund .h-4 {
+    height: 1rem
+  }
+  .sekund .h-5 {
+    height: 1.25rem
+  }
+  .sekund .h-6 {
+    height: 1.5rem
+  }
+  .sekund .h-8 {
+    height: 2rem
+  }
+  .sekund .h-10 {
+    height: 2.5rem
+  }
+  .sekund .h-20 {
+    height: 5rem
+  }
+  .sekund .h-full {
+    height: 100%
+  }
+  .sekund .max-h-4 {
+    max-height: 1rem
+  }
+  .sekund .w-4 {
+    width: 1rem
+  }
+  .sekund .w-5 {
+    width: 1.25rem
+  }
+  .sekund .w-6 {
+    width: 1.5rem
+  }
+  .sekund .w-full {
+    width: 100%
+  }
+  .sekund .min-w-0 {
+    min-width: 0
+  }
+  .sekund .min-w-full {
+    min-width: 100%
+  }
+  .sekund .max-w-xs {
+    max-width: 20rem
+  }
+  .sekund .max-w-xl {
+    max-width: 36rem
+  }
+  .sekund .flex-1 {
+    flex: 1 1 0%
+  }
+  .sekund .flex-shrink-0 {
+    flex-shrink: 0
+  }
+  .sekund .flex-grow {
+    flex-grow: 1
+  }
+  .sekund .transform {
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+  }
+  @-webkit-keyframes spin {
+    to {
+      transform: rotate(360deg)
+    }
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg)
+    }
+  }
+  @-webkit-keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0
+    }
+  }
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0
+    }
+  }
+  @-webkit-keyframes pulse {
+    50% {
+      opacity: .5
+    }
+  }
+  @keyframes pulse {
+    50% {
+      opacity: .5
+    }
+  }
+  @-webkit-keyframes bounce {
+    0%, 100% {
+      transform: translateY(-25%);
+      -webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+              animation-timing-function: cubic-bezier(0.8,0,1,1)
+    }
+
+    50% {
+      transform: none;
+      -webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+              animation-timing-function: cubic-bezier(0,0,0.2,1)
+    }
+  }
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(-25%);
+      -webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
+              animation-timing-function: cubic-bezier(0.8,0,1,1)
+    }
+
+    50% {
+      transform: none;
+      -webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
+              animation-timing-function: cubic-bezier(0,0,0.2,1)
+    }
+  }
+  .sekund .animate-spin {
+    -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite
+  }
+  .sekund .animate-pulse {
+    -webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite
+  }
+  .sekund .animate-bounce {
+    -webkit-animation: bounce 1s infinite;
+            animation: bounce 1s infinite
+  }
+  .sekund .cursor-pointer {
+    cursor: pointer
+  }
+  .sekund .resize {
+    resize: both
+  }
+  .sekund .flex-row {
+    flex-direction: row
+  }
+  .sekund .flex-col {
+    flex-direction: column
+  }
+  .sekund .flex-wrap {
+    flex-wrap: wrap
+  }
+  .sekund .items-start {
+    align-items: flex-start
+  }
+  .sekund .items-center {
+    align-items: center
+  }
+  .sekund .justify-end {
+    justify-content: flex-end
+  }
+  .sekund .justify-center {
+    justify-content: center
+  }
+  .sekund .justify-between {
+    justify-content: space-between
+  }
+  .sekund .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)))
+  }
+  .sekund .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))
+  }
+  .sekund .-space-x-1 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(-0.25rem * var(--tw-space-x-reverse));
+    margin-left: calc(-0.25rem * calc(1 - var(--tw-space-x-reverse)))
+  }
+  .sekund .space-y-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse))
+  }
+  .sekund .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem * var(--tw-space-y-reverse))
+  }
+  .sekund .space-y-2px > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(2px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(2px * var(--tw-space-y-reverse))
+  }
+  .sekund .self-start {
+    align-self: flex-start
+  }
+  .sekund .overflow-auto {
+    overflow: auto
+  }
+  .sekund .overflow-hidden {
+    overflow: hidden
+  }
+  .sekund .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
+  .sekund .whitespace-nowrap {
+    white-space: nowrap
+  }
+  .sekund .whitespace-pre-wrap {
+    white-space: pre-wrap
+  }
+  .sekund .rounded-md {
+    border-radius: 0.375rem
+  }
+  .sekund .rounded-lg {
+    border-radius: 0.5rem
+  }
+  .sekund .rounded-full {
+    border-radius: 9999px
+  }
+  .sekund .border {
+    border-width: 1px
+  }
+  .sekund .border-transparent {
+    border-color: transparent
+  }
+  .sekund .border-obs-modal {
+    border-color: var(--modal-border)
+  }
+  .sekund .dark .dark\:border-obs-modal {
+    border-color: var(--modal-border)
+  }
+  .sekund .bg-obs-primary {
+    background-color: var(--background-primary)
+  }
+  .sekund .bg-obs-primary-alt {
+    background-color: var(--background-primary-alt)
+  }
+  .sekund .bg-obs-secondary {
+    background-color: var(--background-secondary)
+  }
+  .sekund .bg-obs-tertiary {
+    background-color: var(--background-tertiary)
+  }
+  .sekund .bg-primary {
+    background-color: var(--color-bg-primary)
+  }
+  .sekund .bg-accent {
+    background-color: var(--color-bg-accent)
+  }
+  .sekund .bg-secondary {
+    background-color: var(--color-bg-secondary)
+  }
+  .sekund .hover\:bg-gray-200:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(229, 231, 235, var(--tw-bg-opacity))
+  }
+  .sekund .hover\:bg-obs-tertiary:hover {
+    background-color: var(--background-tertiary)
+  }
+  .sekund .hover\:bg-primary:hover {
+    background-color: var(--color-bg-primary)
+  }
+  .sekund .p-1 {
+    padding: 0.25rem
+  }
+  .sekund .p-2 {
+    padding: 0.5rem
+  }
+  .sekund .p-6 {
+    padding: 1.5rem
+  }
+  .sekund .p-8 {
+    padding: 2rem
+  }
+  .sekund .px-1 {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem
+  }
+  .sekund .px-2 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem
+  }
+  .sekund .px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem
+  }
+  .sekund .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem
+  }
+  .sekund .py-0 {
+    padding-top: 0px;
+    padding-bottom: 0px
+  }
+  .sekund .py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem
+  }
+  .sekund .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem
+  }
+  .sekund .pt-1 {
+    padding-top: 0.25rem
+  }
+  .sekund .pt-2 {
+    padding-top: 0.5rem
+  }
+  .sekund .pt-4 {
+    padding-top: 1rem
+  }
+  .sekund .pt-5 {
+    padding-top: 1.25rem
+  }
+  .sekund .pr-1 {
+    padding-right: 0.25rem
+  }
+  .sekund .pr-4 {
+    padding-right: 1rem
+  }
+  .sekund .pb-4 {
+    padding-bottom: 1rem
+  }
+  .sekund .pl-2 {
+    padding-left: 0.5rem
+  }
+  .sekund .text-left {
+    text-align: left
+  }
+  .sekund .text-center {
+    text-align: center
+  }
+  .sekund .text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem
+  }
+  .sekund .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem
+  }
+  .sekund .text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem
+  }
+  .sekund .font-medium {
+    font-weight: 500
+  }
+  .sekund .leading-6 {
+    line-height: 1.5rem
+  }
+  .sekund .text-white {
+    --tw-text-opacity: 1;
+    color: rgba(255, 255, 255, var(--tw-text-opacity))
+  }
+  .sekund .text-obs-normal {
+    color: var(--text-normal)
+  }
+  .sekund .text-obs-muted {
+    color: var(--text-muted)
+  }
+  .sekund .text-obs-faint {
+    color: var(--text-faint)
+  }
+  .sekund .text-primary {
+    color: var(--color-text-primary)
+  }
+  .sekund .text-secondary {
+    color: var(--color-text-secondary)
+  }
+  .sekund .hover\:text-gray-700:hover {
+    --tw-text-opacity: 1;
+    color: rgba(55, 65, 81, var(--tw-text-opacity))
+  }
+  .sekund .hover\:text-obs-muted:hover {
+    color: var(--text-muted)
+  }
+  .sekund .hover\:text-secondary:hover {
+    color: var(--color-text-secondary)
+  }
   .sekund *, .sekund ::before, .sekund ::after {
-    --tw-border-opacity: 1;
-    border-color: rgba(229, 231, 235, var(--tw-border-opacity));
+    --tw-shadow: 0 0 #0000
+  }
+  .sekund .shadow-sm {
+    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
+  }
+  .sekund .focus\:outline-none:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px
+  }
+  .sekund *, .sekund ::before, .sekund ::after {
+    --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgba(59, 130, 246, 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000
+  }
+  .sekund .filter {
+    --tw-blur: var(--tw-empty,/*!*/ /*!*/);
+    --tw-brightness: var(--tw-empty,/*!*/ /*!*/);
+    --tw-contrast: var(--tw-empty,/*!*/ /*!*/);
+    --tw-grayscale: var(--tw-empty,/*!*/ /*!*/);
+    --tw-hue-rotate: var(--tw-empty,/*!*/ /*!*/);
+    --tw-invert: var(--tw-empty,/*!*/ /*!*/);
+    --tw-saturate: var(--tw-empty,/*!*/ /*!*/);
+    --tw-sepia: var(--tw-empty,/*!*/ /*!*/);
+    --tw-drop-shadow: var(--tw-empty,/*!*/ /*!*/);
+    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+  }
+  .sekund .transition {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms
   }
   .sekund {
   --gray-4: #2a2e3b;
@@ -426,619 +577,7 @@ Correct the cursor style of increment and decrement buttons in Safari.
   --white-4: #f4f2ef;
   --white-3: #ebe8e6;
   --white-2: #e3dedd;
-  --white-1: #d9d3d2;
-}
-  /**
-Remove the additional ':invalid' styles in Firefox.
-See: https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737
-*/
-  .sekund .container {
-    width: 100%;
-  }
-  /**
-Restore the focus styles unset by the previous rule.
-*/
-  @media (min-width: 640px) {
-    .sekund .container {
-      max-width: 640px;
-    }
-  }
-  /**
-Remove the inner border and padding in Firefox.
-*/
-  @media (min-width: 768px) {
-    .sekund .container {
-      max-width: 768px;
-    }
-  }
-  /*
-Forms
-=====
-*/
-  @media (min-width: 1024px) {
-    .sekund .container {
-      max-width: 1024px;
-    }
-  }
-  /*
-Tabular data
-============
-*/
-  @media (min-width: 1280px) {
-    .sekund .container {
-      max-width: 1280px;
-    }
-  }
-  /*
-Sections
-========
-*/
-  @media (min-width: 1536px) {
-    .sekund .container {
-      max-width: 1536px;
-    }
-  }
-  /*
-Document
-========
-*/
-  .sekund .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-  /*! modern-normalize v1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
-  .sekund .static {
-    position: static;
-  }
-  /*! tailwindcss v2.2.17 | MIT License | https://tailwindcss.com */
-  .sekund .fixed {
-    position: fixed;
-  }
-  .sekund .absolute {
-    position: absolute;
-  }
-  .sekund .relative {
-    position: relative;
-  }
-  .sekund .inset-0 {
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-  }
-  .sekund .top-0 {
-    top: 0px;
-  }
-  .sekund .right-0 {
-    right: 0px;
-  }
-  .sekund .bottom-0 {
-    bottom: 0px;
-  }
-  .sekund .left-0 {
-    left: 0px;
-  }
-  .sekund .z-30 {
-    z-index: 30;
-  }
-  .sekund .m-2 {
-    margin: 0.5rem;
-  }
-  .sekund .mx-auto {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .sekund .mt-1 {
-    margin-top: 0.25rem;
-  }
-  .sekund .mt-2 {
-    margin-top: 0.5rem;
-  }
-  .sekund .mt-3 {
-    margin-top: 0.75rem;
-  }
-  .sekund .mt-4 {
-    margin-top: 1rem;
-  }
-  .sekund .mt-5 {
-    margin-top: 1.25rem;
-  }
-  .sekund .mt-8 {
-    margin-top: 2rem;
-  }
-  .sekund .mt-24 {
-    margin-top: 6rem;
-  }
-  .sekund .mr-1 {
-    margin-right: 0.25rem;
-  }
-  .sekund .mr-4 {
-    margin-right: 1rem;
-  }
-  .sekund .mr-2px {
-    margin-right: 2px;
-  }
-  .sekund .mb-1 {
-    margin-bottom: 0.25rem;
-  }
-  .sekund .mb-2 {
-    margin-bottom: 0.5rem;
-  }
-  .sekund .ml-1 {
-    margin-left: 0.25rem;
-  }
-  .sekund .ml-2 {
-    margin-left: 0.5rem;
-  }
-  .sekund .block {
-    display: block;
-  }
-  .sekund .inline-block {
-    display: inline-block;
-  }
-  .sekund .flex {
-    display: flex;
-  }
-  .sekund .inline-flex {
-    display: inline-flex;
-  }
-  .sekund .table {
-    display: table;
-  }
-  .sekund .grid {
-    display: grid;
-  }
-  .sekund .h-4 {
-    height: 1rem;
-  }
-  .sekund .h-5 {
-    height: 1.25rem;
-  }
-  .sekund .h-6 {
-    height: 1.5rem;
-  }
-  .sekund .h-8 {
-    height: 2rem;
-  }
-  .sekund .h-10 {
-    height: 2.5rem;
-  }
-  .sekund .h-20 {
-    height: 5rem;
-  }
-  .sekund .h-full {
-    height: 100%;
-  }
-  .sekund .max-h-4 {
-    max-height: 1rem;
-  }
-  .sekund .w-4 {
-    width: 1rem;
-  }
-  .sekund .w-5 {
-    width: 1.25rem;
-  }
-  .sekund .w-6 {
-    width: 1.5rem;
-  }
-  .sekund .w-full {
-    width: 100%;
-  }
-  .sekund .min-w-0 {
-    min-width: 0;
-  }
-  .sekund .min-w-full {
-    min-width: 100%;
-  }
-  .sekund .max-w-xs {
-    max-width: 20rem;
-  }
-  .sekund .max-w-xl {
-    max-width: 36rem;
-  }
-  .sekund .flex-1 {
-    flex: 1 1 0%;
-  }
-  .sekund .flex-shrink-0 {
-    flex-shrink: 0;
-  }
-  .sekund .flex-grow {
-    flex-grow: 1;
-  }
-  .sekund .transform {
-    --tw-translate-x: 0;
-    --tw-translate-y: 0;
-    --tw-rotate: 0;
-    --tw-skew-x: 0;
-    --tw-skew-y: 0;
-    --tw-scale-x: 1;
-    --tw-scale-y: 1;
-    transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-  @-webkit-keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  @-webkit-keyframes ping {
-    75%, 100% {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
-  @keyframes ping {
-    75%, 100% {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
-  @-webkit-keyframes pulse {
-    50% {
-      opacity: .5;
-    }
-  }
-  @keyframes pulse {
-    50% {
-      opacity: .5;
-    }
-  }
-  @-webkit-keyframes bounce {
-    0%, 100% {
-      transform: translateY(-25%);
-      -webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
-              animation-timing-function: cubic-bezier(0.8,0,1,1);
-    }
-
-    50% {
-      transform: none;
-      -webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
-              animation-timing-function: cubic-bezier(0,0,0.2,1);
-    }
-  }
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(-25%);
-      -webkit-animation-timing-function: cubic-bezier(0.8,0,1,1);
-              animation-timing-function: cubic-bezier(0.8,0,1,1);
-    }
-
-    50% {
-      transform: none;
-      -webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
-              animation-timing-function: cubic-bezier(0,0,0.2,1);
-    }
-  }
-  .sekund .animate-spin {
-    -webkit-animation: spin 1s linear infinite;
-            animation: spin 1s linear infinite;
-  }
-  .sekund .animate-pulse {
-    -webkit-animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  .sekund .animate-bounce {
-    -webkit-animation: bounce 1s infinite;
-            animation: bounce 1s infinite;
-  }
-  .sekund .cursor-pointer {
-    cursor: pointer;
-  }
-  .sekund .resize {
-    resize: both;
-  }
-  .sekund .flex-row {
-    flex-direction: row;
-  }
-  .sekund .flex-col {
-    flex-direction: column;
-  }
-  .sekund .flex-wrap {
-    flex-wrap: wrap;
-  }
-  .sekund .items-start {
-    align-items: flex-start;
-  }
-  .sekund .items-center {
-    align-items: center;
-  }
-  .sekund .justify-end {
-    justify-content: flex-end;
-  }
-  .sekund .justify-center {
-    justify-content: center;
-  }
-  .sekund .justify-between {
-    justify-content: space-between;
-  }
-  .sekund .space-x-1 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(0.25rem * var(--tw-space-x-reverse));
-    margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
-  }
-  .sekund .space-x-2 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
-    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-  }
-  .sekund .-space-x-1 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(-0.25rem * var(--tw-space-x-reverse));
-    margin-left: calc(-0.25rem * calc(1 - var(--tw-space-x-reverse)));
-  }
-  .sekund .space-y-2 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-  }
-  .sekund .space-y-4 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(1rem * var(--tw-space-y-reverse));
-  }
-  .sekund .space-y-2px > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(2px * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(2px * var(--tw-space-y-reverse));
-  }
-  .sekund .self-start {
-    align-self: flex-start;
-  }
-  .sekund .overflow-auto {
-    overflow: auto;
-  }
-  .sekund .overflow-hidden {
-    overflow: hidden;
-  }
-  .sekund .truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .sekund .whitespace-nowrap {
-    white-space: nowrap;
-  }
-  .sekund .whitespace-pre-wrap {
-    white-space: pre-wrap;
-  }
-  .sekund .rounded-md {
-    border-radius: 0.375rem;
-  }
-  .sekund .rounded-lg {
-    border-radius: 0.5rem;
-  }
-  .sekund .rounded-full {
-    border-radius: 9999px;
-  }
-  .sekund .border {
-    border-width: 1px;
-  }
-  .sekund .border-transparent {
-    border-color: transparent;
-  }
-  .sekund .border-obs-modal {
-    border-color: var(--modal-border);
-  }
-  .sekund .dark .dark\:border-obs-modal {
-    border-color: var(--modal-border);
-  }
-  .sekund .bg-obs-primary {
-    background-color: var(--background-primary);
-  }
-  .sekund .bg-obs-primary-alt {
-    background-color: var(--background-primary-alt);
-  }
-  .sekund .bg-obs-secondary {
-    background-color: var(--background-secondary);
-  }
-  .sekund .bg-obs-tertiary {
-    background-color: var(--background-tertiary);
-  }
-  .sekund .bg-primary {
-    background-color: var(--color-bg-primary);
-  }
-  .sekund .bg-accent {
-    background-color: var(--color-bg-accent);
-  }
-  .sekund .bg-secondary {
-    background-color: var(--color-bg-secondary);
-  }
-  .sekund .hover\:bg-gray-200:hover {
-    --tw-bg-opacity: 1;
-    background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
-  }
-  .sekund .hover\:bg-obs-tertiary:hover {
-    background-color: var(--background-tertiary);
-  }
-  .sekund .hover\:bg-primary:hover {
-    background-color: var(--color-bg-primary);
-  }
-  .sekund .p-1 {
-    padding: 0.25rem;
-  }
-  .sekund .p-2 {
-    padding: 0.5rem;
-  }
-  .sekund .p-6 {
-    padding: 1.5rem;
-  }
-  .sekund .p-8 {
-    padding: 2rem;
-  }
-  .sekund .px-1 {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-  }
-  .sekund .px-2 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  .sekund .px-3 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-  .sekund .px-4 {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .sekund .py-0 {
-    padding-top: 0px;
-    padding-bottom: 0px;
-  }
-  .sekund .py-1 {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-  }
-  .sekund .py-2 {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-  .sekund .pt-1 {
-    padding-top: 0.25rem;
-  }
-  .sekund .pt-2 {
-    padding-top: 0.5rem;
-  }
-  .sekund .pt-4 {
-    padding-top: 1rem;
-  }
-  .sekund .pt-5 {
-    padding-top: 1.25rem;
-  }
-  .sekund .pr-1 {
-    padding-right: 0.25rem;
-  }
-  .sekund .pr-4 {
-    padding-right: 1rem;
-  }
-  .sekund .pb-4 {
-    padding-bottom: 1rem;
-  }
-  .sekund .pl-2 {
-    padding-left: 0.5rem;
-  }
-  .sekund .text-left {
-    text-align: left;
-  }
-  .sekund .text-center {
-    text-align: center;
-  }
-  .sekund .text-xs {
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
-  .sekund .text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-  .sekund .text-lg {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-  .sekund .font-medium {
-    font-weight: 500;
-  }
-  .sekund .leading-6 {
-    line-height: 1.5rem;
-  }
-  .sekund .text-white {
-    --tw-text-opacity: 1;
-    color: rgba(255, 255, 255, var(--tw-text-opacity));
-  }
-  .sekund .text-obs-normal {
-    color: var(--text-normal);
-  }
-  .sekund .text-obs-muted {
-    color: var(--text-muted);
-  }
-  .sekund .text-obs-faint {
-    color: var(--text-faint);
-  }
-  .sekund .text-primary {
-    color: var(--color-text-primary);
-  }
-  .sekund .text-secondary {
-    color: var(--color-text-secondary);
-  }
-  .sekund .hover\:text-gray-700:hover {
-    --tw-text-opacity: 1;
-    color: rgba(55, 65, 81, var(--tw-text-opacity));
-  }
-  .sekund .hover\:text-obs-muted:hover {
-    color: var(--text-muted);
-  }
-  .sekund .hover\:text-secondary:hover {
-    color: var(--color-text-secondary);
-  }
-  .sekund *, .sekund ::before, .sekund ::after {
-    --tw-shadow: 0 0 #0000;
-  }
-  .sekund .shadow-sm {
-    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  }
-  .sekund .focus\:outline-none:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-  }
-  .sekund *, .sekund ::before, .sekund ::after {
-    --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
-    --tw-ring-offset-width: 0px;
-    --tw-ring-offset-color: #fff;
-    --tw-ring-color: rgba(59, 130, 246, 0.5);
-    --tw-ring-offset-shadow: 0 0 #0000;
-    --tw-ring-shadow: 0 0 #0000;
-  }
-  .sekund .filter {
-    --tw-blur: var(--tw-empty,/*!*/ /*!*/);
-    --tw-brightness: var(--tw-empty,/*!*/ /*!*/);
-    --tw-contrast: var(--tw-empty,/*!*/ /*!*/);
-    --tw-grayscale: var(--tw-empty,/*!*/ /*!*/);
-    --tw-hue-rotate: var(--tw-empty,/*!*/ /*!*/);
-    --tw-invert: var(--tw-empty,/*!*/ /*!*/);
-    --tw-saturate: var(--tw-empty,/*!*/ /*!*/);
-    --tw-sepia: var(--tw-empty,/*!*/ /*!*/);
-    --tw-drop-shadow: var(--tw-empty,/*!*/ /*!*/);
-    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-  }
-  .sekund .transition {
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-  }
-
-.sekund button {
-  background-color: var(--background-button);
-  color: var(--text-normal);
-  border: 1px solid var(--background-modifier-border);
-  box-shadow: 0 1px 1px 0px var(--btn-shadow-color);
-  cursor: pointer;
-  height: var(--input-height);
-  line-height: 0;
-  white-space: nowrap;
-  padding: 6px 20px;
-  margin-right: 3px;
-  margin-left: 3px;
-  font-family: var(--font-ui);
-  font-size: 13px;
-  outline: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  --white-1: #d9d3d2
 }
 
 .sekund .ulink a {
@@ -1051,28 +590,28 @@ Document
 
 @media (min-width: 640px) {
   .sm\:col-span-2 {
-    grid-column: span 2 / span 2;
+    grid-column: span 2 / span 2
   }
 
   .sm\:my-8 {
     margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2rem
   }
 
   .sm\:mt-6 {
-    margin-top: 1.5rem;
+    margin-top: 1.5rem
   }
 
   .sm\:block {
-    display: block;
+    display: block
   }
 
   .sm\:flex {
-    display: flex;
+    display: flex
   }
 
   .sm\:items-center {
-    align-items: center;
+    align-items: center
   }
 }
 

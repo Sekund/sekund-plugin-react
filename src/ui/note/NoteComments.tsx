@@ -138,7 +138,7 @@ export default function NoteComments() {
         </div>
       </div>
       <div className="flex justify-end w-full mt-2">
-        <button className={areaText === '' ? 'text-obs-faint' : 'text-obs-normal'} onClick={areaText === '' ? undefined : clearComment} type="button">
+        <button className={`${areaText === '' ? 'text-obs-faint' : 'text-obs-normal'}`} onClick={areaText === '' ? undefined : clearComment} type="button">
           {t('clear')}
         </button>
         <button ref={sendButton} onClick={addComment} type="button">

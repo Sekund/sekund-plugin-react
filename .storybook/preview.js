@@ -15,6 +15,7 @@ import Cybertron from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/
 import Minimal from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/kepano-minimal.css";
 import Default from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/system.css";
 import Nord from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/obsidian-nord.css";
+import Primary from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/primary.css";
 import cssVariablesTheme from "@etchteam/storybook-addon-css-variables-theme";
 
 TimeAgo.addDefaultLocale(en);
@@ -64,6 +65,7 @@ export const parameters = {
 			Atom,
 			Cybertron,
 			Nord,
+			Primary,
 		},
 	},
 };

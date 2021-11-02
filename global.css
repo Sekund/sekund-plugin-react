@@ -1,5 +1,4 @@
 .sekund {
-	@tailwind base;
 	@tailwind components;
 	@tailwind utilities;
 
@@ -18,24 +17,6 @@
 		--white-2: #e3dedd;
 		--white-1: #d9d3d2;
 	}
-}
-
-.sekund button {
-	background-color: var(--background-button);
-	color: var(--text-normal);
-	border: 1px solid var(--background-modifier-border);
-	box-shadow: 0 1px 1px 0px var(--btn-shadow-color);
-	cursor: pointer;
-	height: var(--input-height);
-	line-height: 0;
-	white-space: nowrap;
-	padding: 6px 20px;
-	margin-right: 3px;
-	margin-left: 3px;
-	font-family: var(--font-ui);
-	font-size: 13px;
-	outline: none;
-	user-select: none;
 }
 
 .sekund .ulink a {

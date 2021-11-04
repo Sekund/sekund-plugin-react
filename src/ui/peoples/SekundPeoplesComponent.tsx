@@ -76,7 +76,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
         <NoteSummariesPanel handleNoteClicked={noteClicked} />
       </NotesContext.Provider>)
   } else return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+    <div className="fixed inset-0 flex flex-col items-center p-8 justify -center">
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
       <div className="text-center ">{t('plugin:noOne')}</div>
       <div className="mt-2 text-sm text-center ">{t('plugin:noOneDesc')}</div>

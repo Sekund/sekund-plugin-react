@@ -32,11 +32,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
   useEffect(() => {
-    setHandleDisplay('none');
     loadOptions("")
-    return () => {
-      setHandleDisplay('');
-    }
   }, [open])
 
   async function loadOptions(inputValue: string) {

@@ -39,11 +39,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
   useEffect(() => {
-    setHandleDisplay('none');
     loadOptions("");
-    return () => {
-      setHandleDisplay('');
-    }
   }, [open])
 
   useEffect(() => {

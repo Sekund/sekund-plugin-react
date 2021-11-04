@@ -43,5 +43,6 @@
     "openHomeView": "Home",
     "openPeoplesView": "Contacts",
     "openGroupsView": "Groupes",
-    "openChatView": "Tchat"
+    "openChatView": "Tchat",
+    "noNotesDesc": "Vous n'avez pas encore téléchargé de notes. Pour le faire, ouvrez la vue \"Chat\" et cliquez sur le bouton \"Télécharger\"."
 }

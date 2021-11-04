@@ -43,5 +43,6 @@
     "openHomeView": "Home",
     "openPeoplesView": "Peoples",
     "openGroupsView": "Groups",
-    "openChatView": "Chat"
+    "openChatView": "Chat",
+    "noNotesDesc": "You haven't uploaded any notes yet. To do so, open the Chat view and click the \"Upload\" button."
 }

@@ -105,7 +105,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
                 <PlusIcon className="w-4 h-4" /> <span className="py-0">{t('new_group')}</span>
               </div>
             </div>
-            <div className="flex flex-col space-y-2px w-xl">
+            <div className="flex flex-col space-y-1px w-xl">
               {groups.map((group: Group) => {
                 return (
                   <div key={group._id.toString()} className="flex items-center justify-between w-full mx-auto bg-obs-primary-alt hover:bg-obs-tertiary">

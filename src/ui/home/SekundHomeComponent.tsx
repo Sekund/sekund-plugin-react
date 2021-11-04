@@ -5,8 +5,10 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { EmojiSadIcon } from "@heroicons/react/solid";
 import { TFile } from "obsidian";
 import React, { useEffect, useReducer } from "react";
+import { useTranslation } from "react-i18next";
 
 export type HomeComponentProps = {
 	view: { addAppDispatch: Function };
@@ -15,6 +17,7 @@ export type HomeComponentProps = {
 }
 
 export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentProps) => {
+	const { t } = useTranslation(["common", "plugin"]);
 	const { appState } = useAppContext();
 	const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
 	const notesProviderState = {
@@ -77,16 +80,24 @@ export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentPro
 		}
 	}
 
-	return (
-		<NotesContext.Provider value={notesProviderState}>
-			<div className="flex flex-col w-full overflow-auto space-y-2px">
-				{notes?.map((note: Note) => (
-					<React.Fragment key={note._id.toString()}>
-						<NoteSummaryComponent note={note} handleNoteClicked={openNoteFile} />
-					</React.Fragment>
-				))}
-			</div>
-		</NotesContext.Provider>)
+	if (notes && notes.length > 0) {
+		return (
+			<NotesContext.Provider value={notesProviderState}>
+				<div className="flex flex-col w-full overflow-auto space-y-1px">
+					{notes?.map((note: Note) => (
+						<React.Fragment key={note._id.toString()}>
+							<NoteSummaryComponent note={note} handleNoteClicked={openNoteFile} />
+						</React.Fragment>
+					))}
+				</div>
+			</NotesContext.Provider>)
+	}
+	else return (
+		<div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+			<div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
+			<div className="text-center ">{t('noNotes')}</div>
+			<div className="mt-2 text-sm text-center ">{t('plugin:noNotesDesc')}</div>
+		</div>)
 }
 
 export default (props: HomeComponentProps) => withConnectionStatus(props)(SekundHomeComponent)

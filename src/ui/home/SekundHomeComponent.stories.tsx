@@ -31,6 +31,13 @@ SomeNotes.args = {
     notes
 };
 
+export const NoNotes = Template.bind({});
+NoNotes.args = {
+    gState: "allGood",
+    nState: { published: false },
+    notes: []
+};
+
 export const Error = Template.bind({});
 Error.args = {
     gState: "unknownError"

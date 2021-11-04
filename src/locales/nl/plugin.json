@@ -43,5 +43,6 @@
     "openHomeView": "Home",
     "openPeoplesView": "Contacten",
     "openGroupsView": "Groepen",
-    "openChatView": "Chat"
+    "openChatView": "Chat",
+    "noNotesDesc": "Je hebt nog geen aantekeningen geupload. Om dit te doen, open de Chat-weergave en klik op de knop \"Uploaden\"."
 }

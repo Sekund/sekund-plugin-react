@@ -24,7 +24,7 @@ export default function NoteSummariesPanel({ handleNoteClicked }: Props) {
 					<span className="font-medium text-obs-primary"
 						onClick={() => notesDispatch({ type: NotesActionKind.ResetNotes, payload: [] })}>← {t('back')}</span>
 				</div>
-				<div className="flex flex-col w-full overflow-auto space-y-2px">
+				<div className="flex flex-col w-full overflow-auto space-y-1px">
 					{notes?.map((note: Note) => (
 						<React.Fragment key={note._id.toString()}>
 							<NoteSummaryComponent note={note} handleNoteClicked={handleNoteClicked} />

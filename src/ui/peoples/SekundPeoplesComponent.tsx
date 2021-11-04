@@ -63,7 +63,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   if (peoples && peoples.length > 0) {
     return (
       <NotesContext.Provider value={notesProviderState}>
-        <div className="flex flex-col space-y-2px w-xl">
+        <div className="flex flex-col space-y-1px w-xl">
           {peoples.map((people: People) => {
             return (
               <SekundPeopleSummary key={people._id.toString()}

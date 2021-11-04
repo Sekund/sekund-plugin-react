@@ -332,10 +332,10 @@
     margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(1rem * var(--tw-space-y-reverse))
   }
-  .sekund .space-y-2px > :not([hidden]) ~ :not([hidden]) {
+  .sekund .space-y-1px > :not([hidden]) ~ :not([hidden]) {
     --tw-space-y-reverse: 0;
-    margin-top: calc(2px * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(2px * var(--tw-space-y-reverse))
+    margin-top: calc(1px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1px * var(--tw-space-y-reverse))
   }
   .sekund .self-start {
     align-self: flex-start

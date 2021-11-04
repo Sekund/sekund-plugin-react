@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 export type GroupsComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
-  syncDown: (path: string) => void,
+  syncDown: (path: string, userId: string) => void,
 }
 
 export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsComponentProps) => {
@@ -79,7 +79,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   }
 
   function noteClicked(note: Note) {
-    syncDown(note.path);
+    syncDown(note.path, note.userId.toString());
   }
 
   function groupMembers(group: Group): JSX.Element {

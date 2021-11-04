@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 export type PeoplesComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
-  syncDown: (path: string) => void,
+  syncDown: (path: string, userId: string) => void,
 }
 
 export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComponentProps) => {
@@ -57,7 +57,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   }
 
   function noteClicked(note: Note) {
-    syncDown(note.path);
+    syncDown(note.path, note.userId.toString());
   }
 
   if (peoples && peoples.length > 0) {

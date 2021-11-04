@@ -64,8 +64,6 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
           });
         });
         observer.observe(darkModeElement, { attributes: true });
-      } else {
-        console.log("could not find darkModeElement")
       }
     }
   }, [])

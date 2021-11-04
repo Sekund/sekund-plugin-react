@@ -44,7 +44,6 @@ export default function SharingModal({ open, setOpen, note }: Props) {
     if (userProfile) { alreadySharing.push(userProfile._id) }
     const found = await UsersService.instance
       .findUsers(inputValue.toLowerCase(), alreadySharing);
-    console.log("loaded sharing options", found);
     setSharingOptions(found)
   }
 

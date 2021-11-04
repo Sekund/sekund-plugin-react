@@ -12,7 +12,7 @@ import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
 import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import SekundView from "@/ui/SekundView";
-import { Constructor, dispatch, getApiKeyConnection, setCurrentNoteState, setGeneralState } from "@/utils";
+import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
 import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
@@ -23,6 +23,7 @@ import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
 import i18next from '@/i18n.config';
+import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(fr)
@@ -71,6 +72,7 @@ export default class SekundPluginReact extends Plugin {
 
     this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
+
   }
 
   onunload(): void {
@@ -235,13 +237,14 @@ export default class SekundPluginReact extends Plugin {
           setGeneralState(dispatchers, "allGood");
 
           if (!this.registeredEvents) {
+            console.log("registering file system events");
             this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
             this.registerEvent(this.app.vault.on("modify", this.handleModify));
             this.registerEvent(this.app.vault.on("rename", this.handleRename));
+            // this.registerEvent(this.app.vault.on('delete',
+            // this.handleDelete));
             this.registeredEvents = true;
           }
-          // this.registerEvent(this.app.vault.on('delete',
-          // this.handleDelete));
 
           // delay calling the backend for a bit as it seems to result in
           // network errors sometimes
@@ -267,7 +270,9 @@ export default class SekundPluginReact extends Plugin {
   };
 
   public readonly handleModify = async (file: TFile): Promise<void> => {
-    setCurrentNoteState(Object.values(this.dispatchers), { fileSynced: false });
+    if (!isSharedNoteFile(file)) {
+      setCurrentNoteState(Object.values(this.dispatchers), OWN_NOTE_OUTDATED, file, undefined);
+    }
   };
 
   addDispatcher(dispatcher: React.Dispatch<AppAction>, viewType: string) {

@@ -7,11 +7,10 @@ import { Plugin_2, TFile } from "obsidian";
 export type GeneralState = "connecting" | "noApiKey" | "noSubdomain" | "noSettings" | "noSuchSubdomain" | "offline" | "allGood" | "unknownError" | "loginError";
 
 export type NoteState = {
-	published: boolean; // exists in Sekund
-	fileSynced: boolean; // exists and synched
+	fileSynced: boolean;
 	publishing: boolean;
 	fetching: boolean;
-	synchronizing: boolean;
+	updating: boolean;
 	isShared: boolean;
 };
 
@@ -30,11 +29,10 @@ export const initialAppState: AppState = {
 	generalState: "offline",
 	remoteNote: undefined,
 	currentNoteState: {
-		published: false,
 		fileSynced: false,
 		publishing: false,
 		fetching: false,
-		synchronizing: false,
+		updating: false,
 		isShared: false,
 	},
 	locale: "en",
@@ -46,8 +44,7 @@ export const initialAppState: AppState = {
 
 export enum AppActionKind {
 	SetCurrentNoteState,
-	SetRemoteNote,
-	SetCurrentFile,
+	UpdateRemoteNote,
 	SetLocale,
 	SetGeneralState,
 	SetUserProfile,
@@ -64,21 +61,22 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
 	const { type, payload } = action;
 
 	let newState: AppState;
-	const trace = new Error().stack;
 	switch (type) {
 		case AppActionKind.SetCurrentNoteState:
-			const noteFlags: Partial<NoteState> = payload as Partial<NoteState>;
-			const result = { ...state, currentNoteState: Object.assign({}, state.currentNoteState, noteFlags) };
+			const { noteState, file, note } = payload;
+			const result = {
+				...state,
+				currentNoteState: noteState,
+				currentFile: file === undefined ? state.currentFile : file,
+				remoteNote: note === undefined ? state.remoteNote : note,
+			};
 			newState = result;
 			break;
 		case AppActionKind.SetGeneralState:
 			newState = { ...state, generalState: payload };
 			break;
-		case AppActionKind.SetRemoteNote:
+		case AppActionKind.UpdateRemoteNote:
 			newState = { ...state, remoteNote: payload };
-			break;
-		case AppActionKind.SetCurrentFile:
-			newState = { ...state, currentFile: payload };
 			break;
 		case AppActionKind.SetLocale:
 			newState = { ...state, locale: payload };

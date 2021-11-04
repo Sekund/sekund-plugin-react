@@ -1,4 +1,3 @@
-import { Note } from "@/domain/Note";
 import i18next from "@/i18n.config";
 import NoteSyncService from "@/services/NoteSyncService";
 import SekundPeoplesComponent, { PeoplesComponentProps } from "@/ui/peoples/SekundPeoplesComponent";
@@ -21,10 +20,10 @@ export default class SekundPeoplesView extends SekundView {
         return PEOPLES_VIEW_ICON;
     }
 
-    async syncDown(path: string) {
+    async syncDown(path: string, userId: string) {
         const note = await NoteSyncService.instance.getNoteByPath(path);
         if (note) {
-            NoteSyncService.instance.syncDown(note);
+            NoteSyncService.instance.syncDown(note.path, userId);
         }
     }
 

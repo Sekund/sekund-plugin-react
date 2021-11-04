@@ -2,6 +2,8 @@ import * as Realm from "realm-web";
 import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
 import React from "react";
 import GlobalState from "@/state/GlobalState";
+import { TFile } from "obsidian";
+import { Note } from "@/domain/Note";
 
 export async function getApiKeyConnection(realmApp: Realm.App, apiKey: string): Promise<Realm.User | null> {
 	const credentials = Realm.Credentials.apiKey(apiKey);
@@ -25,8 +27,17 @@ export function setGeneralState(dispatchers: Array<React.Dispatch<AppAction>>, g
 	GlobalState.instance.appState.generalState = gState;
 }
 
-export function setCurrentNoteState(dispatchers: Array<React.Dispatch<AppAction>>, nState: Partial<NoteState>) {
-	dispatchers.forEach((appDispatch) => appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: nState }));
+export function setCurrentNoteState(dispatchers: Array<React.Dispatch<AppAction>>, nState: NoteState | null, local: TFile | undefined | null, remote: Note | undefined | null) {
+	dispatchers.forEach((appDispatch) =>
+		appDispatch({
+			type: AppActionKind.SetCurrentNoteState,
+			payload: {
+				noteState: nState,
+				file: local,
+				note: remote,
+			},
+		})
+	);
 }
 
 export function isObjectEmpty(object: Record<string, unknown>): boolean {
@@ -43,3 +54,7 @@ export function cssProp(name: string) {
 }
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
+
+export function isSharedNoteFile(file: TFile): boolean {
+	return file.path.startsWith("__sekund__");
+}

@@ -11,7 +11,7 @@ import React, { useEffect, useReducer } from "react";
 export type HomeComponentProps = {
 	view: { addAppDispatch: Function };
 	notesService: NotesService | undefined;
-	syncDown: (path: string) => void,
+	syncDown: (path: string, userId: string) => void,
 }
 
 export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentProps) => {
@@ -65,19 +65,15 @@ export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentPro
 	}
 
 	async function openNoteFile(note: Note) {
-		console.log("looking to open file at path: " + note.path)
 		const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
 		if (file) {
-			console.log("found local file")
 			if (appState.plugin?.app.workspace.activeLeaf) {
-				console.log("activeLeaf is live, opening file...")
 				appState.plugin.app.workspace.activeLeaf.openFile(file as TFile)
 			} else {
 				console.log("no active leaf")
 			}
 		} else {
-			console.log("no local file, downloading remote note")
-			syncDown(note.path)
+			syncDown(note.path, note.userId.toString())
 		}
 	}
 

@@ -1,12 +1,13 @@
 import { Note } from "@/domain/Note";
+import filenamify from "@/helpers/filenamify";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
-import { AppAction, AppActionKind } from "@/state/AppReducer";
+import { AppAction } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
-import { dispatch, setCurrentNoteState } from "@/utils";
+import { OWN_NOTE_FETCHING, OWN_NOTE_LOCAL, OWN_NOTE_OUTDATED, OWN_NOTE_SYNCHRONIZING, OWN_NOTE_UPTODATE, SHARED_NOTE_SYNCHRONIZING, SHARED_NOTE_UPTODATE } from "@/state/NoteStates";
+import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
 import { DataAdapter, TFile, Vault } from "obsidian";
-import filenamify from "@/helpers/filenamify";
 
 export default class NoteSyncService extends ServerlessService {
 	private static _instance: NoteSyncService;
@@ -36,63 +37,65 @@ export default class NoteSyncService extends ServerlessService {
 	async unpublish() {
 		const { remoteNote } = GlobalState.instance.appState;
 		if (remoteNote) {
+			// remote note can only be own note, because it is not allowed to
+			// unpublish other peoples' notes
 			await callFunction(this.plugin, "deleteNote", [remoteNote._id]);
-			setCurrentNoteState(this.dispatchers, { published: false, fileSynced: false });
+			setCurrentNoteState(this.dispatchers, OWN_NOTE_LOCAL, undefined, null);
 		}
 	}
 
 	async noLocalFile(note: Note) {
-		dispatch(this.dispatchers, AppActionKind.SetRemoteNote, note);
-		dispatch(this.dispatchers, AppActionKind.SetCurrentFile, undefined);
+		// note state is irrevant here, the only relevant info is the note
+		// the note component just needs to decide what to display based on
+		// whether the note is an own note or a shared one
+		setCurrentNoteState(this.dispatchers, null, null, note);
 	}
 
 	async compareNotes(file: TFile) {
-		console.log("comparing notes...");
 		const { path, stat } = file;
-		const isShared = path.startsWith("__sekund__");
-		dispatch(this.dispatchers, AppActionKind.SetCurrentFile, file);
-		console.log("setting current note state to published false");
-		setCurrentNoteState(this.dispatchers, { fetching: true, published: false, isShared });
-		let fileSynced = true;
-		let published = true;
-		if (!isShared) {
+
+		if (isSharedNoteFile(file)) {
+			const dirs = file.path.split("/");
+			this.syncDown(dirs.splice(2).join("/"), dirs[1]);
+		} else {
+			setCurrentNoteState(this.dispatchers, OWN_NOTE_FETCHING, file, null);
+
 			const rNote = await this.getNoteByPath(path);
-			fileSynced = !!rNote && rNote.updated === stat.mtime;
-			published = rNote !== null;
+
+			if (!rNote) {
+				setCurrentNoteState(this.dispatchers, OWN_NOTE_LOCAL, file, null);
+			} else {
+				const fileSynced = !!rNote && rNote.updated === stat.mtime;
+				setCurrentNoteState(this.dispatchers, fileSynced ? OWN_NOTE_UPTODATE : OWN_NOTE_OUTDATED, file, rNote);
+			}
 		}
-		const noteState = { fileSynced, fetching: false, published: true };
-		console.log("now file is synched, noteState ", noteState);
-		setCurrentNoteState(this.dispatchers, noteState);
 	}
 
-	async getNoteByPath(path: string): Promise<Note | undefined> {
-		const nbp = await callFunction(this.plugin, "getNoteByPath", [path]);
-		dispatch(this.dispatchers, AppActionKind.SetRemoteNote, nbp);
-		return nbp;
+	async getNoteByPath(path: string, userId?: string): Promise<Note | undefined> {
+		return await callFunction(this.plugin, "getNoteByPath", [path, userId]);
 	}
 
-	async syncDown(note: Note) {
-		const ownNote = note.userId.equals(GlobalState.instance.appState.userProfile._id);
-		const rootDir = ownNote ? "" : `__sekund__/${note.userId.toString()}/`;
-		let dirs = `${rootDir}${note.path}`;
-		dirs = dirs.substring(0, dirs.lastIndexOf("/"));
-		const fullPath = `${dirs}/${filenamify(note.title)}.md`;
-		if (await this.fsAdapter.exists(fullPath)) {
-			console.log(`The file already exists at ${fullPath}`);
+	async syncDown(path: string, userId: string) {
+		const ownNote = userId === GlobalState.instance.appState.userProfile._id.toString();
+		const rootDir = ownNote ? "" : `__sekund__/${userId}/`;
+		// console.log("syncDown", `[${path}]`, `[${userId}]`);
+		const note = await this.getNoteByPath(path, userId);
+		if (note) {
+			const fullPath = `${rootDir}${path}`;
+			const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
+			if (!(await this.fsAdapter.exists(fullPath))) {
+				await this.createDirs(dirs);
+				await this.fsAdapter.write(fullPath, note.content);
+			}
+			const noteFile = this.vault.getAbstractFileByPath(fullPath);
+			if (noteFile && noteFile instanceof TFile) {
+				setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
+				this.plugin.app.workspace.activeLeaf?.openFile(noteFile);
+			} else {
+				console.log("ERROR: Could not open file ", noteFile);
+			}
 		} else {
-			console.log("writing file...");
-			await this.createDirs(dirs);
-			await this.fsAdapter.write(fullPath, note.content);
-		}
-		const noteFile = this.vault.getAbstractFileByPath(fullPath);
-		if (noteFile && noteFile instanceof TFile) {
-			console.log("opening file ", noteFile);
-			this.plugin.app.workspace.activeLeaf?.openFile(noteFile);
-			const rNote = await callFunction(this.plugin, "getNote", [note._id.toString()]);
-			dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
-			this.compareNotes(noteFile);
-		} else {
-			console.log("Could not open file ", noteFile);
+			console.log("ERROR: No remote file to sync down ", path, userId);
 		}
 	}
 
@@ -109,8 +112,9 @@ export default class NoteSyncService extends ServerlessService {
 
 	async syncFile() {
 		const file = GlobalState.instance.appState.currentFile;
-		setCurrentNoteState(this.dispatchers, GlobalState.instance.appState.currentNoteState.published ? { publishing: true } : { synchronizing: true });
 		if (file && GlobalState.instance.appState && this.plugin.user) {
+			const ownNote = !isSharedNoteFile(file);
+			setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_SYNCHRONIZING : SHARED_NOTE_SYNCHRONIZING, undefined, undefined);
 			const { remoteNote } = GlobalState.instance.appState;
 			await callFunction(this.plugin, "upsertNote", [
 				{
@@ -124,10 +128,9 @@ export default class NoteSyncService extends ServerlessService {
 				},
 			]);
 			const rNote = await this.getNoteByPath(file.path);
-			dispatch(this.dispatchers, AppActionKind.SetRemoteNote, rNote);
 			setTimeout(() => {
-				setCurrentNoteState(this.dispatchers, { publishing: false, published: true, fileSynced: true, synchronizing: false });
-			}, 800);
+				setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, undefined, rNote);
+			}, 100);
 		}
 	}
 }

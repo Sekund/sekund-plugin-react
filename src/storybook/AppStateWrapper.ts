@@ -1,6 +1,6 @@
 import { Note } from "@/domain/Note";
 import { AppContextType } from "@/state/AppContext";
-import { AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
+import { AppActionKind, AppState, GeneralState, NoteState } from "@/state/AppReducer";
 import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 import React from "react";
@@ -31,17 +31,18 @@ export default class GeneralStateWrapper extends React.Component {
 		if (appContext.appState.plugin === undefined) {
 			appContext.appDispatch({ type: AppActionKind.SetPlugin, payload: { saveSettings: () => {}, settings: { apiKey: "888555222777AAABBB", subdomain: "storybook" } } });
 		}
-		if (this.nState && this.noteStateDiffers(this.nState, appContext.appState.currentNoteState)) {
-			appContext.appDispatch({ type: AppActionKind.SetCurrentNoteState, payload: this.nState });
-		}
-		if (this.note && this.remoteNotesDiffer(this.note, appContext.appState.remoteNote)) {
-			appContext.appDispatch({ type: AppActionKind.SetRemoteNote, payload: this.note });
+		if (this.nState && this.noteStateDiffers(this.nState, appContext.appState)) {
+			appContext.appDispatch({
+				type: AppActionKind.SetCurrentNoteState,
+				payload: {
+					noteState: this.nState,
+					note: this.note,
+					file: this.localFile,
+				},
+			});
 		}
 		if (!appContext.appState.userProfile) {
 			appContext.appDispatch({ type: AppActionKind.SetUserProfile, payload: { _id: new ObjectID(), image: "avatars/1.jpeg", name: "Candide Kemmler", email: "hi@sekund.io" } });
-		}
-		if (appContext.appState.currentFile !== this.localFile) {
-			appContext.appDispatch({ type: AppActionKind.SetCurrentFile, payload: this.localFile });
 		}
 	}
 
@@ -52,12 +53,13 @@ export default class GeneralStateWrapper extends React.Component {
 		return JSON.stringify(note) !== JSON.stringify(remoteNote);
 	}
 
-	noteStateDiffers(nState: Partial<NoteState>, currentNoteState: NoteState): boolean {
-		if (nState.published !== undefined && nState.published !== currentNoteState.published) return true;
-		if (nState.publishing !== undefined && nState.publishing !== currentNoteState.publishing) return true;
-		if (nState.fileSynced !== undefined && nState.fileSynced !== currentNoteState.fileSynced) return true;
-		if (nState.fetching !== undefined && nState.fetching !== currentNoteState.fetching) return true;
-		if (nState.synchronizing !== undefined && nState.synchronizing !== currentNoteState.synchronizing) return true;
+	noteStateDiffers(nState: Partial<NoteState>, appState: AppState): boolean {
+		if (nState.publishing !== undefined && nState.publishing !== appState.currentNoteState.publishing) return true;
+		if (nState.fileSynced !== undefined && nState.fileSynced !== appState.currentNoteState.fileSynced) return true;
+		if (nState.fetching !== undefined && nState.fetching !== appState.currentNoteState.fetching) return true;
+		if (nState.updating !== undefined && nState.updating !== appState.currentNoteState.updating) return true;
+		if (this.localFile !== null && appState.currentFile === null) return true;
+		if (this.note !== null && appState.remoteNote === null) return true;
 		return false;
 	}
 }

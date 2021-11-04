@@ -20,10 +20,10 @@ export default class SekundHomeView extends SekundView {
         return HOME_VIEW_ICON;
     }
 
-    async syncDown(path: string) {
+    async syncDown(path: string, userId: string) {
         const note = await NoteSyncService.instance.getNoteByPath(path);
         if (note) {
-            NoteSyncService.instance.syncDown(note);
+            NoteSyncService.instance.syncDown(note.path, userId);
         }
     }
 

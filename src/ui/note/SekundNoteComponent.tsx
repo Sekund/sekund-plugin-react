@@ -57,7 +57,7 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
   function uploadButton() {
     return (
       <div className="flex flex-col items-center p-2">
-        <button onClick={handleSync} className={`flex items-center  ${fetching || publishing ? "animate-pulse" : ""}`}>
+        <button onClick={handleSync} className={`flex items-center mod-cta  ${fetching || publishing ? "animate-pulse" : ""}`}>
           <svg xmlns="http://www.w3.org/2000/svg" className={`w-6 h-6 ${publishing ? "animate-bounce" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
@@ -112,7 +112,7 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
     }
     return (
       <button key="sharing.share" type="button">
-        Share
+        {t('plugin:Share')}
       </button>
     );
   }
@@ -152,7 +152,7 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
 
     return (
       <div className="fixed inset-0">
-        <div className="flex flex-col items-center justify-center w-full h-full">
+        <div className="flex flex-col items-center justify-center w-full h-full mod-cta">
           {uploadButton()}
         </div>
       </div>
@@ -187,13 +187,13 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
           <div className="fixed inset-0">
             <div className="flex flex-col items-center justify-center w-full h-full p-2">
               <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
-              <button onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
+              <button className="mod-cta" onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
             </div>
           </div>
           : <NoteComments />}
         <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>
           <div className="flex items-center justify-between px-2 text-sm">{children}</div>
-          <a className={`flex items-center justify-center p-1 text-sm text-center cursor-pointer ${footerTextColor}`} onClick={handleUnpublish}>
+          <a className={`flex items-center justify-center p-1 text-sm text-center cursor-pointer mod-cta ${footerTextColor}`} onClick={handleUnpublish}>
             <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
             {t('plugin:deleteFromSekund')}
           </a>

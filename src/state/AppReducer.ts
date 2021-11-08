@@ -2,7 +2,7 @@ import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import SekundPluginReact from "@/main";
 import GlobalState from "@/state/GlobalState";
-import { Plugin_2, TFile } from "obsidian";
+import { TFile } from "obsidian";
 
 export type GeneralState = "connecting" | "noApiKey" | "noSubdomain" | "noSettings" | "noSuchSubdomain" | "offline" | "allGood" | "unknownError" | "loginError";
 

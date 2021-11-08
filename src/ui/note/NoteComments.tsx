@@ -69,25 +69,16 @@ export default function NoteComments() {
     }
   }
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.code === "Enter") {
-      ensureSendVisible();
-    }
-  }
-
-  function ensureSendVisible() {
-    if (sendButton.current) {
-      const inView = isVisible(sendButton.current);
-      if (!inView) {
-        let position = sendButton.current.getBoundingClientRect();
-        window.scrollTo(position.left, position.top + window.scrollY + 200);
-      }
-    }
-  }
-
   function clearComment() {
     const textarea = document.getElementById("comment") as HTMLTextAreaElement;
     setAreaText((textarea.value = ""));
+  }
+
+  function autoexpand() {
+    const textarea = document.getElementById("comment") as HTMLTextAreaElement;
+    if (textarea.parentNode) {
+      (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value
+    }
   }
 
 
@@ -97,15 +88,15 @@ export default function NoteComments() {
         <label htmlFor="message" className="flex items-center h-10 space-x-2">
           <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>{t('you')}</span>
         </label>
-        <div className="mt-1">
-          <TextareaAutosize onChange={(e) => setAreaText(e.target.value)} onKeyDown={(e: any) => handleKeydown(e)} onHeightChange={ensureSendVisible} style={{ fontSize: "1rem" }} minRows={2} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 border rounded-md shadow-sm " aria-describedby="message-max" defaultValue={""} />
+        <div className="mt-1 grow-wrap">
+          <textarea onInput={autoexpand} onChange={(e) => setAreaText(e.target.value)} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 text-sm border rounded-md" aria-describedby="message-max" defaultValue={""} />
         </div>
       </div>
       <div className="flex justify-end w-full mt-2">
         <button className={`${areaText === '' ? 'text-obs-faint' : 'text-obs-normal'}`} onClick={areaText === '' ? undefined : clearComment} type="button">
           {t('clear')}
         </button>
-        <button ref={sendButton} onClick={addComment} type="button">
+        <button className={`${areaText === '' ? 'text-obs-faint' : 'text-obs-normal mod-cta'}`} ref={sendButton} onClick={areaText === '' ? undefined : addComment} type="button">
           {t('send')}
         </button>
       </div>

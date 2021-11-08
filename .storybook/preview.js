@@ -17,6 +17,7 @@ import Minimal from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/st
 import Default from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/system.css";
 import Nord from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/obsidian-nord.css";
 import Primary from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/primary.css";
+import GlobalState from "@/state/GlobalState";
 
 import cssVariablesTheme from "@etchteam/storybook-addon-css-variables-theme";
 
@@ -97,3 +98,4 @@ export const globalTypes = {
 		},
 	},
 };
+new GlobalState();

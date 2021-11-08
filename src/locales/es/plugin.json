@@ -44,5 +44,6 @@
     "openPeoplesView": "Contactos",
     "openGroupsView": "Grupos",
     "openChatView": "Chat",
-    "noNotesDesc": "Todavía no has subido ninguna nota. Para ello, abre la vista de chat y haz clic en el botón \"Cargar\"."
+    "noNotesDesc": "Todavía no has subido ninguna nota. Para ello, abre la vista de chat y haz clic en el botón \"Cargar\".",
+    "openAllViews": "Abrir todas las vistas"
 }

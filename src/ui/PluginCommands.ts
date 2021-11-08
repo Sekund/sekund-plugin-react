@@ -47,6 +47,15 @@ export default class PluginCommands {
 				await this.plugin.showPane(GROUPS_VIEW_TYPE);
 			},
 		},
+		{
+			id: "sekund-open-all-views",
+			icon: "sekund-icon",
+			name: i18next.t("plugin:openAllViews"),
+			showInRibbon: true,
+			callback: async () => {
+				[HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE].forEach((t) => this.plugin.showPane(t));
+			},
+		},
 	];
 
 	async ribbonDisplayCommands(): Promise<void> {

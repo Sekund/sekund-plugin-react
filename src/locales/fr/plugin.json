@@ -44,5 +44,6 @@
     "openPeoplesView": "Contacts",
     "openGroupsView": "Groupes",
     "openChatView": "Tchat",
-    "noNotesDesc": "Vous n'avez pas encore téléchargé de notes. Pour le faire, ouvrez la vue \"Chat\" et cliquez sur le bouton \"Télécharger\"."
+    "noNotesDesc": "Vous n'avez pas encore téléchargé de notes. Pour le faire, ouvrez la vue \"Chat\" et cliquez sur le bouton \"Télécharger\".",
+    "openAllViews": "Ouvrir toutes les vues"
 }

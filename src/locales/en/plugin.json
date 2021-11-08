@@ -44,5 +44,6 @@
     "openPeoplesView": "Peoples",
     "openGroupsView": "Groups",
     "openChatView": "Chat",
-    "noNotesDesc": "You haven't uploaded any notes yet. To do so, open the Chat view and click the \"Upload\" button."
+    "noNotesDesc": "You haven't uploaded any notes yet. To do so, open the Chat view and click the \"Upload\" button.",
+    "openAllViews": "Open all views"
 }

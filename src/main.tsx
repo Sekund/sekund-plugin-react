@@ -52,6 +52,7 @@ export default class SekundPluginReact extends Plugin {
   async onload() {
     await this.loadSettings();
 
+    new GlobalState();
     addIcons();
 
     const commands = new PluginCommands(this);

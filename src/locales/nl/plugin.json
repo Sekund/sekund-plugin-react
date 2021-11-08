@@ -44,5 +44,6 @@
     "openPeoplesView": "Contacten",
     "openGroupsView": "Groepen",
     "openChatView": "Chat",
-    "noNotesDesc": "Je hebt nog geen aantekeningen geupload. Om dit te doen, open de Chat-weergave en klik op de knop \"Uploaden\"."
+    "noNotesDesc": "Je hebt nog geen aantekeningen geupload. Om dit te doen, open de Chat-weergave en klik op de knop \"Uploaden\".",
+    "openAllViews": "Open alle uitzichten"
 }

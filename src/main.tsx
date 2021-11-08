@@ -228,7 +228,6 @@ export default class SekundPluginReact extends Plugin {
           setGeneralState(dispatchers, "allGood");
 
           if (!this.registeredEvents) {
-            console.log("registering file system events");
             this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
             this.registerEvent(this.app.vault.on("modify", this.handleModify));
             this.registerEvent(this.app.vault.on("rename", this.handleRename));

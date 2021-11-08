@@ -1,17 +1,13 @@
 import { NoteComment } from "@/domain/NoteComment";
 import { getAvatar } from "@/helpers/avatars";
-import { isVisible } from "@/helpers/visibility";
 import EventsWatcherService from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
-import { AppActionKind } from "@/state/AppReducer";
-import EventsContext, { useEventsContext } from "@/state/EventsContext";
-import { EventsActionKind } from "@/state/EventsReducer";
+import { useEventsContext } from "@/state/EventsContext";
 import GlobalState from "@/state/GlobalState";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import TextareaAutosize from "react-textarea-autosize";
 
 export default function NoteComments() {
   const { appState } = useAppContext();
@@ -63,24 +59,23 @@ export default function NoteComments() {
 
   async function addComment() {
     if (appState.remoteNote) {
-      const textarea = document.getElementById("comment") as HTMLTextAreaElement;
+      const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
       NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin?.user.customData._id);
       textarea.value = "";
     }
   }
 
   function clearComment() {
-    const textarea = document.getElementById("comment") as HTMLTextAreaElement;
+    const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
     setAreaText((textarea.value = ""));
   }
 
   function autoexpand() {
-    const textarea = document.getElementById("comment") as HTMLTextAreaElement;
+    const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
     if (textarea.parentNode) {
       (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value
     }
   }
-
 
   return (
     <div className="px-2 mt-1 mb-16">
@@ -89,7 +84,7 @@ export default function NoteComments() {
           <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>{t('you')}</span>
         </label>
         <div className="mt-1 grow-wrap">
-          <textarea onInput={autoexpand} onChange={(e) => setAreaText(e.target.value)} id="comment" name="message" rows={2} className="relative block w-full px-2 py-1 text-sm border rounded-md" aria-describedby="message-max" defaultValue={""} />
+          <textarea onInput={autoexpand} onChange={(e) => setAreaText(e.target.value)} id="sekund-comment" name="message" rows={2} className="relative block w-full px-2 py-1 text-sm border rounded-md" aria-describedby="message-max" defaultValue={""} />
         </div>
       </div>
       <div className="flex justify-end w-full mt-2">

@@ -7,7 +7,6 @@ import { Popover } from "@headlessui/react";
 import { DotsHorizontalIcon, PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import TextareaAutosize from "react-textarea-autosize";
 import ReactTimeAgo from "react-time-ago";
 import Markdown from "markdown-to-jsx";
 
@@ -25,6 +24,8 @@ export default function NoteCommentComponent({ comment }: Props) {
   const area = useRef<HTMLDivElement>(null);
 
   const guestId = userProfile?._id;
+  const popoverButtonRef = useRef<any>();
+  let globalClickListener: EventListener;
 
   useEffect(() => {
     if (!editMode && userComment) {
@@ -36,6 +37,17 @@ export default function NoteCommentComponent({ comment }: Props) {
         }
       }, 20);
     }
+    if (editMode) {
+      const commentId = `comment-${comment.updated}`;
+      globalClickListener = e => {
+        const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
+        if (!e.composedPath().includes(textarea)) {
+          window.removeEventListener('click', globalClickListener);
+          setEditMode(false);
+        }
+      };
+      setTimeout(() => window.addEventListener('click', globalClickListener, false), 20)
+    }
   }, [editMode]);
 
   function deleteComment(created: number, updated: number) {
@@ -46,7 +58,6 @@ export default function NoteCommentComponent({ comment }: Props) {
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.code === "Enter") {
-      ensureAreaBottomVisible();
       if (!e.shiftKey) {
         setEditMode(false);
       }
@@ -57,21 +68,26 @@ export default function NoteCommentComponent({ comment }: Props) {
     }
   }
 
-  function ensureAreaBottomVisible() {
-    if (area.current) {
-      const inView = isVisible(area.current);
-      if (!inView) {
-        let position = area.current.getBoundingClientRect();
-        window.scrollTo(position.left, position.bottom + window.scrollY + 100);
-      }
+  function autoexpand(commentId: string) {
+    const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
+    if (textarea && textarea.parentNode) {
+      (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value
     }
   }
 
   function commentText() {
     if (editMode) {
-      return <TextareaAutosize minRows={2} onHeightChange={ensureAreaBottomVisible} onKeyDown={(e: any) => handleKeydown(e)} onChange={(evt) => setUserComment(evt.target.value)} className="p-1 mt-1 mr-4 input" defaultValue={comment.text}></TextareaAutosize>;
+      const commentId = `comment-${comment.updated}`;
+      setTimeout(() => autoexpand(commentId), 1);
+      return (<div className="grow-wrap">
+        <textarea onInput={() => autoexpand(commentId)} id={commentId} onKeyDown={(e: any) => handleKeydown(e)} onChange={(evt) => setUserComment(evt.target.value)} className="p-1 mt-1 mr-4 input" defaultValue={comment.text} />
+      </div>);
     }
     return <Markdown>{comment.text}</Markdown>;
+  }
+
+  function clickPopover() {
+    popoverButtonRef?.current?.click()
   }
 
   function commentActions(noteComment: NoteComment) {
@@ -79,17 +95,17 @@ export default function NoteCommentComponent({ comment }: Props) {
     if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
-          <Popover.Button className="relative flex items-center justify-center w-4 h-4 rounded-full cursor-pointer max-h-4 max-w-4 hover:bg-primary">
+          <Popover.Button ref={popoverButtonRef} className="flex items-center justify-center w-4 h-4 rounded-full cursor-pointer max-h-4 max-w-4 hover:bg-primary">
             <DotsHorizontalIcon style={{ minWidth: '1rem' }}></DotsHorizontalIcon>
           </Popover.Button>
 
-          <Popover.Panel className="absolute z-30 mt-24 rounded-lg cursor-pointer bg-obs-primary-alt">
-            <div className="flex flex-col px-2 py-2 space-y-2 text-sm rounded-lg leading-2 text-primary bg-obs-primary-alt">
-              <a onClick={() => deleteComment(noteComment.created, noteComment.updated)} className="flex items-center px-1 py-1 space-x-2 rounded-lg hover:bg-gray-200 hover:text-gray-700">
+          <Popover.Panel className="relative rounded-lg cursor-pointer bg-obs-primary-alt">
+            <div className="absolute z-30 flex flex-col px-2 py-2 space-y-2 text-sm rounded-lg leading-2 text-primary bg-obs-primary-alt">
+              <a onClick={() => { deleteComment(noteComment.created, noteComment.updated); clickPopover() }} className="flex items-center px-1 py-1 space-x-2 rounded-lg">
                 <TrashIcon className="w-5 h-5" />
                 <span>{t('Delete')}</span>
               </a>
-              <a onClick={() => setEditMode(true)} className="flex items-center px-1 py-1 space-x-2 rounded-lg hover:bg-gray-200 hover:text-gray-700">
+              <a onClick={() => { setEditMode(true); clickPopover() }} className="flex items-center px-1 py-1 space-x-2 rounded-lg">
                 <PencilIcon className="w-5 h-5" />
                 <span>{t('Edit')}</span>
               </a>

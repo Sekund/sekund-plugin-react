@@ -92,7 +92,7 @@ export default function NoteComments() {
 
 
   return (
-    <div className="px-2 mt-1">
+    <div className="px-2 mt-1 mb-16">
       <div className={`sm:col-span-2`}>
         <label htmlFor="message" className="flex items-center h-10 space-x-2">
           <span>{getAvatar(guestName, guestImage, guestEmail, 8)}</span> <span>{t('you')}</span>

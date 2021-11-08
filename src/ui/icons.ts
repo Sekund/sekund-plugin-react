@@ -1,6 +1,18 @@
 import { addIcon } from "obsidian";
 
 export const icons: Record<string, string> = {
+	"sekund-icon": `<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	viewBox="0 0 600 600" style="enable-background:new 0 0 600 600;" xml:space="preserve">
+<style type="text/css">
+ .st0{fill:#F4526A;}
+ .st1{fill:#FFFFFF;}
+</style>
+<circle class="st0" cx="300" cy="300" r="300"/>
+<path class="st1" d="M181.39,201.53c-54.76,0-99.15,43.39-99.15,99.15c0,69.19,57.87,100.21,90.89,100.21
+ c-7.22,38.27-24.8,71.34-71.25,112.67c121.9-33.07,182.83-121.9,182.83-206.62C284.7,239.76,236.15,201.53,181.39,201.53z"/>
+<path class="st1" d="M416.28,201.53c-54.76,0-99.15,43.39-99.15,99.15c0,69.19,57.87,100.21,90.89,100.21
+ c-7.22,38.27-24.8,71.34-71.25,112.67c121.9-33.07,182.83-121.9,182.83-206.62C519.59,239.76,471.04,201.53,416.28,201.53z"/>
+</svg>`,
 	"sekund-note": `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
   <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
   <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />

@@ -6,11 +6,13 @@ import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
+import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import SekundGroupsView from "@/ui/groups/SekundGroupsView";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundNoteView from "@/ui/note/SekundNoteView";
 import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
+import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
 import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
@@ -19,11 +21,9 @@ import en from 'javascript-time-ago/locale/en.json';
 import es from 'javascript-time-ago/locale/es.json';
 import fr from 'javascript-time-ago/locale/fr.json';
 import nl from 'javascript-time-ago/locale/nl.json';
-import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import { App, Modal, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
-import i18next from '@/i18n.config';
-import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 
 TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(fr)
@@ -51,7 +51,14 @@ export default class SekundPluginReact extends Plugin {
 
   async onload() {
     await this.loadSettings();
+
     addIcons();
+
+    const commands = new PluginCommands(this);
+    this.addRibbonIcon('sekund-icon', 'Sekund Panes', (evt: MouseEvent) => {
+      // Called when the user clicks the icon.
+      commands.ribbonDisplayCommands();
+    });
 
     this.registerViews([
       { type: NOTE_VIEW_TYPE, View: SekundNoteView },
@@ -59,16 +66,6 @@ export default class SekundPluginReact extends Plugin {
       { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
       { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
     ])
-
-    const locale = window.moment ? (window.moment as any).locale() : 'en';
-
-    this.addCommands([
-      { id: "sekund-open-note-view", name: i18next.t("plugin:openChatView"), type: NOTE_VIEW_TYPE },
-      { id: "sekund-open-home-view", name: i18next.t("plugin:openHomeView"), type: HOME_VIEW_TYPE },
-      { id: "sekund-open-peoples-view", name: i18next.t("plugin:openPeoplesView"), type: PEOPLES_VIEW_TYPE },
-      { id: "sekund-open-groups-view", name: i18next.t("plugin:openGroupsView"), type: GROUPS_VIEW_TYPE }
-    ]);
-
 
     this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
@@ -90,25 +87,17 @@ export default class SekundPluginReact extends Plugin {
     }
   }
 
-  addCommands(specs: { id: string, name: string, type: string }[]) {
-    for (const spec of specs) {
-      const { id, name, type } = spec;
-      this.addCommand({
-        id,
-        name,
-        callback: async () => {
-          if (this.app.workspace.getLeavesOfType(type).length == 0) {
-            await this.app.workspace.getRightLeaf(false).setViewState({
-              type,
-            });
-          }
-          const firstLeaf = this.app.workspace.getLeavesOfType(type).first();
-          if (firstLeaf) {
-            this.app.workspace.revealLeaf(firstLeaf);
-          }
-        },
+  async showPane(type: string) {
+    if (this.app.workspace.getLeavesOfType(type).length == 0) {
+      await this.app.workspace.getRightLeaf(false).setViewState({
+        type,
       });
     }
+    const firstLeaf = this.app.workspace.getLeavesOfType(type).first();
+    if (firstLeaf) {
+      this.app.workspace.revealLeaf(firstLeaf);
+    }
+
   }
 
   refreshPanes() {
@@ -168,6 +157,7 @@ export default class SekundPluginReact extends Plugin {
     if (this.onlineListener) {
       window.removeEventListener("online", this.onlineListener);
     }
+
     if (this.offlineListener) {
       window.removeEventListener("offline", this.offlineListener);
     }
@@ -277,6 +267,22 @@ export default class SekundPluginReact extends Plugin {
 
   addDispatcher(dispatcher: React.Dispatch<AppAction>, viewType: string) {
     this.dispatchers[viewType] = dispatcher;
+  }
+}
+
+class SekundMenuModal extends Modal {
+  constructor(app: App) {
+    super(app);
+  }
+
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.setText('Woah!');
+  }
+
+  onClose() {
+    const { contentEl } = this;
+    contentEl.empty();
   }
 }
 

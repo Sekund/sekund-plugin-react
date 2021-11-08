@@ -21,7 +21,7 @@ export default function NoteSummariesPanel({ handleNoteClicked }: Props) {
 		return (
 			<div className="fixed inset-0 flex flex-col w-full h-full bg-obs-primary">
 				<div className="flex items-center h-8 px-2">
-					<span className="font-medium text-obs-primary"
+					<span className="font-medium text-normal"
 						onClick={() => notesDispatch({ type: NotesActionKind.ResetNotes, payload: [] })}>← {t('back')}</span>
 				</div>
 				<div className="flex flex-col w-full overflow-auto space-y-1px">

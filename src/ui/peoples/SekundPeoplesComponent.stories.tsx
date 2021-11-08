@@ -30,6 +30,12 @@ SomePeoples.args = {
     peoples
 };
 
+export const FewPeoples = Template.bind({});
+FewPeoples.args = {
+    gState: "allGood",
+    peoples: peoples.slice(0, 2)
+};
+
 export const NoOne = Template.bind({});
 NoOne.args = {
     gState: "allGood",

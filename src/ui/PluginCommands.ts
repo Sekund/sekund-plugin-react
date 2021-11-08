@@ -3,6 +3,10 @@ import { NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE } f
 import ThePlugin from "../main";
 import { GenericFuzzySuggester, SuggesterItem } from "./GenericFuzzySuggester";
 
+/**
+ *
+ */
+
 export default class PluginCommands {
 	plugin: ThePlugin;
 

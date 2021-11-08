@@ -10,12 +10,14 @@ import nl from "javascript-time-ago/locale/nl.json";
 
 import "@/styles/obsidian-app.css";
 import "/global.css";
+import "@/styles/sb.css";
 import Atom from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/obsidian-atom.css";
 import Cybertron from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/cybertron.css";
 import Minimal from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/kepano-minimal.css";
 import Default from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/system.css";
 import Nord from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/obsidian-nord.css";
 import Primary from "!!style-loader?injectType=lazyStyleTag!css-loader!../src/styles/primary.css";
+
 import cssVariablesTheme from "@etchteam/storybook-addon-css-variables-theme";
 
 TimeAgo.addDefaultLocale(en);
@@ -51,6 +53,13 @@ export const parameters = {
 				name: "Obsidian Vertical Tab",
 				styles: {
 					width: "300px",
+					height: "100%",
+				},
+			},
+			narrowVerticalTab: {
+				name: "Too Narrow",
+				styles: {
+					width: "200px",
 					height: "100%",
 				},
 			},

@@ -28,6 +28,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   const forceUpdate = () => setState(state + 1);
   const [sharingOptions, setSharingOptions] = useState<SelectOption[]>([]);
   const selectInput = useRef<any>();
+  const shade = useRef<any>()
 
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
@@ -79,7 +80,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       const { groups } = sharing;
       groups?.forEach((g, idx) =>
         children.push(
-          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
+          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
             {groupAvatar(g)}
             <span className="ml-2 truncate">{g.name}</span>
             <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
@@ -92,7 +93,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       const { peoples } = sharing;
       peoples?.forEach((p) =>
         children.push(
-          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
+          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
             {peopleAvatar(p)}
             <span className="ml-2 truncate whitespace-nowrap">{`${p.name || p.email}`}</span>
             <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
@@ -104,8 +105,8 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-obs-primary">
-      <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-secondary">
+    <div ref={shade} onClick={(evt) => { if (evt.target === shade.current) { setOpen(false) } }} className="fixed inset-0 flex flex-col items-center justify-center bg-obs-cover">
+      <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
         <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">
           <div className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none" onClick={() => setOpen(false)}>
             <span className="sr-only">{t('close')}</span>

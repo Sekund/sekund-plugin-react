@@ -1894,8 +1894,8 @@ body.is-dragging {
 /* Window frame */
 
 body:not(.hider-frameless):not(.is-fullscreen):not(.is-mobile) {
-	--titlebar-height: 28px;
-	padding-top: var(--titlebar-height) !important;
+	/* --titlebar-height: 28px;
+	padding-top: var(--titlebar-height) !important; */
 }
 body:not(.hider-frameless):not(.is-fullscreen):not(.is-mobile) .titlebar {
 	background: var(--background-secondary);

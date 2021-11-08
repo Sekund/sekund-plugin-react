@@ -69,6 +69,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   }
 
   function createGroup() {
+    console.log("create group")
     setCurrentGroup(null);
     setShowNewGroupModal(true);
   }
@@ -101,7 +102,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
         <NotesContext.Provider value={notesProviderState}>
           <div className="flex flex-col">
             <div className="flex items-center justify-end w-full h-8 px-2 text-xs">
-              <div className="flex items-center p-1 space-x-1 border rounded-md mr-2px dark:border-obs-modal text-obs-primary" onClick={createGroup}>
+              <div className="flex items-center p-1 space-x-1 border rounded-md mr-2px dark:border-obs-modal text-normal" onClick={createGroup}>
                 <PlusIcon className="w-4 h-4" /> <span className="py-0">{t('new_group')}</span>
               </div>
             </div>
@@ -130,7 +131,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
       <div className="text-center ">{t('plugin:noGroups')}</div>
       <div className="mt-2 text-sm text-center ">{t('plugin:noGroupsDesc')}</div>
       <button onClick={createGroup} className="flex items-center mt-2">
-        <PlusIcon className="w-4 h-4 mr-1" />{t('new_group')}
+        <PlusIcon className="w-4 h-4 mr-1 mod-cta" />{t('new_group')}
       </button>
     </div>)
 

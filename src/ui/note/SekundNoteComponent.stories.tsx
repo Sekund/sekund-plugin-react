@@ -5,6 +5,7 @@ import SekundNoteComponentHOC, { SekundNoteComponent } from './SekundNoteCompone
 import '/global.css';
 import notes, { someNote } from "@/mockdata/NotesMock";
 import { TFile } from 'obsidian';
+import { callFunction } from '@/services/ServiceUtils';
 
 export default {
     title: 'Sekund/Note',

@@ -1,4 +1,4 @@
-#root {
+body {
 	height: 100vh;
 	overflow: auto;
 	--titlebar-height: 0px;

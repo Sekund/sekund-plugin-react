@@ -1,5 +1,4 @@
 import { Note } from "@/domain/Note";
-import filenamify from "@/helpers/filenamify";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
@@ -7,6 +6,8 @@ import { AppAction } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_FETCHING, OWN_NOTE_LOCAL, OWN_NOTE_OUTDATED, OWN_NOTE_SYNCHRONIZING, OWN_NOTE_UPTODATE, SHARED_NOTE_SYNCHRONIZING, SHARED_NOTE_UPTODATE } from "@/state/NoteStates";
 import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
+import { decode, encode } from "base64-arraybuffer";
+import mime from "mime-types";
 import { DataAdapter, TFile, Vault } from "obsidian";
 
 export default class NoteSyncService extends ServerlessService {
@@ -87,6 +88,9 @@ export default class NoteSyncService extends ServerlessService {
 				await this.createDirs(dirs);
 				await this.fsAdapter.write(fullPath, note.content);
 			}
+			if (note.assets && note.assets.length > 0) {
+				await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
+			}
 			const noteFile = this.vault.getAbstractFileByPath(fullPath);
 			if (noteFile && noteFile instanceof TFile) {
 				setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
@@ -110,24 +114,52 @@ export default class NoteSyncService extends ServerlessService {
 		}
 	}
 
+	async uploadDependencies(assets: Array<string>, noteId: string) {
+		const userId = GlobalState.instance.appState.userProfile._id.toString();
+		assets.forEach(async (path) => {
+			const assetFile = this.vault.getAbstractFileByPath(path);
+			if (assetFile) {
+				const blob = await this.fsAdapter.readBinary(path);
+				const base64 = encode(blob);
+				const mimeType = mime.lookup(assetFile.name);
+				await callFunction(this.plugin, "upload", [base64, `${userId}/${noteId}/${assetFile.path}`, mimeType]);
+			}
+		});
+	}
+
+	async downloadDependencies(assets: Array<string>, noteUserId: string, noteId: string) {
+		assets.forEach(async (path) => {
+			const file: any = await callFunction(this.plugin, "download", [`${noteUserId}/${noteId}/${path}`]);
+			const dependencyPath = `${noteUserId}/${path}`;
+			this.createDirs(dependencyPath);
+			await this.fsAdapter.writeBinary(dependencyPath, file.buffer);
+		});
+	}
+
 	async syncFile() {
 		const file = GlobalState.instance.appState.currentFile;
 		if (file && GlobalState.instance.appState && this.plugin.user) {
 			const ownNote = !isSharedNoteFile(file);
 			setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_SYNCHRONIZING : SHARED_NOTE_SYNCHRONIZING, undefined, undefined);
 			const { remoteNote } = GlobalState.instance.appState;
+			const content = await file.vault.read(file);
+			const assets = Object.keys(this.plugin.app.metadataCache.resolvedLinks[file.name]);
 			await callFunction(this.plugin, "upsertNote", [
 				{
 					path: file.path,
 					title: file.name,
-					content: await file.vault.read(file),
+					content,
 					created: file.stat.ctime,
 					updated: file.stat.mtime,
 					firstPublished: remoteNote && remoteNote.firstPublished ? remoteNote.firstPublished : Date.now(),
 					lastPublished: Date.now(),
+					assets,
 				},
 			]);
 			const rNote = await this.getNoteByPath(file.path);
+			if (rNote) {
+				await this.uploadDependencies(assets, rNote._id.toString());
+			}
 			setTimeout(() => {
 				setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, undefined, rNote);
 			}, 100);

@@ -30,10 +30,10 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
-    eventsWatcher.watchEvents();
-    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["updateNote"], reloadNote))
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["updateNote"], reloadNote))
     return () => {
-      eventsWatcher.removeEventListener(listenerId);
+      eventsWatcher?.removeEventListener(listenerId);
     }
   }, [])
 

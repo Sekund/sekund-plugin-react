@@ -47,10 +47,10 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
-    eventsWatcher.watchEvents();
-    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["modifySharingPeoples"], reloadList))
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["modifySharingPeoples"], reloadList))
     return () => {
-      eventsWatcher.removeEventListener(listenerId);
+      eventsWatcher?.removeEventListener(listenerId);
     }
   }, [])
 

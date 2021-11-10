@@ -60,10 +60,10 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
-    eventsWatcher.watchEvents();
-    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["modifySharingGroups"], fetchGroups))
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["modifySharingGroups"], fetchGroups))
     return () => {
-      eventsWatcher.removeEventListener(listenerId);
+      eventsWatcher?.removeEventListener(listenerId);
     }
   }, [])
 

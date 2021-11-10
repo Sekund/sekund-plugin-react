@@ -26,10 +26,10 @@ export default function NoteComments() {
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
-    eventsWatcher.watchEvents();
-    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["addComment", "removeComment", "editComment"], reloadNote))
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["addComment", "removeComment", "editComment"], reloadNote))
     return () => {
-      eventsWatcher.removeEventListener(listenerId);
+      eventsWatcher?.removeEventListener(listenerId);
     }
   }, [])
 

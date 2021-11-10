@@ -48,15 +48,11 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher.watchEvents();
-    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["modifySharing"], reloadList))
+    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["modifySharingPeoples"], reloadList))
     return () => {
       eventsWatcher.removeEventListener(listenerId);
     }
   }, [])
-
-  useEffect(() => {
-    reloadList()
-  }, [notesState.notes]);
 
   function reloadList() {
     console.log("reloading list as there were changes");

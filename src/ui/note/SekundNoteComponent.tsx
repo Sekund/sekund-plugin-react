@@ -7,7 +7,7 @@ import NoteComments from "@/ui/note/NoteComments";
 import Loader from "@/ui/common/LoaderComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import EventsContext from "@/state/EventsContext";
 import EventsReducer, { initialEventsState } from "@/state/EventsReducer";

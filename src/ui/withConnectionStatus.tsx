@@ -1,11 +1,12 @@
-import i18nConf from '../i18n.config';
 import AppContext from "@/state/AppContext";
-import AppReducer, { initialAppState } from "@/state/AppReducer";
+import AppReducer from "@/state/AppReducer";
+import GlobalState from '@/state/GlobalState';
 import APIInfo from '@/ui/APIInfo';
+import Loader from '@/ui/common/LoaderComponent';
+import { makeid } from "@/utils";
 import React, { useEffect, useReducer, useRef } from 'react';
 import { Trans, useTranslation } from "react-i18next";
-import Loader from '@/ui/common/LoaderComponent';
-import GlobalState from '@/state/GlobalState';
+import i18nConf from '../i18n.config';
 
 type Props = {
   view: { addAppDispatch: Function }
@@ -15,8 +16,8 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
   const { t, i18n } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
   const localizedAppState = window.moment
-    ? { ...initialAppState, generalState: GlobalState.instance.appState.generalState, locale: (window.moment as any).locale() }
-    : { ...initialAppState, generalState: GlobalState.instance.appState.generalState };
+    ? { ...GlobalState.instance.appState, id: makeid(3), locale: (window.moment as any).locale() }
+    : { ...GlobalState.instance.appState, id: makeid(3) };
 
   const [appState, appDispatch] = useReducer(AppReducer, localizedAppState);
   const appProviderState = {

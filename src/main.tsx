@@ -43,7 +43,7 @@ const DEFAULT_SETTINGS: SekundPluginSettings = {
 export default class SekundPluginReact extends Plugin {
 
   settings: SekundPluginSettings = {} as SekundPluginSettings;
-  dispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
+  private viewDispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
   private registeredEvents = false;
   private authenticatedUsers: { [subdomain: string]: Realm.User | null } = {};
   private offlineListener?: EventListener;
@@ -152,7 +152,7 @@ export default class SekundPluginReact extends Plugin {
   public readonly updateOnlineStatus = async () => {
     if (!navigator.onLine) {
       Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
-      setGeneralState(Object.values(this.dispatchers), "offline");
+      setGeneralState(this.dispatchers, "offline");
     }
 
     if (this.onlineListener) {
@@ -187,14 +187,14 @@ export default class SekundPluginReact extends Plugin {
       return "connecting";
     }
 
-    setGeneralState(Object.values(this.dispatchers), "connecting");
+    setGeneralState(this.dispatchers, "connecting");
 
     if (!this.settings.apiKey || this.settings.apiKey === "") {
       if (!this.settings.subdomain || this.settings.subdomain === "") {
-        setGeneralState(Object.values(this.dispatchers), "noSettings");
+        setGeneralState(this.dispatchers, "noSettings");
         return 'noSettings'
       } else {
-        setGeneralState(Object.values(this.dispatchers), "noApiKey");
+        setGeneralState(this.dispatchers, "noApiKey");
         return 'noApiKey';
       }
     }
@@ -205,7 +205,7 @@ export default class SekundPluginReact extends Plugin {
     switch (appIdResult) {
       case "noSubdomain": // this could be redundant since we already checked for the subdomain
       case "noSuchSubdomain":
-        setGeneralState(Object.values(this.dispatchers), appIdResult);
+        setGeneralState(this.dispatchers, appIdResult);
         return appIdResult;
       default:
         const user = await getApiKeyConnection(new Realm.App(appIdResult), this.settings.apiKey);
@@ -213,10 +213,8 @@ export default class SekundPluginReact extends Plugin {
         if (user) {
           this.authenticatedUsers[this.settings.subdomain] = user;
 
-          const dispatchers = Object.values(this.dispatchers);
-
           new UsersService(this);
-          new NoteSyncService(this, dispatchers);
+          new NoteSyncService(this);
           new NotesService(this);
           new PeoplesService(this);
           new GroupsService(this);
@@ -224,8 +222,8 @@ export default class SekundPluginReact extends Plugin {
 
           const userProfile = await UsersService.instance.fetchUser();
 
-          dispatch(dispatchers, AppActionKind.SetUserProfile, userProfile)
-          setGeneralState(dispatchers, "allGood");
+          dispatch(this.dispatchers, AppActionKind.SetUserProfile, userProfile)
+          setGeneralState(this.dispatchers, "allGood");
 
           if (!this.registeredEvents) {
             this.registerEvent(this.app.workspace.on("file-open", this.handleFileOpen));
@@ -240,7 +238,7 @@ export default class SekundPluginReact extends Plugin {
           // network errors sometimes
           setTimeout(() => this.handleFileOpen(this.app.workspace.getActiveFile()), 100);
         } else if (!user) {
-          setGeneralState(Object.values(this.dispatchers), "loginError");
+          setGeneralState(this.dispatchers, "loginError");
           return 'loginError';
         }
 
@@ -261,28 +259,20 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly handleModify = async (file: TFile): Promise<void> => {
     if (!isSharedNoteFile(file)) {
-      setCurrentNoteState(Object.values(this.dispatchers), OWN_NOTE_OUTDATED, file, undefined);
+      setCurrentNoteState(this.dispatchers, OWN_NOTE_OUTDATED, file, undefined);
     }
   };
 
   addDispatcher(dispatcher: React.Dispatch<AppAction>, viewType: string) {
-    this.dispatchers[viewType] = dispatcher;
-  }
-}
-
-class SekundMenuModal extends Modal {
-  constructor(app: App) {
-    super(app);
+    this.viewDispatchers[viewType] = dispatcher;
   }
 
-  onOpen() {
-    const { contentEl } = this;
-    contentEl.setText('Woah!');
+  removeDispatcher(viewType: string) {
+    delete this.viewDispatchers[viewType];
   }
 
-  onClose() {
-    const { contentEl } = this;
-    contentEl.empty();
+  get dispatchers() {
+    return Object.values(this.viewDispatchers);
   }
 }
 

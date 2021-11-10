@@ -14,6 +14,7 @@ export default abstract class SekundView extends ItemView {
 
   async onClose(): Promise<void> {
     ReactDOM.unmountComponentAtNode(this.containerEl.children[1]);
+    this.plugin.removeDispatcher(this.getViewType());
   }
 
   addAppDispatch(appContext: AppContextType) {

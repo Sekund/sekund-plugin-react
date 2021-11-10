@@ -1,11 +1,10 @@
+import { someNote } from "@/mockdata/NotesMock";
 import AppStateWrapper from '@/storybook/AppStateWrapper';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { TFile } from 'obsidian';
 import React from 'react';
 import SekundNoteComponentHOC, { SekundNoteComponent } from './SekundNoteComponent';
 import '/global.css';
-import notes, { someNote } from "@/mockdata/NotesMock";
-import { TFile } from 'obsidian';
-import { callFunction } from '@/services/ServiceUtils';
 
 export default {
     title: 'Sekund/Note',
@@ -34,7 +33,6 @@ PublishedAndSynced.args = {
     nState: { published: true, fileSynced: true },
     note: someNote,
     localFile: {} as TFile
-
 };
 
 export const PublishedNotSharing = Template.bind({});

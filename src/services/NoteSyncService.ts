@@ -2,11 +2,10 @@ import { Note } from "@/domain/Note";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
-import { AppAction } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_FETCHING, OWN_NOTE_LOCAL, OWN_NOTE_OUTDATED, OWN_NOTE_SYNCHRONIZING, OWN_NOTE_UPTODATE, SHARED_NOTE_SYNCHRONIZING, SHARED_NOTE_UPTODATE } from "@/state/NoteStates";
 import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
-import { decode, encode } from "base64-arraybuffer";
+import { encode } from "base64-arraybuffer";
 import mime from "mime-types";
 import { DataAdapter, TFile, Vault } from "obsidian";
 
@@ -21,7 +20,7 @@ export default class NoteSyncService extends ServerlessService {
 		return NoteSyncService._instance;
 	}
 
-	constructor(plugin: SekundPluginReact, private dispatchers: React.Dispatch<AppAction>[]) {
+	constructor(plugin: SekundPluginReact) {
 		super(plugin);
 		this.fsAdapter = plugin.app.vault.adapter;
 		this.vault = plugin.app.vault;
@@ -41,7 +40,7 @@ export default class NoteSyncService extends ServerlessService {
 			// remote note can only be own note, because it is not allowed to
 			// unpublish other peoples' notes
 			await callFunction(this.plugin, "deleteNote", [remoteNote._id]);
-			setCurrentNoteState(this.dispatchers, OWN_NOTE_LOCAL, undefined, null);
+			setCurrentNoteState(this.plugin.dispatchers, OWN_NOTE_LOCAL, undefined, null);
 		}
 	}
 
@@ -49,7 +48,7 @@ export default class NoteSyncService extends ServerlessService {
 		// note state is irrevant here, the only relevant info is the note
 		// the note component just needs to decide what to display based on
 		// whether the note is an own note or a shared one
-		setCurrentNoteState(this.dispatchers, null, null, note);
+		setCurrentNoteState(this.plugin.dispatchers, null, null, note);
 	}
 
 	async compareNotes(file: TFile) {
@@ -59,15 +58,15 @@ export default class NoteSyncService extends ServerlessService {
 			const dirs = file.path.split("/");
 			this.syncDown(dirs.splice(2).join("/"), dirs[1]);
 		} else {
-			setCurrentNoteState(this.dispatchers, OWN_NOTE_FETCHING, file, null);
+			setCurrentNoteState(this.plugin.dispatchers, OWN_NOTE_FETCHING, file, null);
 
 			const rNote = await this.getNoteByPath(path);
 
 			if (!rNote) {
-				setCurrentNoteState(this.dispatchers, OWN_NOTE_LOCAL, file, null);
+				setCurrentNoteState(this.plugin.dispatchers, OWN_NOTE_LOCAL, file, null);
 			} else {
 				const fileSynced = !!rNote && rNote.updated === stat.mtime;
-				setCurrentNoteState(this.dispatchers, fileSynced ? OWN_NOTE_UPTODATE : OWN_NOTE_OUTDATED, file, rNote);
+				setCurrentNoteState(this.plugin.dispatchers, fileSynced ? OWN_NOTE_UPTODATE : OWN_NOTE_OUTDATED, file, rNote);
 			}
 		}
 	}
@@ -93,7 +92,7 @@ export default class NoteSyncService extends ServerlessService {
 			}
 			const noteFile = this.vault.getAbstractFileByPath(fullPath);
 			if (noteFile && noteFile instanceof TFile) {
-				setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
+				setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
 				this.plugin.app.workspace.activeLeaf?.openFile(noteFile);
 			} else {
 				console.log("ERROR: Could not open file ", noteFile);
@@ -140,7 +139,7 @@ export default class NoteSyncService extends ServerlessService {
 		const file = GlobalState.instance.appState.currentFile;
 		if (file && GlobalState.instance.appState && this.plugin.user) {
 			const ownNote = !isSharedNoteFile(file);
-			setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_SYNCHRONIZING : SHARED_NOTE_SYNCHRONIZING, undefined, undefined);
+			setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_SYNCHRONIZING : SHARED_NOTE_SYNCHRONIZING, undefined, undefined);
 			const { remoteNote } = GlobalState.instance.appState;
 			const content = await file.vault.read(file);
 			const assets = Object.keys(this.plugin.app.metadataCache.resolvedLinks[file.name]);
@@ -161,7 +160,7 @@ export default class NoteSyncService extends ServerlessService {
 				await this.uploadDependencies(assets, rNote._id.toString());
 			}
 			setTimeout(() => {
-				setCurrentNoteState(this.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, undefined, rNote);
+				setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, undefined, rNote);
 			}, 100);
 		}
 	}

@@ -1,9 +1,8 @@
-import * as Realm from "realm-web";
-import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
-import React from "react";
-import GlobalState from "@/state/GlobalState";
-import { TFile } from "obsidian";
 import { Note } from "@/domain/Note";
+import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
+import { TFile } from "obsidian";
+import React from "react";
+import * as Realm from "realm-web";
 
 export async function getApiKeyConnection(realmApp: Realm.App, apiKey: string): Promise<Realm.User | null> {
 	const credentials = Realm.Credentials.apiKey(apiKey);
@@ -20,24 +19,14 @@ export function dispatch(dispatchers: Array<React.Dispatch<AppAction>>, type: Ap
 
 export function setGeneralState(dispatchers: Array<React.Dispatch<AppAction>>, gState: GeneralState) {
 	dispatchers.forEach((appDispatch) => appDispatch({ type: AppActionKind.SetGeneralState, payload: gState }));
-	// we are setting the global state's generalState here so that contexts
-	// that are not yet created will be initialized with the mutated state at
-	// that stage – we might already be connecting/connected when another
-	// component gets created.
-	GlobalState.instance.appState.generalState = gState;
 }
 
 export function setCurrentNoteState(dispatchers: Array<React.Dispatch<AppAction>>, nState: NoteState | null, local: TFile | undefined | null, remote: Note | undefined | null) {
-	dispatchers.forEach((appDispatch) =>
-		appDispatch({
-			type: AppActionKind.SetCurrentNoteState,
-			payload: {
-				noteState: nState,
-				file: local,
-				note: remote,
-			},
-		})
-	);
+	dispatch(dispatchers, AppActionKind.SetCurrentNoteState, {
+		noteState: nState,
+		file: local,
+		note: remote,
+	});
 }
 
 export function isObjectEmpty(object: Record<string, unknown>): boolean {
@@ -57,4 +46,14 @@ export type Constructor<T = {}> = new (...args: any[]) => T;
 
 export function isSharedNoteFile(file: TFile): boolean {
 	return file.path.startsWith("__sekund__");
+}
+
+export function makeid(length: number): string {
+	var result = "";
+	var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
 }

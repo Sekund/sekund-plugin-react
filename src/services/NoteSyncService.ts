@@ -78,15 +78,12 @@ export default class NoteSyncService extends ServerlessService {
 	async syncDown(path: string, userId: string) {
 		const ownNote = userId === GlobalState.instance.appState.userProfile._id.toString();
 		const rootDir = ownNote ? "" : `__sekund__/${userId}/`;
-		// console.log("syncDown", `[${path}]`, `[${userId}]`);
 		const note = await this.getNoteByPath(path, userId);
 		if (note) {
 			const fullPath = `${rootDir}${path}`;
 			const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
-			if (!(await this.fsAdapter.exists(fullPath))) {
-				await this.createDirs(dirs);
-				await this.fsAdapter.write(fullPath, note.content);
-			}
+			await this.createDirs(dirs);
+			await this.fsAdapter.write(fullPath, note.content);
 			if (note.assets && note.assets.length > 0) {
 				await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
 			}
@@ -140,9 +137,9 @@ export default class NoteSyncService extends ServerlessService {
 		if (file && GlobalState.instance.appState && this.plugin.user) {
 			const ownNote = !isSharedNoteFile(file);
 			setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_SYNCHRONIZING : SHARED_NOTE_SYNCHRONIZING, undefined, undefined);
-			const { remoteNote } = GlobalState.instance.appState;
 			const content = await file.vault.read(file);
-			const assets = Object.keys(this.plugin.app.metadataCache.resolvedLinks[file.name]);
+			const links = this.plugin.app.metadataCache.resolvedLinks[file.path];
+			const assets = links ? Object.keys(links) : [];
 			await callFunction(this.plugin, "upsertNote", [
 				{
 					path: file.path,
@@ -150,8 +147,6 @@ export default class NoteSyncService extends ServerlessService {
 					content,
 					created: file.stat.ctime,
 					updated: file.stat.mtime,
-					firstPublished: remoteNote && remoteNote.firstPublished ? remoteNote.firstPublished : Date.now(),
-					lastPublished: Date.now(),
 					assets,
 				},
 			]);

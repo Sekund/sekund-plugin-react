@@ -1,3 +1,4 @@
+import EventsWatcherService from "@/services/EventsWatcherService";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
@@ -217,6 +218,7 @@ export default class SekundPluginReact extends Plugin {
           new NotesService(this);
           new PeoplesService(this);
           new GroupsService(this);
+          new EventsWatcherService(this);
 
           const userProfile = await UsersService.instance.fetchUser();
 

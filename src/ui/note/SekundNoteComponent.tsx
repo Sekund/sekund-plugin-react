@@ -1,27 +1,52 @@
 import { Group } from "@/domain/Group";
 import { isSharing } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import { useAppContext } from "@/state/AppContext";
+import GlobalState from "@/state/GlobalState";
 import Loader from "@/ui/common/LoaderComponent";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { makeid } from "@/utils";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
   view: { addAppDispatch: Function }
   syncUp: () => void;
+  syncDown: (path: string, userId: string) => void;
   unpublish: () => void;
 }
 
-export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
+export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   const { appState } = useAppContext();
   const { fileSynced, publishing, fetching, updating } = appState.currentNoteState;
   const { t } = useTranslation(["common", "plugin"]);
   const { remoteNote, currentFile } = appState;
   const [showSharingModal, setShowSharingModal] = useState(false);
+
+  useEffect(() => {
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher.watchEvents();
+    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["updateNote"], reloadNote))
+    return () => {
+      eventsWatcher.removeEventListener(listenerId);
+    }
+  }, [])
+
+  function reloadNote(evt: any) {
+    (async () => {
+      const currentRemoteNote = GlobalState.instance.appState.remoteNote;
+      if (currentRemoteNote && evt.data.noteId.equals(currentRemoteNote._id)) {
+        if (evt.updateTime > currentRemoteNote.updated) {
+          syncDown(currentRemoteNote.path, currentRemoteNote.userId.toString())
+        }
+      }
+    })()
+  }
 
   function handleSync() {
     if (!publishing && !fileSynced && !fetching) {

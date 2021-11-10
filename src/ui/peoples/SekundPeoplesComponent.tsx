@@ -1,5 +1,6 @@
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
@@ -9,6 +10,7 @@ import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import SekundPeopleSummary from "@/ui/peoples/SekundPeopleSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { makeid } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer } from "react";
@@ -31,6 +33,8 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   };
 
   const { peoples } = peoplesState;
+  let mode: 'sharing' | 'shared' | 'none' = 'none';
+  let focusedPerson: ObjectID | undefined = undefined;
 
   async function fetchPeoples() {
     if (!peoplesService) {
@@ -41,17 +45,50 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   }
 
   useEffect(() => {
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher.watchEvents();
+    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["modifySharing"], reloadList))
+    return () => {
+      eventsWatcher.removeEventListener(listenerId);
+    }
+  }, [])
+
+  useEffect(() => {
+    reloadList()
+  }, [notesState.notes]);
+
+  function reloadList() {
+    console.log("reloading list as there were changes");
+    fetchPeoples();
+    if (focusedPerson && notesState.notes && notesState.notes.length > 0) {
+      switch (mode) {
+        case 'shared':
+          displayShared(focusedPerson);
+          break;
+        case 'sharing':
+          displaySharing(focusedPerson);
+          break;
+      }
+    }
+  }
+
+  useEffect(() => {
     if (appState.generalState === "allGood") {
       fetchPeoples();
     }
   }, [appState.generalState])
 
   async function displaySharing(peopleId: ObjectID) {
+    mode = 'sharing';
+    focusedPerson = peopleId;
     const sharingNotes = await NotesService.instance.getSharingNotes(peopleId.toString());
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharingNotes })
   }
 
   async function displayShared(peopleId: ObjectID) {
+    mode = 'shared';
+    focusedPerson = peopleId;
     const sharedNotes = await NotesService.instance.getSharedNotes(peopleId.toString());
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharedNotes })
   }

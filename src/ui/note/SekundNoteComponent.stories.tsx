@@ -15,7 +15,12 @@ export default {
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale);
 
-    const InjectedNoteComponent = SekundNoteComponentHOC({ view: wrapper, syncUp: () => { }, unpublish: () => { } });
+    const InjectedNoteComponent = SekundNoteComponentHOC({
+        view: wrapper,
+        syncUp: () => { },
+        syncDown: (path: string, userId: string) => { },
+        unpublish: () => { }
+    });
 
     return <InjectedNoteComponent />
 };

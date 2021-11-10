@@ -1,11 +1,12 @@
 import { NoteComment } from "@/domain/NoteComment";
 import { getAvatar } from "@/helpers/avatars";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import { AppActionKind } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
-import { dispatch } from "@/utils";
+import { dispatch, makeid } from "@/utils";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -23,34 +24,12 @@ export default function NoteComments() {
   const [localComments, setLocalComments] = useState<Array<NoteComment>>(remoteNote?.comments || [])
 
   useEffect(() => {
-    const events = appState.plugin?.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("events");
-    let gen: AsyncGenerator<Realm.Services.MongoDB.ChangeEvent<any>, any, unknown> | null;
-    if (events) {
-      try {
-        gen = events.watch();
-        (async () => {
-          for await (const change of gen) {
-            // resumeToken = change._id;
-            switch (change.operationType) {
-              case "insert": {
-                const { fullDocument } = change;
-                if (gen) {
-                  reloadNote(fullDocument);
-                }
-                break;
-              }
-            }
-          }
-        })();
-      } catch (err) {
-        console.log("error watching events")
-      }
-    }
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher.watchEvents();
+    eventsWatcher.addEventListener(listenerId, new SekundEventListener(["addComment", "removeComment", "editComment"], reloadNote))
     return () => {
-      if (gen) {
-        gen.return(undefined);
-        gen = null;
-      }
+      eventsWatcher.removeEventListener(listenerId);
     }
   }, [])
 
@@ -58,24 +37,18 @@ export default function NoteComments() {
     (async () => {
       const currentRemoteNote = GlobalState.instance.appState.remoteNote;
       if (currentRemoteNote && evt.data.noteId.equals(currentRemoteNote._id)) {
-        switch (evt.type) {
-          case "addComment":
-          case "removeComment":
-          case "editComment":
-            if (evt.updateTime > currentRemoteNote.updated) {
-              const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
-              if (appState.plugin) {
-                dispatch(appState.plugin.dispatchers, AppActionKind.SetCurrentNoteState, {
-                  noteState: undefined,
-                  note: updtNote,
-                  file: undefined
-                })
-              }
-              if (updtNote) {
-                setLocalComments(updtNote.comments);
-              }
-            }
-            break;
+        if (evt.updateTime > currentRemoteNote.updated) {
+          const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
+          if (appState.plugin) {
+            dispatch(appState.plugin.dispatchers, AppActionKind.SetCurrentNoteState, {
+              noteState: undefined,
+              note: updtNote,
+              file: undefined
+            })
+          }
+          if (updtNote) {
+            setLocalComments(updtNote.comments);
+          }
         }
       }
     })()

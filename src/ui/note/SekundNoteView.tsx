@@ -28,8 +28,12 @@ export default class SekundNoteView extends SekundView {
         NoteSyncService.instance.syncFile();
     }
 
+    syncDown(path: string, userId: string) {
+        NoteSyncService.instance.syncDown(path, userId);
+    }
+
     async onOpen(): Promise<void> {
-        const props = { view: this, syncUp: this.syncUp, unpublish: this.unpublish }
+        const props = { view: this, syncUp: this.syncUp, syncDown: this.syncDown, unpublish: this.unpublish }
         const InjectedNoteComponent = SekundNoteComponent(props);
         ReactDOM.render(<InjectedNoteComponent />, this.containerEl.children[1]);
         this.plugin.updateOnlineStatus();

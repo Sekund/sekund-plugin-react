@@ -94,7 +94,7 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
       );
     }
     children.push(
-      <a key="sharing.edit" className="ml-1">
+      <a key="sharing.edit" className="flex items-center ml-1">
         <DotsHorizontalIcon className="w-4 h-4" />
       </a>
     );

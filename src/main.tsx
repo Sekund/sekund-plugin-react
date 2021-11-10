@@ -249,6 +249,19 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
     if (file) {
+      const leaf = this.app.workspace.activeLeaf;
+      if (leaf) {
+        if (isSharedNoteFile(file)) {
+          const state = leaf.getViewState()
+          state.state.mode = 'preview';
+          leaf.setViewState(state);
+        } else {
+          const state = leaf.getViewState();
+          state.state.mode = 'source';
+          leaf.setViewState(state);
+        }
+      }
+
       NoteSyncService.instance.compareNotes(file);
     }
   };

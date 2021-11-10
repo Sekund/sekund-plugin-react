@@ -45,5 +45,6 @@
     "openGroupsView": "Groepen",
     "openChatView": "Chat",
     "noNotesDesc": "Je hebt nog geen aantekeningen geupload. Om dit te doen, open de Chat-weergave en klik op de knop \"Uploaden\".",
-    "openAllViews": "Open alle uitzichten"
+    "openAllViews": "Open alle uitzichten",
+    "readonlyWarning": "Beschouw deze nota als alleen-lezen: telkens wanneer u hem opent, zal Sekund hem overschrijven met zijn meest recente versie."
 }

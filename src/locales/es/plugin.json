@@ -45,5 +45,6 @@
     "openGroupsView": "Grupos",
     "openChatView": "Chat",
     "noNotesDesc": "Todavía no has subido ninguna nota. Para ello, abre la vista de chat y haz clic en el botón \"Cargar\".",
-    "openAllViews": "Abrir todas las vistas"
+    "openAllViews": "Abrir todas las vistas",
+    "readonlyWarning": "Considere esta nota como de sólo lectura: cada vez que la abra, Sekund la sobrescribirá con su versión más reciente."
 }

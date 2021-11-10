@@ -45,5 +45,6 @@
     "openGroupsView": "Groups",
     "openChatView": "Chat",
     "noNotesDesc": "You haven't uploaded any notes yet. To do so, open the Chat view and click the \"Upload\" button.",
-    "openAllViews": "Open all views"
+    "openAllViews": "Open all views",
+    "readonlyWarning": "Please consider this note read-only: everytime you open it, Sekund will overwrite it with its most recent version."
 }

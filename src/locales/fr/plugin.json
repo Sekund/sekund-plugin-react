@@ -45,5 +45,6 @@
     "openGroupsView": "Groupes",
     "openChatView": "Tchat",
     "noNotesDesc": "Vous n'avez pas encore téléchargé de notes. Pour le faire, ouvrez la vue \"Chat\" et cliquez sur le bouton \"Télécharger\".",
-    "openAllViews": "Ouvrir toutes les vues"
+    "openAllViews": "Ouvrir toutes les vues",
+    "readonlyWarning": "Veuillez considérer cette note comme étant en lecture seule : chaque fois que vous l'ouvrirez, Sekund l'écrasera avec sa version la plus récente."
 }

@@ -8,6 +8,7 @@ import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import mime from "mime-types";
 import { DataAdapter, TFile, Vault } from "obsidian";
+import i18next from "@/i18n.config";
 
 export default class NoteSyncService extends ServerlessService {
 	private static _instance: NoteSyncService;
@@ -83,7 +84,12 @@ export default class NoteSyncService extends ServerlessService {
 			const fullPath = `${rootDir}${path}`;
 			const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
 			await this.createDirs(dirs);
-			await this.fsAdapter.write(fullPath, note.content);
+			const noteContents = ownNote
+				? note.content
+				: `<div style="background-color: var(--background-primary-alt); font-style: italic; padding: 0.5rem; font-size: 0.85rem; font-weight: 700">${i18next.t("plugin:readonlyWarning")}</div>
+
+${note.content}`;
+			await this.fsAdapter.write(fullPath, noteContents);
 			if (note.assets && note.assets.length > 0) {
 				await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
 			}

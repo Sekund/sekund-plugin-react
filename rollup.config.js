@@ -26,7 +26,7 @@ export default {
 			compact: true,
 		},
 	],
-	external: ["obsidian"],
+	external: ["obsidian", "fs", "os", "path"],
 	plugins: [
 		json(),
 		postcss({

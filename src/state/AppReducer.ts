@@ -66,7 +66,7 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
 			const { noteState, file, note } = payload;
 			const result = {
 				...state,
-				currentNoteState: noteState,
+				currentNoteState: noteState === undefined ? state.currentNoteState : noteState,
 				currentFile: file === undefined ? state.currentFile : file,
 				remoteNote: note === undefined ? state.remoteNote : note,
 			};

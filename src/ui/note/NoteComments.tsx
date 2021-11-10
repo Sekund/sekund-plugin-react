@@ -1,11 +1,11 @@
 import { NoteComment } from "@/domain/NoteComment";
 import { getAvatar } from "@/helpers/avatars";
-import EventsWatcherService from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
-import { useEventsContext } from "@/state/EventsContext";
+import { AppActionKind } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
+import { dispatch } from "@/utils";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,39 +19,67 @@ export default function NoteComments() {
   const guestEmail = userProfile?.email;
   const sendButton = useRef<HTMLButtonElement>(null);
   const [areaText, setAreaText] = useState("");
-  const { eventsState, eventsDispatch } = useEventsContext();
 
   const [localComments, setLocalComments] = useState<Array<NoteComment>>(remoteNote?.comments || [])
 
   useEffect(() => {
-    if (EventsWatcherService.instance) {
-      EventsWatcherService.instance.watchEvents(eventsDispatch);
+    const events = appState.plugin?.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("events");
+    let gen: AsyncGenerator<Realm.Services.MongoDB.ChangeEvent<any>, any, unknown> | null;
+    if (events) {
+      try {
+        gen = events.watch();
+        (async () => {
+          for await (const change of gen) {
+            // resumeToken = change._id;
+            switch (change.operationType) {
+              case "insert": {
+                const { fullDocument } = change;
+                if (gen) {
+                  reloadNote(fullDocument);
+                }
+                break;
+              }
+            }
+          }
+        })();
+      } catch (err) {
+        console.log("error watching events")
+      }
+    }
+    return () => {
+      if (gen) {
+        gen.return(undefined);
+        gen = null;
+      }
     }
   }, [])
 
-  useEffect(() => {
-    if (!eventsState.event || !remoteNote) {
-      return;
-    }
-    const evt = eventsState.event;
-    switch (evt.type) {
-      case "addComment":
-      case "removeComment":
-      case "editComment":
-        (async () => {
-          const currentRemoteNote = GlobalState.instance.appState.remoteNote;
-          if (currentRemoteNote && evt.data.noteId.equals(currentRemoteNote._id)) {
-            if (evt.updateTime > remoteNote.updated) {
+  function reloadNote(evt: any) {
+    (async () => {
+      const currentRemoteNote = GlobalState.instance.appState.remoteNote;
+      if (currentRemoteNote && evt.data.noteId.equals(currentRemoteNote._id)) {
+        switch (evt.type) {
+          case "addComment":
+          case "removeComment":
+          case "editComment":
+            if (evt.updateTime > currentRemoteNote.updated) {
               const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
+              if (appState.plugin) {
+                dispatch(appState.plugin.dispatchers, AppActionKind.SetCurrentNoteState, {
+                  noteState: undefined,
+                  note: updtNote,
+                  file: undefined
+                })
+              }
               if (updtNote) {
                 setLocalComments(updtNote.comments);
               }
             }
-          }
-        })()
-        break;
-    }
-  }, [eventsState.event]);
+            break;
+        }
+      }
+    })()
+  }
 
   useEffect(() => {
     setLocalComments(remoteNote?.comments || []);

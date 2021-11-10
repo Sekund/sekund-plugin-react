@@ -2,16 +2,13 @@ import { Group } from "@/domain/Group";
 import { isSharing } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import { useAppContext } from "@/state/AppContext";
+import Loader from "@/ui/common/LoaderComponent";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
-import Loader from "@/ui/common/LoaderComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import EventsContext from "@/state/EventsContext";
-import EventsReducer, { initialEventsState } from "@/state/EventsReducer";
-
 
 type Props = {
   view: { addAppDispatch: Function }
@@ -25,8 +22,6 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
   const { t } = useTranslation(["common", "plugin"]);
   const { remoteNote, currentFile } = appState;
   const [showSharingModal, setShowSharingModal] = useState(false);
-  const [eventsState, eventsDispatch] = React.useReducer(EventsReducer, initialEventsState);
-  const eventsProviderState = { eventsState, eventsDispatch };
 
   function handleSync() {
     if (!publishing && !fileSynced && !fetching) {
@@ -182,7 +177,7 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
     }
 
     return (
-      <EventsContext.Provider value={eventsProviderState}>
+      <>
         {remoteNote && !isSharing(remoteNote) ?
           <div className="fixed inset-0">
             <div className="flex flex-col items-center justify-center w-full h-full p-2">
@@ -199,7 +194,7 @@ export const SekundNoteComponent = ({ syncUp, unpublish }: Props) => {
           </a>
         </div>
         {renderSharingDialog()}
-      </EventsContext.Provider>)
+      </>)
   }
 }
 

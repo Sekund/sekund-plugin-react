@@ -14,8 +14,9 @@ import SekundNoteView from "@/ui/note/SekundNoteView";
 import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
+import SekundMainView from "@/ui/main/SekundMainView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
-import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
+import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID, MAIN_VIEW_TYPE } from "@/_constants";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
 import es from 'javascript-time-ago/locale/es.json';
@@ -66,6 +67,7 @@ export default class SekundPluginReact extends Plugin {
       { type: HOME_VIEW_TYPE, View: SekundHomeView },
       { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
       { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
+      { type: MAIN_VIEW_TYPE, View: SekundMainView },
     ])
 
     this.addSettingTab(new SekundSettingsTab(this.app, this));
@@ -74,7 +76,7 @@ export default class SekundPluginReact extends Plugin {
   }
 
   onunload(): void {
-    [NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE].forEach(t => {
+    [NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach(t => {
       this.app.workspace
         .getLeavesOfType(t)
         .forEach((leaf) => leaf.detach());

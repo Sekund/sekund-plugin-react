@@ -41,6 +41,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
       peoplesService = PeoplesService.instance;
     }
     const peoples = await peoplesService.getPeoples();
+    console.log("peoples", peoples);
     peoplesDispatch({ type: PeoplesActionKind.SetPeoples, payload: peoples });
   }
 
@@ -98,7 +99,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
     return (
       <NotesContext.Provider value={notesProviderState}>
         <div className="flex flex-col divide-y divide-solid divide-obs-modifier-border w-xl" >
-          {peoples.map((people: People) => {
+          {peoples.map((people: People, idx) => {
             return (
               <SekundPeopleSummary key={people._id.toString()}
                 people={people}
@@ -110,7 +111,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
         <NoteSummariesPanel handleNoteClicked={noteClicked} />
       </NotesContext.Provider>)
   } else return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+    <div className="flex flex-col items-center justify-center h-full p-8 ">
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
       <div className="text-center ">{t('plugin:noOne')}</div>
       <div className="mt-2 text-sm text-center ">{t('plugin:noOneDesc')}</div>

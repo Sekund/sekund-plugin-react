@@ -59,3 +59,30 @@
 	/* Place on top of each other */
 	grid-area: 1 / 1 / 2 / 2;
 }
+
+.sekund .split-grid {
+	display: grid;
+	grid-template-rows: 1fr 10px 1fr;
+}
+
+.sekund .gutter-row {
+	grid-column: 1/-1;
+	cursor: row-resize;
+}
+
+.sekund .gutter-row-1 {
+	grid-row: 1;
+}
+
+.sekund gutter {
+	background-color: #eee;
+	background-repeat: no-repeat;
+	background-position: 50%;
+}
+
+.sekund .gutter.gutter-vertical {
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
+	background-repeat: no-repeat;
+	background-position: center;
+	cursor: row-resize;
+}

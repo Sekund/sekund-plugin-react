@@ -151,17 +151,16 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   // there is not currentFile
   if (!currentFile && remoteNote) {
 
-    return <div className="fixed inset-0">
+    return (
       <div className="flex flex-col items-center justify-center w-full h-full p-2">
         <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t('plugin:deleteFromSekundDesc')}</span>
         <button onClick={handleUnpublish} className="flex items-center"><TrashIcon className="w-4 h-4 mr-1" />{t('plugin:deleteFromSekund')}</button>
-      </div>
-    </div>
+      </div>)
 
   }
 
   if (fetching) {
-    return <div className="fixed inset-0 animate-pulse bg-obs-primary-alt">
+    return <div className="animate-pulse bg-obs-primary-alt">
       <div className="flex flex-col items-center justify-center w-full h-full">
         <Loader className="h-20" />
       </div>
@@ -171,7 +170,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   if (!remoteNote) {
 
     return (
-      <div className="fixed inset-0">
+      <div className="h-full">
         <div className="flex flex-col items-center justify-center w-full h-full mod-cta">
           {uploadButton()}
         </div>
@@ -204,11 +203,9 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     return (
       <>
         {remoteNote && !isSharing(remoteNote) ?
-          <div className="fixed inset-0">
-            <div className="flex flex-col items-center justify-center w-full h-full p-2">
-              <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
-              <button className="mod-cta" onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
-            </div>
+          <div className="flex flex-col items-center justify-center w-full h-full p-2">
+            <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
+            <button className="mod-cta" onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
           </div>
           : <NoteComments />}
         <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>

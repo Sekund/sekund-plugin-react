@@ -49,8 +49,8 @@ const allPeoplesMock = [
 
 export default allPeoplesMock.map((pd: any) => {
 	return {
-		_id: new ObjectID(pd._id.$oid),
 		...pd,
+		_id: new ObjectID(pd._id.$oid),
 	} as People;
 });
 

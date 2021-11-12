@@ -1,5 +1,5 @@
 import i18next from "@/i18n.config";
-import { NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE } from "@/_constants";
+import { NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE } from "@/_constants";
 import ThePlugin from "../main";
 import { GenericFuzzySuggester, SuggesterItem } from "./GenericFuzzySuggester";
 
@@ -54,6 +54,15 @@ export default class PluginCommands {
 			showInRibbon: true,
 			callback: async () => {
 				[HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE].forEach((t) => this.plugin.showPane(t));
+			},
+		},
+		{
+			id: "sekund-open-tabs-view",
+			icon: "sekund-icon",
+			name: "Open Main View",
+			showInRibbon: true,
+			callback: async () => {
+				await this.plugin.showPane(MAIN_VIEW_TYPE);
 			},
 		},
 	];

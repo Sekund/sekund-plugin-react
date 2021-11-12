@@ -3,7 +3,6 @@ import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import { SelectOption } from "@/domain/Types";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
-import { setHandleDisplay } from "@/helpers/obsidian";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";

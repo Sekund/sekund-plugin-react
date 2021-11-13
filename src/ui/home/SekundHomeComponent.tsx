@@ -93,7 +93,7 @@ export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentPro
 			</NotesContext.Provider>)
 	}
 	else return (
-		<div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+		<div className="absolute inset-0 flex flex-col items-center justify-center p-8">
 			<div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
 			<div className="text-center ">{t('noNotes')}</div>
 			<div className="mt-2 text-sm text-center ">{t('plugin:noNotesDesc')}</div>

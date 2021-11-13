@@ -5,7 +5,6 @@ import { TFile } from "obsidian";
 import React from 'react';
 import SekundGroupsComponentHOC, { SekundGroupsComponent } from './SekundGroupsComponent';
 import '/global.css';
-import ObjectId from 'bson-objectid';
 import { users } from "@/mockdata/Users";
 import ObjectID from "bson-objectid";
 
@@ -34,19 +33,19 @@ const groups = [
         name: "Pads lovers",
         created: now,
         updated: now,
-        peoples: [new ObjectId("6150c1ef14be465c39539ccf"), new ObjectId("6171606afc13ae1f35000008"), new ObjectId("6171606afc13ae1f3500000a"), new ObjectId("6171606afc13ae1f3500000e")],
-        userId: new ObjectId("6150c1ef14be465c39539ccf"),
+        peoples: [new ObjectID("6150c1ef14be465c39539ccf"), new ObjectID("6171606afc13ae1f35000008"), new ObjectID("6171606afc13ae1f3500000a"), new ObjectID("6171606afc13ae1f3500000e")],
+        userId: new ObjectID("6150c1ef14be465c39539ccf"),
     },
     {
         _id: new ObjectID(),
         name: "Pernambuco",
         created: now,
         updated: now,
-        peoples: [new ObjectId("6150c1ef14be465c39539ccf"), new ObjectId("6171606afc13ae1f35000005"), new ObjectId("6171606afc13ae1f35000003")],
-        userId: new ObjectId("6171606afc13ae1f35000003"),
+        peoples: [new ObjectID("6150c1ef14be465c39539ccf"), new ObjectID("6171606afc13ae1f35000005"), new ObjectID("6171606afc13ae1f35000003")],
+        userId: new ObjectID("6171606afc13ae1f35000003"),
     },
 ].map(g =>
-    ({ ...g, peoples: g.peoples.map(p => users.filter((u: any) => new ObjectId(u._id.$oid).equals(p))[0]) })
+    ({ ...g, peoples: g.peoples.map(p => users.filter((u: any) => new ObjectID(u._id.$oid).equals(p))[0]) })
 );
 
 export const SomeGroups = Template.bind({});

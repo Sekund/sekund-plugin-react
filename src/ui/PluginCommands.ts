@@ -57,7 +57,7 @@ export default class PluginCommands {
 			},
 		},
 		{
-			id: "sekund-open-tabs-view",
+			id: "sekund-open-main-view",
 			icon: "sekund-icon",
 			name: "Open Main View",
 			showInRibbon: true,

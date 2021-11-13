@@ -36,7 +36,14 @@ export default class SekundMainView extends SekundView {
   }
 
   async onOpen(): Promise<void> {
-    const props = { view: this, peoplesService: undefined, syncDown: this.syncDown, syncUp: this.syncUp, unpublish: this.unpublish } as MainComponentProps;
+    const props = {
+      view: this,
+      peoplesService: undefined,
+      notesService: undefined,
+      syncDown: this.syncDown,
+      syncUp: this.syncUp,
+      unpublish: this.unpublish
+    } as MainComponentProps;
     const InjectedTabsComponent = SekundMainComponent(props);
     ReactDOM.render(<InjectedTabsComponent />, this.containerEl.children[1]);
     this.plugin.updateOnlineStatus();

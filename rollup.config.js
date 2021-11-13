@@ -39,7 +39,7 @@ export default {
 				insertAt: "top",
 			},
 		}),
-		typescript({ sourceMap: false }),
+		typescript({ sourceMap: isProd }),
 		nodeResolve({ browser: true }),
 		commonjs(),
 		nodePolyfills("path"),

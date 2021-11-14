@@ -37,7 +37,7 @@ export const HeightAdjustable = ({ children, initialHeight, ...props }) => {
 	});
 
 	return (
-		<div className="rounded-md" style={{ height: adjustedHeight + 'px' }} {...props}>
+		<div className="bg-obs-primary" style={{ height: adjustedHeight + 'px' }} {...props}>
 			<HeightAdjustableContext.Provider
 				value={{
 					onMouseHoldDown,

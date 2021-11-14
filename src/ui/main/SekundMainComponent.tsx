@@ -83,13 +83,15 @@ export const SekundMainComponent = (props: MainComponentProps) => {
         </div>
       </div>
 
-      <div className="overflow-auto">
+      <div className="relative overflow-auto">
         {getViewTypeView()}
       </div>
 
       <HeightAdjustable initialHeight={400}>
         <HeightAdjustableHandle />
-        <SekundNoteComponent {...props} />
+        <div className="relative h-full overflow-auto">
+          <SekundNoteComponent {...props} />
+        </div>
       </HeightAdjustable>
       {renderViewsModal()}
       {renderTeamsModal()}

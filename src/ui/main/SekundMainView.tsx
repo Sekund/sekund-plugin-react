@@ -2,14 +2,14 @@ import i18next from "@/i18n.config";
 import NoteSyncService from "@/services/NoteSyncService";
 import SekundMainComponent, { MainComponentProps } from "@/ui/main/SekundMainComponent";
 import SekundView from "@/ui/SekundView";
-import { MAIN_VIEW_ICON, PEOPLES_VIEW_TYPE } from "@/_constants";
+import { MAIN_VIEW_ICON, MAIN_VIEW_TYPE } from "@/_constants";
 import React from "react";
 import ReactDOM from "react-dom";
 
 export default class SekundMainView extends SekundView {
 
   getViewType(): string {
-    return PEOPLES_VIEW_TYPE;
+    return MAIN_VIEW_TYPE;
   }
 
   getDisplayText(): string {

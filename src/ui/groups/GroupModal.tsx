@@ -114,7 +114,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   function deleteButton() {
     if (group?._id) {
       return (
-        <button onClick={destroy} type="button" className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md shadow-sm cursor-pointer bg-accent text-white border-transparent`}>
+        <button onClick={destroy} type="button">
           <div className="flex items-center">
             Delete
             <TrashIcon className="w-4 h-4 ml-2"></TrashIcon>
@@ -126,7 +126,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   }
 
   return (
-    <div ref={shade} onClick={(evt) => { if (evt.target === shade.current) { setOpen(false) } }} className="fixed inset-0 flex flex-col items-center justify-center bg-obs-cover">
+    <div ref={shade} onClick={(evt) => { if (evt.target === shade.current) { setOpen(false) } }} className="absolute inset-0 flex flex-col items-center justify-center bg-obs-cover">
       <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
         <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">
           <div className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none" onClick={() => setOpen(false)}>

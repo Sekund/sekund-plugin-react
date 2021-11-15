@@ -2,6 +2,7 @@ import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
+import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
@@ -9,9 +10,10 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import PeoplesContext from "@/state/PeoplesContext";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
+import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import GroupModal from "@/ui/groups/GroupModal";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid } from "@/utils";
+import { dispatch, makeid } from "@/utils";
 import { DotsHorizontalIcon, EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -81,14 +83,14 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   }
 
   function createGroup() {
-    console.log("create group")
     setCurrentGroup(null);
     setShowNewGroupModal(true);
   }
 
   async function displayMessages(group: Group) {
-    const sharingNotes = await NotesService.instance.getGroupNotes(group._id.toString());
-    notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharingNotes })
+    peoplesDispatch({ type: PeoplesActionKind.SetCurrentGroup, payload: group });
+    const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
+    notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes })
   }
 
   function noteClicked(note: Note) {
@@ -97,13 +99,13 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
 
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id)
-    return (<div className="flex p-1 -space-x-1 overflow-hidden" onClick={editAllowed ? () => editGroup(group) : undefined}>
+    return (<div className="flex items-center p-1 overflow-hidden" onClick={editAllowed ? () => editGroup(group) : undefined}>
       <div className="flex flex-row items-center -space-x-1">
         {group.peoples.map((people) => {
           return <React.Fragment key={people._id?.toString()}>{peopleAvatar(people)}</React.Fragment>;
         })}
-        {editAllowed ? <DotsHorizontalIcon className="w-4 h-4" /> : ""}
       </div>
+      {editAllowed ? <DotsHorizontalIcon className="w-4 h-4" /> : ""}
     </div>
     )
   }
@@ -133,6 +135,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
                   );
                 })}
               </div>
+              <NoteSummariesPanel handleNoteClicked={noteClicked} />
             </div>
           )
             : (

@@ -18,12 +18,10 @@ export default class EventsWatcherService extends ServerlessService {
 
 	public addEventListener(id: string, listener: SekundEventListener) {
 		this.listeners[id] = listener;
-		console.log("added, now listeners are ", this.listeners);
 	}
 
 	public removeEventListener(id: string) {
 		delete this.listeners[id];
-		console.log("removed, now listeners are ", this.listeners);
 	}
 
 	public async watchEvents() {

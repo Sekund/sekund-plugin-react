@@ -146,7 +146,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   }
 
   // render
-  console.log("notestate", appState.currentFile, appState.currentNoteState, appState.remoteNote)
+  // console.log("notestate", appState.currentFile, appState.currentNoteState, appState.remoteNote)
 
   // there is not currentFile
   if (!currentFile && remoteNote) {

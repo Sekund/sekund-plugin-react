@@ -1,5 +1,8 @@
 import { Note } from "@/domain/Note"
+import { People } from "@/domain/People";
+import { getAvatar, peopleAvatar } from "@/helpers/avatars";
 import { useAppContext } from "@/state/AppContext";
+import { usePeoplesContext } from "@/state/PeoplesContext";
 import { ChatAlt2Icon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React from 'react';
@@ -14,6 +17,8 @@ type Props = {
 export default function NoteSummaryComponent({ note, handleNoteClicked }: Props) {
 	const { i18n } = useTranslation();
 	const { appState } = useAppContext();
+
+	const { peoplesState, peoplesDispatch } = usePeoplesContext();
 
 	const { remoteNote } = appState;
 
@@ -31,9 +36,8 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 		return <div className="flex items-center space-x-1 text-obs-muted">{children}</div>
 	}
 
-	return (
-		<div className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${note._id.equals(remoteNote?._id || new ObjectID()) ? 'bg-obs-tertiary' : ''}`}
-			onClick={() => handleNoteClicked(note)}>
+	function summaryContents() {
+		return <>
 			<div>
 				{note.title.replace(".md", "")}
 			</div>
@@ -41,8 +45,35 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 				<ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
 				{stats(note)}
 			</div>
-		</div>
+		</>
+	}
 
+	function isCurrentNote() {
+		return note._id.equals(remoteNote?._id || new ObjectID())
+	}
+
+	function summary() {
+		return <div className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${isCurrentNote() ? 'bg-obs-tertiary' : ''}`}
+			onClick={() => handleNoteClicked(note)}>
+			{summaryContents()}
+		</div>
+	}
+
+	function withAvatar(summary: JSX.Element) {
+		const author: People | undefined = peoplesState.currentGroup?.peoples.filter(p => p._id.equals(remoteNote?.userId || new ObjectID()))[0]
+		if (author) {
+			return <div className={`flex space-x-2 items-center px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${isCurrentNote() ? 'bg-obs-tertiary' : ''}`} onClick={() => handleNoteClicked(note)} >
+				<div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>
+				<div className="flex flex-col flex-grow">{summaryContents()}</div>
+			</div>
+		}
+		return summary
+	}
+
+	return (
+		peoplesState && peoplesState.groups
+			? withAvatar(summary())
+			: summary()
 	)
 
 }

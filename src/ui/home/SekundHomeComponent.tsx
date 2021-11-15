@@ -76,7 +76,8 @@ export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentPro
 				console.log("no active leaf")
 			}
 		} else {
-			syncDown(note.path, note.userId.toString())
+			console.log("no file, we should ask the user if they want to restore the note")
+			// syncDown(note.path, note.userId.toString())
 		}
 	}
 

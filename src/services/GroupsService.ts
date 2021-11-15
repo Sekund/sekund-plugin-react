@@ -26,10 +26,14 @@ export default class GroupsService extends ServerlessService {
 		return result;
 	}
 
+	async getGroupPeoples(groupId: ObjectID) {
+		const result: any = await callFunction(this.plugin, "getGroupPeoples", [groupId]);
+		return result;
+	}
+
 	async upsertGroup(group: Group): Promise<Group> {
 		(group as any).peoples = group.peoples.map((g) => g._id);
 		const result: any = await callFunction(this.plugin, "upsertGroup", [group]);
-		console.log("upserted group, result", result);
 		return result[0];
 	}
 }

@@ -103,7 +103,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
       <HeightAdjustable initialHeight={400}>
         <HeightAdjustableHandle />
-        <div className="relative h-full overflow-auto">
+        <div className="relative h-full overflow-auto bg-obs-primary">
           <SekundNoteComponent {...props} />
         </div>
       </HeightAdjustable>

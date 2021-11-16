@@ -18,7 +18,7 @@ export default function SekundPeopleSummary({ people, displayShared, displayShar
         const children: Array<JSX.Element> = [];
         if (people.sharing > 0) {
             children.push(
-                <button onClick={() => displaySharing(people._id)} className="px-2 mr-0" key="shing" title={t('plugin:yourShares')}>
+                <button onClick={() => displaySharing(people._id)} className="px-2 mr-0" key="shing" title={t('plugin:yourSharesDesc')}>
                     <div className="flex items-center">
                         <ArrowSmUpIcon className="w-4 h-4"></ArrowSmUpIcon> {people?.sharing}
                     </div>

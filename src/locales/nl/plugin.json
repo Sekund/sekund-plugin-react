@@ -25,7 +25,7 @@
     "Share": "Deel",
     "synchronizing": "Synchroniserend...",
     "uploading": "Uploaden...",
-    "yourShares": "Merkt op dat je deelt met deze persoon",
+    "yourSharesDesc": "Merkt op dat je deelt met deze persoon",
     "theirShares": "Merkt op dat deze persoon iets met je deelt",
     "noOne": "Oeps... Er is hier niemand.",
     "noOneDesc": "Deel iets met iemand of vraag iemand om iets met je te delen.",
@@ -46,5 +46,7 @@
     "openChatView": "Chat",
     "noNotesDesc": "Je hebt nog geen aantekeningen geupload. Om dit te doen, open de Chat-weergave en klik op de knop \"Uploaden\".",
     "openAllViews": "Open alle uitzichten",
-    "readonlyWarning": "Beschouw deze nota als alleen-lezen: telkens wanneer u hem opent, zal Sekund hem overschrijven met zijn meest recente versie."
+    "readonlyWarning": "Beschouw deze nota als alleen-lezen: telkens wanneer u hem opent, zal Sekund hem overschrijven met zijn meest recente versie.",
+    "yourShares": "Uw Aandelen",
+    "addApiKey": "API Sleutel Toevoegen…"
 }

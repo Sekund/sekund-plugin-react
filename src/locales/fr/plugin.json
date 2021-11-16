@@ -25,7 +25,7 @@
     "Share": "Partager",
     "synchronizing": "Synchronisation en cours...",
     "uploading": "Téléchargement...",
-    "yourShares": "Notes que vous partagez avec cette personne",
+    "yourSharesDesc": "Notes que vous partagez avec cette personne",
     "theirShares": "Notes que cette personne partage avec vous",
     "noOne": "Oups... Il n'y a personne ici.",
     "noOneDesc": "Partagez quelque chose avec quelqu'un ou demandez à quelqu'un de partager quelque chose avec vous.",
@@ -46,5 +46,7 @@
     "openChatView": "Tchat",
     "noNotesDesc": "Vous n'avez pas encore téléchargé de notes. Pour le faire, ouvrez la vue \"Chat\" et cliquez sur le bouton \"Télécharger\".",
     "openAllViews": "Ouvrir toutes les vues",
-    "readonlyWarning": "Veuillez considérer cette note comme étant en lecture seule : chaque fois que vous l'ouvrirez, Sekund l'écrasera avec sa version la plus récente."
+    "readonlyWarning": "Veuillez considérer cette note comme étant en lecture seule : chaque fois que vous l'ouvrirez, Sekund l'écrasera avec sa version la plus récente.",
+    "yourShares": "Vos partages",
+    "addApiKey": "Ajouter une clé API…"
 }

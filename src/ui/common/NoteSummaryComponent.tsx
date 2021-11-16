@@ -60,7 +60,7 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 	}
 
 	function withAvatar(summary: JSX.Element) {
-		const author: People | undefined = peoplesState.currentGroup?.peoples.filter(p => p._id.equals(remoteNote?.userId || new ObjectID()))[0]
+		const author: People | undefined = peoplesState.currentGroup?.peoples.filter(p => p._id.equals(note.userId))[0]
 		if (author) {
 			return <div className={`flex space-x-2 items-center px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${isCurrentNote() ? 'bg-obs-tertiary' : ''}`} onClick={() => handleNoteClicked(note)} >
 				<div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>

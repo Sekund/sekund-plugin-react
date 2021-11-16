@@ -10,19 +10,19 @@ import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import SekundGroupsView from "@/ui/groups/SekundGroupsView";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
+import SekundMainView from "@/ui/main/SekundMainView";
 import SekundNoteView from "@/ui/note/SekundNoteView";
 import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
-import SekundMainView from "@/ui/main/SekundMainView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
-import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID, MAIN_VIEW_TYPE } from "@/_constants";
+import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, MAIN_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
 import es from 'javascript-time-ago/locale/es.json';
 import fr from 'javascript-time-ago/locale/fr.json';
 import nl from 'javascript-time-ago/locale/nl.json';
-import { App, Modal, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
 
@@ -141,6 +141,7 @@ export default class SekundPluginReact extends Plugin {
         const subdomains = publicUser.mongoClient("mongodb-atlas").db("meta").collection("subdomains");
         const record = await subdomains.findOne({ subdomain: this.settings.subdomain });
         if (record) {
+          this.updateMetaDocuments(publicUser);
           return record.app_id;
         }
         return "noSuchSubdomain";
@@ -149,6 +150,14 @@ export default class SekundPluginReact extends Plugin {
       }
     }
     return "noSubdomain";
+  }
+
+  private async updateMetaDocuments(publicUser: any) {
+    const documents = publicUser.mongoClient("mongodb-atlas").db("meta").collection("documents");
+    const readme = await documents.findOne({ title: "**README**" });
+    if (readme) {
+      await this.app.vault.adapter.write("__sekund__/**README**.md", readme.content);
+    }
   }
 
   public readonly updateOnlineStatus = async () => {

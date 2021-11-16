@@ -91,7 +91,6 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   }
 
   function noteClicked(note: Note) {
-    console.log("note clicked");
     syncDown(note.path, note.userId.toString());
   }
 

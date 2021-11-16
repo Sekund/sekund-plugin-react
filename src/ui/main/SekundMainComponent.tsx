@@ -51,9 +51,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   function showViewTypes(evt: any) {
     setShowViews(true);
-    console.log("setshowview to true");
     const hideViewTypes = () => {
-      console.log("hiding view type");
       setShowViews(false);
       document.removeEventListener("click", hideViewTypes);
     }

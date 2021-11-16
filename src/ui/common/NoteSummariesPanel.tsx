@@ -2,7 +2,7 @@ import { Note } from '@/domain/Note';
 import { useNotesContext } from '@/state/NotesContext';
 import { NotesActionKind } from '@/state/NotesReducer';
 import NoteSummaryComponent from '@/ui/common/NoteSummaryComponent';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -17,9 +17,17 @@ export default function NoteSummariesPanel({ handleNoteClicked }: Props) {
 
 	const { notes } = notesState;
 
+	useEffect(() => {
+
+		if (notes && notes.length > 0) {
+			window.scrollTo(0, 0);
+		}
+
+	}, [notes])
+
 	if (notes && notes.length > 0) {
 		return (
-			<div className="absolute inset-0 flex flex-col w-full h-full bg-obs-primary">
+			<div className="fixed inset-0 flex flex-col w-full h-full bg-obs-primary">
 				<div className="flex items-center h-8 px-2">
 					<span className="font-medium text-normal"
 						onClick={() => notesDispatch({ type: NotesActionKind.ResetNotes, payload: [] })}>← {t('back')}</span>

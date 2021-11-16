@@ -45,7 +45,6 @@ export const SekundHomeComponent = ({ notesService, syncDown }: HomeComponentPro
 	useEffect(() => {
 		(async () => {
 			if (appState.plugin && appState.plugin.user) {
-				console.log("putting notes watcher in place...");
 				const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
 				if (notes) {
 					gen = notes.watch();

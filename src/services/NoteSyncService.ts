@@ -1,4 +1,5 @@
 import { Note } from "@/domain/Note";
+import i18next from "@/i18n.config";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
@@ -8,7 +9,6 @@ import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import mime from "mime-types";
 import { DataAdapter, TFile, Vault } from "obsidian";
-import i18next from "@/i18n.config";
 
 export default class NoteSyncService extends ServerlessService {
 	private static _instance: NoteSyncService;
@@ -56,8 +56,9 @@ export default class NoteSyncService extends ServerlessService {
 		const { path, stat } = file;
 
 		if (isSharedNoteFile(file)) {
-			const dirs = file.path.split("/");
-			this.syncDown(dirs.splice(2).join("/"), dirs[1]);
+			// let's not sync files when opened from the file system
+			// const dirs = file.path.split("/");
+			// this.syncDown(dirs.splice(2).join("/"), dirs[1]);
 		} else {
 			setCurrentNoteState(this.plugin.dispatchers, OWN_NOTE_FETCHING, file, null);
 
@@ -89,10 +90,10 @@ export default class NoteSyncService extends ServerlessService {
 				: `<div style="background-color: var(--background-primary-alt); font-style: italic; padding: 0.5rem; font-size: 0.85rem; font-weight: 700">${i18next.t("plugin:readonlyWarning")}</div>
 
 ${note.content}`;
-			await this.fsAdapter.write(fullPath, noteContents);
 			if (note.assets && note.assets.length > 0) {
 				await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
 			}
+			await this.fsAdapter.write(fullPath, noteContents);
 			const noteFile = this.vault.getAbstractFileByPath(fullPath);
 			if (noteFile && noteFile instanceof TFile) {
 				setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
@@ -130,12 +131,12 @@ ${note.content}`;
 	}
 
 	async downloadDependencies(assets: Array<string>, noteUserId: string, noteId: string) {
-		assets.forEach(async (path) => {
+		for (const path of assets) {
 			const file: any = await callFunction(this.plugin, "download", [`${noteUserId}/${noteId}/${path}`]);
-			const dependencyPath = `${noteUserId}/${path}`;
-			this.createDirs(dependencyPath);
+			const dependencyPath = `__sekund__/${noteUserId}/${path}`;
+			await this.createDirs(dependencyPath.substring(0, dependencyPath.lastIndexOf("/")));
 			await this.fsAdapter.writeBinary(dependencyPath, file.buffer);
-		});
+		}
 	}
 
 	async syncFile() {

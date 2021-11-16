@@ -2,7 +2,6 @@ import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
-import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
@@ -13,7 +12,7 @@ import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import GroupModal from "@/ui/groups/GroupModal";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { dispatch, makeid } from "@/utils";
+import { makeid } from "@/utils";
 import { DotsHorizontalIcon, EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";

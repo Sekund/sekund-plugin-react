@@ -1,4 +1,4 @@
-import notes from "@/mockdata/NotesMock";
+import notes, { someNote } from "@/mockdata/NotesMock";
 import peoples from "@/mockdata/PeoplesMock";
 import { users } from "@/mockdata/Users";
 import NotesService from '@/services/NotesService';
@@ -18,7 +18,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, args.nState, null, {} as TFile, locale);
+    const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale);
     const peoplesService = {
         getUserGroups: () => args.groups,
         getPeoples: () => args.peoples
@@ -65,10 +65,21 @@ const groups = [
 export const SomePeoples = Template.bind({});
 SomePeoples.args = {
     gState: "allGood",
-    nState: { published: false },
+    nState: { published: true, fileSynced: true },
     notes,
     peoples,
-    groups
+    groups,
+    note: someNote,
+    localFile: {} as TFile
+};
+
+export const Empty = Template.bind({});
+Empty.args = {
+    gState: "allGood",
+    nState: { published: false },
+    notes: [],
+    peoples: [],
+    groups: []
 };
 
 export const Error = Template.bind({});

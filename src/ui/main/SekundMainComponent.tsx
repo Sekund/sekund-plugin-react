@@ -1,14 +1,12 @@
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
-import { useAppContext } from "@/state/AppContext";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
-import TeamsModal from "@/ui/main/TeamsModal";
-import ViewsModal from "@/ui/main/ViewsModal";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { Popover } from "@headlessui/react";
 import { ChevronDownIcon, CloudUploadIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import React, { useState } from "react";
 
@@ -25,26 +23,9 @@ export type ViewType = "home" | "peoples" | "groups";
 
 export const SekundMainComponent = (props: MainComponentProps) => {
 
-  const { appState } = useAppContext();
-  const [showViewsModal, setShowViewsModal] = useState(false);
-  const [showTeamsModal, setShowTeamsModal] = useState(false);
+  const [showViews, setShowViews] = useState(false);
+  // const [showTeams, setShowTeams] = useState(false);
   const [viewType, setViewType] = useState<ViewType>('home');
-
-  function renderViewsModal() {
-    if (showViewsModal) {
-      return <ViewsModal setOpen={setShowViewsModal} setViewType={setViewType} />
-    } else {
-      return null;
-    }
-  }
-
-  function renderTeamsModal() {
-    if (showTeamsModal) {
-      return <TeamsModal setOpen={setShowTeamsModal} />
-    } else {
-      return null;
-    }
-  }
 
   function getViewTypeIcon() {
     switch (viewType) {
@@ -68,19 +49,54 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     }
   }
 
+  function showViewTypes(evt: any) {
+    setShowViews(true);
+    console.log("setshowview to true");
+    const hideViewTypes = () => {
+      console.log("hiding view type");
+      setShowViews(false);
+      document.removeEventListener("click", hideViewTypes);
+    }
+    document.addEventListener("click", hideViewTypes)
+    evt.stopPropagation();
+  }
+
   return (
 
     <div className="fixed inset-0 grid h-full" style={{ gridTemplateRows: 'auto 1fr auto' }}>
-
       <div className="flex items-center justify-between w-full py-1">
-        <div className="flex items-center ml-2 text-obs-muted" onClick={() => setShowViewsModal(true)}>
-          {getViewTypeIcon()}
-          <ChevronDownIcon className="w-6 h-6" />
+        <div className="flex flex-col items-center mt-1 ml-2 text-obs-muted">
+          <div className="main-component-button" onClick={showViewTypes}>
+            {getViewTypeIcon()}
+            <ChevronDownIcon className="w-6 h-6" />
+          </div>
+          {
+            showViews ?
+              (<Popover className="relative">
+                <Popover.Panel className="absolute z-20 -ml-4" static>
+                  <div className="flex flex-col">
+                    <button onClick={() => { setViewType("home"); setShowViews(false); }} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate rounded-none">
+                      <CloudUploadIcon className="h-6 w-h" />
+                      <span>Your Shares</span>
+                    </button>
+                    <button onClick={() => { setViewType("peoples"); setShowViews(false); }} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate rounded-none">
+                      <UsersIcon className="h-6 w-h" />
+                      <span>Peoples</span>
+                    </button>
+                    <button onClick={() => { setViewType("groups"); setShowViews(false); }} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate rounded-none">
+                      <UserGroupIcon className="h-6 w-h" />
+                      <span>Groups</span>
+                    </button>
+                  </div>
+                </Popover.Panel>
+              </Popover>)
+              : null
+          }
         </div>
-        <div className="flex items-center mr-1 text-obs-muted" onClick={() => setShowTeamsModal(true)}>
+        {/* <div className="flex items-center mr-1 text-obs-muted" onClick={() => setShowTeamsModal(true)}>
           <span>{appState.plugin?.settings.subdomain}</span>
           <ChevronDownIcon className="w-6 h-6" />
-        </div>
+        </div> */}
       </div>
 
       <div className="relative overflow-auto">
@@ -93,8 +109,6 @@ export const SekundMainComponent = (props: MainComponentProps) => {
           <SekundNoteComponent {...props} />
         </div>
       </HeightAdjustable>
-      {renderViewsModal()}
-      {renderTeamsModal()}
 
     </div >
   )

@@ -86,3 +86,9 @@
 	background-position: center;
 	cursor: row-resize;
 }
+
+.nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title[data-path^="__sekund__"] .nav-folder-title-content {
+	display: inline-block;
+	text-transform: uppercase;
+	font-style: italic;
+}

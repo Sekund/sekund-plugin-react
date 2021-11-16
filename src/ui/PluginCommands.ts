@@ -12,12 +12,12 @@ export default class PluginCommands {
 
 	sekundCommands = [
 		{
-			id: "sekund-open-note-view",
+			id: "sekund-open-main-view",
 			icon: "sekund-icon",
-			name: i18next.t("plugin:openChatView"),
+			name: "Open Main View",
 			showInRibbon: true,
 			callback: async () => {
-				await this.plugin.showPane(NOTE_VIEW_TYPE);
+				await this.plugin.showPane(MAIN_VIEW_TYPE);
 			},
 		},
 		{
@@ -45,24 +45,6 @@ export default class PluginCommands {
 			showInRibbon: true,
 			callback: async () => {
 				await this.plugin.showPane(GROUPS_VIEW_TYPE);
-			},
-		},
-		{
-			id: "sekund-open-all-views",
-			icon: "sekund-icon",
-			name: i18next.t("plugin:openAllViews"),
-			showInRibbon: true,
-			callback: async () => {
-				[HOME_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE].forEach((t) => this.plugin.showPane(t));
-			},
-		},
-		{
-			id: "sekund-open-main-view",
-			icon: "sekund-icon",
-			name: "Open Main View",
-			showInRibbon: true,
-			callback: async () => {
-				await this.plugin.showPane(MAIN_VIEW_TYPE);
 			},
 		},
 	];

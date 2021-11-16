@@ -63,7 +63,6 @@ export default class SekundPluginReact extends Plugin {
     });
 
     this.registerViews([
-      { type: NOTE_VIEW_TYPE, View: SekundNoteView },
       { type: HOME_VIEW_TYPE, View: SekundHomeView },
       { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
       { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
@@ -76,7 +75,7 @@ export default class SekundPluginReact extends Plugin {
   }
 
   onunload(): void {
-    [NOTE_VIEW_TYPE, HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach(t => {
+    [HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach(t => {
       this.app.workspace
         .getLeavesOfType(t)
         .forEach((leaf) => leaf.detach());

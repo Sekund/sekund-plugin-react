@@ -16,3 +16,5 @@ data.json
 deploy
 scripts
 poeditor.yml
+
+global-snippets.css

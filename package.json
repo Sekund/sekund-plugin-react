@@ -9,6 +9,7 @@
 		"dev": "rollup --config rollup.config.js -w",
 		"build": "export environment=production && rollup --config rollup.config.js && terser main.js > release/main.js && postcss global.css -o release/styles.css",
 		"build:css": "export environment=development && postcss global.css -o styles.css",
+		"build:snippets": "export environment=development && postcss global-snippets.css -o tw-utils.css",
 		"storybook": "start-storybook -s public -p 6006",
 		"build-storybook": "build-storybook -s public",
 		"deploy-storybook": "storybook-to-ghpages"

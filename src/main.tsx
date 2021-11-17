@@ -11,12 +11,11 @@ import SekundGroupsView from "@/ui/groups/SekundGroupsView";
 import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
-import SekundNoteView from "@/ui/note/SekundNoteView";
 import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
-import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, MAIN_VIEW_TYPE, NOTE_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
+import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, MAIN_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
 import es from 'javascript-time-ago/locale/es.json';
@@ -31,19 +30,35 @@ TimeAgo.addLocale(fr)
 TimeAgo.addLocale(nl)
 TimeAgo.addLocale(es)
 
-interface SekundPluginSettings {
-  apiKey: string;
-  subdomain: string;
-}
+class SekundPluginSettings {
+  private _apiKeys: { [subdomain: string]: string } = {}
 
-const DEFAULT_SETTINGS: SekundPluginSettings = {
-  apiKey: "",
-  subdomain: "",
-};
+  public constructor(public subdomain: string) { }
+
+  get apiKey() {
+    return this._apiKeys[this.subdomain]
+  }
+
+  get apiKeys() {
+    return this._apiKeys;
+  }
+
+  set apiKey(k: string) {
+    this._apiKeys[this.subdomain] = k;
+  }
+
+  public deleteApiKey(subdomain: string) {
+    delete this._apiKeys[subdomain];
+  }
+
+  public addApiKey(subdomain: string, apiKey: string) {
+    this._apiKeys[subdomain] = apiKey;
+  }
+}
 
 export default class SekundPluginReact extends Plugin {
 
-  settings: SekundPluginSettings = {} as SekundPluginSettings;
+  settings: SekundPluginSettings = new SekundPluginSettings("null")
   private viewDispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
   private registeredEvents = false;
   private authenticatedUsers: { [subdomain: string]: Realm.User | null } = {};
@@ -69,7 +84,7 @@ export default class SekundPluginReact extends Plugin {
       { type: MAIN_VIEW_TYPE, View: SekundMainView },
     ])
 
-    this.addSettingTab(new SekundSettingsTab(this.app, this));
+    // this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
 
   }
@@ -115,7 +130,28 @@ export default class SekundPluginReact extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const settings = await this.loadData();
+    if (settings.apiKey) {
+      // convert old settings
+      this.settings = new SekundPluginSettings(settings.subdomain);
+      this.settings.addApiKey(settings.subdomain, settings.apiKey);
+      this.saveSettings();
+    } else {
+      this.settings = new SekundPluginSettings(settings.subdomain);
+      for (const subdomain of Object.keys(settings._apiKeys)) {
+        this.settings.addApiKey(subdomain, settings._apiKeys[subdomain]);
+      }
+    }
+  }
+
+  async addApiKey(subdomain: string, apiKey: string) {
+    this.settings.addApiKey(subdomain, apiKey);
+    await this.saveSettings();
+  }
+
+  async deleteApiKey(subdomain: string) {
+    this.settings.deleteApiKey(subdomain);
+    await this.saveSettings();
   }
 
   async saveSettings() {
@@ -186,10 +222,10 @@ export default class SekundPluginReact extends Plugin {
     }));
   }
 
-  public readonly attemptConnection = async (): Promise<GeneralState> => {
+  public readonly attemptConnection = async (force?: boolean): Promise<GeneralState> => {
 
     const authUser = this.authenticatedUsers[this.settings.subdomain];
-    if (authUser && authUser.isLoggedIn) {
+    if (!force && authUser && authUser.isLoggedIn) {
       return "allGood";
     }
 
@@ -299,48 +335,48 @@ export default class SekundPluginReact extends Plugin {
   }
 }
 
-class SekundSettingsTab extends PluginSettingTab {
-  plugin: SekundPluginReact;
+// class SekundSettingsTab extends PluginSettingTab {
+//   plugin: SekundPluginReact;
 
-  constructor(app: App, plugin: SekundPluginReact) {
-    super(app, plugin);
-    this.plugin = plugin;
-  }
+//   constructor(app: App, plugin: SekundPluginReact) {
+//     super(app, plugin);
+//     this.plugin = plugin;
+//   }
 
-  hide(): void {
-    this.plugin.saveSettings();
-    setTimeout(() => this.plugin.attemptConnection(), 100);
-  }
+//   hide(): void {
+//     this.plugin.saveSettings();
+//     setTimeout(() => this.plugin.attemptConnection(), 100);
+//   }
 
-  display(): void {
-    let { containerEl } = this;
+//   display(): void {
+//     let { containerEl } = this;
 
-    containerEl.empty();
+//     containerEl.empty();
 
-    new Setting(containerEl)
-      .setName("Sekund API Key")
-      .setDesc("To retrieve your API key, go to your Sekund Account Page -> API Key")
-      .addText((text) =>
-        text
-          .setPlaceholder("Paste your Sekund API Key here")
-          .setValue(this.plugin.settings.apiKey || "")
-          .onChange(async (value) => {
-            this.plugin.settings.apiKey = value;
-            await this.plugin.saveSettings();
-          })
-      );
+//     new Setting(containerEl)
+//       .setName("Sekund API Key")
+//       .setDesc("To retrieve your API key, go to your Sekund Account Page -> API Key")
+//       .addText((text) =>
+//         text
+//           .setPlaceholder("Paste your Sekund API Key here")
+//           .setValue(this.plugin.settings.apiKey || "")
+//           .onChange(async (value) => {
+//             this.plugin.settings.apiKey = value;
+//             await this.plugin.saveSettings();
+//           })
+//       );
 
-    new Setting(containerEl)
-      .setName("Sekund subdomain")
-      .setDesc("Specify your Sekund subdomain (e.g. [TEAM_NAME].sekund.io)")
-      .addText((text) =>
-        text
-          .setPlaceholder("Subdomain")
-          .setValue(this.plugin.settings.subdomain || "")
-          .onChange(async (value) => {
-            this.plugin.settings.subdomain = value;
-            await this.plugin.saveSettings();
-          })
-      );
-  }
-}
+//     new Setting(containerEl)
+//       .setName("Sekund subdomain")
+//       .setDesc("Specify your Sekund subdomain (e.g. [TEAM_NAME].sekund.io)")
+//       .addText((text) =>
+//         text
+//           .setPlaceholder("Subdomain")
+//           .setValue(this.plugin.settings.subdomain || "")
+//           .onChange(async (value) => {
+//             this.plugin.settings.subdomain = value;
+//             await this.plugin.saveSettings();
+//           })
+//       );
+//   }
+// }

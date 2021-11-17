@@ -48,5 +48,7 @@
     "openAllViews": "Open all views",
     "readonlyWarning": "Please consider this note read-only: everytime you open it, Sekund will overwrite it with its most recent version.",
     "yourShares": "Your Shares",
-    "addApiKey": "Add an API Key…"
+    "addApiKey": "Add an API Key…",
+    "selectAnotherTeam": "Select another team",
+    "teamID": "Team ID"
 }

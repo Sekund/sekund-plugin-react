@@ -116,7 +116,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
       return (
         <button onClick={destroy} type="button">
           <div className="flex items-center">
-            Delete
+            {t('delete')}
             <TrashIcon className="w-4 h-4 ml-2"></TrashIcon>
           </div>
         </button>

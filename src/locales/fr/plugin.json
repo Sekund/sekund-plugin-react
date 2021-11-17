@@ -48,5 +48,7 @@
     "openAllViews": "Ouvrir toutes les vues",
     "readonlyWarning": "Veuillez considérer cette note comme étant en lecture seule : chaque fois que vous l'ouvrirez, Sekund l'écrasera avec sa version la plus récente.",
     "yourShares": "Vos partages",
-    "addApiKey": "Ajouter une clé API…"
+    "addApiKey": "Ajouter une clé API…",
+    "selectAnotherTeam": "Sélectionnez une autre équipe",
+    "teamID": "ID de l'équipe"
 }

@@ -48,5 +48,7 @@
     "openAllViews": "Open alle uitzichten",
     "readonlyWarning": "Beschouw deze nota als alleen-lezen: telkens wanneer u hem opent, zal Sekund hem overschrijven met zijn meest recente versie.",
     "yourShares": "Uw Aandelen",
-    "addApiKey": "API Sleutel Toevoegen…"
+    "addApiKey": "API Sleutel Toevoegen…",
+    "selectAnotherTeam": "Kies een ander team",
+    "teamID": "Team ID"
 }

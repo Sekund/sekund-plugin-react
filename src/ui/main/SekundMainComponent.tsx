@@ -4,7 +4,7 @@ import { useAppContext } from "@/state/AppContext";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
-import AddApiKeyModal from "@/ui/main/AddApiKeyModal";
+import AddApiKeyModal from "@/ui/main/ApiKeyModal";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
@@ -31,7 +31,8 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const { appState } = useAppContext();
   const [showViews, setShowViews] = useState(false);
   const [showTeams, setShowTeams] = useState(false);
-  const [showAddApiModal, setShowAddApiModal] = useState(false);
+  const [subdomain, setSubdomain] = useState<string | null>(null);
+  const [showAddApiModal, setShowAddApiModal] = useState<boolean>(false);
   const [viewType, setViewType] = useState<ViewType>('home');
 
   function getViewTypeIcon() {
@@ -78,14 +79,15 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   function renderAddApiKeyModal() {
     if (showAddApiModal) {
-      return <AddApiKeyModal open={showAddApiModal} setOpen={setShowAddApiModal} />
+      return <AddApiKeyModal setOpen={setShowAddApiModal} subdomain={subdomain} />
     }
     return null
   }
 
-  function showApiKeyModal() {
-    setShowTeams(false);
+  function showApiKeyModal(subdomain: string | null) {
+    setSubdomain(subdomain);
     setShowAddApiModal(true);
+    setTimeout(() => setShowTeams(false), 20);
   }
 
   return (
@@ -130,7 +132,13 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               (<Popover className="relative">
                 <Popover.Panel className="fixed z-20 right-1" static>
                   <div className="flex flex-col">
-                    <button onClick={showApiKeyModal} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
+                    {Object.keys(appState.plugin?.settings.apiKeys || {}).map(subdomain => {
+                      return (
+                        <button onClick={() => showApiKeyModal(subdomain)} key={subdomain} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
+                          <span>{subdomain}</span>
+                        </button>)
+                    })}
+                    <button onClick={() => showApiKeyModal(null)} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
                       <PlusIcon className="w-6 h-6" />
                       <span>{t('plugin:addApiKey')}</span>
                     </button>

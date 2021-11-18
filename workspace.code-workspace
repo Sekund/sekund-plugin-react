@@ -1,0 +1,48 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"[c]": {
+			"editor.wordBasedSuggestions": false,
+			"editor.suggest.insertMode": "replace",
+			"editor.semanticHighlighting.enabled": true,
+			"editor.quickSuggestions": {
+				"strings": true
+			}
+		},
+		"search.exclude": {
+			"**/.git": true,
+			"**/node_modules": true
+		},
+		"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+		"terminal.integrated.shell.osx": "/bin/bash",
+		"files.exclude": {
+			"node_modules/": true,
+			"**/.classpath": true,
+			"**/.project": true,
+			"**/.settings": true,
+			"**/.factorypath": true
+		},
+		"editor.minimap.enabled": false,
+		"editor.suggestSelection": "first",
+		"editor.formatOnSave": true,
+		"vetur.format.enable": false,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": true
+		},
+		"[jsonc]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[javascript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[typescript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"workbench.colorCustomizations": {},
+		"workbench.colorTheme": "Monokai"
+	}
+}

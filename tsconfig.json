@@ -18,6 +18,6 @@
 		"lib": ["dom", "es5", "scripthost", "es2015", "DOM.Iterable", "ESNext"],
 		"jsx": "react"
 	},
-	"include": ["**/*.ts", "**/*.tsx", "src/**/*.ts", "src/**/*.json", "src/**/*.tsx", "src/helpers/reactSelect.js"],
+	"include": ["**/*.ts", "**/*.tsx", "src/**/*.ts", "src/**/*.json", "src/**/*.tsx", "src/helpers/reactSelect.js", "src/utils.test.js"],
 	"exclude": ["node_modules/*", "¨**.*.stories.tsx"]
 }

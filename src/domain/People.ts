@@ -12,4 +12,6 @@ export interface People {
   bio?: string;
   sharing: number;
   shared: number;
+  unreadSharing: number;
+  unreadShared: number;
 }

@@ -48,6 +48,10 @@ export function isSharedNoteFile(file: TFile): boolean {
 	return file.path.startsWith("__sekund__");
 }
 
+export function originalPath(file: TFile): string {
+	return file.path.startsWith("__sekund__") ? file.path.split("/").slice(2).join("/") : file.path;
+}
+
 export function makeid(length: number): string {
 	var result = "";
 	var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -56,4 +60,9 @@ export function makeid(length: number): string {
 		result += characters.charAt(Math.floor(Math.random() * charactersLength));
 	}
 	return result;
+}
+
+export function hourMinSec(time: number) {
+	const d = new Date(time);
+	return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
 }

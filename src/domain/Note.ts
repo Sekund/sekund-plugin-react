@@ -15,6 +15,9 @@ export interface Note {
 	content: string;
 	userId: ObjectID;
 	assets: Array<string>;
+	isRead: number;
+	readCount: number;
+	backlinksCount: number;
 
 	comments: NoteComment[];
 

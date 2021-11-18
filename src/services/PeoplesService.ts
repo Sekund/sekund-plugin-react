@@ -1,3 +1,4 @@
+import { Note } from "@/domain/Note";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
@@ -27,8 +28,8 @@ export default class PeoplesService extends ServerlessService {
   async getRawPeoples(): Promise<People[]> {
     const { sharingNotes, sharedNotes } = await callFunction(this.plugin, "peoples");
 
-    const sharing: Array<{ sharing: { peoples: ObjectID[] } }> = sharingNotes;
-    const shared: Array<{ userId: ObjectID }> = sharedNotes;
+    const sharing: Array<{ sharing: { peoples: ObjectID[] }; isRead: number; updated: number }> = sharingNotes;
+    const shared: Array<{ userId: ObjectID; isRead: number; updated: number }> = sharedNotes;
 
     const peoples: Array<People> = [];
 
@@ -38,11 +39,13 @@ export default class PeoplesService extends ServerlessService {
     };
 
     sharing.forEach((note) => {
+      const isUnread = note.isRead && note.isRead < note.updated;
       note.sharing?.peoples?.forEach((userId) => {
         if (getPeople(userId) === null) {
           peoples.push({
             _id: userId,
             sharing: 1,
+            unreadSharing: isUnread ? 1 : 0,
           } as People);
         } else {
           const people = getPeople(userId);
@@ -54,11 +57,13 @@ export default class PeoplesService extends ServerlessService {
     });
 
     shared.forEach((note) => {
+      const isUnread = note.isRead && note.isRead < note.updated;
       if (note.userId) {
         if (getPeople(note.userId) === null) {
           peoples.push({
             _id: note.userId,
             shared: 1,
+            unreadShared: isUnread ? 1 : 0,
           } as People);
         } else {
           const people = getPeople(note.userId);
@@ -67,6 +72,13 @@ export default class PeoplesService extends ServerlessService {
               people.shared += 1;
             } else {
               people.shared = 1;
+            }
+            if (isUnread) {
+              if (people.unreadShared) {
+                people.unreadShared += 1;
+              } else {
+                people.unreadShared = 1;
+              }
             }
           }
         }
@@ -83,7 +95,9 @@ export default class PeoplesService extends ServerlessService {
     const users = await atlasUsers?.find({ _id: { $in: peoples.map((p) => p._id) } });
 
     const peopleData: Array<People> = peoples.map((p) => {
-      const user: { name: string; email: string; image: string; createdAt: Date; bio: string; updatedAt: Date } = users?.filter((user) => user._id.equals(p._id))[0];
+      const user: { name: string; email: string; image: string; createdAt: Date; bio: string; updatedAt: Date } = users?.filter((user) =>
+        user._id.equals(p._id)
+      )[0];
       if (user) {
         p.createdAt = user.createdAt;
         p.updatedAt = user.updatedAt;

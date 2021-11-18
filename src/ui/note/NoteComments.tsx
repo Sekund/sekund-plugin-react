@@ -27,7 +27,7 @@ export default function NoteComments() {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["addComment", "removeComment", "editComment"], reloadNote))
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.removeComment", ",note.editComment"], reloadNote))
     return () => {
       eventsWatcher?.removeEventListener(listenerId);
     }
@@ -36,7 +36,7 @@ export default function NoteComments() {
   function reloadNote(evt: any) {
     (async () => {
       const currentRemoteNote = GlobalState.instance.appState.remoteNote;
-      if (currentRemoteNote && evt.data.noteId.equals(currentRemoteNote._id)) {
+      if (currentRemoteNote && evt.data._id.equals(currentRemoteNote._id)) {
         if (evt.updateTime > currentRemoteNote.updated) {
           const updtNote = await NotesService.instance.getNote(currentRemoteNote._id.toString())
           if (appState.plugin) {

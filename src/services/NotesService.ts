@@ -54,6 +54,10 @@ export default class NotesService extends ServerlessService {
 		return await callFunction(this.plugin, "addSharingGroup", [noteId, group._id]);
 	}
 
+	async setNoteIsRead(noteId: ObjectID) {
+		return await callFunction(this.plugin, "setNoteIsRead", [noteId]);
+	}
+
 	async deleteNote(noteId: ObjectID) {
 		const atlasNotesColl = this.notesColl();
 		if (atlasNotesColl) {

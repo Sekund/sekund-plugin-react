@@ -21,7 +21,7 @@ import en from 'javascript-time-ago/locale/en.json';
 import es from 'javascript-time-ago/locale/es.json';
 import fr from 'javascript-time-ago/locale/fr.json';
 import nl from 'javascript-time-ago/locale/nl.json';
-import { App, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
+import { Plugin, TFile } from "obsidian";
 import React from "react";
 import * as Realm from 'realm-web';
 

@@ -30,6 +30,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
+  const [mode, setMode] = useState<"none" | "group">("none")
   const notesProviderState = {
     notesState,
     notesDispatch,
@@ -90,6 +91,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
     peoplesDispatch({ type: PeoplesActionKind.SetCurrentGroup, payload: group });
     const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes })
+    setMode("group")
   }
 
   function noteClicked(note: Note) {
@@ -115,26 +117,31 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
         <>
           {groups && groups.length > 0 ? (
             <div className="flex flex-col">
-              <div className="flex items-center justify-end w-full h-8 px-2 text-xs">
-                <div className="flex items-center p-1 space-x-1 border rounded-md mr-2px dark:border-obs-modal text-normal" onClick={createGroup}>
-                  <PlusIcon className="w-4 h-4" /> <span className="py-0">{t('new_group')}</span>
-                </div>
-              </div>
-              <div className="flex flex-col space-y-1px w-xl">
-                {groups.map((group: Group) => {
-                  return (
-                    <div key={group._id.toString()} className="flex items-center justify-between w-full mx-auto bg-obs-primary-alt hover:bg-obs-tertiary">
-                      <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer"
-                        onClick={() => displayMessages(group)}>
-                        <div className="flex">{groupAvatar(group, 10)}</div>
-                        <div className="truncate text-md text-primary">{group.name}</div>
-                      </div>
-                      {groupMembers(group)}
+              {mode === 'none' ?
+                <>
+                  <div className="flex items-center justify-end w-full h-8 px-2 text-xs">
+                    <div className="flex items-center p-1 space-x-1 border rounded-md mr-2px dark:border-obs-modal text-normal" onClick={createGroup}>
+                      <PlusIcon className="w-4 h-4" /> <span className="py-0">{t('new_group')}</span>
                     </div>
-                  );
-                })}
-              </div>
-              <NoteSummariesPanel handleNoteClicked={noteClicked} />
+                  </div>
+                  <div className="flex flex-col space-y-1px w-xl">
+                    {groups.map((group: Group) => {
+                      return (
+                        <div key={group._id.toString()} className="flex items-center justify-between w-full mx-auto bg-obs-primary-alt hover:bg-obs-tertiary">
+                          <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer"
+                            onClick={() => displayMessages(group)}>
+                            <div className="flex">{groupAvatar(group, 10)}</div>
+                            <div className="truncate text-md text-primary">{group.name}</div>
+                          </div>
+                          {groupMembers(group)}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+                :
+                <NoteSummariesPanel handleNoteClicked={noteClicked} goBack={() => setMode("none")} />
+              }
             </div>
           )
             : (

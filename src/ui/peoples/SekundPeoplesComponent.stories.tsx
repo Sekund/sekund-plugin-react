@@ -14,7 +14,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-    const wrapper = new AppStateWrapper(args.gState, args.nState, null, {} as TFile, locale);
+    const wrapper = new AppStateWrapper(args.gState, args.nState, null, { path: "home/home.md" } as TFile, locale);
     const peoplesService = {
         getPeoples: () => args.peoples
     } as PeoplesService;

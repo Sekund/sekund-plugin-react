@@ -30,73 +30,80 @@ addDecorator((storyFn) => <I18nextProvider i18n={i18next}>{storyFn()}</I18nextPr
 addDecorator(cssVariablesTheme);
 
 export const parameters = {
-	actions: { argTypesRegex: "^on[A-Z].*" },
-	layout: "fullscreen",
-	controls: {
-		matchers: {
-			color: /(background|color)$/i,
-			date: /Date$/,
-		},
-	},
-	i18next,
-	locale: "en",
-	locales: {
-		en: "English",
-		fr: "Français",
-	},
-	darkMode: {
-		stylePreview: true,
-		darkClass: "theme-dark",
-		lightClass: "theme-light",
-	},
-	viewport: {
-		viewports: {
-			verticalTab: {
-				name: "Obsidian Vertical Tab",
-				styles: {
-					width: "300px",
-					height: "100%",
-				},
-			},
-			narrowVerticalTab: {
-				name: "Too Narrow",
-				styles: {
-					width: "200px",
-					height: "100%",
-				},
-			},
-		},
-		defaultViewport: "verticalTab",
-	},
-	cssVariables: {
-		files: {
-			Minimal,
-			Default,
-			Atom,
-			Cybertron,
-			Nord,
-			Primary,
-		},
-	},
+  actions: { argTypesRegex: "^on[A-Z].*" },
+  layout: "fullscreen",
+  controls: {
+    matchers: {
+      color: /(background|color)$/i,
+      date: /Date$/,
+    },
+  },
+  i18next,
+  locale: "en",
+  locales: {
+    en: "English",
+    fr: "Français",
+  },
+  darkMode: {
+    stylePreview: true,
+    darkClass: "theme-dark",
+    lightClass: "theme-light",
+  },
+  viewport: {
+    viewports: {
+      verticalTab: {
+        name: "Obsidian Vertical Tab",
+        styles: {
+          width: "300px",
+          height: "100%",
+        },
+      },
+      wideVerticalTab: {
+        name: "Wider",
+        styles: {
+          width: "450px",
+          height: "100%",
+        },
+      },
+      narrowVerticalTab: {
+        name: "Too Narrow",
+        styles: {
+          width: "200px",
+          height: "100%",
+        },
+      },
+    },
+    defaultViewport: "verticalTab",
+  },
+  cssVariables: {
+    files: {
+      Minimal,
+      Default,
+      Atom,
+      Cybertron,
+      Nord,
+      Primary,
+    },
+  },
 };
 export const globalTypes = {
-	locale: {
-		name: "Locale",
-		description: "Internationalization locale",
-		defaultValue: "en",
-		toolbar: {
-			icon: "globe",
-			items: [
-				{ value: "en", right: "🇺🇸", title: "English" },
-				{ value: "fr", right: "🇫🇷", title: "French" },
-				{ value: "nl", right: "🇳🇱", title: "Dutch" },
-				{ value: "es", right: "🇪🇸", title: "Spanish" },
-				// { value: "de", right: "🇩🇪", title: "German" },
-				// { value: "it", right: "🇮🇹", title: "Italian" },
-				// { value: "pt", right: "🇵🇹", title: "Portuguese" },
-				// { value: "ru", right: "🇷🇺", title: "Russian" },
-			],
-		},
-	},
+  locale: {
+    name: "Locale",
+    description: "Internationalization locale",
+    defaultValue: "en",
+    toolbar: {
+      icon: "globe",
+      items: [
+        { value: "en", right: "🇺🇸", title: "English" },
+        { value: "fr", right: "🇫🇷", title: "French" },
+        { value: "nl", right: "🇳🇱", title: "Dutch" },
+        { value: "es", right: "🇪🇸", title: "Spanish" },
+        // { value: "de", right: "🇩🇪", title: "German" },
+        // { value: "it", right: "🇮🇹", title: "Italian" },
+        // { value: "pt", right: "🇵🇹", title: "Portuguese" },
+        // { value: "ru", right: "🇷🇺", title: "Russian" },
+      ],
+    },
+  },
 };
 new GlobalState();

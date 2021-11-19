@@ -70,7 +70,7 @@ SomePeoples.args = {
     peoples,
     groups,
     note: someNote,
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const Empty = Template.bind({});

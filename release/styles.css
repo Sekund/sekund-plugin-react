@@ -58,14 +58,26 @@
   .sekund .top-0 {
     top: 0px
   }
+  .sekund .-top-3 {
+    top: -0.75rem
+  }
   .sekund .right-0 {
     right: 0px
+  }
+  .sekund .right-1 {
+    right: 0.25rem
   }
   .sekund .bottom-0 {
     bottom: 0px
   }
+  .sekund .-bottom-3 {
+    bottom: -0.75rem
+  }
   .sekund .left-0 {
     left: 0px
+  }
+  .sekund .z-20 {
+    z-index: 20
   }
   .sekund .z-30 {
     z-index: 30
@@ -104,6 +116,9 @@
   .sekund .mr-1 {
     margin-right: 0.25rem
   }
+  .sekund .mr-2 {
+    margin-right: 0.5rem
+  }
   .sekund .mr-4 {
     margin-right: 1rem
   }
@@ -116,6 +131,9 @@
   .sekund .mb-2 {
     margin-bottom: 0.5rem
   }
+  .sekund .mb-4 {
+    margin-bottom: 1rem
+  }
   .sekund .mb-16 {
     margin-bottom: 4rem
   }
@@ -125,6 +143,9 @@
   .sekund .ml-2 {
     margin-left: 0.5rem
   }
+  .sekund .-ml-4 {
+    margin-left: -1rem
+  }
   .sekund .block {
     display: block
   }
@@ -133,9 +154,6 @@
   }
   .sekund .flex {
     display: flex
-  }
-  .sekund .inline-flex {
-    display: inline-flex
   }
   .sekund .table {
     display: table
@@ -160,6 +178,9 @@
   }
   .sekund .h-20 {
     height: 5rem
+  }
+  .sekund .h-4px {
+    height: 4px
   }
   .sekund .h-full {
     height: 100%
@@ -371,6 +392,9 @@
   .sekund .whitespace-pre-wrap {
     white-space: pre-wrap
   }
+  .sekund .rounded-none {
+    border-radius: 0px
+  }
   .sekund .rounded-md {
     border-radius: 0.375rem
   }
@@ -383,14 +407,17 @@
   .sekund .border {
     border-width: 1px
   }
-  .sekund .border-transparent {
-    border-color: transparent
+  .sekund .border-t {
+    border-top-width: 1px
   }
   .sekund .border-obs-modal {
     border-color: var(--modal-border)
   }
   .sekund .dark .dark\:border-obs-modal {
     border-color: var(--modal-border)
+  }
+  .sekund .bg-transparent {
+    background-color: transparent
   }
   .sekund .bg-obs-primary {
     background-color: var(--background-primary)
@@ -404,14 +431,14 @@
   .sekund .bg-obs-tertiary {
     background-color: var(--background-tertiary)
   }
+  .sekund .bg-obs-modifier-border {
+    background-color: var(--background-modifier-border)
+  }
   .sekund .bg-obs-cover {
     background-color: var(--background-modifier-cover)
   }
   .sekund .bg-primary {
     background-color: var(--color-bg-primary)
-  }
-  .sekund .bg-accent {
-    background-color: var(--color-bg-accent)
   }
   .sekund .bg-secondary {
     background-color: var(--color-bg-secondary)
@@ -510,12 +537,11 @@
   .sekund .font-medium {
     font-weight: 500
   }
+  .sekund .font-bold {
+    font-weight: 700
+  }
   .sekund .leading-6 {
     line-height: 1.5rem
-  }
-  .sekund .text-white {
-    --tw-text-opacity: 1;
-    color: rgba(255, 255, 255, var(--tw-text-opacity))
   }
   .sekund .text-obs-normal {
     color: var(--text-normal)
@@ -525,6 +551,9 @@
   }
   .sekund .text-obs-faint {
     color: var(--text-faint)
+  }
+  .sekund .text-accent-4 {
+    color: var(--accent-4)
   }
   .sekund .text-primary {
     color: var(--color-text-primary)
@@ -538,12 +567,11 @@
   .sekund .hover\:text-secondary:hover {
     color: var(--color-text-secondary)
   }
+  .sekund .opacity-50 {
+    opacity: 0.5
+  }
   .sekund *, .sekund ::before, .sekund ::after {
     --tw-shadow: 0 0 #0000
-  }
-  .sekund .shadow-sm {
-    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)
   }
   .sekund .focus\:outline-none:focus {
     outline: 2px solid transparent;
@@ -628,6 +656,39 @@
   font: inherit;
   /* Place on top of each other */
   grid-area: 1 / 1 / 2 / 2;
+}
+
+.sekund .split-grid {
+  display: grid;
+  grid-template-rows: 1fr 10px 1fr;
+}
+
+.sekund .gutter-row {
+  grid-column: 1/-1;
+  cursor: row-resize;
+}
+
+.sekund .gutter-row-1 {
+  grid-row: 1;
+}
+
+.sekund gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.sekund .gutter.gutter-vertical {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=");
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: row-resize;
+}
+
+.nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title[data-path^="__sekund__"] .nav-folder-title-content {
+  display: inline-block;
+  text-transform: uppercase;
+  font-style: italic;
 }
 
 @media (min-width: 640px) {

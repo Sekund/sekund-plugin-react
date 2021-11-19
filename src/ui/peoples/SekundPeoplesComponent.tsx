@@ -52,8 +52,7 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
 
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(listListenerId, new SekundEventListener(["modifySharingPeoples"], reloadList))
-    eventsWatcher?.addEventListener(commentsListenerId, new SekundEventListener(["note.addComment",
-      "note.removeComment", "note.editComment"], checkComments))
+    eventsWatcher?.addEventListener(commentsListenerId, new SekundEventListener(["note.addComment"], checkComments))
     return () => {
       eventsWatcher?.removeEventListener(listListenerId);
       eventsWatcher?.removeEventListener(commentsListenerId);
@@ -62,6 +61,9 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
 
   function checkComments(fullDocument: any) {
     const updtNote: Note = fullDocument.data;
+    if (updtNote.isRead && updtNote.isRead < updtNote.updated) {
+      fetchPeoples();
+    }
     if (GlobalState.instance.appState.remoteNote && updtNote._id.equals(GlobalState.instance.appState.remoteNote._id)) {
       // automatically set updates to read when they pertain to the
       // currently displayed note
@@ -73,7 +75,6 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   }
 
   function reloadList() {
-    console.log("reloading list as there were changes");
     fetchPeoples();
     if (focusedPerson && notesState.notes && notesState.notes.length > 0) {
       switch (mode) {
@@ -94,28 +95,31 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   }, [appState.generalState])
 
   async function displaySharing(peopleId: ObjectID) {
-    setMode('sharing');
     setFocusedPerson(peopleId);
     const sharingNotes = await NotesService.instance.getSharingNotes(peopleId.toString());
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharingNotes })
+    setMode('sharing');
   }
 
   async function displayShared(peopleId: ObjectID) {
-    setMode('shared');
     setFocusedPerson(peopleId);
     const sharedNotes = await NotesService.instance.getSharedNotes(peopleId.toString());
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharedNotes })
+    setMode('shared');
   }
 
   function noteClicked(note: Note) {
+    if (note.isRead && note.isRead < note.updated) {
+      fetchPeoples();
+    }
     syncDown(note.path, note.userId.toString());
   }
 
   if (peoples && peoples.length > 0) {
     return (
       <NotesContext.Provider value={notesProviderState}>
-        {notesState.notes && notesState.notes.length > 0 ?
-          <NoteSummariesPanel handleNoteClicked={noteClicked} />
+        {mode === 'shared' || mode === 'sharing' ?
+          <NoteSummariesPanel handleNoteClicked={noteClicked} goBack={() => setMode('none')} />
           :
           <div className="flex flex-col divide-y divide-solid divide-obs-modifier-border w-xl" >
             {peoples.map((people: People) => {

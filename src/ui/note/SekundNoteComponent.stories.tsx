@@ -29,7 +29,7 @@ export const Unpublished = Template.bind({});
 Unpublished.args = {
     gState: "allGood",
     nState: { fileSynced: false, fetching: false, published: false },
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const PublishedAndSynced = Template.bind({});
@@ -37,7 +37,7 @@ PublishedAndSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
     note: someNote,
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const PublishedNotSharing = Template.bind({});
@@ -45,7 +45,7 @@ PublishedNotSharing.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
     note: { ...someNote, sharing: {} },
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const PublishedSharingNoComments = Template.bind({});
@@ -53,7 +53,7 @@ PublishedSharingNoComments.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
     note: { ...someNote, comments: [] },
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const PublishedAndNotSynced = Template.bind({});
@@ -61,7 +61,7 @@ PublishedAndNotSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: false },
     note: someNote,
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const Publishing = Template.bind({});
@@ -74,14 +74,14 @@ export const FetchingRemoteNote = Template.bind({});
 FetchingRemoteNote.args = {
     gState: "allGood",
     nState: { fetching: true },
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const Synchronizing = Template.bind({});
 Synchronizing.args = {
     gState: "allGood",
     nState: { published: true, synchronizing: true },
-    localFile: {} as TFile
+    localFile: { path: "home/home.md" } as TFile
 };
 
 export const NoLocalFile = Template.bind({});

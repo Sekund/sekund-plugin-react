@@ -106,7 +106,7 @@ export function peopleAvatar(people: People, size: number, badge?: number) {
 export function avatarImage(image: string, size: number, badge?: number) {
   if (badge) {
     return <StyledBadge
-      badgeContent={2}
+      badgeContent={badge}
       overlap="circular"
     >
       <Avatar src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>

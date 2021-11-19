@@ -8,6 +8,8 @@ import { People } from "../domain/People";
 
 export default class PeoplesService extends ServerlessService {
   private static _instance: PeoplesService;
+  private totalUnread: number = 0;
+
   constructor(plugin: SekundPluginReact) {
     super(plugin);
     PeoplesService._instance = this;
@@ -40,6 +42,9 @@ export default class PeoplesService extends ServerlessService {
 
     sharing.forEach((note) => {
       const isUnread = note.isRead && note.isRead < note.updated;
+      if (isUnread) {
+        this.totalUnread += 1;
+      }
       note.sharing?.peoples?.forEach((userId) => {
         if (getPeople(userId) === null) {
           peoples.push({
@@ -58,6 +63,9 @@ export default class PeoplesService extends ServerlessService {
 
     shared.forEach((note) => {
       const isUnread = note.isRead && note.isRead < note.updated;
+      if (isUnread) {
+        this.totalUnread += 1;
+      }
       if (note.userId) {
         if (getPeople(note.userId) === null) {
           peoples.push({

@@ -1,12 +1,12 @@
-import { Note } from "@/domain/Note"
+import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
-import { getAvatar, peopleAvatar } from "@/helpers/avatars";
+import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { usePeoplesContext } from "@/state/PeoplesContext";
-import { hourMinSec, originalPath } from "@/utils";
+import { originalPath } from "@/utils";
 import { ChatAlt2Icon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React from 'react';

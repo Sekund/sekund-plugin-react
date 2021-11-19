@@ -18,8 +18,10 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@emotion/styled": "^11.6.0",
 		"@headlessui/react": "^1.4.1",
 		"@heroicons/react": "^1.0.4",
+		"@mui/material": "^5.1.1",
 		"base64-arraybuffer": "^1.0.1",
 		"bson-objectid": "^2.0.1",
 		"filename-reserved-regex": "^3.0.0",
@@ -32,7 +34,6 @@
 		"obsidian": "^0.12.5",
 		"postcss-import": "^14.0.2",
 		"react": "^17.0.2",
-		"react-avatar": "^3.10.0",
 		"react-dom": "^17.0.2",
 		"react-i18next": "^11.12.0",
 		"react-time-ago": "^7.1.3",

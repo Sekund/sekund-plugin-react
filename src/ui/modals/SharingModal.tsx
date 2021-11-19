@@ -80,7 +80,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       groups?.forEach((g, idx) =>
         children.push(
           <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
-            {groupAvatar(g)}
+            {groupAvatar(g, 6)}
             <span className="ml-2 truncate">{g.name}</span>
             <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
           </div>
@@ -93,7 +93,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
       peoples?.forEach((p) =>
         children.push(
           <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
-            {peopleAvatar(p)}
+            {peopleAvatar(p, 6)}
             <span className="ml-2 truncate whitespace-nowrap">{`${p.name || p.email}`}</span>
             <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
           </div>

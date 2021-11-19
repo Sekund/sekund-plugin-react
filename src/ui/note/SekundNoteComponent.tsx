@@ -91,7 +91,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     return (
       <div className="flex p-1 -space-x-1 overflow-hidden">
         {groups.map((group, idx) => {
-          return <React.Fragment key={idx}>{groupAvatar(group)}</React.Fragment>;
+          return <React.Fragment key={idx}>{groupAvatar(group, 6)}</React.Fragment>;
         })}
       </div>
     );

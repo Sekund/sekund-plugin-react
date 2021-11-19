@@ -101,7 +101,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
     return (<div className="flex items-center p-1 overflow-hidden" onClick={editAllowed ? () => editGroup(group) : undefined}>
       <div className="flex flex-row items-center -space-x-1">
         {group.peoples.map((people) => {
-          return <React.Fragment key={people._id?.toString()}>{peopleAvatar(people)}</React.Fragment>;
+          return <React.Fragment key={people._id?.toString()}>{peopleAvatar(people, 6)}</React.Fragment>;
         })}
       </div>
       {editAllowed ? <DotsHorizontalIcon className="w-4 h-4" /> : ""}

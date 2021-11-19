@@ -3,7 +3,6 @@ import { Group } from "@/domain/Group";
 import { People } from "@/domain/People";
 import { SelectOption } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
-import { setHandleDisplay } from "@/helpers/obsidian";
 import GroupsService from "@/services/GroupsService";
 import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
@@ -93,7 +92,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
     peoples.forEach((p) =>
       children.push(
         <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
-          {peopleAvatar(p)}
+          {peopleAvatar(p, 6)}
           <span className="ml-2 truncate">{`${p.name || p.email}`}</span>
           <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
         </div>

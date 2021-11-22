@@ -149,6 +149,9 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   // console.log("notestate", appState.currentFile, appState.currentNoteState, appState.remoteNote)
 
   // there is not currentFile
+
+  let mainPanel: JSX.Element;
+
   if (!currentFile && remoteNote) {
 
     return (
@@ -160,7 +163,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   }
 
   if (fetching) {
-    return <div className="animate-pulse bg-obs-primary-alt">
+    return <div className="h-full animate-pulse">
       <div className="flex flex-col items-center justify-center w-full h-full">
         <Loader className="h-20" />
       </div>
@@ -169,7 +172,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
 
   if (!remoteNote) {
 
-    return (
+    mainPanel = (
       <div className="h-full">
         <div className="flex flex-col items-center justify-center w-full h-full mod-cta">
           {uploadButton()}
@@ -200,12 +203,14 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
       children.push(sharing(remoteNote.sharing))
     }
 
-    return (
+    mainPanel = (
       <>
         {remoteNote && !isSharing(remoteNote) ?
           <div className="flex flex-col items-center justify-center w-full h-full p-2">
-            <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
-            <button className="mod-cta" onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
+            <div className="flex flex-col items-center justify-center w-full h-full">
+              <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t('plugin:shareDesc')}</span>
+              <button className="mod-cta" onClick={() => setShowSharingModal(true)}>{t('plugin:Share')}</button>
+            </div>
           </div>
           : <NoteComments />}
         <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>
@@ -218,6 +223,17 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         {renderSharingDialog()}
       </>)
   }
+
+  return <div className="flex flex-col w-full h-full">
+    <div className="fixed z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted" >
+      <div className="flex">
+        {currentFile?.name.replace(/\.md/, '')}
+      </div>
+    </div>
+    <div className="flex-grow h-full mt-8 overflow-auto">
+      {mainPanel}
+    </div>
+  </div>
 }
 
 export default (props: Props) => withConnectionStatus(props)(SekundNoteComponent)

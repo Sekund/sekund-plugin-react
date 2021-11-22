@@ -13,6 +13,7 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
+    console.log("wrapper with parameters", args)
     const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale);
 
     const InjectedNoteComponent = SekundNoteComponentHOC({
@@ -29,7 +30,7 @@ export const Unpublished = Template.bind({});
 Unpublished.args = {
     gState: "allGood",
     nState: { fileSynced: false, fetching: false, published: false },
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const PublishedAndSynced = Template.bind({});
@@ -37,7 +38,7 @@ PublishedAndSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
     note: someNote,
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const PublishedNotSharing = Template.bind({});
@@ -45,7 +46,7 @@ PublishedNotSharing.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
     note: { ...someNote, sharing: {} },
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const PublishedSharingNoComments = Template.bind({});
@@ -53,7 +54,7 @@ PublishedSharingNoComments.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: true },
     note: { ...someNote, comments: [] },
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const PublishedAndNotSynced = Template.bind({});
@@ -61,7 +62,7 @@ PublishedAndNotSynced.args = {
     gState: "allGood",
     nState: { published: true, fileSynced: false },
     note: someNote,
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const Publishing = Template.bind({});
@@ -74,20 +75,21 @@ export const FetchingRemoteNote = Template.bind({});
 FetchingRemoteNote.args = {
     gState: "allGood",
     nState: { fetching: true },
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
-export const Synchronizing = Template.bind({});
-Synchronizing.args = {
+export const Updating = Template.bind({});
+Updating.args = {
     gState: "allGood",
-    nState: { published: true, synchronizing: true },
-    localFile: { path: "home/home.md" } as TFile
+    nState: { published: true, updating: true },
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const NoLocalFile = Template.bind({});
 NoLocalFile.args = {
     gState: "allGood",
     nState: { published: true },
+    note: someNote,
     localFile: null
 };
 

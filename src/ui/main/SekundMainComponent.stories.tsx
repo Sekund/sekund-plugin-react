@@ -70,7 +70,7 @@ SomePeoples.args = {
     peoples,
     groups,
     note: someNote,
-    localFile: { path: "home/home.md" } as TFile
+    localFile: { path: "home/home.md", name: "Home" } as TFile
 };
 
 export const Empty = Template.bind({});
@@ -86,3 +86,98 @@ export const Error = Template.bind({});
 Error.args = {
     gState: "unknownError"
 };
+
+export const Unpublished = Template.bind({});
+Unpublished.args = {
+    gState: "allGood",
+    nState: { fileSynced: false, fetching: false, published: false },
+    notes,
+    peoples,
+    groups,
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const PublishedAndSynced = Template.bind({});
+PublishedAndSynced.args = {
+    gState: "allGood",
+    nState: { published: true, fileSynced: true },
+    notes,
+    peoples,
+    groups,
+    note: someNote,
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const PublishedNotSharing = Template.bind({});
+PublishedNotSharing.args = {
+    gState: "allGood",
+    nState: { published: true, fileSynced: true },
+    notes,
+    peoples,
+    groups,
+    note: { ...someNote, sharing: {} },
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const PublishedSharingNoComments = Template.bind({});
+PublishedSharingNoComments.args = {
+    gState: "allGood",
+    nState: { published: true, fileSynced: true },
+    notes,
+    peoples,
+    groups,
+    note: { ...someNote, comments: [] },
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const PublishedAndNotSynced = Template.bind({});
+PublishedAndNotSynced.args = {
+    gState: "allGood",
+    nState: { published: true, fileSynced: false },
+    notes,
+    peoples,
+    groups,
+    note: someNote,
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const Publishing = Template.bind({});
+Publishing.args = {
+    gState: "allGood",
+    nState: { publishing: true },
+    notes,
+    peoples,
+    groups,
+};
+
+export const FetchingRemoteNote = Template.bind({});
+FetchingRemoteNote.args = {
+    gState: "allGood",
+    nState: { fetching: true },
+    notes,
+    peoples,
+    groups,
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const Updating = Template.bind({});
+Updating.args = {
+    gState: "allGood",
+    nState: { published: true, updating: true },
+    notes,
+    peoples,
+    groups,
+    localFile: { path: "home/home.md", name: "Home" } as TFile
+};
+
+export const NoLocalFile = Template.bind({});
+NoLocalFile.args = {
+    gState: "allGood",
+    nState: { published: true },
+    notes,
+    peoples,
+    groups,
+    note: someNote,
+    localFile: null
+};
+

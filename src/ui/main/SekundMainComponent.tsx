@@ -96,31 +96,16 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       <div className="flex items-center justify-between w-full py-1">
         <div className="flex flex-col items-center mt-1 ml-2 text-obs-muted">
           <div className="flex items-center" onClick={showViewTypes}>
-            {getViewTypeIcon()}
-            <ChevronDownIcon className="w-6 h-6" />
+            <div onClick={() => { setViewType("home"); setShowViews(false); }} className={`flex items-center px-2 mr-0 space-x-2 truncate rounded-none opacity-${viewType === 'home' ? '100' : '50'} cursor-pointer`}>
+              <CloudUploadIcon className="w-6 h-6" />
+            </div>
+            <div onClick={() => { setViewType("peoples"); setShowViews(false); }} className={`flex items-center pr-2 mr-0 space-x-2 truncate rounded-none opacity-${viewType === 'peoples' ? '100' : '50'} cursor-pointer`}>
+              <UsersIcon className="w-6 h-6" />
+            </div>
+            <div onClick={() => { setViewType("groups"); setShowViews(false); }} className={`flex items-center mr-0 space-x-2 truncate rounded-none opacity-${viewType === 'groups' ? '100' : '50'} cursor-pointer`}>
+              <UserGroupIcon className="w-6 h-6" />
+            </div>
           </div>
-          {
-            showViews ?
-              (<Popover className="relative">
-                <Popover.Panel className="absolute z-20 -ml-4" static>
-                  <div className="flex flex-col">
-                    <button onClick={() => { setViewType("home"); setShowViews(false); }} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate rounded-none">
-                      <CloudUploadIcon className="w-6 h-6" />
-                      <span>{t('plugin:yourShares')}</span>
-                    </button>
-                    <button onClick={() => { setViewType("peoples"); setShowViews(false); }} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate rounded-none">
-                      <UsersIcon className="w-6 h-6" />
-                      <span>{t('plugin:openPeoplesView')}</span>
-                    </button>
-                    <button onClick={() => { setViewType("groups"); setShowViews(false); }} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate rounded-none">
-                      <UserGroupIcon className="w-6 h-6" />
-                      <span>{t('plugin:openGroupsView')}</span>
-                    </button>
-                  </div>
-                </Popover.Panel>
-              </Popover>)
-              : null
-          }
         </div>
         <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted" onClick={showTeamsMenu}>
           <div className="flex items-center">

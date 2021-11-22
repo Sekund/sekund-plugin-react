@@ -76,6 +76,9 @@
   .sekund .left-0 {
     left: 0px
   }
+  .sekund .z-10 {
+    z-index: 10
+  }
   .sekund .z-20 {
     z-index: 20
   }
@@ -142,9 +145,6 @@
   }
   .sekund .ml-2 {
     margin-left: 0.5rem
-  }
-  .sekund .-ml-4 {
-    margin-left: -1rem
   }
   .sekund .block {
     display: block
@@ -306,9 +306,6 @@
   }
   .sekund .resize {
     resize: both
-  }
-  .sekund .flex-row {
-    flex-direction: row
   }
   .sekund .flex-col {
     flex-direction: column
@@ -507,6 +504,9 @@
   .sekund .pr-1 {
     padding-right: 0.25rem
   }
+  .sekund .pr-2 {
+    padding-right: 0.5rem
+  }
   .sekund .pr-4 {
     padding-right: 1rem
   }
@@ -689,6 +689,12 @@
   display: inline-block;
   text-transform: uppercase;
   font-style: italic;
+}
+
+.sekund .MuiAvatarGroup-avatar {
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: small;
 }
 
 @media (min-width: 640px) {

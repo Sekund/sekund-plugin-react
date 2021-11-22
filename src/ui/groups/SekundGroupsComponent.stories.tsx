@@ -33,7 +33,7 @@ const groups = [
         name: "Pads lovers",
         created: now,
         updated: now,
-        peoples: [new ObjectID("6150c1ef14be465c39539ccf"), new ObjectID("6171606afc13ae1f35000008"), new ObjectID("6171606afc13ae1f3500000a"), new ObjectID("6171606afc13ae1f3500000e")],
+        peoples: [new ObjectID("6150c1ef14be465c39539ccf"), new ObjectID("6171606afc13ae1f35000008"), new ObjectID("6171606afc13ae1f3500000a"), new ObjectID("6171606afc13ae1f3500000e"), new ObjectID("6171606afc13ae1f35000010"), new ObjectID("6171606afc13ae1f35000012"), new ObjectID("6171606afc13ae1f35000003"), new ObjectID("6171606afc13ae1f35000005")],
         userId: new ObjectID("6150c1ef14be465c39539ccf"),
     },
     {

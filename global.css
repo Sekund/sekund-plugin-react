@@ -92,3 +92,9 @@
 	text-transform: uppercase;
 	font-style: italic;
 }
+
+.sekund .MuiAvatarGroup-avatar {
+	height: 1.5rem;
+	width: 1.5rem;
+	font-size: small;
+}

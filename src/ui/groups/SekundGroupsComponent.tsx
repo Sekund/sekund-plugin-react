@@ -14,6 +14,7 @@ import GroupModal from "@/ui/groups/GroupModal";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid } from "@/utils";
 import { DotsHorizontalIcon, EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
+import { AvatarGroup } from "@mui/material";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -101,11 +102,10 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown }: GroupsCompon
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id)
     return (<div className="flex items-center p-1 overflow-hidden" onClick={editAllowed ? () => editGroup(group) : undefined}>
-      <div className="flex flex-row items-center -space-x-1">
-        {group.peoples.map((people) => {
-          return <React.Fragment key={people._id?.toString()}>{peopleAvatar(people, 6)}</React.Fragment>;
-        })}
-      </div>
+      <AvatarGroup className="h-6" sx={{ height: 24 }}>
+        {group.peoples.map((people) => peopleAvatar(people, 6))}
+      </AvatarGroup>
+
       {editAllowed ? <DotsHorizontalIcon className="w-4 h-4" /> : ""}
     </div>
     )

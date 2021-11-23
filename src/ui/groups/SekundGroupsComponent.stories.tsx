@@ -5,7 +5,7 @@ import { TFile } from "obsidian";
 import React from 'react';
 import SekundGroupsComponentHOC, { SekundGroupsComponent } from './SekundGroupsComponent';
 import '/global.css';
-import { users } from "@/mockdata/Users";
+import users from "@/mockdata/Users";
 import ObjectID from "bson-objectid";
 
 export default {
@@ -45,7 +45,7 @@ const groups = [
         userId: new ObjectID("6171606afc13ae1f35000003"),
     },
 ].map(g =>
-    ({ ...g, peoples: g.peoples.map(p => users.filter((u: any) => new ObjectID(u._id.$oid).equals(p))[0]) })
+    ({ ...g, peoples: g.peoples.map(p => users.filter((u: any) => u._id.equals(p))[0]) })
 );
 
 export const SomeGroups = Template.bind({});

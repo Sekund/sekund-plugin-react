@@ -1,7 +1,8 @@
 import { Group } from "@/domain/Group";
-import { People } from "@/domain/People";
-import { Avatar, BadgeUnstyled, Box } from "@mui/material";
+import { PeopleId } from "@/domain/People";
+import { Avatar, BadgeUnstyled } from "@mui/material";
 import { styled } from '@mui/material/styles';
+import ObjectID from "bson-objectid";
 import React from "react";
 
 const StyledBadge = styled(BadgeUnstyled)`
@@ -53,66 +54,62 @@ const StyledBadge = styled(BadgeUnstyled)`
   }
 `;
 
-function BadgeContent() {
-  return (
-    <Box
-      component="span"
-      sx={{
-        width: 42,
-        height: 42,
-        borderRadius: '2px',
-        background: '#eee',
-        display: 'inline-block',
-        verticalAlign: 'middle',
-      }}
-    />
-  );
-}
-
-export function getAvatar(name: string | undefined, image: string | undefined, email: string | undefined, size: number, badge?: number) {
-  if (image) {
-    return avatarImage(image, size, badge);
-  } else if (email) {
-    return emailAvatar(email, size, badge);
-  } else if (name) {
-    return nameAvatar(name, size, badge);
-  }
+export function peopleAvatar(people: PeopleId, size: number, badge?: number) {
+  if (people.image) return avatarImage(people.image, people._id, size, badge);
+  else if (people.email) return emailAvatar(people.email, people._id, size, badge);
+  else if (people.name) return nameAvatar(people.name, people._id, size, badge);
   return null;
 }
 
 export function groupAvatar(group: Group, size: number, badge?: number) {
-  return nameAvatar(group.name, size, badge);
+  return nameAvatar(group.name, group._id, size, badge);
 }
 
-export function nameAvatar(name: string, size: number, badge?: number) {
-  return <Avatar className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
+export function nameAvatar(name: string, id: ObjectID, size: number, badge?: number) {
+  if (badge) {
+    return <StyledBadge
+      key={id.toString()}
+      badgeContent={badge}
+      overlap="circular"
+    >
+      <Avatar className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
+        {getInitials(name)}
+      </Avatar>
+    </StyledBadge>
+  }
+  return <Avatar key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
     {getInitials(name)}
   </Avatar>
 }
 
-export function emailAvatar(email: string, size: number, badge?: number) {
-  return <Avatar className={`h-${size} w-${size} flex-shrink-0`}>
+export function emailAvatar(email: string, id: ObjectID, size: number, badge?: number) {
+  if (badge) {
+    return <StyledBadge
+      key={id.toString()}
+      badgeContent={badge}
+      overlap="circular"
+    >
+      <Avatar className={`h-${size} w-${size} flex-shrink-0`}>
+        {getInitials(email)}
+      </Avatar>
+    </StyledBadge>
+  }
+  return <Avatar key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`}>
     {getInitials(email)}
   </Avatar>
 }
 
-export function peopleAvatar(people: People, size: number, badge?: number) {
-  if (people.image) return avatarImage(people.image, size, badge);
-  else if (people.email) return emailAvatar(people.email, size, badge);
-  else if (people.name) return nameAvatar(people.name, size, badge);
-  return null;
-}
-
-export function avatarImage(image: string, size: number, badge?: number) {
+export function avatarImage(image: string, id: ObjectID, size: number, badge?: number) {
   if (badge) {
     return <StyledBadge
+      key={id.toString()}
       badgeContent={badge}
       overlap="circular"
     >
       <Avatar src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>
     </StyledBadge>
   }
-  return (<Avatar src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>)
+  return (<Avatar key={id.toString()} src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>)
 }
 
 export function getInitials(fullName: string): string {

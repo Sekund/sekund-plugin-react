@@ -6,19 +6,22 @@ import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { usePeoplesContext } from "@/state/PeoplesContext";
+import { ViewType } from "@/ui/main/SekundMainComponent";
 import { originalPath } from "@/utils";
-import { ChatAlt2Icon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import { ArrowDownIcon, ArrowUpIcon, ChatAlt2Icon, DownloadIcon, UploadIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
+import { isContext } from "vm";
 
 type Props = {
 	note: Note
+	context: ViewType;
 	handleNoteClicked: (note: Note) => void
 }
 
-export default function NoteSummaryComponent({ note, handleNoteClicked }: Props) {
+export default function NoteSummaryComponent({ note, handleNoteClicked, context }: Props) {
 	const { i18n } = useTranslation();
 	const { appState } = useAppContext();
 
@@ -57,10 +60,20 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 		return "";
 	}
 
-	function summaryContents() {
+	function renderUpOrDownArrow() {
+		if (appState.userProfile._id.equals(note.userId)) {
+			return <ArrowUpIcon className="w-4 h-4 text-green-500" />
+		}
+		return <ArrowDownIcon className="w-4 h-4 text-blue-500" />
+	}
+
+	function summaryContents(upOrDownArrow?: boolean) {
 		return <>
 			<div className={`${readStatusClass()}`}>
-				{note.title.replace(".md", "")}
+				{upOrDownArrow
+					? <div className="flex items-center space-x-2">{renderUpOrDownArrow()}{note.title.replace(".md", "")}</div>
+					: note.title.replace(".md", "")
+				}
 			</div>
 			<div className="flex items-center justify-between">
 				<ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
@@ -83,10 +96,10 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 
 	}
 
-	function summary() {
+	function summary(upOrDownArrow?: boolean) {
 		return <div className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${isCurrentNote() ? 'bg-obs-tertiary' : ''}`}
 			onClick={noteClicked}>
-			{summaryContents()}
+			{summaryContents(upOrDownArrow)}
 		</div>
 	}
 
@@ -101,10 +114,11 @@ export default function NoteSummaryComponent({ note, handleNoteClicked }: Props)
 		return summary
 	}
 
-	return (
-		peoplesState && peoplesState.groups
-			? withAvatar(summary())
-			: summary()
-	)
+	if (context === 'groups') {
+		return withAvatar(summary());
+	} else if (context === 'peoples') {
+		return summary(true)
+	}
+	return summary()
 
 }

@@ -10,7 +10,7 @@ import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { Popover } from "@headlessui/react";
 import { ChevronDownIcon, CloudUploadIcon, PlusIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export type MainComponentProps = {
@@ -24,6 +24,15 @@ export type MainComponentProps = {
 
 export type ViewType = "home" | "peoples" | "groups";
 
+const usePrevious = <T extends unknown>(value: T): T | undefined => {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
+
+
 export const SekundMainComponent = (props: MainComponentProps) => {
 
   const { t } = useTranslation(["common", "plugin"])
@@ -34,27 +43,22 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const [subdomain, setSubdomain] = useState<string | null>(null);
   const [showAddApiModal, setShowAddApiModal] = useState<boolean>(false);
   const [viewType, setViewType] = useState<ViewType>('home');
-
-  function getViewTypeIcon() {
-    switch (viewType) {
-      case "home":
-        return <CloudUploadIcon className="w-6 h-6" />;
-      case "peoples":
-        return <UsersIcon className="w-6 h-6" />
-      case "groups":
-        return <UserGroupIcon className="w-6 h-6" />;
-    }
-  }
+  const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 })
+  const previousView = usePrevious(viewType);
+  const viewRef = useRef<any>();
 
   function getViewTypeView() {
-    switch (viewType) {
-      case "home":
-        return <SekundHomeComponent {...props} />;
-      case "peoples":
-        return <SekundPeoplesComponent {...props} />
-      case "groups":
-        return <SekundGroupsComponent {...props} />
+    if (previousView) {
+      scrollPositions.current[previousView] = viewRef.current?.scrollTop;
     }
+    if (scrollPositions.current[viewType] && viewRef.current) {
+      setTimeout(() => viewRef.current.scrollTop = scrollPositions.current[viewType], 20);
+    }
+    return <>
+      <SekundHomeComponent className={`${viewType !== "home" ? 'hidden' : ''}`} {...props} />
+      <SekundPeoplesComponent className={`${viewType !== "peoples" ? 'hidden' : ''}`} {...props} />
+      <SekundGroupsComponent className={`${viewType !== "groups" ? 'hidden' : ''}`} {...props} />
+    </>
   }
 
   function showViewTypes(evt: any) {
@@ -135,7 +139,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
         </div>
       </div>
 
-      <div className="relative overflow-auto">
+      <div ref={viewRef} className="relative overflow-auto">
         {getViewTypeView()}
       </div>
 

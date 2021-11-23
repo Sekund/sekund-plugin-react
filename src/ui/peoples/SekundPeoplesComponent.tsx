@@ -1,39 +1,26 @@
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
-import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
-import GlobalState from "@/state/GlobalState";
-import NotesContext from "@/state/NotesContext";
-import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
-import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import SekundPeopleSummary from "@/ui/peoples/SekundPeopleSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
-import ObjectID from "bson-objectid";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
 
 export type PeoplesComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
   syncDown: (path: string, userId: string) => void,
-}
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComponentProps) => {
+export const SekundPeoplesComponent = ({ className, peoplesService, syncDown }: PeoplesComponentProps) => {
   const { appState } = useAppContext();
   const { t } = useTranslation("plugin");
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
-  const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
-  const [mode, setMode] = useState<'sharing' | 'shared' | 'none'>('none')
-  const [focusedPerson, setFocusedPerson] = useState<ObjectID | undefined>()
-  const notesProviderState = {
-    notesState,
-    notesDispatch,
-  };
 
   const { peoples } = peoplesState;
 
@@ -60,32 +47,10 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
   }, [])
 
   function checkComments(fullDocument: any) {
-    const updtNote: Note = fullDocument.data;
-    if (updtNote.isRead && updtNote.isRead < updtNote.updated) {
-      fetchPeoples();
-    }
-    if (GlobalState.instance.appState.remoteNote && updtNote._id.equals(GlobalState.instance.appState.remoteNote._id)) {
-      // automatically set updates to read when they pertain to the
-      // currently displayed note
-      NotesService.instance.setNoteIsRead(updtNote._id);
-      notesDispatch({ type: NotesActionKind.UpdateNote, payload: { ...updtNote, isRead: Date.now() } })
-    } else {
-      notesDispatch({ type: NotesActionKind.UpdateNote, payload: updtNote })
-    }
   }
 
   function reloadList() {
     fetchPeoples();
-    if (focusedPerson && notesState.notes && notesState.notes.length > 0) {
-      switch (mode) {
-        case 'shared':
-          displayShared(focusedPerson);
-          break;
-        case 'sharing':
-          displaySharing(focusedPerson);
-          break;
-      }
-    }
   }
 
   useEffect(() => {
@@ -93,20 +58,6 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
       fetchPeoples();
     }
   }, [appState.generalState])
-
-  async function displaySharing(peopleId: ObjectID) {
-    setFocusedPerson(peopleId);
-    const sharingNotes = await NotesService.instance.getSharingNotes(peopleId.toString());
-    notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharingNotes })
-    setMode('sharing');
-  }
-
-  async function displayShared(peopleId: ObjectID) {
-    setFocusedPerson(peopleId);
-    const sharedNotes = await NotesService.instance.getSharedNotes(peopleId.toString());
-    notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharedNotes })
-    setMode('shared');
-  }
 
   function noteClicked(note: Note) {
     if (note.isRead && note.isRead < note.updated) {
@@ -117,24 +68,16 @@ export const SekundPeoplesComponent = ({ peoplesService, syncDown }: PeoplesComp
 
   if (peoples && peoples.length > 0) {
     return (
-      <NotesContext.Provider value={notesProviderState}>
-        {mode === 'shared' || mode === 'sharing' ?
-          <NoteSummariesPanel handleNoteClicked={noteClicked} goBack={() => setMode('none')} />
-          :
-          <div className="flex flex-col divide-y divide-solid divide-obs-modifier-border w-xl" >
-            {peoples.map((people: People) => {
-              return (
-                <SekundPeopleSummary key={people._id.toString()}
-                  people={people}
-                  displayShared={displayShared}
-                  displaySharing={displaySharing} />
-              );
-            })}
-          </div>
-        }
-      </NotesContext.Provider>)
+      <div className={`${className} flex flex-col divide-y divide-solid divide-obs-modifier-border w-xl border-x-none`} >
+        {peoples.map((people: People) => {
+          return (
+            <SekundPeopleSummary key={people._id.toString()}
+              people={people} handleNoteClicked={noteClicked} />
+          );
+        })}
+      </div>)
   } else return (
-    <div className="flex flex-col items-center justify-center h-full p-8 ">
+    <div className={`${className} flex flex-col items-center justify-center h-full p-8`}>
       <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
       <div className="text-center ">{t('plugin:noOne')}</div>
       <div className="mt-2 text-sm text-center ">{t('plugin:noOneDesc')}</div>

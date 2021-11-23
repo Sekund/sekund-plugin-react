@@ -1,6 +1,6 @@
 import notes, { someNote } from "@/mockdata/NotesMock";
 import peoples from "@/mockdata/PeoplesMock";
-import { users } from "@/mockdata/Users";
+import users from "@/mockdata/Users";
 import NotesService from '@/services/NotesService';
 import PeoplesService from "@/services/PeoplesService";
 import AppStateWrapper from '@/storybook/AppStateWrapper';
@@ -38,6 +38,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
     return <InjectedHomeComponent />
 };
+console.log("users", users)
 
 const now = Date.now();
 
@@ -59,7 +60,7 @@ const groups = [
         userId: new ObjectID("6171606afc13ae1f35000003"),
     },
 ].map(g =>
-    ({ ...g, peoples: g.peoples.map(p => users.filter((u: any) => new ObjectID(u._id.$oid).equals(p))[0]) })
+    ({ ...g, peoples: g.peoples.map(p => users.filter((u: any) => u._id.equals(p))[0]) })
 );
 
 export const SomePeoples = Template.bind({});

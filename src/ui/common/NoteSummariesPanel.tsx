@@ -1,16 +1,17 @@
 import { Note } from '@/domain/Note';
 import { useNotesContext } from '@/state/NotesContext';
-import { NotesActionKind } from '@/state/NotesReducer';
 import NoteSummaryComponent from '@/ui/common/NoteSummaryComponent';
+import { ViewType } from '@/ui/main/SekundMainComponent';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
 	handleNoteClicked: (note: Note) => void;
-	goBack: () => void;
+	context: ViewType;
+	className?: string;
 }
 
-export default function NoteSummariesPanel({ handleNoteClicked, goBack }: Props) {
+export default function NoteSummariesPanel({ handleNoteClicked, className, context }: Props) {
 
 	const { t } = useTranslation();
 
@@ -18,23 +19,13 @@ export default function NoteSummariesPanel({ handleNoteClicked, goBack }: Props)
 
 	const { notes } = notesState;
 
-	useEffect(() => {
-
-		window.scrollTo(0, 0);
-
-	}, [])
-
 	if (notes && notes.length > 0) {
 		return (
-			<div className="absolute inset-0 flex flex-col w-full bg-obs-primary">
-				<div className="flex items-center h-8 px-2">
-					<span className="font-medium text-normal"
-						onClick={goBack}>← {t('back')}</span>
-				</div>
-				<div className="flex flex-col w-full overflow-auto space-y-1px">
+			<div className={`$flex flex-col w-full bg-obs-primary`}>
+				<div className={`${className} flex flex-col w-full overflow-auto space-y-1px bg-obs-primary`}>
 					{notes?.map((note: Note) => (
 						<React.Fragment key={note._id.toString()}>
-							<NoteSummaryComponent note={note} handleNoteClicked={handleNoteClicked} />
+							<NoteSummaryComponent context={context} note={note} handleNoteClicked={handleNoteClicked} />
 						</React.Fragment>
 					))}
 				</div>

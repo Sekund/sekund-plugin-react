@@ -1,14 +1,13 @@
 import { NoteComment } from "@/domain/NoteComment";
-import { getAvatar } from "@/helpers/avatars";
-import { isVisible } from "@/helpers/visibility";
+import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import { Popover } from "@headlessui/react";
 import { DotsHorizontalIcon, PencilIcon, TrashIcon } from "@heroicons/react/solid";
+import Markdown from "markdown-to-jsx";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
-import Markdown from "markdown-to-jsx";
 
 type Props = {
   comment: NoteComment;
@@ -121,7 +120,7 @@ export default function NoteCommentComponent({ comment }: Props) {
 
   return (
     <div key={comment.created} className="flex items-start">
-      <div className="flex-shrink-0">{getAvatar(name, image, email, 8)}</div>
+      <div className="flex-shrink-0">{peopleAvatar(comment.author, 8)}</div>
       <div ref={area} className={`flex flex-col px-3 pt-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}>
         <div className="flex items-center mb-2 space-x-2 ">
           <ReactTimeAgo className="text-obs-muted" date={+comment.created} locale={i18n.language} />

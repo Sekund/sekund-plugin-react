@@ -1,6 +1,8 @@
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
+import { BlueBadge, GreenBadge, OrangeBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
@@ -8,6 +10,7 @@ import AddApiKeyModal from "@/ui/main/ApiKeyModal";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { makeid } from "@/utils";
 import { Popover } from "@headlessui/react";
 import { ChevronDownIcon, CloudUploadIcon, PlusIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import React, { useEffect, useRef, useState } from "react";
@@ -46,6 +49,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 })
   const previousView = usePrevious(viewType);
   const viewRef = useRef<any>();
+  const notifications = useRef({ home: 0, groups: 0, peoples: 0 })
 
   function getViewTypeView() {
     if (previousView) {
@@ -60,6 +64,21 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       <SekundPeoplesComponent className={`${viewType !== "peoples" ? 'hidden' : ''}`} {...props} />
       <SekundGroupsComponent className={`${viewType !== "groups" ? 'hidden' : ''}`} {...props} />
     </>
+  }
+
+  useEffect(() => {
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.removeComment", ",note.editComment"], loadUnreadNotes))
+    return () => {
+      eventsWatcher?.removeEventListener(listenerId);
+    }
+  }, [])
+
+  async function loadUnreadNotes() {
+    const unreadNotes = await NotesService.instance.getUnreadNotes();
+    console.log("unreadNotes", unreadNotes);
   }
 
   function showViewTypes(evt: any) {
@@ -101,14 +120,53 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       <div className="flex items-center justify-between w-full py-1">
         <div className="flex flex-col items-center mt-1 ml-2 text-obs-muted">
           <div className="flex items-center" onClick={showViewTypes}>
-            <div onClick={() => { setViewType("home"); setShowViews(false); }} className={`flex items-center px-2 mr-0 space-x-2 truncate rounded-none opacity-${viewType === 'home' ? '100' : '50'} cursor-pointer`}>
-              <CloudUploadIcon className="w-6 h-6" />
+            <div onClick={() => { setViewType("home"); setShowViews(false); }} className={`flex items-center px-2 mr-0 space-x-2 rounded-none opacity-${viewType === 'home' ? '100' : '50'} cursor-pointer`}>
+              {notifications.current.home > 0
+                ?
+                <GreenBadge
+                  badgeContent={notifications.current.home}
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}>
+                  <CloudUploadIcon className="w-6 h-6 text-obs-normal" />
+                </GreenBadge>
+                :
+                <CloudUploadIcon className="w-6 h-6 text-obs-normal" />
+              }
             </div>
-            <div onClick={() => { setViewType("peoples"); setShowViews(false); }} className={`flex items-center pr-2 mr-0 space-x-2 truncate rounded-none opacity-${viewType === 'peoples' ? '100' : '50'} cursor-pointer`}>
-              <UsersIcon className="w-6 h-6" />
+            <div onClick={() => { setViewType("peoples"); setShowViews(false); }} className={`flex items-center pr-2 mr-0 space-x-2 rounded-none opacity-${viewType === 'peoples' ? '100' : '50'} cursor-pointer`}>
+              {notifications.current.peoples > 0
+                ?
+                <BlueBadge
+                  badgeContent={notifications.current.peoples}
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}>
+                  <UsersIcon className="w-6 h-6 text-obs-normal" />
+                </BlueBadge>
+                :
+                <UsersIcon className="w-6 h-6 text-obs-normal" />
+              }
             </div>
-            <div onClick={() => { setViewType("groups"); setShowViews(false); }} className={`flex items-center mr-0 space-x-2 truncate rounded-none opacity-${viewType === 'groups' ? '100' : '50'} cursor-pointer`}>
-              <UserGroupIcon className="w-6 h-6" />
+            <div onClick={() => { setViewType("groups"); setShowViews(false); }} className={`flex items-center mr-0 space-x-2 rounded-none opacity-${viewType === 'groups' ? '100' : '50'} cursor-pointer`}>
+              {notifications.current.groups > 0
+                ?
+                <OrangeBadge
+                  badgeContent={notifications.current.groups}
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}>
+                  <UserGroupIcon className="w-6 h-6 text-obs-normal" />
+                </OrangeBadge>
+                :
+                <UserGroupIcon className="w-6 h-6 text-obs-normal" />
+              }
             </div>
           </div>
         </div>

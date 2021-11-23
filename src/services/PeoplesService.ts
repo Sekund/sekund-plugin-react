@@ -1,4 +1,3 @@
-import { Note } from "@/domain/Note";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";

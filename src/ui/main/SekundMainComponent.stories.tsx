@@ -38,7 +38,6 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
     return <InjectedHomeComponent />
 };
-console.log("users", users)
 
 const now = Date.now();
 

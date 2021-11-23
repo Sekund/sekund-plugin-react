@@ -9,7 +9,7 @@ import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid } from "@/utils";
-import { DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
+import { CheckIcon, DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -186,7 +186,11 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     const children: Array<JSX.Element> = [];
 
     if (fileSynced) {
-      children.push(<span key="uptd">{t('uptodate')}</span>)
+      children.push(
+        <span className="flex items-center space-x-1" key="uptd">
+          <CheckIcon className="w-4 h-4"></CheckIcon>
+          {t('uptodate')}
+        </span>)
     } else {
 
       children.push(
@@ -199,10 +203,6 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
       )
     }
 
-    if (remoteNote && isSharing(remoteNote)) {
-      children.push(sharing(remoteNote.sharing))
-    }
-
     mainPanel = (
       <>
         {remoteNote && !isSharing(remoteNote) ?
@@ -213,12 +213,8 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
             </div>
           </div>
           : <NoteComments />}
-        <div className={`fixed bottom-0 left-0 right-0 flex flex-col pt-1 bg-obs-primary-alt ${footerTextColor}`}>
+        <div className={`fixed bottom-0 left-0 right-0 flex flex-col py-1 bg-obs-primary-alt ${footerTextColor}`}>
           <div className="flex items-center justify-between px-2 text-sm">{children}</div>
-          <a className={`flex items-center justify-center p-1 text-sm text-center cursor-pointer mod-cta ${footerTextColor}`} onClick={handleUnpublish}>
-            <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
-            {t('plugin:deleteFromSekund')}
-          </a>
         </div>
         {renderSharingDialog()}
       </>)
@@ -226,8 +222,14 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
 
   return <div className="flex flex-col w-full h-full">
     <div className="fixed z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted" >
-      <div className="flex">
-        {currentFile?.name.replace(/\.md/, '')}
+      <div className="flex justify-between">
+        <div className="flex items-center space-x-1">
+          <span>{currentFile?.name.replace(/\.md/, '')}</span>
+          <span className="flex items-center" title={t('plugin:deleteFromSekund')} onClick={handleUnpublish} >
+            <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
+          </span>
+        </div>
+        {remoteNote && isSharing(remoteNote) ? sharing(remoteNote.sharing) : null}
       </div>
     </div>
     <div className="flex-grow h-full mt-8 overflow-auto">

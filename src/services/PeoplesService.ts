@@ -28,9 +28,9 @@ export default class PeoplesService extends ServerlessService {
   }
 
   async getRawPeoples(): Promise<People[]> {
-    const { sharingNotes, sharedNotes } = await callFunction(this.plugin, "peoples");
+    const { sharedNotes } = await callFunction(this.plugin, "peoples");
 
-    const sharing: Array<{ sharing: { peoples: ObjectID[] }; isRead: number; updated: number }> = sharingNotes;
+    // const sharing: Array<{ sharing: { peoples: ObjectID[] }; isRead: number; updated: number }> = sharingNotes;
     const shared: Array<{ userId: ObjectID; isRead: number; updated: number }> = sharedNotes;
 
     const peoples: Array<People> = [];
@@ -40,26 +40,26 @@ export default class PeoplesService extends ServerlessService {
       return found.length > 0 ? found[0] : null;
     };
 
-    sharing.forEach((note) => {
-      const isUnread = note.isRead && note.isRead < note.updated;
-      if (isUnread) {
-        this.totalUnread += 1;
-      }
-      note.sharing?.peoples?.forEach((userId) => {
-        if (getPeople(userId) === null) {
-          peoples.push({
-            _id: userId,
-            sharing: 1,
-            unreadSharing: isUnread ? 1 : 0,
-          } as People);
-        } else {
-          const people = getPeople(userId);
-          if (people && people.sharing) {
-            people.sharing += 1;
-          }
-        }
-      });
-    });
+    // sharing.forEach((note) => {
+    //   const isUnread = note.isRead && note.isRead < note.updated;
+    //   if (isUnread) {
+    //     this.totalUnread += 1;
+    //   }
+    //   note.sharing?.peoples?.forEach((userId) => {
+    //     if (getPeople(userId) === null) {
+    //       peoples.push({
+    //         _id: userId,
+    //         sharing: 1,
+    //         unreadSharing: isUnread ? 1 : 0,
+    //       } as People);
+    //     } else {
+    //       const people = getPeople(userId);
+    //       if (people && people.sharing) {
+    //         people.sharing += 1;
+    //       }
+    //     }
+    //   });
+    // });
 
     shared.forEach((note) => {
       const isUnread = note.isRead && note.isRead < note.updated;

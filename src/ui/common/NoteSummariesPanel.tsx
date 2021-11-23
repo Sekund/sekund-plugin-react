@@ -1,21 +1,19 @@
+import { Group } from '@/domain/Group';
 import { Note } from '@/domain/Note';
 import { useNotesContext } from '@/state/NotesContext';
 import NoteSummaryComponent from '@/ui/common/NoteSummaryComponent';
 import { ViewType } from '@/ui/main/SekundMainComponent';
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
 
 type Props = {
 	handleNoteClicked: (note: Note) => void;
 	context: ViewType;
-	className?: string;
-}
+	group?: Group;
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export default function NoteSummariesPanel({ handleNoteClicked, className, context }: Props) {
+export default function NoteSummariesPanel({ handleNoteClicked, className, context, group }: Props) {
 
-	const { t } = useTranslation();
-
-	const { notesState, notesDispatch } = useNotesContext();
+	const { notesState } = useNotesContext();
 
 	const { notes } = notesState;
 
@@ -25,7 +23,7 @@ export default function NoteSummariesPanel({ handleNoteClicked, className, conte
 				<div className={`${className} flex flex-col w-full overflow-auto space-y-1px bg-obs-primary`}>
 					{notes?.map((note: Note) => (
 						<React.Fragment key={note._id.toString()}>
-							<NoteSummaryComponent context={context} note={note} handleNoteClicked={handleNoteClicked} />
+							<NoteSummaryComponent context={context} group={group} note={note} handleNoteClicked={handleNoteClicked} />
 						</React.Fragment>
 					))}
 				</div>

@@ -60,10 +60,8 @@ export default function SekundPeopleSummary({ people, handleNoteClicked }: Props
     async function toggleExpanded() {
         if (!expanded) {
             const sharedNotes = await NotesService.instance.getSharedNotes(people._id.toString());
-            const sharingNotes = await NotesService.instance.getSharingNotes(people._id.toString());
-            const allNotes = [...sharedNotes, ...sharingNotes];
-            allNotes.sort((a, b) => a.created - b.created)
-            notesDispatch({ type: NotesActionKind.ResetNotes, payload: allNotes })
+            sharedNotes.sort((a: Note, b: Note) => a.created - b.created)
+            notesDispatch({ type: NotesActionKind.ResetNotes, payload: sharedNotes })
         }
         setExpanded(!expanded);
     }

@@ -51,9 +51,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     if (previousView) {
       scrollPositions.current[previousView] = viewRef.current?.scrollTop;
     }
-    if (scrollPositions.current[viewType] && viewRef.current) {
-      setTimeout(() => viewRef.current.scrollTop = scrollPositions.current[viewType], 20);
-    }
+    setTimeout(() => {
+      const savedScrollPosition = scrollPositions.current[viewType];
+      viewRef.current.scrollTop = savedScrollPosition ? scrollPositions.current[viewType] : 0;
+    }, 10);
     return <>
       <SekundHomeComponent className={`${viewType !== "home" ? 'hidden' : ''}`} {...props} />
       <SekundPeoplesComponent className={`${viewType !== "peoples" ? 'hidden' : ''}`} {...props} />

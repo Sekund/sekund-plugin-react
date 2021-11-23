@@ -88,7 +88,7 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
           </div>
           {groupMembers(group)}
         </div>
-        {expanded ? <NoteSummariesPanel context="peoples" handleNoteClicked={handleNoteClicked} /> : null}
+        {expanded ? <NoteSummariesPanel context="groups" group={group} handleNoteClicked={handleNoteClicked} /> : null}
       </div>
     </NotesContext.Provider>
   )

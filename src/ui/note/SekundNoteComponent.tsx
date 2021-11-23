@@ -223,12 +223,17 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   return <div className="flex flex-col w-full h-full">
     <div className="fixed z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted" >
       <div className="flex justify-between">
-        <div className="flex items-center space-x-1">
-          <span>{currentFile?.name.replace(/\.md/, '')}</span>
-          <span className="flex items-center" title={t('plugin:deleteFromSekund')} onClick={handleUnpublish} >
-            <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
-          </span>
-        </div>
+        {currentFile
+          ?
+          <div className="flex items-center space-x-1">
+            <span>{currentFile?.name.replace(/\.md/, '')}</span>
+            <span className="flex items-center" title={t('plugin:deleteFromSekund')} onClick={handleUnpublish} >
+              <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
+            </span>
+          </div>
+          :
+          <div>&nbsp;</div>
+        }
         {remoteNote && isSharing(remoteNote) ? sharing(remoteNote.sharing) : null}
       </div>
     </div>

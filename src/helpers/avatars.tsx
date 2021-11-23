@@ -62,7 +62,7 @@ export function peopleAvatar(people: PeopleId, size: number, badge?: number) {
 }
 
 export function groupAvatar(group: Group, size: number, badge?: number) {
-  return nameAvatar(group.name, group._id, size, badge);
+  return nameAvatar(group?.name || "error", group?._id || new ObjectID(), size, badge);
 }
 
 export function nameAvatar(name: string, id: ObjectID, size: number, badge?: number) {

@@ -6,7 +6,7 @@ import { useAppContext } from "@/state/AppContext";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
 import SekundPeopleSummary from "@/ui/peoples/SekundPeopleSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid } from "@/utils";
+import { makeid, touch } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ export type PeoplesComponentProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const SekundPeoplesComponent = ({ className, peoplesService, syncDown }: PeoplesComponentProps) => {
-  const { appState } = useAppContext();
+  const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation("plugin");
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
 
@@ -63,6 +63,7 @@ export const SekundPeoplesComponent = ({ className, peoplesService, syncDown }: 
     if (note.isRead && note.isRead < note.updated) {
       fetchPeoples();
     }
+    touch(appDispatch, note._id);
     syncDown(note.path, note.userId.toString());
   }
 

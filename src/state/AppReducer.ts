@@ -4,93 +4,125 @@ import SekundPluginReact from "@/main";
 import GlobalState from "@/state/GlobalState";
 import { TFile } from "obsidian";
 
-export type GeneralState = "connecting" | "noApiKey" | "noSubdomain" | "noSettings" | "noSuchSubdomain" | "offline" | "allGood" | "unknownError" | "loginError";
+export type GeneralState =
+  | "connecting"
+  | "noApiKey"
+  | "noSubdomain"
+  | "noSettings"
+  | "noSuchSubdomain"
+  | "offline"
+  | "allGood"
+  | "unknownError"
+  | "loginError";
+
+export type UnreadNotes = {
+  home: Note[];
+  peoples: Note[];
+  groups: Note[];
+  all: Note[];
+};
 
 export type NoteState = {
-	fileSynced: boolean;
-	publishing: boolean;
-	fetching: boolean;
-	updating: boolean;
-	isShared: boolean;
+  fileSynced: boolean;
+  publishing: boolean;
+  fetching: boolean;
+  updating: boolean;
+  isShared: boolean;
 };
 
 export type AppState = {
-	generalState: GeneralState;
-	currentNoteState: NoteState;
-	remoteNote: Note | undefined;
-	currentFile: TFile | undefined;
-	locale: string;
-	plugin: SekundPluginReact | undefined;
-	userProfile: People;
-	event: any;
+  generalState: GeneralState;
+  currentNoteState: NoteState;
+  remoteNote: Note | undefined;
+  currentFile: TFile | undefined;
+  locale: string;
+  plugin: SekundPluginReact | undefined;
+  userProfile: People;
+  event: any;
+  unreadNotes: UnreadNotes;
 };
 
 export const initialAppState: AppState = {
-	generalState: "offline",
-	remoteNote: undefined,
-	currentNoteState: {
-		fileSynced: false,
-		publishing: false,
-		fetching: false,
-		updating: false,
-		isShared: false,
-	},
-	locale: "en",
-	currentFile: undefined,
-	plugin: undefined,
-	userProfile: {} as People,
-	event: undefined,
+  generalState: "offline",
+  remoteNote: undefined,
+  currentNoteState: {
+    fileSynced: false,
+    publishing: false,
+    fetching: false,
+    updating: false,
+    isShared: false,
+  },
+  locale: "en",
+  currentFile: undefined,
+  plugin: undefined,
+  userProfile: {} as People,
+  event: undefined,
+  unreadNotes: { home: [], peoples: [], groups: [], all: [] },
 };
 
 export enum AppActionKind {
-	SetCurrentNoteState,
-	UpdateRemoteNote,
-	SetLocale,
-	SetGeneralState,
-	SetUserProfile,
-	SetPlugin,
-	SetEvent,
+  SetCurrentNoteState,
+  UpdateRemoteNote,
+  SetLocale,
+  SetGeneralState,
+  SetUserProfile,
+  SetPlugin,
+  SetEvent,
+  SetUnreadNotes,
+  SetNoteIsRead,
 }
 
 export type AppAction = {
-	type: AppActionKind;
-	payload: any;
+  type: AppActionKind;
+  payload: any;
 };
 
 export default function AppReducer(state: AppState, action: AppAction): AppState {
-	const { type, payload } = action;
+  const { type, payload } = action;
 
-	let newState: AppState;
-	switch (type) {
-		case AppActionKind.SetCurrentNoteState:
-			const { noteState, file, note } = payload;
-			const result = {
-				...state,
-				currentNoteState: noteState === undefined ? state.currentNoteState : noteState,
-				currentFile: file === undefined ? state.currentFile : file,
-				remoteNote: note === undefined ? state.remoteNote : note,
-			};
-			newState = result;
-			break;
-		case AppActionKind.SetGeneralState:
-			newState = { ...state, generalState: payload };
-			break;
-		case AppActionKind.UpdateRemoteNote:
-			newState = { ...state, remoteNote: payload };
-			break;
-		case AppActionKind.SetLocale:
-			newState = { ...state, locale: payload };
-			break;
-		case AppActionKind.SetPlugin:
-			newState = { ...state, plugin: payload };
-			break;
-		case AppActionKind.SetUserProfile:
-			newState = { ...state, userProfile: payload };
-			break;
-		default:
-			newState = state;
-	}
+  let newState: AppState;
+  switch (type) {
+    case AppActionKind.SetCurrentNoteState:
+      const { noteState, file, note } = payload;
+      const result = {
+        ...state,
+        currentNoteState: noteState === undefined ? state.currentNoteState : noteState,
+        currentFile: file === undefined ? state.currentFile : file,
+        remoteNote: note === undefined ? state.remoteNote : note,
+      };
+      newState = result;
+      break;
+    case AppActionKind.SetGeneralState:
+      newState = { ...state, generalState: payload };
+      break;
+    case AppActionKind.UpdateRemoteNote:
+      newState = { ...state, remoteNote: payload };
+      break;
+    case AppActionKind.SetLocale:
+      newState = { ...state, locale: payload };
+      break;
+    case AppActionKind.SetPlugin:
+      newState = { ...state, plugin: payload };
+      break;
+    case AppActionKind.SetUserProfile:
+      newState = { ...state, userProfile: payload };
+      break;
+    case AppActionKind.SetUnreadNotes:
+      console.log("SetUnreadNotes", payload);
+      newState = { ...state, unreadNotes: payload };
+      break;
+    case AppActionKind.SetNoteIsRead:
+      const unreadNotes = { ...state.unreadNotes };
+      unreadNotes.home = unreadNotes.home.filter((n) => !n._id.equals(payload));
+      unreadNotes.peoples = unreadNotes.peoples.filter((n) => !n._id.equals(payload));
+      unreadNotes.groups = unreadNotes.groups.filter((n) => !n._id.equals(payload));
+      unreadNotes.all = unreadNotes.all.filter((n) => !n._id.equals(payload));
+      newState = { ...state, unreadNotes };
+      break;
+    default:
+      newState = state;
+  }
 
-	GlobalState.instance.appState = newState;
-	return newState;
+  GlobalState.instance.appState = newState;
+  return newState;
 }

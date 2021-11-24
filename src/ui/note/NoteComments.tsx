@@ -24,7 +24,7 @@ export default function NoteComments() {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.removeComment", ",note.editComment"], reloadNote))
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.removeComment", "note.editComment"], reloadNote))
     return () => {
       eventsWatcher?.removeEventListener(listenerId);
     }
@@ -59,8 +59,25 @@ export default function NoteComments() {
     if (appState.remoteNote) {
       const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
       NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin?.user.customData._id);
+      const now = Date.now();
+      setLocalComments([...localComments, {
+        text: textarea.value,
+        author: userProfile,
+        created: now,
+        updated: now
+      }])
       textarea.value = "";
     }
+  }
+
+  function removeLocalComment(noteComment: NoteComment) {
+    const comments = localComments.filter(c => c.created !== noteComment.created && c.updated !== noteComment.updated);
+    setLocalComments(comments);
+  }
+
+  function editLocalComment(noteComment: NoteComment) {
+    const comments = localComments.map(c => (c.created === noteComment.created && c.updated === noteComment.updated) ? noteComment : c);
+    setLocalComments(comments)
   }
 
   function clearComment() {
@@ -97,7 +114,10 @@ export default function NoteComments() {
         {localComments?.sort((a, b) => (a.created > b.created) ? -1 : 1).map((noteComment) => {
           return (
             <Fragment key={noteComment.created}>
-              <NoteCommentComponent comment={noteComment}></NoteCommentComponent>
+              <NoteCommentComponent
+                comment={noteComment}
+                removeLocalComment={removeLocalComment}
+                editLocalComment={editLocalComment} />
             </Fragment>
           );
         })}

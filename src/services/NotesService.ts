@@ -96,6 +96,6 @@ export default class NotesService extends ServerlessService {
   }
 
   async getUnreadNotes() {
-    return await callFunction(this.plugin, "unreadNotes", []);
+    return await callFunction(this.plugin, "unreadNotes");
   }
 }

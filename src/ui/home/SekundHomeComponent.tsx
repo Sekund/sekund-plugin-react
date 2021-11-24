@@ -5,6 +5,7 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { touch } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
 import { TFile } from "obsidian";
 import React, { useEffect, useReducer } from "react";
@@ -18,13 +19,12 @@ export type HomeComponentProps = {
 
 export const SekundHomeComponent = ({ notesService, syncDown, className }: HomeComponentProps) => {
 	const { t } = useTranslation(["common", "plugin"]);
-	const { appState } = useAppContext();
+	const { appState, appDispatch } = useAppContext();
 	const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
 	const notesProviderState = {
 		notesState,
 		notesDispatch,
 	};
-	let gen: AsyncGenerator<Realm.Services.MongoDB.ChangeEvent<any>, any, unknown>;
 
 	const { notes } = notesState;
 
@@ -42,30 +42,6 @@ export const SekundHomeComponent = ({ notesService, syncDown, className }: HomeC
 		}
 	}, [appState.generalState])
 
-	useEffect(() => {
-		(async () => {
-			if (appState.plugin && appState.plugin.user) {
-				const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
-				if (notes) {
-					gen = notes.watch();
-					for await (const change of gen) {
-						handleNotesChange(change);
-					}
-				}
-			}
-		})()
-		return () => {
-			if (gen) {
-				gen.return(undefined);
-			}
-		}
-	}, []);
-
-	async function handleNotesChange(change: Realm.Services.MongoDB.ChangeEvent<any>) {
-		const updtNotes = await NotesService.instance.getNotes(Date.now(), 10000);
-		notesDispatch({ type: NotesActionKind.ResetNotes, payload: updtNotes });
-	}
-
 	async function openNoteFile(note: Note) {
 		const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
 		if (file) {
@@ -78,6 +54,7 @@ export const SekundHomeComponent = ({ notesService, syncDown, className }: HomeC
 			console.log("no file, we should ask the user if they want to restore the note")
 			// syncDown(note.path, note.userId.toString())
 		}
+		touch(appDispatch, note._id);
 	}
 
 	if (notes && notes.length > 0) {
@@ -86,7 +63,7 @@ export const SekundHomeComponent = ({ notesService, syncDown, className }: HomeC
 				<div className={`${className} flex flex-col w-full overflow-auto space-y-1px`}>
 					{notes?.map((note: Note) => (
 						<React.Fragment key={note._id.toString()}>
-							<NoteSummaryComponent context="home" note={note} handleNoteClicked={openNoteFile} />
+							<NoteSummaryComponent context="home" noteSummary={note} handleNoteClicked={openNoteFile} />
 						</React.Fragment>
 					))}
 				</div>

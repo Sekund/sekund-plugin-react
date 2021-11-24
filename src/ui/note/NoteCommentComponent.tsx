@@ -11,9 +11,11 @@ import ReactTimeAgo from "react-time-ago";
 
 type Props = {
   comment: NoteComment;
+  removeLocalComment: (noteComment: NoteComment) => void;
+  editLocalComment: (noteComment: NoteComment) => void;
 };
 
-export default function NoteCommentComponent({ comment }: Props) {
+export default function NoteCommentComponent({ comment, removeLocalComment, editLocalComment }: Props) {
   const { t, i18n } = useTranslation(["common", "plugin"]);
   const { appState } = useAppContext();
   const { userProfile, remoteNote } = appState;
@@ -30,8 +32,8 @@ export default function NoteCommentComponent({ comment }: Props) {
     if (!editMode && userComment) {
       setTimeout(async () => {
         if (remoteNote) {
+          editLocalComment({ ...comment, text: userComment });
           await NotesService.instance.editComment(remoteNote._id, userComment, comment.created, comment.updated);
-          // comment.text = userComment;
           setUserComment(null);
         }
       }, 20);
@@ -53,6 +55,7 @@ export default function NoteCommentComponent({ comment }: Props) {
     if (remoteNote) {
       NotesService.instance.removeComment(remoteNote._id, created, updated);
     }
+    removeLocalComment(comment);
   }
 
   function handleKeydown(e: KeyboardEvent) {

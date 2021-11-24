@@ -1,7 +1,10 @@
+import { Note } from "@/domain/Note";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
+import { AppActionKind } from "@/state/AppReducer";
+import GlobalState from "@/state/GlobalState";
 import { BlueBadge, GreenBadge, OrangeBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
@@ -10,9 +13,9 @@ import AddApiKeyModal from "@/ui/main/ApiKeyModal";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid } from "@/utils";
+import { makeid, touch } from "@/utils";
 import { Popover } from "@headlessui/react";
-import { ChevronDownIcon, CloudUploadIcon, PlusIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon, CloudUploadIcon, CogIcon, PlusIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -40,7 +43,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   const { t } = useTranslation(["common", "plugin"])
 
-  const { appState } = useAppContext();
+  const { appState, appDispatch } = useAppContext();
   const [showViews, setShowViews] = useState(false);
   const [showTeams, setShowTeams] = useState(false);
   const [subdomain, setSubdomain] = useState<string | null>(null);
@@ -49,7 +52,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 })
   const previousView = usePrevious(viewType);
   const viewRef = useRef<any>();
-  const notifications = useRef({ home: 0, groups: 0, peoples: 0 })
+  const { unreadNotes } = appState;
 
   function getViewTypeView() {
     if (previousView) {
@@ -70,15 +73,27 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.removeComment", ",note.editComment"], loadUnreadNotes))
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment"], filterIncomingChanges))
+    fetchUnread();
     return () => {
       eventsWatcher?.removeEventListener(listenerId);
     }
   }, [])
 
-  async function loadUnreadNotes() {
+  async function filterIncomingChanges(fullDocument: any) {
+    const updtNote: Note = fullDocument.data;
+    if (GlobalState.instance.appState.remoteNote && updtNote._id.equals(GlobalState.instance.appState.remoteNote._id)) {
+      // immediately update read timestamp if the notification pertains to
+      // the currently open note
+      touch(appDispatch, updtNote._id);
+    } else {
+      fetchUnread();
+    }
+  }
+
+  async function fetchUnread() {
     const unreadNotes = await NotesService.instance.getUnreadNotes();
-    console.log("unreadNotes", unreadNotes);
+    appDispatch({ type: AppActionKind.SetUnreadNotes, payload: unreadNotes })
   }
 
   function showViewTypes(evt: any) {
@@ -121,10 +136,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
         <div className="flex flex-col items-center mt-1 ml-2 text-obs-muted">
           <div className="flex items-center" onClick={showViewTypes}>
             <div onClick={() => { setViewType("home"); setShowViews(false); }} className={`flex items-center px-2 mr-0 space-x-2 rounded-none opacity-${viewType === 'home' ? '100' : '50'} cursor-pointer`}>
-              {notifications.current.home > 0
+              {unreadNotes.home.length > 0
                 ?
                 <GreenBadge
-                  badgeContent={notifications.current.home}
+                  badgeContent={unreadNotes.home.length}
                   overlap="circular"
                   anchorOrigin={{
                     vertical: 'top',
@@ -137,10 +152,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               }
             </div>
             <div onClick={() => { setViewType("peoples"); setShowViews(false); }} className={`flex items-center pr-2 mr-0 space-x-2 rounded-none opacity-${viewType === 'peoples' ? '100' : '50'} cursor-pointer`}>
-              {notifications.current.peoples > 0
+              {unreadNotes.peoples.length > 0
                 ?
                 <BlueBadge
-                  badgeContent={notifications.current.peoples}
+                  badgeContent={unreadNotes.peoples.length}
                   overlap="circular"
                   anchorOrigin={{
                     vertical: 'top',
@@ -153,10 +168,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               }
             </div>
             <div onClick={() => { setViewType("groups"); setShowViews(false); }} className={`flex items-center mr-0 space-x-2 rounded-none opacity-${viewType === 'groups' ? '100' : '50'} cursor-pointer`}>
-              {notifications.current.groups > 0
+              {unreadNotes.groups.length > 0
                 ?
                 <OrangeBadge
-                  badgeContent={notifications.current.groups}
+                  badgeContent={unreadNotes.groups.length}
                   overlap="circular"
                   anchorOrigin={{
                     vertical: 'top',
@@ -170,10 +185,15 @@ export const SekundMainComponent = (props: MainComponentProps) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted" onClick={showTeamsMenu}>
+        <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted" >
           <div className="flex items-center">
-            <span>{appState.plugin?.settings.subdomain}</span>
-            <ChevronDownIcon className="w-6 h-6" />
+            <div className="flex items-center" onClick={showTeamsMenu}>
+              <span>{appState.plugin?.settings.subdomain}</span>
+              <ChevronDownIcon className="w-6 h-6" />
+            </div>
+            <div className="cursor-pointer" onClick={fetchUnread}>
+              <CogIcon className="w-6 h-6" />
+            </div>
           </div>
           {
             showTeams ?

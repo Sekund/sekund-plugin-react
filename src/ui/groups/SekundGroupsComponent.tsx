@@ -12,7 +12,7 @@ import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import GroupModal from "@/ui/groups/GroupModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid } from "@/utils";
+import { makeid, touch } from "@/utils";
 import { EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -24,7 +24,7 @@ export type GroupsComponentProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: GroupsComponentProps) => {
-  const { appState } = useAppContext();
+  const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation();
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
@@ -93,6 +93,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
 
   function noteClicked(note: Note) {
     syncDown(note.path, note.userId.toString());
+    touch(appDispatch, note._id);
   }
 
   return (
@@ -125,7 +126,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
             </div>
           )
             : (
-              <div className={`${className} fixed inset-0 flex flex-col items-center justify-center p-8`}>
+              <div className={`${className} absolute inset-0 flex flex-col items-center justify-center p-8`}>
                 <div className="flex justify-center mb-2"><EmojiSadIcon className="w-6 h-6" /></div>
                 <div className="text-center ">{t('plugin:noGroups')}</div>
                 <div className="mt-2 text-sm text-center ">{t('plugin:noGroupsDesc')}</div>

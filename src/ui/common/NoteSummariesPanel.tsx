@@ -23,7 +23,7 @@ export default function NoteSummariesPanel({ handleNoteClicked, className, conte
 				<div className={`${className} flex flex-col w-full overflow-auto space-y-1px bg-obs-primary`}>
 					{notes?.map((note: Note) => (
 						<React.Fragment key={note._id.toString()}>
-							<NoteSummaryComponent context={context} group={group} note={note} handleNoteClicked={handleNoteClicked} />
+							<NoteSummaryComponent context={context} group={group} noteSummary={note} handleNoteClicked={handleNoteClicked} />
 						</React.Fragment>
 					))}
 				</div>

@@ -8,20 +8,20 @@ import { NotesActionKind } from "@/state/NotesReducer";
 import { usePeoplesContext } from "@/state/PeoplesContext";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { originalPath } from "@/utils";
-import { ArrowDownIcon, ArrowUpIcon, ChatAlt2Icon } from "@heroicons/react/solid";
+import { ChatAlt2Icon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
 type Props = {
-	note: Note
+	noteSummary: Note
 	context: ViewType;
 	handleNoteClicked: (note: Note) => void
 	group?: Group
 }
 
-export default function NoteSummaryComponent({ note, handleNoteClicked, context, group }: Props) {
+export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context, group }: Props) {
 	const { t, i18n } = useTranslation();
 	const { appState } = useAppContext();
 
@@ -30,27 +30,32 @@ export default function NoteSummaryComponent({ note, handleNoteClicked, context,
 
 	const { remoteNote, currentFile } = appState;
 	const { userProfile } = appState;
+	const { unreadNotes } = appState;
+	const [note, setNote] = useState(noteSummary);
 
-	function stats(note: Note) {
-		if (note.comments && note.comments.length > 0) {
-			return <div className="flex items-center space-x-1 text-obs-muted">
-				<ChatAlt2Icon className="w-4 h-4" />
-				{note.comments.length}
-			</div>
+	useEffect(() => {
+		for (const unreadNote of unreadNotes.all) {
+			if (unreadNote._id.equals(note._id)) {
+				console.log("there are now " + unreadNote.comments.length + " comments");
+				setNote({
+					...note,
+					updated: unreadNote.updated,
+					comments: unreadNote.comments,
+					path: unreadNote.path,
+					title: unreadNote.title
+				})
+			}
 		}
-		return null;
-	}
+	}, [unreadNotes])
+
 
 	function readStatusClass() {
 		if (note && currentFile) {
-			// console.log("comparing isRead with updated, isRead: " +
-			// 	hourMinSec(note.isRead) + ", updated: " + hourMinSec(note.updated)
-			// 	+ " (" + note.title + ")", remoteNote?.path, originalPath(currentFile));
 			if (currentFile && note.path === originalPath(currentFile)) {
 				// console.log("we are looking at the updated file")
 				return "";
 			}
-			if (note.isRead && note.updated > note.isRead) {
+			if (note.isRead < note.updated) {
 				return "font-bold"
 			}
 		}
@@ -68,7 +73,7 @@ export default function NoteSummaryComponent({ note, handleNoteClicked, context,
 		}
 		notesDispatch({ type: NotesActionKind.SetNoteIsRead, payload: note._id })
 		handleNoteClicked(note);
-
+		setNote({ ...note, isRead: Date.now() });
 	}
 
 	function getAuthor() {
@@ -101,7 +106,15 @@ export default function NoteSummaryComponent({ note, handleNoteClicked, context,
 		</div>
 		<div className="flex items-center justify-between">
 			<ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
-			{stats(note)}
+			{note.comments && note.comments.length > 0
+				?
+				<div className="flex items-center space-x-1 text-obs-muted">
+					<ChatAlt2Icon className="w-4 h-4" />
+					{note.comments.length}
+				</div>
+				:
+				null
+			}
 		</div>
 	</div>
 

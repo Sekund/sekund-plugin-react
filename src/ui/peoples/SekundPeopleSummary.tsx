@@ -8,9 +8,7 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid } from "@/utils";
-import { abort } from "process";
 import React, { useEffect, useReducer, useState } from 'react';
-import { useTranslation } from "react-i18next";
 type Props = {
     people: People
     handleNoteClicked: (note: Note) => void;
@@ -18,7 +16,6 @@ type Props = {
 
 export default function SekundPeopleSummary({ people, handleNoteClicked }: Props) {
 
-    const { t } = useTranslation(["plugin"]);
     const [expanded, setExpanded] = useState(false);
     const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
     const notesProviderState = {
@@ -28,31 +25,14 @@ export default function SekundPeopleSummary({ people, handleNoteClicked }: Props
 
     useEffect(() => {
         const listListenerId = makeid(5);
-        const commentsListenerId = makeid(5);
         const eventsWatcher = EventsWatcherService.instance;
 
         eventsWatcher?.watchEvents();
         eventsWatcher?.addEventListener(listListenerId, new SekundEventListener(["modifySharingPeoples"], reloadList))
-        eventsWatcher?.addEventListener(commentsListenerId, new SekundEventListener(["note.addComment"], checkComments))
         return () => {
             eventsWatcher?.removeEventListener(listListenerId);
-            eventsWatcher?.removeEventListener(commentsListenerId);
         }
     }, [])
-
-    function checkComments(fullDocument: any) {
-        const updtNote: Note = fullDocument.data;
-        if (updtNote.isRead && updtNote.isRead < updtNote.updated) {
-        }
-        if (GlobalState.instance.appState.remoteNote && updtNote._id.equals(GlobalState.instance.appState.remoteNote._id)) {
-            // automatically set updates to read when they pertain to the
-            // currently displayed note
-            NotesService.instance.setNoteIsRead(updtNote._id);
-            notesDispatch({ type: NotesActionKind.UpdateNote, payload: { ...updtNote, isRead: Date.now() } })
-        } else {
-            notesDispatch({ type: NotesActionKind.UpdateNote, payload: updtNote })
-        }
-    }
 
     function reloadList() {
     }

@@ -7,31 +7,29 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 export default class SekundPeoplesView extends SekundView {
+  getViewType(): string {
+    return PEOPLES_VIEW_TYPE;
+  }
 
-    getViewType(): string {
-        return PEOPLES_VIEW_TYPE;
+  getDisplayText(): string {
+    return `Sekund: ${i18next.t("plugin:openPeoplesView")}`;
+  }
+
+  getIcon(): string {
+    return PEOPLES_VIEW_ICON;
+  }
+
+  async syncDown(path: string, userId: string) {
+    const note = await NoteSyncService.instance.getNoteByPath(path);
+    if (note) {
+      NoteSyncService.instance.syncDown(note.path, userId);
     }
+  }
 
-    getDisplayText(): string {
-        return `Sekund: ${i18next.t("plugin:openPeoplesView")}`;
-    }
-
-    getIcon(): string {
-        return PEOPLES_VIEW_ICON;
-    }
-
-    async syncDown(path: string, userId: string) {
-        const note = await NoteSyncService.instance.getNoteByPath(path);
-        if (note) {
-            NoteSyncService.instance.syncDown(note.path, userId);
-        }
-    }
-
-    async onOpen(): Promise<void> {
-        const props = { view: this, peoplesService: undefined, syncDown: this.syncDown } as PeoplesComponentProps;
-        const InjectedNoteComponent = SekundPeoplesComponent(props);
-        ReactDOM.render(<InjectedNoteComponent />, this.containerEl.children[1]);
-        this.plugin.updateOnlineStatus();
-    }
-
+  async onOpen(): Promise<void> {
+    const props = { view: this, notesService: undefined, syncDown: this.syncDown } as PeoplesComponentProps;
+    const InjectedNoteComponent = SekundPeoplesComponent(props);
+    ReactDOM.render(<InjectedNoteComponent />, this.containerEl.children[1]);
+    this.plugin.updateOnlineStatus();
+  }
 }

@@ -1,11 +1,11 @@
-import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
-import { People } from "@/domain/People";
+import { PeopleId } from "@/domain/People";
+import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
+import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
-import { usePeoplesContext } from "@/state/PeoplesContext";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { originalPath } from "@/utils";
 import { ChatAlt2Icon } from "@heroicons/react/solid";
@@ -18,25 +18,21 @@ type Props = {
   noteSummary: Note;
   context: ViewType;
   handleNoteClicked: (note: Note) => void;
-  group?: Group;
 };
 
-export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context, group }: Props) {
+export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context }: Props) {
   const { t, i18n } = useTranslation();
   const { appState } = useAppContext();
 
-  const { peoplesState } = usePeoplesContext();
   const { notesDispatch } = useNotesContext();
 
   const { remoteNote, currentFile } = appState;
-  const { userProfile } = appState;
   const { unreadNotes } = appState;
   const [note, setNote] = useState(noteSummary);
 
   useEffect(() => {
     for (const unreadNote of unreadNotes.all) {
       if (unreadNote._id.equals(note._id)) {
-        console.log("there are now " + unreadNote.comments.length + " comments");
         setNote({
           ...note,
           updated: unreadNote.updated,
@@ -74,49 +70,55 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     setNote({ ...note, isRead: Date.now() });
   }
 
-  function getAuthor() {
-    if (note.userId.equals(userProfile._id)) {
-      return t("you");
-    } else if (group) {
-      let noteUser: People | undefined = peoplesState.currentGroup?.peoples.filter((p) => p._id.equals(note.userId))[0];
-      if (noteUser?.name && noteUser.name.trim() !== "") {
-        return noteUser.name;
-      }
-      if (noteUser?.email && noteUser.email.trim() !== "") {
-        return noteUser.email;
-      }
-    }
-    return note.userId.toString();
+  function summaryContents() {
+    return (
+      <>
+        <div className={`${readStatusClass()}`}>{note.title.replace(".md", "")}</div>
+        <div className="flex items-center justify-between">
+          <ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
+          {note.comments && note.comments.length > 0 ? (
+            <div key="cmts" className="flex items-center">
+              <ChatAlt2Icon className="w-4 h-4" />
+              {note.comments.length}
+            </div>
+          ) : null}
+        </div>
+      </>
+    );
+  }
+  function summary() {
+    return (
+      <div
+        className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${
+          isCurrentNote() ? "bg-obs-tertiary" : ""
+        }`}
+        onClick={noteClicked}
+      >
+        {summaryContents()}
+      </div>
+    );
   }
 
-  return (
-    <div
-      className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${
-        isCurrentNote() ? "bg-obs-tertiary" : ""
-      }`}
-      onClick={noteClicked}
-    >
-      <div>
-        {context === "groups" ? (
-          <div className="flex items-start justify-between overflow-auto">
-            <span className={`${readStatusClass()}`}>{note.title.replace(".md", "")}</span>
-            <span className="truncate" style={{ maxWidth: "35%" }}>
-              {getAuthor()}
-            </span>
-          </div>
-        ) : (
-          <span className={`${readStatusClass()}`}>{note.title.replace(".md", "")}</span>
-        )}
-      </div>
-      <div className="flex items-center justify-between">
-        <ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
-        {note.comments && note.comments.length > 0 ? (
-          <div className="flex items-center space-x-1 text-obs-muted">
-            <ChatAlt2Icon className="w-4 h-4" />
-            {note.comments.length}
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
+  function withAvatar(summary: JSX.Element) {
+    const author: PeopleId | undefined = UsersService.instance.getUserInfo(note.userId.toString());
+    if (author) {
+      return (
+        <div
+          className={`flex space-x-2 items-center px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${
+            isCurrentNote() ? "bg-obs-tertiary" : ""
+          }`}
+          onClick={noteClicked}
+        >
+          <div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>
+          <div className="flex flex-col flex-grow">{summaryContents()}</div>
+        </div>
+      );
+    }
+    return summary;
+  }
+
+  if (context === "groups" || context === "peoples") {
+    return withAvatar(summary());
+  }
+  return summary();
 }

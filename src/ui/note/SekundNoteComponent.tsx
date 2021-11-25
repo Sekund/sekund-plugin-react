@@ -227,9 +227,14 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
           ?
           <div className="flex items-center space-x-1">
             <span>{currentFile?.name.replace(/\.md/, '')}</span>
-            <span className="flex items-center" title={t('plugin:deleteFromSekund')} onClick={handleUnpublish} >
-              <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
-            </span>
+            {remoteNote
+              ?
+              <span className="flex items-center" title={t('plugin:deleteFromSekund')} onClick={handleUnpublish} >
+                <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
+              </span>
+              :
+              null
+            }
           </div>
           :
           <div>&nbsp;</div>

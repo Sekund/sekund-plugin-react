@@ -1,13 +1,14 @@
 import { Note } from "@/domain/Note";
 import { PeopleId } from "@/domain/People";
 import { peopleAvatar } from "@/helpers/avatars";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
-import { originalPath } from "@/utils";
+import { isUnread, makeid, originalPath } from "@/utils";
 import { ChatAlt2Icon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
@@ -31,30 +32,50 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   const [note, setNote] = useState(noteSummary);
 
   useEffect(() => {
+    let found = false;
     for (const unreadNote of unreadNotes.all) {
       if (unreadNote._id.equals(note._id)) {
-        setNote({
-          ...note,
-          updated: unreadNote.updated,
-          comments: unreadNote.comments,
-          path: unreadNote.path,
-          title: unreadNote.title,
-        });
+        console.log(`set note ${unreadNote.title} (${unreadNote.comments.length} comments) to unread (${context})`);
+        updateNote(unreadNote);
+        found = true;
       }
+    }
+    if (!found && isUnread(note)) {
+      // console.log(`set note ${note.title} to read (${context})`);
+      setNote({ ...note, isRead: Date.now() });
     }
   }, [unreadNotes]);
 
+  useEffect(() => {
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(
+      listenerId,
+      new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment"], (fullDocument: any) => {
+        const updtNote: Note = fullDocument.data;
+        if (note._id.equals(updtNote._id)) {
+          updateNote(updtNote);
+        }
+      })
+    );
+    return () => {
+      eventsWatcher?.removeEventListener(listenerId);
+    };
+  }, []);
+
+  function updateNote(updtNote: Note) {
+    setNote({
+      ...note,
+      updated: updtNote.updated,
+      comments: updtNote.comments,
+      path: updtNote.path,
+      title: updtNote.title,
+    });
+  }
+
   function readStatusClass() {
-    if (note && currentFile) {
-      if (currentFile && note.path === originalPath(currentFile)) {
-        // console.log("we are looking at the updated file")
-        return "";
-      }
-      if (note.isRead < note.updated) {
-        return "font-bold";
-      }
-    }
-    return "";
+    return isUnread(note) ? "font-bold" : "";
   }
 
   function isCurrentNote() {

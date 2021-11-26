@@ -62,6 +62,10 @@ export function peopleAvatar(people: PeopleId, size: number, badge?: number) {
 }
 
 export function groupAvatar(group: Group, size: number, badge?: number) {
+  if (!group._id) {
+    console.log("empty group!");
+    return null;
+  }
   if (badge) {
     return (
       <StyledBadge key={group._id.toString()} badgeContent={badge}>

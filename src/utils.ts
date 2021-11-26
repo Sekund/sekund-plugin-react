@@ -74,7 +74,13 @@ export function hourMinSec(time: number) {
   return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
 }
 
-export function touch(appDispatch: Dispatch<AppAction>, noteId: ObjectID) {
-  NotesService.instance.setNoteIsRead(noteId);
-  appDispatch({ type: AppActionKind.SetNoteIsRead, payload: noteId });
+export async function touch(appDispatch: Dispatch<AppAction>, note: Note) {
+  if (isUnread(note)) {
+    await NotesService.instance.setNoteIsRead(note._id);
+    appDispatch({ type: AppActionKind.SetNoteIsRead, payload: note._id });
+  }
+}
+
+export function isUnread(note: Note) {
+  return note.isRead < note.updated;
 }

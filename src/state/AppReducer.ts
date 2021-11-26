@@ -2,6 +2,7 @@ import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
 import SekundPluginReact from "@/main";
 import GlobalState from "@/state/GlobalState";
+import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 
 export type GeneralState =
@@ -108,15 +109,11 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       newState = { ...state, userProfile: payload };
       break;
     case AppActionKind.SetUnreadNotes:
-      console.log("SetUnreadNotes", payload);
       newState = { ...state, unreadNotes: payload };
       break;
     case AppActionKind.SetNoteIsRead:
       const unreadNotes = { ...state.unreadNotes };
-      unreadNotes.home = unreadNotes.home.filter((n) => !n._id.equals(payload));
-      unreadNotes.peoples = unreadNotes.peoples.filter((n) => !n._id.equals(payload));
-      unreadNotes.groups = unreadNotes.groups.filter((n) => !n._id.equals(payload));
-      unreadNotes.all = unreadNotes.all.filter((n) => !n._id.equals(payload));
+      filterNoteOutOfUnreadNotes(unreadNotes, payload);
       newState = { ...state, unreadNotes };
       break;
     default:
@@ -125,4 +122,12 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
 
   GlobalState.instance.appState = newState;
   return newState;
+}
+
+export function filterNoteOutOfUnreadNotes(unreadNotes: UnreadNotes, noteId: ObjectID) {
+  unreadNotes.home = unreadNotes.home.filter((n) => !n._id.equals(noteId));
+  unreadNotes.peoples = unreadNotes.peoples.filter((n) => !n._id.equals(noteId));
+  unreadNotes.groups = unreadNotes.groups.filter((n) => !n._id.equals(noteId));
+  unreadNotes.all = unreadNotes.all.filter((n) => !n._id.equals(noteId));
+  return unreadNotes;
 }

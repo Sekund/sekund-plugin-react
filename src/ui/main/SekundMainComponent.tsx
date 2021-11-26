@@ -3,7 +3,7 @@ import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatc
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
-import { AppActionKind } from "@/state/AppReducer";
+import { AppActionKind, filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { BlueBadge, GreenBadge, OrangeBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
@@ -89,15 +89,17 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     if (GlobalState.instance.appState.remoteNote && updtNote._id.equals(GlobalState.instance.appState.remoteNote._id)) {
       // immediately update read timestamp if the notification pertains to
       // the currently open note
-      touch(appDispatch, updtNote._id);
-    } else {
-      fetchUnread();
+      await touch(appDispatch, updtNote);
     }
+    fetchUnread();
   }
 
   async function fetchUnread() {
     const unreadNotes = await NotesService.instance.getUnreadNotes();
-    appDispatch({ type: AppActionKind.SetUnreadNotes, payload: unreadNotes });
+    console.log("unreadNotes", unreadNotes);
+    const { remoteNote } = GlobalState.instance.appState;
+    const filteredUnreadNotes = remoteNote ? filterNoteOutOfUnreadNotes(unreadNotes, remoteNote._id) : unreadNotes;
+    appDispatch({ type: AppActionKind.SetUnreadNotes, payload: filteredUnreadNotes });
   }
 
   function showViewTypes(evt: any) {

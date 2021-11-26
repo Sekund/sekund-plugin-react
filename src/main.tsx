@@ -16,27 +16,28 @@ import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
 import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, MAIN_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en.json';
-import es from 'javascript-time-ago/locale/es.json';
-import fr from 'javascript-time-ago/locale/fr.json';
-import nl from 'javascript-time-ago/locale/nl.json';
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import es from "javascript-time-ago/locale/es.json";
+import fr from "javascript-time-ago/locale/fr.json";
+import nl from "javascript-time-ago/locale/nl.json";
 import { Plugin, TFile } from "obsidian";
 import React from "react";
-import * as Realm from 'realm-web';
+import * as Realm from "realm-web";
 
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(fr)
-TimeAgo.addLocale(nl)
-TimeAgo.addLocale(es)
+TimeAgo.addDefaultLocale(en);
+TimeAgo.addLocale(fr);
+TimeAgo.addLocale(nl);
+TimeAgo.addLocale(es);
 
 class SekundPluginSettings {
-  private _apiKeys: { [subdomain: string]: string } = {}
+  private _apiKeys: { [subdomain: string]: string } = {};
+  public subdomain = "";
 
-  public constructor(public subdomain: string) { }
+  public constructor() {}
 
   get apiKey() {
-    return this._apiKeys[this.subdomain]
+    return this._apiKeys[this.subdomain];
   }
 
   get apiKeys() {
@@ -57,8 +58,7 @@ class SekundPluginSettings {
 }
 
 export default class SekundPluginReact extends Plugin {
-
-  settings: SekundPluginSettings = new SekundPluginSettings("null")
+  settings: SekundPluginSettings = new SekundPluginSettings();
   private viewDispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
   private registeredEvents = false;
   private authenticatedUsers: { [subdomain: string]: Realm.User | null } = {};
@@ -72,7 +72,7 @@ export default class SekundPluginReact extends Plugin {
     addIcons();
 
     const commands = new PluginCommands(this);
-    this.addRibbonIcon('sekund-icon', 'Sekund Panes', (evt: MouseEvent) => {
+    this.addRibbonIcon("sekund-icon", "Sekund Panes", (evt: MouseEvent) => {
       // Called when the user clicks the icon.
       commands.ribbonDisplayCommands();
     });
@@ -82,22 +82,19 @@ export default class SekundPluginReact extends Plugin {
       { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
       { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
       { type: MAIN_VIEW_TYPE, View: SekundMainView },
-    ])
+    ]);
 
     // this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
-
   }
 
   onunload(): void {
-    [HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach(t => {
-      this.app.workspace
-        .getLeavesOfType(t)
-        .forEach((leaf) => leaf.detach());
-    })
+    [HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach((t) => {
+      this.app.workspace.getLeavesOfType(t).forEach((leaf) => leaf.detach());
+    });
   }
 
-  registerViews(specs: { type: string, View: Constructor<SekundView> }[]) {
+  registerViews(specs: { type: string; View: Constructor<SekundView> }[]) {
     for (const spec of specs) {
       const { type, View } = spec;
       this.registerView(type, (leaf) => new View(leaf, this));
@@ -114,7 +111,6 @@ export default class SekundPluginReact extends Plugin {
     if (firstLeaf) {
       this.app.workspace.revealLeaf(firstLeaf);
     }
-
   }
 
   refreshPanes() {
@@ -131,15 +127,20 @@ export default class SekundPluginReact extends Plugin {
 
   async loadSettings() {
     const settings = await this.loadData();
-    if (settings.apiKey) {
-      // convert old settings
-      this.settings = new SekundPluginSettings(settings.subdomain);
+    if (settings && settings.apiKey) {
+      this.settings = new SekundPluginSettings();
+      this.settings.subdomain = settings.subdomain;
       this.settings.addApiKey(settings.subdomain, settings.apiKey);
       this.saveSettings();
     } else {
-      this.settings = new SekundPluginSettings(settings.subdomain);
-      for (const subdomain of Object.keys(settings._apiKeys)) {
-        this.settings.addApiKey(subdomain, settings._apiKeys[subdomain]);
+      if (settings) {
+        this.settings = new SekundPluginSettings();
+        this.settings.subdomain = settings.subdomain;
+        for (const subdomain of Object.keys(settings._apiKeys)) {
+          this.settings.addApiKey(subdomain, settings._apiKeys[subdomain]);
+        }
+      } else {
+        this.settings = new SekundPluginSettings();
       }
     }
   }
@@ -162,7 +163,7 @@ export default class SekundPluginReact extends Plugin {
     const user = this.authenticatedUsers[this.settings.subdomain];
     if (user) {
       return user;
-    } else throw new Error("Attempt to access unexisting user")
+    } else throw new Error("Attempt to access unexisting user");
   }
 
   public get subdomain(): string {
@@ -197,7 +198,7 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly updateOnlineStatus = async () => {
     if (!navigator.onLine) {
-      Object.keys(this.authenticatedUsers).forEach(k => this.authenticatedUsers[k] = null);
+      Object.keys(this.authenticatedUsers).forEach((k) => (this.authenticatedUsers[k] = null));
       setGeneralState(this.dispatchers, "offline");
     }
 
@@ -213,17 +214,23 @@ export default class SekundPluginReact extends Plugin {
       await this.attemptConnection();
     }
 
-    window.addEventListener("online", (this.onlineListener = () => setTimeout(() => {
-      this.attemptConnection();
-    }, 1000)));
+    window.addEventListener(
+      "online",
+      (this.onlineListener = () =>
+        setTimeout(() => {
+          this.attemptConnection();
+        }, 1000))
+    );
 
-    window.addEventListener("offline", (this.offlineListener = () => {
-      this.updateOnlineStatus()
-    }));
-  }
+    window.addEventListener(
+      "offline",
+      (this.offlineListener = () => {
+        this.updateOnlineStatus();
+      })
+    );
+  };
 
   public readonly attemptConnection = async (force?: boolean): Promise<GeneralState> => {
-
     const authUser = this.authenticatedUsers[this.settings.subdomain];
     if (!force && authUser && authUser.isLoggedIn) {
       return "allGood";
@@ -238,13 +245,12 @@ export default class SekundPluginReact extends Plugin {
     if (!this.settings.apiKey || this.settings.apiKey === "") {
       if (!this.settings.subdomain || this.settings.subdomain === "") {
         setGeneralState(this.dispatchers, "noSettings");
-        return 'noSettings'
+        return "noSettings";
       } else {
         setGeneralState(this.dispatchers, "noApiKey");
-        return 'noApiKey';
+        return "noApiKey";
       }
     }
-
 
     const appIdResult = await this.getRealmAppId();
 
@@ -268,7 +274,7 @@ export default class SekundPluginReact extends Plugin {
 
           const userProfile = await UsersService.instance.fetchUser();
 
-          dispatch(this.dispatchers, AppActionKind.SetUserProfile, userProfile)
+          dispatch(this.dispatchers, AppActionKind.SetUserProfile, userProfile);
           setGeneralState(this.dispatchers, "allGood");
 
           if (!this.registeredEvents) {
@@ -285,12 +291,12 @@ export default class SekundPluginReact extends Plugin {
           setTimeout(() => this.handleFileOpen(this.app.workspace.getActiveFile()), 100);
         } else if (!user) {
           setGeneralState(this.dispatchers, "loginError");
-          return 'loginError';
+          return "loginError";
         }
 
         break;
     }
-    return 'allGood'
+    return "allGood";
   };
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
@@ -298,12 +304,12 @@ export default class SekundPluginReact extends Plugin {
       const leaf = this.app.workspace.activeLeaf;
       if (leaf) {
         if (isSharedNoteFile(file)) {
-          const state = leaf.getViewState()
-          state.state.mode = 'preview';
+          const state = leaf.getViewState();
+          state.state.mode = "preview";
           leaf.setViewState(state);
         } else {
           const state = leaf.getViewState();
-          state.state.mode = 'source';
+          state.state.mode = "source";
           leaf.setViewState(state);
         }
       }

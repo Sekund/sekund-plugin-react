@@ -58,7 +58,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown }: Pe
   }, [appState.generalState]);
 
   function noteClicked(note: Note) {
-    touch(appDispatch, note._id);
+    touch(appDispatch, note);
     syncDown(note.path, note.userId.toString());
   }
 

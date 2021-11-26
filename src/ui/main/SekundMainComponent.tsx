@@ -23,10 +23,10 @@ export type MainComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
   notesService: NotesService | undefined;
-  syncDown: (path: string, userId: string) => void,
+  syncDown: (path: string, userId: string) => void;
   syncUp: () => void;
   unpublish: () => void;
-}
+};
 
 export type ViewType = "home" | "peoples" | "groups";
 
@@ -38,21 +38,20 @@ const usePrevious = <T extends unknown>(value: T): T | undefined => {
   return ref.current;
 };
 
-
 export const SekundMainComponent = (props: MainComponentProps) => {
-
-  const { t } = useTranslation(["common", "plugin"])
+  const { t } = useTranslation(["common", "plugin"]);
 
   const { appState, appDispatch } = useAppContext();
   const [showViews, setShowViews] = useState(false);
   const [showTeams, setShowTeams] = useState(false);
   const [subdomain, setSubdomain] = useState<string | null>(null);
   const [showAddApiModal, setShowAddApiModal] = useState<boolean>(false);
-  const [viewType, setViewType] = useState<ViewType>('home');
-  const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 })
+  const [viewType, setViewType] = useState<ViewType>("home");
+  const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 });
   const previousView = usePrevious(viewType);
   const viewRef = useRef<any>();
   const { unreadNotes } = appState;
+  const sekundMainComponentRoot = useRef<HTMLDivElement>(null);
 
   function getViewTypeView() {
     if (previousView) {
@@ -62,23 +61,28 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       const savedScrollPosition = scrollPositions.current[viewType];
       viewRef.current.scrollTop = savedScrollPosition ? scrollPositions.current[viewType] : 0;
     }, 10);
-    return <>
-      <SekundHomeComponent className={`${viewType !== "home" ? 'hidden' : ''}`} {...props} />
-      <SekundPeoplesComponent className={`${viewType !== "peoples" ? 'hidden' : ''}`} {...props} />
-      <SekundGroupsComponent className={`${viewType !== "groups" ? 'hidden' : ''}`} {...props} />
-    </>
+    return (
+      <>
+        <SekundHomeComponent className={`${viewType !== "home" ? "hidden" : ""}`} {...props} />
+        <SekundPeoplesComponent className={`${viewType !== "peoples" ? "hidden" : ""}`} {...props} />
+        <SekundGroupsComponent className={`${viewType !== "groups" ? "hidden" : ""}`} {...props} />
+      </>
+    );
   }
 
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment"], filterIncomingChanges))
+    eventsWatcher?.addEventListener(
+      listenerId,
+      new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment"], filterIncomingChanges)
+    );
     fetchUnread();
     return () => {
       eventsWatcher?.removeEventListener(listenerId);
-    }
-  }, [])
+    };
+  }, []);
 
   async function filterIncomingChanges(fullDocument: any) {
     const updtNote: Note = fullDocument.data;
@@ -93,7 +97,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   async function fetchUnread() {
     const unreadNotes = await NotesService.instance.getUnreadNotes();
-    appDispatch({ type: AppActionKind.SetUnreadNotes, payload: unreadNotes })
+    appDispatch({ type: AppActionKind.SetUnreadNotes, payload: unreadNotes });
   }
 
   function showViewTypes(evt: any) {
@@ -101,8 +105,8 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     const hideViewTypes = () => {
       setShowViews(false);
       document.removeEventListener("click", hideViewTypes);
-    }
-    document.addEventListener("click", hideViewTypes)
+    };
+    document.addEventListener("click", hideViewTypes);
     evt.stopPropagation();
   }
 
@@ -111,16 +115,16 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     const hideTeamsMenu = () => {
       setShowTeams(false);
       document.removeEventListener("click", hideTeamsMenu);
-    }
-    document.addEventListener("click", hideTeamsMenu)
+    };
+    document.addEventListener("click", hideTeamsMenu);
     evt.stopPropagation();
   }
 
   function renderAddApiKeyModal() {
     if (showAddApiModal) {
-      return <AddApiKeyModal setOpen={setShowAddApiModal} subdomain={subdomain} />
+      return <AddApiKeyModal setOpen={setShowAddApiModal} subdomain={subdomain} />;
     }
-    return null
+    return null;
   }
 
   function showApiKeyModal(subdomain: string | null) {
@@ -130,62 +134,79 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   }
 
   return (
-
-    <div className="fixed inset-0 grid h-full" style={{ gridTemplateRows: 'auto 1fr auto' }}>
+    <div ref={sekundMainComponentRoot} className="fixed inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
       <div className="flex items-center justify-between w-full py-1">
         <div className="flex flex-col items-center mt-1 ml-2 text-obs-muted">
           <div className="flex items-center" onClick={showViewTypes}>
-            <div onClick={() => { setViewType("home"); setShowViews(false); }} className={`flex items-center px-2 mr-0 space-x-2 rounded-none opacity-${viewType === 'home' ? '100' : '50'} cursor-pointer`}>
-              {unreadNotes.home.length > 0
-                ?
+            <div
+              onClick={() => {
+                setViewType("home");
+                setShowViews(false);
+              }}
+              className={`flex items-center px-2 mr-0 space-x-2 rounded-none opacity-${viewType === "home" ? "100" : "50"} cursor-pointer`}
+            >
+              {unreadNotes.home.length > 0 ? (
                 <GreenBadge
                   badgeContent={unreadNotes.home.length}
                   overlap="circular"
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}>
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
                   <CloudUploadIcon className="w-6 h-6 text-obs-normal" />
                 </GreenBadge>
-                :
+              ) : (
                 <CloudUploadIcon className="w-6 h-6 text-obs-normal" />
-              }
+              )}
             </div>
-            <div onClick={() => { setViewType("peoples"); setShowViews(false); }} className={`flex items-center pr-2 mr-0 space-x-2 rounded-none opacity-${viewType === 'peoples' ? '100' : '50'} cursor-pointer`}>
-              {unreadNotes.peoples.length > 0
-                ?
+            <div
+              onClick={() => {
+                setViewType("peoples");
+                setShowViews(false);
+              }}
+              className={`flex items-center pr-2 mr-0 space-x-2 rounded-none opacity-${viewType === "peoples" ? "100" : "50"} cursor-pointer`}
+            >
+              {unreadNotes.peoples.length > 0 ? (
                 <BlueBadge
                   badgeContent={unreadNotes.peoples.length}
                   overlap="circular"
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}>
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
                   <UsersIcon className="w-6 h-6 text-obs-normal" />
                 </BlueBadge>
-                :
+              ) : (
                 <UsersIcon className="w-6 h-6 text-obs-normal" />
-              }
+              )}
             </div>
-            <div onClick={() => { setViewType("groups"); setShowViews(false); }} className={`flex items-center mr-0 space-x-2 rounded-none opacity-${viewType === 'groups' ? '100' : '50'} cursor-pointer`}>
-              {unreadNotes.groups.length > 0
-                ?
+            <div
+              onClick={() => {
+                setViewType("groups");
+                setShowViews(false);
+              }}
+              className={`flex items-center mr-0 space-x-2 rounded-none opacity-${viewType === "groups" ? "100" : "50"} cursor-pointer`}
+            >
+              {unreadNotes.groups.length > 0 ? (
                 <OrangeBadge
                   badgeContent={unreadNotes.groups.length}
                   overlap="circular"
                   anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}>
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
                   <UserGroupIcon className="w-6 h-6 text-obs-normal" />
                 </OrangeBadge>
-                :
+              ) : (
                 <UserGroupIcon className="w-6 h-6 text-obs-normal" />
-              }
+              )}
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted" >
+        <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted">
           <div className="flex items-center">
             <div className="flex items-center" onClick={showTeamsMenu}>
               <span>{appState.plugin?.settings.subdomain}</span>
@@ -195,26 +216,29 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               <CogIcon className="w-6 h-6" />
             </div>
           </div>
-          {
-            showTeams ?
-              (<Popover className="relative">
-                <Popover.Panel className="fixed z-20 right-1" static>
-                  <div className="flex flex-col">
-                    {Object.keys(appState.plugin?.settings.apiKeys || {}).map(subdomain => {
-                      return (
-                        <button onClick={() => showApiKeyModal(subdomain)} key={subdomain} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
-                          <span>{subdomain}</span>
-                        </button>)
-                    })}
-                    <button onClick={() => showApiKeyModal(null)} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
-                      <PlusIcon className="w-6 h-6" />
-                      <span>{t('plugin:addApiKey')}</span>
-                    </button>
-                  </div>
-                </Popover.Panel>
-              </Popover>)
-              : null
-          }
+          {showTeams ? (
+            <Popover className="relative">
+              <Popover.Panel className="fixed z-20 right-1" static>
+                <div className="flex flex-col">
+                  {Object.keys(appState.plugin?.settings.apiKeys || {}).map((subdomain) => {
+                    return (
+                      <button
+                        onClick={() => showApiKeyModal(subdomain)}
+                        key={subdomain}
+                        className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none"
+                      >
+                        <span>{subdomain}</span>
+                      </button>
+                    );
+                  })}
+                  <button onClick={() => showApiKeyModal(null)} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
+                    <PlusIcon className="w-6 h-6" />
+                    <span>{t("plugin:addApiKey")}</span>
+                  </button>
+                </div>
+              </Popover.Panel>
+            </Popover>
+          ) : null}
         </div>
       </div>
 
@@ -222,7 +246,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
         {getViewTypeView()}
       </div>
 
-      <HeightAdjustable initialHeight={400}>
+      <HeightAdjustable initialHeight={400} parentComponent={sekundMainComponentRoot}>
         <HeightAdjustableHandle />
         <div className="relative h-full overflow-auto bg-obs-primary">
           <SekundNoteComponent {...props} />
@@ -230,11 +254,8 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       </HeightAdjustable>
 
       {renderAddApiKeyModal()}
+    </div>
+  );
+};
 
-    </div >
-  )
-
-
-}
-
-export default (props: MainComponentProps) => withConnectionStatus(props)(SekundMainComponent)
+export default (props: MainComponentProps) => withConnectionStatus(props)(SekundMainComponent);

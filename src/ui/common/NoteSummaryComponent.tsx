@@ -9,8 +9,7 @@ import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
-import NoteComments from "@/ui/note/NoteComments";
-import { isUnread, makeid, originalPath } from "@/utils";
+import { isUnread, makeid } from "@/utils";
 import { ChatAlt2Icon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
@@ -54,8 +53,9 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment"], (fullDocument: any) => {
+      new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment", "note.rename"], (fullDocument: any) => {
         const updtNote: Note = fullDocument.data;
+        console.log("detected note event in summary: " + fullDocument.type);
         if (note._id.equals(updtNote._id)) {
           updateNote(updtNote);
         }
@@ -68,7 +68,6 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
 
   useEffect(() => {
     if (noteUpdates && noteUpdates._id?.equals(note._id)) {
-      console.log("detected local note update " + noteUpdates.comments.length);
       updateNote(noteUpdates);
     }
   }, [noteUpdates]);

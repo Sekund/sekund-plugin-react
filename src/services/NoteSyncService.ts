@@ -1,7 +1,6 @@
 import { Note } from "@/domain/Note";
 import i18next from "@/i18n.config";
 import SekundPluginReact from "@/main";
-import NotesService from "@/services/NotesService";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
 import GlobalState from "@/state/GlobalState";
@@ -41,6 +40,18 @@ export default class NoteSyncService extends ServerlessService {
     const { remoteNote } = GlobalState.instance.appState;
     if (remoteNote) {
       await callFunction(this.plugin, "renameNote", [remoteNote._id, name, path]);
+    }
+  }
+
+  async renameSharedNote(note: Note) {
+    if (!GlobalState.instance.appState.userProfile._id.equals(note.userId)) {
+      const previousPath = (note as unknown as any).previousPath; // hack: the backend adds the previous path field to enable this use case
+      const previousNotePath = `__sekund__/${note.userId.toString()}/${previousPath}`;
+      const updatedNotePath = `__sekund__/${note.userId.toString()}/${note.path}`;
+      const previousNoteFile = this.vault.getAbstractFileByPath(previousNotePath);
+      if (previousNoteFile) {
+        this.vault.rename(previousNoteFile, updatedNotePath);
+      }
     }
   }
 

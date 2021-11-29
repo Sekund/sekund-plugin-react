@@ -1,4 +1,5 @@
-import EventsWatcherService from "@/services/EventsWatcherService";
+import { Note } from "@/domain/Note";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
@@ -14,7 +15,7 @@ import SekundMainView from "@/ui/main/SekundMainView";
 import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
-import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState } from "@/utils";
+import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, setCurrentNoteState, setGeneralState } from "@/utils";
 import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, MAIN_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -64,6 +65,7 @@ export default class SekundPluginReact extends Plugin {
   private authenticatedUsers: { [subdomain: string]: Realm.User | null } = {};
   private offlineListener?: EventListener;
   private onlineListener?: EventListener;
+  private notesListenerId = "";
 
   async onload() {
     await this.loadSettings();
@@ -92,6 +94,8 @@ export default class SekundPluginReact extends Plugin {
     [HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach((t) => {
       this.app.workspace.getLeavesOfType(t).forEach((leaf) => leaf.detach());
     });
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.removeEventListener(this.notesListenerId);
   }
 
   registerViews(specs: { type: string; View: Constructor<SekundView> }[]) {
@@ -272,6 +276,8 @@ export default class SekundPluginReact extends Plugin {
           new GroupsService(this);
           new EventsWatcherService(this);
 
+          this.watchNotes();
+
           const userProfile = await UsersService.instance.fetchUser();
 
           dispatch(this.dispatchers, AppActionKind.SetUserProfile, userProfile);
@@ -297,6 +303,19 @@ export default class SekundPluginReact extends Plugin {
         break;
     }
     return "allGood";
+  };
+
+  watchNotes = () => {
+    this.notesListenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(
+      this.notesListenerId,
+      new SekundEventListener(["note.rename"], (fullDocument: any) => {
+        const updtNote: Note = fullDocument.data;
+        NoteSyncService.instance.renameSharedNote(updtNote);
+      })
+    );
   };
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {

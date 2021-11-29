@@ -7,31 +7,31 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 export default class SekundHomeView extends SekundView {
+  getViewType(): string {
+    return HOME_VIEW_TYPE;
+  }
 
-    getViewType(): string {
-        return HOME_VIEW_TYPE;
+  getDisplayText(): string {
+    return `Sekund: ${i18next.t("plugin:openHomeView")}`;
+  }
+
+  getIcon(): string {
+    return HOME_VIEW_ICON;
+  }
+
+  async syncDown(path: string, userId: string) {
+    const note = await NoteSyncService.instance.getNoteByPath(path);
+    if (note) {
+      NoteSyncService.instance.syncDown(note.path, userId);
     }
+  }
 
-    getDisplayText(): string {
-        return `Sekund: ${i18next.t("plugin:openHomeView")}`;
-    }
+  async fetchUnread() {}
 
-    getIcon(): string {
-        return HOME_VIEW_ICON;
-    }
-
-    async syncDown(path: string, userId: string) {
-        const note = await NoteSyncService.instance.getNoteByPath(path);
-        if (note) {
-            NoteSyncService.instance.syncDown(note.path, userId);
-        }
-    }
-
-    async onOpen(): Promise<void> {
-        const props = { view: this, notesService: undefined, syncDown: this.syncDown } as HomeComponentProps;
-        const InjectedHomeComponent = SekundHomeComponent(props);
-        ReactDOM.render(<InjectedHomeComponent />, this.containerEl.children[1]);
-        this.plugin.updateOnlineStatus();
-    }
-
+  async onOpen(): Promise<void> {
+    const props = { view: this, notesService: undefined, syncDown: this.syncDown, fetchUnread: this.fetchUnread } as HomeComponentProps;
+    const InjectedHomeComponent = SekundHomeComponent(props);
+    ReactDOM.render(<InjectedHomeComponent />, this.containerEl.children[1]);
+    this.plugin.updateOnlineStatus();
+  }
 }

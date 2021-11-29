@@ -1,5 +1,4 @@
 import { Note } from "@/domain/Note";
-import i18next from "@/i18n.config";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
@@ -36,8 +35,9 @@ export default class NoteSyncService extends ServerlessService {
     NoteSyncService._instance = this;
   }
 
-  async renameNote({ name, path }: TFile) {
-    const { remoteNote } = GlobalState.instance.appState;
+  async renameNote({ name, path }: TFile, oldPath: string) {
+    const remoteNote = await this.getNoteByPath(oldPath);
+    console.log("rename note");
     if (remoteNote) {
       await callFunction(this.plugin, "renameNote", [remoteNote._id, name, path]);
     }
@@ -45,11 +45,15 @@ export default class NoteSyncService extends ServerlessService {
 
   async renameSharedNote(note: Note) {
     if (!GlobalState.instance.appState.userProfile._id.equals(note.userId)) {
-      const previousPath = (note as unknown as any).previousPath; // hack: the backend adds the previous path field to enable this use case
+      console.log("renamesharednote", note);
+      // hack: the backend adds the previous path field to enable this use case
+      const previousPath = (note as unknown as any).previousPath;
       const previousNotePath = `__sekund__/${note.userId.toString()}/${previousPath}`;
       const updatedNotePath = `__sekund__/${note.userId.toString()}/${note.path}`;
       const previousNoteFile = this.vault.getAbstractFileByPath(previousNotePath);
       if (previousNoteFile) {
+        const updatedNoteDirs = updatedNotePath.substring(0, updatedNotePath.lastIndexOf("/"));
+        await this.createDirs(updatedNoteDirs);
         this.vault.rename(previousNoteFile, updatedNotePath);
       }
     }
@@ -103,20 +107,24 @@ export default class NoteSyncService extends ServerlessService {
     const note = await this.getNoteByPath(path, userId);
     if (note) {
       const fullPath = `${rootDir}${path}`;
-      const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
-      await this.createDirs(dirs);
-      const noteContents = ownNote
-        ? note.content
-        : `<div style="background-color: var(--background-primary-alt); font-style: italic; padding: 0.5rem; font-size: 0.85rem; font-weight: 700">${i18next.t(
-            "plugin:readonlyWarning"
-          )}</div>
+      const noteFile = this.vault.getAbstractFileByPath(fullPath);
+      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime > note.updated;
+      if (!upToDate) {
+        const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
+        await this.createDirs(dirs);
+        const noteContents = ownNote
+          ? note.content
+          : `---
+_id: ${note._id.toString()}
+updated: ${note.updated}
+---
 
 ${note.content}`;
-      if (note.assets && note.assets.length > 0) {
-        await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
+        if (note.assets && note.assets.length > 0) {
+          await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
+        }
+        await this.fsAdapter.write(fullPath, noteContents);
       }
-      await this.fsAdapter.write(fullPath, noteContents);
-      const noteFile = this.vault.getAbstractFileByPath(fullPath);
       if (noteFile && noteFile instanceof TFile) {
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
         this.plugin.app.workspace.activeLeaf?.openFile(noteFile);

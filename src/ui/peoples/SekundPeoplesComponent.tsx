@@ -15,9 +15,10 @@ export type PeoplesComponentProps = {
   view: { addAppDispatch: Function };
   notesService: NotesService | undefined;
   syncDown: (path: string, userId: string) => void;
+  fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundPeoplesComponent = ({ className, notesService, syncDown }: PeoplesComponentProps) => {
+export const SekundPeoplesComponent = ({ className, notesService, syncDown, fetchUnread }: PeoplesComponentProps) => {
   const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation("plugin");
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -49,6 +50,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown }: Pe
 
   async function reloadList() {
     fetchSharedNotes();
+    fetchUnread();
   }
 
   useEffect(() => {

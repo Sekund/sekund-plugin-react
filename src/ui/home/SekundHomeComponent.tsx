@@ -8,16 +8,17 @@ import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
 import { TFile } from "obsidian";
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 export type HomeComponentProps = {
   view: { addAppDispatch: Function };
   notesService: NotesService | undefined;
   syncDown: (path: string, userId: string) => void;
+  fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundHomeComponent = ({ notesService, syncDown, className }: HomeComponentProps) => {
+export const SekundHomeComponent = ({ notesService, syncDown, className, fetchUnread }: HomeComponentProps) => {
   const { t } = useTranslation(["common", "plugin"]);
   const { appState, appDispatch } = useAppContext();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -25,8 +26,40 @@ export const SekundHomeComponent = ({ notesService, syncDown, className }: HomeC
     notesState,
     notesDispatch,
   };
+  const resumeToken = useRef(null);
+  const watching = useRef(false);
 
   const { notes } = notesState;
+
+  useEffect(() => {
+    watchEvents();
+  }, []);
+
+  async function watchEvents() {
+    if (!appState.plugin) {
+      return;
+    }
+    const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
+    if (notes) {
+      try {
+        const cursor = resumeToken.current ? notes.watch({ resumeAfter: resumeToken.current }) : notes.watch();
+        watching.current = true;
+        for await (const change of cursor) {
+          resumeToken.current = change._id;
+          switch (change.operationType) {
+            case "delete":
+            case "insert":
+              await fetchNotes();
+              await fetchUnread();
+              break;
+          }
+        }
+        watching.current = false;
+      } catch (err) {
+        watching.current = false;
+      }
+    }
+  }
 
   async function fetchNotes() {
     if (!notesService) {

@@ -1,5 +1,5 @@
 import { Group } from "@/domain/Group";
-import { isSharing } from "@/domain/Note";
+import { isSharing, Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import { useAppContext } from "@/state/AppContext";
@@ -26,6 +26,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   const { t } = useTranslation(["common", "plugin"]);
   const { remoteNote, currentFile } = appState;
   const [showSharingModal, setShowSharingModal] = useState(false);
+  const { userProfile } = appState;
 
   useEffect(() => {
     const listenerId = makeid(5);
@@ -156,6 +157,10 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     }
   }
 
+  function isOwnNote(note: Note) {
+    return note.userId.equals(userProfile._id);
+  }
+
   // render
   // console.log("notestate", appState.currentFile, appState.currentNoteState, appState.remoteNote)
 
@@ -255,7 +260,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
           {currentFile ? (
             <div className="flex items-center space-x-1">
               <span>{currentFile?.name.replace(/\.md/, "")}</span>
-              {remoteNote ? (
+              {remoteNote && isOwnNote(remoteNote) ? (
                 <span className="flex items-center" title={t("plugin:deleteFromSekund")} onClick={handleUnpublish}>
                   <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
                 </span>

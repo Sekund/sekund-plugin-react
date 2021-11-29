@@ -332,13 +332,16 @@ export default class SekundPluginReact extends Plugin {
           leaf.setViewState(state);
         }
       }
-
       NoteSyncService.instance.compareNotes(file);
     }
   };
 
-  public readonly handleRename = async (file: TFile): Promise<void> => {
-    NoteSyncService.instance.renameNote(file);
+  public readonly handleRename = async (file: TFile, oldPath?: string): Promise<void> => {
+    if (!isSharedNoteFile(file) && oldPath) {
+      NoteSyncService.instance.renameNote(file, oldPath);
+    } else {
+      console.log("file inside __sekund__ folder was renamed, thus doing nothing");
+    }
   };
 
   public readonly handleModify = async (file: TFile): Promise<void> => {

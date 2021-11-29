@@ -82,7 +82,7 @@ export async function touch(appDispatch: Dispatch<AppAction>, note: Note) {
 }
 
 export function isUnread(note: Note) {
-  return note.isRead < note.updated;
+  return note.isRead < note.updated || !note.isRead;
 }
 
 export async function wait(delay: number): Promise<void> {

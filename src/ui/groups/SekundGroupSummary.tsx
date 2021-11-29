@@ -15,9 +15,10 @@ type Props = {
   group: Group;
   editGroup: (group: Group) => void;
   handleNoteClicked: (note: Note) => void;
+  fetchUnread: () => Promise<void>;
 };
 
-export default function SekundGroupSummary({ group, editGroup, handleNoteClicked }: Props) {
+export default function SekundGroupSummary({ group, editGroup, handleNoteClicked, fetchUnread }: Props) {
   const expandedRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -48,9 +49,10 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["modifySharingGroups"], () => {
+      new SekundEventListener(["modifySharingGroups"], async () => {
         if (expandedRef.current) {
-          fetchGroupNotes();
+          await fetchGroupNotes();
+          await fetchUnread();
         }
       })
     );

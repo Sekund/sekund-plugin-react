@@ -26,8 +26,10 @@ export default class SekundPeoplesView extends SekundView {
     }
   }
 
+  async fetchUnread() {}
+
   async onOpen(): Promise<void> {
-    const props = { view: this, notesService: undefined, syncDown: this.syncDown } as PeoplesComponentProps;
+    const props = { view: this, notesService: undefined, syncDown: this.syncDown, fetchUnread: this.fetchUnread } as PeoplesComponentProps;
     const InjectedNoteComponent = SekundPeoplesComponent(props);
     ReactDOM.render(<InjectedNoteComponent />, this.containerEl.children[1]);
     this.plugin.updateOnlineStatus();

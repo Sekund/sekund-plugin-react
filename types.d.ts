@@ -8,7 +8,7 @@ declare module "obsidian" {
   }
 
   interface Vault {
-    on(name: FSEvent, callback: (file: TFile) => Promise<void>): EventRef;
+    on(name: FSEvent, callback: (file: TFile, oldname?: string) => Promise<void>): EventRef;
   }
 
   interface MarkdownPostProcessorContext {
@@ -16,6 +16,12 @@ declare module "obsidian" {
   }
 
   interface MetadataCache {
-    on(name: "dataview:metadata-change", callback: (...args: [op: "rename", file: TAbstractFile, oldPath: string] | [op: "delete", file: TFile] | [op: "update", file: TFile]) => unknown, ctx?: unknown): EventRef;
+    on(
+      name: "dataview:metadata-change",
+      callback: (
+        ...args: [op: "rename", file: TAbstractFile, oldPath: string] | [op: "delete", file: TFile] | [op: "update", file: TFile]
+      ) => unknown,
+      ctx?: unknown
+    ): EventRef;
   }
 }

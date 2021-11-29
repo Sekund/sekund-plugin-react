@@ -19,9 +19,10 @@ export type GroupsComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
   syncDown: (path: string, userId: string) => void;
+  fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: GroupsComponentProps) => {
+export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fetchUnread }: GroupsComponentProps) => {
   const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation();
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
@@ -92,7 +93,15 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
                   </div>
                   <div className="flex flex-col space-y-1px w-xl">
                     {groups.map((group: Group) => {
-                      return <SekundGroupSummary key={group._id.toString()} group={group} handleNoteClicked={noteClicked} editGroup={editGroup} />;
+                      return (
+                        <SekundGroupSummary
+                          key={group._id.toString()}
+                          fetchUnread={fetchUnread}
+                          group={group}
+                          handleNoteClicked={noteClicked}
+                          editGroup={editGroup}
+                        />
+                      );
                     })}
                   </div>
                 </>

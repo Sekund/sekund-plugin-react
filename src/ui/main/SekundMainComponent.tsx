@@ -61,11 +61,12 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       const savedScrollPosition = scrollPositions.current[viewType];
       viewRef.current.scrollTop = savedScrollPosition ? scrollPositions.current[viewType] : 0;
     }, 10);
+    const betterProps = { ...props, fetchUnread };
     return (
       <>
-        <SekundHomeComponent className={`${viewType !== "home" ? "hidden" : ""}`} {...props} />
-        <SekundPeoplesComponent className={`${viewType !== "peoples" ? "hidden" : ""}`} {...props} />
-        <SekundGroupsComponent className={`${viewType !== "groups" ? "hidden" : ""}`} {...props} />
+        <SekundHomeComponent className={`${viewType !== "home" ? "hidden" : ""}`} {...betterProps} />
+        <SekundPeoplesComponent className={`${viewType !== "peoples" ? "hidden" : ""}`} {...betterProps} />
+        <SekundGroupsComponent className={`${viewType !== "groups" ? "hidden" : ""}`} {...betterProps} />
       </>
     );
   }
@@ -96,7 +97,6 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   async function fetchUnread() {
     const unreadNotes = await NotesService.instance.getUnreadNotes();
-    console.log("unreadNotes", unreadNotes);
     const { remoteNote } = GlobalState.instance.appState;
     const filteredUnreadNotes = remoteNote ? filterNoteOutOfUnreadNotes(unreadNotes, remoteNote._id) : unreadNotes;
     appDispatch({ type: AppActionKind.SetUnreadNotes, payload: filteredUnreadNotes });

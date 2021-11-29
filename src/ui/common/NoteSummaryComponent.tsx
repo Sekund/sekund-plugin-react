@@ -23,7 +23,7 @@ type Props = {
 };
 
 export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context }: Props) {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { appState } = useAppContext();
 
   const { notesDispatch } = useNotesContext();
@@ -36,7 +36,6 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     let found = false;
     for (const unreadNote of unreadNotes.all) {
       if (unreadNote._id.equals(note._id)) {
-        console.log(`set note ${unreadNote.title} (${unreadNote.comments.length} comments) to unread (${context})`);
         updateNote(unreadNote);
         found = true;
       }
@@ -55,7 +54,6 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
       listenerId,
       new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment", "note.rename"], (fullDocument: any) => {
         const updtNote: Note = fullDocument.data;
-        console.log("detected note event in summary: " + fullDocument.type);
         if (note._id.equals(updtNote._id)) {
           updateNote(updtNote);
         }

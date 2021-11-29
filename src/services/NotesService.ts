@@ -76,8 +76,8 @@ export default class NotesService extends ServerlessService {
    * @param noteId
    * @param comment
    */
-  async addNoteComment(noteId: ObjectID, comment: string, author: string) {
-    return await callFunction(this.plugin, "addComment", [noteId, comment, author]);
+  async addNoteComment(noteId: ObjectID, comment: string, author: string, created: number) {
+    return await callFunction(this.plugin, "addComment", [noteId, comment, author, created]);
   }
 
   async editComment(noteId: ObjectID, comment: string, created: number, updated: number) {

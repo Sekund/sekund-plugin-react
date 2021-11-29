@@ -1,5 +1,6 @@
 import { Note } from "@/domain/Note";
 import { PeopleId } from "@/domain/People";
+import { NoteSummary } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
@@ -8,6 +9,7 @@ import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
+import NoteComments from "@/ui/note/NoteComments";
 import { isUnread, makeid, originalPath } from "@/utils";
 import { ChatAlt2Icon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
@@ -27,8 +29,8 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
 
   const { notesDispatch } = useNotesContext();
 
-  const { remoteNote, currentFile } = appState;
-  const { unreadNotes } = appState;
+  const { remoteNote } = appState;
+  const { unreadNotes, noteUpdates } = appState;
   const [note, setNote] = useState(noteSummary);
 
   useEffect(() => {
@@ -64,10 +66,18 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     };
   }, []);
 
-  function updateNote(updtNote: Note) {
+  useEffect(() => {
+    if (noteUpdates && noteUpdates._id?.equals(note._id)) {
+      console.log("detected local note update " + noteUpdates.comments.length);
+      updateNote(noteUpdates);
+    }
+  }, [noteUpdates]);
+
+  function updateNote(updtNote: NoteSummary) {
     setNote({
       ...note,
       updated: updtNote.updated,
+      isRead: updtNote.isRead,
       comments: updtNote.comments,
       path: updtNote.path,
       title: updtNote.title,

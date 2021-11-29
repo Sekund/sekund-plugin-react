@@ -40,14 +40,14 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     }
     if (editMode) {
       const commentId = `comment-${comment.updated}`;
-      globalClickListener = e => {
+      globalClickListener = (e) => {
         const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
         if (!e.composedPath().includes(textarea)) {
-          window.removeEventListener('click', globalClickListener);
+          window.removeEventListener("click", globalClickListener);
           setEditMode(false);
         }
       };
-      setTimeout(() => window.addEventListener('click', globalClickListener, false), 20)
+      setTimeout(() => window.addEventListener("click", globalClickListener, false), 20);
     }
   }, [editMode]);
 
@@ -73,7 +73,7 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   function autoexpand(commentId: string) {
     const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
     if (textarea && textarea.parentNode) {
-      (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value
+      (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value;
     }
   }
 
@@ -81,35 +81,61 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     if (editMode) {
       const commentId = `comment-${comment.updated}`;
       setTimeout(() => autoexpand(commentId), 1);
-      return (<div className="grow-wrap">
-        <textarea onInput={() => autoexpand(commentId)} id={commentId} onKeyDown={(e: any) => handleKeydown(e)} onChange={(evt) => setUserComment(evt.target.value)} className="p-1 mt-1 mr-4 input" defaultValue={comment.text} />
-      </div>);
+      return (
+        <div className="grow-wrap">
+          <textarea
+            onInput={() => autoexpand(commentId)}
+            id={commentId}
+            onKeyDown={(e: any) => handleKeydown(e)}
+            onChange={(evt) => setUserComment(evt.target.value)}
+            className="p-1 mt-1 mr-4 input"
+            defaultValue={comment.text}
+          />
+        </div>
+      );
     }
     return <Markdown>{comment.text}</Markdown>;
   }
 
   function clickPopover() {
-    popoverButtonRef?.current?.click()
+    popoverButtonRef?.current?.click();
   }
 
   function commentActions(noteComment: NoteComment) {
-    if (!guestId) { return null }
+    if (!guestId) {
+      return null;
+    }
     if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
-          <Popover.Button ref={popoverButtonRef} className="flex items-center justify-center w-4 h-4 rounded-full cursor-pointer max-h-4 max-w-4 hover:bg-primary">
-            <DotsHorizontalIcon style={{ minWidth: '1rem' }}></DotsHorizontalIcon>
+          <Popover.Button
+            ref={popoverButtonRef}
+            className="flex items-center justify-center w-4 h-4 rounded-full cursor-pointer max-h-4 max-w-4 hover:bg-primary"
+          >
+            <DotsHorizontalIcon style={{ minWidth: "1rem" }}></DotsHorizontalIcon>
           </Popover.Button>
 
           <Popover.Panel className="relative rounded-lg cursor-pointer bg-obs-primary-alt">
             <div className="absolute z-30 flex flex-col px-2 py-2 space-y-2 text-sm rounded-lg leading-2 text-primary bg-obs-primary-alt">
-              <a onClick={() => { deleteComment(noteComment.created, noteComment.updated); clickPopover() }} className="flex items-center px-1 py-1 space-x-2 rounded-lg">
+              <a
+                onClick={() => {
+                  deleteComment(noteComment.created, noteComment.updated);
+                  clickPopover();
+                }}
+                className="flex items-center px-1 py-1 space-x-2 rounded-lg"
+              >
                 <TrashIcon className="w-5 h-5" />
-                <span>{t('Delete')}</span>
+                <span>{t("Delete")}</span>
               </a>
-              <a onClick={() => { setEditMode(true); clickPopover() }} className="flex items-center px-1 py-1 space-x-2 rounded-lg">
+              <a
+                onClick={() => {
+                  setEditMode(true);
+                  clickPopover();
+                }}
+                className="flex items-center px-1 py-1 space-x-2 rounded-lg"
+              >
                 <PencilIcon className="w-5 h-5" />
-                <span>{t('Edit')}</span>
+                <span>{t("Edit")}</span>
               </a>
             </div>
           </Popover.Panel>
@@ -118,13 +144,15 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     }
   }
 
-
   const { image, name, email } = comment.author;
 
   return (
     <div key={comment.created} className="flex items-start">
       <div className="flex-shrink-0">{peopleAvatar(comment.author, 8)}</div>
-      <div ref={area} className={`flex flex-col px-3 pt-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}>
+      <div
+        ref={area}
+        className={`flex flex-col px-3 pt-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}
+      >
         <div className="flex items-center mb-2 space-x-2 ">
           <ReactTimeAgo className="text-obs-muted" date={+comment.created} locale={i18n.language} />
           {commentActions(comment)}
@@ -143,7 +171,6 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
           </div>
         ) : null}
       </div>
-
     </div>
   );
 }

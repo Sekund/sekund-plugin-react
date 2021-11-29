@@ -1,5 +1,6 @@
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
+import { NoteSummary } from "@/domain/Types";
 import SekundPluginReact from "@/main";
 import GlobalState from "@/state/GlobalState";
 import ObjectID from "bson-objectid";
@@ -41,6 +42,7 @@ export type AppState = {
   userProfile: People;
   event: any;
   unreadNotes: UnreadNotes;
+  noteUpdates: NoteSummary | undefined;
 };
 
 export const initialAppState: AppState = {
@@ -59,6 +61,7 @@ export const initialAppState: AppState = {
   userProfile: {} as People,
   event: undefined,
   unreadNotes: { home: [], peoples: [], groups: [], all: [] },
+  noteUpdates: undefined,
 };
 
 export enum AppActionKind {
@@ -71,6 +74,7 @@ export enum AppActionKind {
   SetEvent,
   SetUnreadNotes,
   SetNoteIsRead,
+  SetNoteUpdates,
 }
 
 export type AppAction = {
@@ -115,6 +119,9 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       const unreadNotes = { ...state.unreadNotes };
       filterNoteOutOfUnreadNotes(unreadNotes, payload);
       newState = { ...state, unreadNotes };
+      break;
+    case AppActionKind.SetNoteUpdates:
+      newState = { ...state, noteUpdates: state.noteUpdates ? { ...state.noteUpdates, ...payload } : payload };
       break;
     default:
       newState = state;

@@ -6,7 +6,7 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid, touch } from "@/utils";
+import { makeid, touch, wait } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
@@ -47,7 +47,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown }: Pe
     };
   }, []);
 
-  function reloadList() {
+  async function reloadList() {
     fetchSharedNotes();
   }
 

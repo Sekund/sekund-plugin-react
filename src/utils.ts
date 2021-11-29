@@ -84,3 +84,7 @@ export async function touch(appDispatch: Dispatch<AppAction>, note: Note) {
 export function isUnread(note: Note) {
   return note.isRead < note.updated;
 }
+
+export async function wait(delay: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, delay));
+}

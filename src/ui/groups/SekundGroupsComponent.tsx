@@ -1,18 +1,16 @@
 import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
-import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
-import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
-import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
+import NotesReducer, { initialNotesState } from "@/state/NotesReducer";
 import PeoplesContext from "@/state/PeoplesContext";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import GroupModal from "@/ui/groups/GroupModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid, touch } from "@/utils";
+import { touch } from "@/utils";
 import { EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -59,16 +57,6 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
   }
 
   useEffect(() => {
-    const listenerId = makeid(5);
-    const eventsWatcher = EventsWatcherService.instance;
-    eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["modifySharingGroups"], fetchGroups));
-    return () => {
-      eventsWatcher?.removeEventListener(listenerId);
-    };
-  }, []);
-
-  useEffect(() => {
     if (appState.generalState === "allGood") {
       fetchGroups();
     }
@@ -82,13 +70,6 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
   function createGroup() {
     setCurrentGroup(null);
     setShowNewGroupModal(true);
-  }
-
-  async function displayMessages(group: Group) {
-    peoplesDispatch({ type: PeoplesActionKind.SetCurrentGroup, payload: group });
-    const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
-    notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes });
-    setMode("group");
   }
 
   function noteClicked(note: Note) {

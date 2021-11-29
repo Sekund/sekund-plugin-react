@@ -1,14 +1,16 @@
 import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
+import { makeid } from "@/utils";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 type Props = {
   group: Group;
   editGroup: (group: Group) => void;
@@ -16,6 +18,7 @@ type Props = {
 };
 
 export default function SekundGroupSummary({ group, editGroup, handleNoteClicked }: Props) {
+  const expandedRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
   const notesProviderState = {
@@ -25,14 +28,36 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
   const { appState } = useAppContext();
   const { userProfile } = appState;
 
-  async function toggleExpanded() {
-    if (!expanded) {
-      const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
-      groupNotes.sort((a: Note, b: Note) => a.created - b.created);
-      notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes });
-    }
-    setExpanded(!expanded);
+  async function fetchGroupNotes() {
+    const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
+    groupNotes.sort((a: Note, b: Note) => a.created - b.created);
+    notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes });
   }
+
+  async function toggleExpanded() {
+    if (!expandedRef.current) {
+      fetchGroupNotes();
+    }
+    expandedRef.current = !expandedRef.current;
+    setExpanded(expandedRef.current);
+  }
+
+  useEffect(() => {
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(
+      listenerId,
+      new SekundEventListener(["modifySharingGroups"], () => {
+        if (expandedRef.current) {
+          fetchGroupNotes();
+        }
+      })
+    );
+    return () => {
+      eventsWatcher?.removeEventListener(listenerId);
+    };
+  }, []);
 
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);

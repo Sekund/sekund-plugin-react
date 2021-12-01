@@ -20,7 +20,9 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     getNotes: (oldest: number, limit: number) => args.notes,
   } as NotesService;
 
-  const InjectedHomeComponent = SekundPeoplesComponentHOC({ view: wrapper, notesService, syncDown: (path: string) => {} });
+  const fetchUnread = async () => {};
+
+  const InjectedHomeComponent = SekundPeoplesComponentHOC({ view: wrapper, notesService, fetchUnread, syncDown: (path: string) => {} });
 
   return <InjectedHomeComponent />;
 };

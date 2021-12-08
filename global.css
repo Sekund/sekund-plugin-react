@@ -98,3 +98,8 @@
 	width: 1.5rem;
 	font-size: small;
 }
+
+.sekund button,
+.sekund a {
+	cursor: pointer;
+}

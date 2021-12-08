@@ -1,11 +1,11 @@
 {
     "connecting": "Connexion en cours à",
     "loginError": "Erreur de login",
-    "loginErrorDesc": "Vérifiez votre clé d'API",
+    "loginErrorDesc": "Veuillez vérifier vos identifiants",
     "noApiKey": "Pas de clé d'API",
     "noApiKeyDesc": "Désolé, vous devez spécifier une clé d'API pour utiliser ce plugin. Vous la trouverez dans les réglages de votre compte Sekund",
-    "noSettings": "Aucun réglage",
-    "noSettingsDesc": "Veuillez vous rendre sur votre compte Sekund, obtenir votre sous-domaine et votre clé API et les coller ci-dessous. Vous pouvez vous créer un compte de test gratuit <a href=\"https://app.sekund.io/\">ici</a>.",
+    "noSettings": "Aucun espace de travail enregistré",
+    "noSettingsDesc": "Ce coffre-fort n'est encore lié à aucun espace de travail sur Sekund.io.",
     "noSubdomain": "Pas de sous-domaine",
     "noSubdomainDesc": "Veuillez spécifier le sous-domaine associé à votre compte",
     "noSuchSubdomain": "Désolé, nous n'avons pas trouvé ce sous domaine",
@@ -19,7 +19,7 @@
     "update": "Mettre à jour",
     "uploadToSekund": "Télécharger sur Sekund.io",
     "deleteFromSekund": "Supprimer de Sekund.io",
-    "uploadToSekundDesc": "Votre note pourra être partagée avec d'autres membres de votre équipe.",
+    "uploadToSekundDesc": "Votre note pourra être partagée avec d'autres membres de votre espace de travail.",
     "deleteFromSekundDesc": "Votre note sera supprimée de votre compte Sekund.io. Votre copie locale restera intacte.",
     "shareDesc": "Votre note est disponible pour le partage, mais vous ne l'avez encore partagée avec personne. Cliquez sur le bouton « Partager » ci-dessous et choisissez les personnes ou les groupes avec lesquels vous souhaitez partager cette note.",
     "Share": "Partager",
@@ -30,7 +30,7 @@
     "noOne": "Oups... Il n'y a personne ici.",
     "noOneDesc": "Partagez quelque chose avec quelqu'un ou demandez à quelqu'un de partager quelque chose avec vous.",
     "noGroups": "Oups... Vous n'avez pas encore de groupes.",
-    "noGroupsDesc": "Créez-en un vous-même ou rappelez aux membres de votre équipe de vous ajouter à leur(s) groupe(s).",
+    "noGroupsDesc": "Créez-en un vous-même ou rappelez aux membres de votre espace de travail de vous ajouter à leur(s) groupe(s).",
     "mastery": "Maîtrise",
     "shareWithWhom": "Avec qui voulez-vous partager cette note ?",
     "setSharingOptions": "Définir les options de partage",
@@ -49,6 +49,6 @@
     "readonlyWarning": "Veuillez considérer cette note comme étant en lecture seule : chaque fois que vous l'ouvrirez, Sekund l'écrasera avec sa version la plus récente.",
     "yourShares": "Vos partages",
     "addApiKey": "Ajouter une clé API…",
-    "selectAnotherTeam": "Sélectionnez une autre équipe",
-    "teamID": "ID de l'équipe"
+    "selectAnotherWorkspace": "Sélectionnez un autre espace de travail",
+    "workspaceID": "ID de l'espace de travail"
 }

@@ -1,4 +1,5 @@
 import { Note } from "@/domain/Note";
+import ApiKeyService from "@/services/ApiKeyService";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
@@ -151,6 +152,7 @@ export default class SekundPluginReact extends Plugin {
 
   async addApiKey(subdomain: string, apiKey: string) {
     this.settings.addApiKey(subdomain, apiKey);
+    this.settings.subdomain = subdomain;
     await this.saveSettings();
   }
 
@@ -174,22 +176,22 @@ export default class SekundPluginReact extends Plugin {
     return this.settings.subdomain;
   }
 
-  private async getRealmAppId(): Promise<string | "noSubdomain" | "noSuchSubdomain"> {
-    if (this.settings.subdomain && this.settings.subdomain !== "") {
-      const publicUser = await getApiKeyConnection(new Realm.App(PUBLIC_APP_ID), PUBLIC_APIKEY);
-      if (publicUser) {
-        const subdomains = publicUser.mongoClient("mongodb-atlas").db("meta").collection("subdomains");
-        const record = await subdomains.findOne({ subdomain: this.settings.subdomain });
-        if (record) {
-          this.updateMetaDocuments(publicUser);
-          return record.app_id;
-        }
-        return "noSuchSubdomain";
-      } else {
-        return "unknownError";
-      }
+  public async getRealmAppId(subdomain: string): Promise<string | "noSubdomain" | "noSuchSubdomain"> {
+    const publicUser = await getApiKeyConnection(new Realm.App(PUBLIC_APP_ID), PUBLIC_APIKEY);
+    if (subdomain.trim() === "") {
+      return "noSubdomain";
     }
-    return "noSubdomain";
+    if (publicUser) {
+      const subdomains = publicUser.mongoClient("mongodb-atlas").db("meta").collection("subdomains");
+      const record = await subdomains.findOne({ subdomain });
+      if (record) {
+        this.updateMetaDocuments(publicUser);
+        return record.app_id;
+      }
+      return "noSuchSubdomain";
+    } else {
+      return "unknownError";
+    }
   }
 
   private async updateMetaDocuments(publicUser: any) {
@@ -256,7 +258,7 @@ export default class SekundPluginReact extends Plugin {
       }
     }
 
-    const appIdResult = await this.getRealmAppId();
+    const appIdResult = await this.getRealmAppId(this.settings.subdomain);
 
     switch (appIdResult) {
       case "noSubdomain": // this could be redundant since we already checked for the subdomain

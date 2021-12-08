@@ -1,7 +1,7 @@
 {
     "connecting": "Conectando con",
     "loginError": "Error de inicio de sesión.",
-    "loginErrorDesc": "Comprueba tu clave de API",
+    "loginErrorDesc": "Por favor, verifique sus credenciales",
     "noApiKey": "Ninguna clave de API.",
     "noApiKeyDesc": "Lo sentimos, debes especificar una clave de API de Sekund antes de usar este plugin. Dirígete a la configuración de tu cuenta de Sekund para solucionarlo.",
     "noSettings": "Ningún ajuste.",
@@ -19,7 +19,7 @@
     "update": "Actualizar",
     "uploadToSekund": "Subir a Sekund.io",
     "deleteFromSekund": "Cancelar de Sekund.io",
-    "uploadToSekundDesc": "Tu nota podrá ser compartida con otros miembros de tu equipo.",
+    "uploadToSekundDesc": "Tu nota podrá ser compartida con otros miembros de tu espacio de trabajo.",
     "deleteFromSekundDesc": "Tu nota se eliminará de tu cuenta Sekund.io. Tu copia local quedará intacta.",
     "shareDesc": "Tu nota puede ser compartida, pero aún no la has compartido con nadie. Haz clic en el botón \"Compartir\" a continuación y elige las personas o grupos con los que quieras compartir esta nota.",
     "Share": "Compartir",
@@ -49,6 +49,6 @@
     "readonlyWarning": "Considere esta nota como de sólo lectura: cada vez que la abra, Sekund la sobrescribirá con su versión más reciente.",
     "yourShares": "Sus acciones",
     "addApiKey": "Añadir clave API…",
-    "selectAnotherTeam": "Seleccione otro equipo",
-    "teamID": "Identificación del equipo"
+    "selectAnotherWorkspace": "Seleccione otro espacio de trabajo",
+    "workspaceID": "Identificación del espacio de trabajo"
 }

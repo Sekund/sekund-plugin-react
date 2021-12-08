@@ -31,7 +31,10 @@ export default class GeneralStateWrapper extends React.Component {
     if (appContext.appState.plugin === undefined) {
       appContext.appDispatch({
         type: AppActionKind.SetPlugin,
-        payload: { saveSettings: () => {}, settings: { apiKey: "888555222777AAABBB", subdomain: "storybook" } },
+        payload: {
+          saveSettings: () => {},
+          settings: { apiKey: "888555222777AAABBB", subdomain: "storybook", apiKeys: { storybook: "888555222777AAABBB", public: "777" } },
+        },
       });
     }
     if (

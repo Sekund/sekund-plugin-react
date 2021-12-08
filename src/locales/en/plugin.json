@@ -1,7 +1,7 @@
 {
     "connecting": "Connecting to",
     "loginError": "Login Error.",
-    "loginErrorDesc": "Please check your API Key",
+    "loginErrorDesc": "Please verify your credentials",
     "noApiKey": "No API Key.",
     "noApiKeyDesc": "Sorry, you need to specify a Sekund API Key before using this plugin. Please head to your Sekund account's settings to fix that.",
     "noSettings": "No Settings.",
@@ -19,7 +19,7 @@
     "update": "Update",
     "uploadToSekund": "Upload to Sekund.io",
     "deleteFromSekund": "Delete from Sekund.io",
-    "uploadToSekundDesc": "Your note will be available for sharing with other members of your team.",
+    "uploadToSekundDesc": "Your note will be available for sharing with other members of your workspace.",
     "deleteFromSekundDesc": "Your note will be removed from your Sekund.io account. Your local copy will remain untouched.",
     "shareDesc": "Your note is available for sharing, but you haven't shared it with anyone yet. Hit the 'Share' button below and pick people or groups with whom you want to share this note.",
     "Share": "Share",
@@ -49,6 +49,6 @@
     "readonlyWarning": "Please consider this note read-only: everytime you open it, Sekund will overwrite it with its most recent version.",
     "yourShares": "Your Shares",
     "addApiKey": "Add an API Key…",
-    "selectAnotherTeam": "Select another team",
-    "teamID": "Team ID"
+    "selectAnotherWorkspace": "Select another workspace",
+    "workspaceID": "Workspace ID"
 }

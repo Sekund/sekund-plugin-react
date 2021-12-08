@@ -9,7 +9,7 @@ import { BlueBadge, GreenBadge, OrangeBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
-import AddApiKeyModal from "@/ui/main/ApiKeyModal";
+import AddApiKeyModal from "@/ui/main/AddWorkspaceModal";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
@@ -44,7 +44,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const { appState, appDispatch } = useAppContext();
   const [showViews, setShowViews] = useState(false);
   const [showTeams, setShowTeams] = useState(false);
-  const [subdomain, setSubdomain] = useState<string | null>(null);
+  const [subdomain, setSubdomain] = useState<string | null | undefined>();
   const [showAddApiModal, setShowAddApiModal] = useState<boolean>(false);
   const [viewType, setViewType] = useState<ViewType>("home");
   const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 });
@@ -123,9 +123,9 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   }
 
   function renderAddApiKeyModal() {
-    if (showAddApiModal) {
-      return <AddApiKeyModal setOpen={setShowAddApiModal} subdomain={subdomain} />;
-    }
+    // if (showAddApiModal) {
+    //   return <AddApiKeyModal setOpen={setShowAddApiModal} workspaceId={subdomain} />;
+    // }
     return null;
   }
 
@@ -210,15 +210,15 @@ export const SekundMainComponent = (props: MainComponentProps) => {
         </div>
         <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted">
           <div className="flex items-center">
-            <div className="flex items-center" onClick={showTeamsMenu}>
+            {/* <div className="flex items-center" onClick={showTeamsMenu}>
               <span>{appState.plugin?.settings.subdomain}</span>
               <ChevronDownIcon className="w-6 h-6" />
-            </div>
+            </div> */}
             <div className="cursor-pointer" onClick={fetchUnread}>
               <CogIcon className="w-6 h-6" />
             </div>
           </div>
-          {showTeams ? (
+          {/* {showTeams ? (
             <Popover className="relative">
               <Popover.Panel className="fixed z-20 right-1" static>
                 <div className="flex flex-col">
@@ -235,12 +235,12 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   })}
                   <button onClick={() => showApiKeyModal(null)} className="flex items-center px-2 py-2 mr-0 space-x-2 truncate border-t rounded-none">
                     <PlusIcon className="w-6 h-6" />
-                    <span>{t("plugin:addApiKey")}</span>
+                    <span>{t("addWorkspace")}</span>
                   </button>
                 </div>
               </Popover.Panel>
             </Popover>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
 

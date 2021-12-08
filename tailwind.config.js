@@ -19,6 +19,7 @@ module.exports = {
         400: "400px",
       },
       width: {
+        form: "240px",
         "1/2": ".125rem",
       },
       backgroundColor: {

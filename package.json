@@ -12,7 +12,8 @@
 		"build:snippets": "export environment=development && postcss global-snippets.css -o tw-utils.css",
 		"storybook": "start-storybook -s public -p 6006",
 		"build-storybook": "build-storybook -s public",
-		"deploy-storybook": "storybook-to-ghpages"
+		"deploy-storybook": "storybook-to-ghpages",
+		"labels": "poeditor pull && rm -rf src/locales && mv tmp/locales src"
 	},
 	"keywords": [],
 	"author": "",
@@ -32,6 +33,7 @@
 		"match-casing": "^2.0.0",
 		"mime-types": "^2.1.34",
 		"obsidian": "^0.12.5",
+		"password-validator": "^5.2.1",
 		"postcss-import": "^14.0.2",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",

@@ -1,7 +1,7 @@
 {
     "connecting": "Verbinden met",
     "loginError": "Login fout.",
-    "loginErrorDesc": "Controleer uw API-sleutel",
+    "loginErrorDesc": "Controleer uw geloofsbrieven",
     "noApiKey": "Geen API-sleutel.",
     "noApiKeyDesc": "Sorry, u moet een Sekund API-sleutel opgeven voordat u deze plug-in gebruikt. Ga naar de instellingen van je Sekund-account om dat op te lossen.",
     "noSettings": "Geen instellingen.",
@@ -19,7 +19,7 @@
     "update": "Update",
     "uploadToSekund": "Uploaden naar Sekund.io",
     "deleteFromSekund": "Verwijderen van Sekund.io",
-    "uploadToSekundDesc": "Uw notitie is beschikbaar om te delen met andere leden van uw team.",
+    "uploadToSekundDesc": "Uw notitie is beschikbaar om te delen met andere leden van uw werkruimte.",
     "deleteFromSekundDesc": "Je notitie wordt verwijderd uit je Sekund.io-account. Uw lokale exemplaar blijft onaangeroerd.",
     "shareDesc": "Je notitie is beschikbaar om te delen, maar je hebt deze nog met niemand gedeeld. Klik hieronder op de knop 'Delen' en kies mensen of groepen met wie je deze notitie wilt delen.",
     "Share": "Deel",
@@ -49,6 +49,6 @@
     "readonlyWarning": "Beschouw deze nota als alleen-lezen: telkens wanneer u hem opent, zal Sekund hem overschrijven met zijn meest recente versie.",
     "yourShares": "Uw Aandelen",
     "addApiKey": "API Sleutel Toevoegen…",
-    "selectAnotherTeam": "Kies een ander team",
-    "teamID": "Team ID"
+    "selectAnotherWorkspace": "Kies een andere werkruimte",
+    "workspaceID": "Werkruimte ID"
 }

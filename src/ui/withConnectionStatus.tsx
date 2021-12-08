@@ -1,19 +1,25 @@
 import AppContext from "@/state/AppContext";
 import AppReducer from "@/state/AppReducer";
-import GlobalState from '@/state/GlobalState';
-import APIInfo from '@/ui/APIInfo';
-import Loader from '@/ui/common/LoaderComponent';
+import GlobalState from "@/state/GlobalState";
+import Login from "@/ui/auth/Login";
+import SetWorkspace from "@/ui/auth/SetWorkspace";
+import Loader from "@/ui/common/LoaderComponent";
+import Onboarding from "@/ui/Onboarding";
 import { makeid } from "@/utils";
-import React, { useEffect, useReducer, useRef } from 'react';
+import { ArrowNarrowLeftIcon, ArrowRightIcon, CloudIcon, EmojiSadIcon, ExclamationCircleIcon, StatusOfflineIcon } from "@heroicons/react/solid";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import i18nConf from '../i18n.config';
+import i18nConf from "../i18n.config";
 
 type Props = {
-  view: { addAppDispatch: Function }
-}
+  view: { addAppDispatch: Function };
+};
 
 const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreProps: any) => {
   const { t, i18n } = useTranslation(["common", "plugin"], { i18n: i18nConf });
+  const [action, setAction] = useState<"none" | "login" | "register">("none");
+  const workspaceId = useRef("");
+  const workspaceName = useRef("");
 
   const localizedAppState = window.moment
     ? { ...GlobalState.instance.appState, id: makeid(3), locale: (window.moment as any).locale() }
@@ -24,7 +30,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
     appState,
     appDispatch,
   };
-  const sekundRoot = useRef<HTMLDivElement>(null)
+  const sekundRoot = useRef<HTMLDivElement>(null);
 
   // allow SekundView and NotesService to mutate the state
   if (props.view) {
@@ -32,33 +38,37 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
   }
 
   useEffect(() => {
-    i18n.changeLanguage(appState.locale)
+    i18n.changeLanguage(appState.locale);
   }, [appState.locale]);
+
+  useEffect(() => {
+    setAction("none");
+  }, [appState.generalState]);
 
   useEffect(() => {
     // sync obsidian's theme-dark/theme-light to tailwind's dark/light
     // theme classes
     if (sekundRoot.current) {
-      var darkModeElement = sekundRoot.current.closest('.theme-dark');
+      var darkModeElement = sekundRoot.current.closest(".theme-dark");
       if (!darkModeElement) {
-        darkModeElement = sekundRoot.current.closest('.theme-light');
+        darkModeElement = sekundRoot.current.closest(".theme-light");
       }
       if (!darkModeElement) {
         darkModeElement = document.body;
       }
       if (darkModeElement) {
         var isDark = darkModeElement.classList.contains("theme-dark");
-        sekundRoot.current.classList.add(isDark ? 'dark' : 'light')
+        sekundRoot.current.classList.add(isDark ? "dark" : "light");
         const sekundRootElement = sekundRoot.current;
         var observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             if (mutation.attributeName === "class") {
               if (mutation.target) {
-                var isDark = (mutation.target as HTMLElement).classList.contains('theme-dark');
+                var isDark = (mutation.target as HTMLElement).classList.contains("theme-dark");
                 if (isDark) {
-                  sekundRootElement.classList.add('dark')
+                  sekundRootElement.classList.add("dark");
                 } else {
-                  sekundRootElement.classList.remove('dark')
+                  sekundRootElement.classList.remove("dark");
                 }
               }
             }
@@ -67,11 +77,101 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
         observer.observe(darkModeElement, { attributes: true });
       }
     }
-  }, [])
+  }, []);
+
+  function switchWorkspace(evt: any) {
+    if (!appState.plugin) return;
+    appState.plugin.settings.apiKey = evt.target.value;
+    appState.plugin.saveSettings();
+    appState.plugin.attemptConnection(true);
+  }
+
+  const ContinueButton = () => (
+    <button className="flex items-center mt-4 space-x-1 mod-cta" onClick={() => setAction("login")}>
+      <span>{t("continue")}</span>
+      <ArrowRightIcon className="w-4 h-4" />
+    </button>
+  );
+
+  const WorkspaceSwitch = () => {
+    if (!appState.plugin) return <div />;
+    const otherWorkspaces = Object.keys(appState.plugin.settings.apiKeys);
+    return otherWorkspaces.length > 1 ? (
+      <div className="flex flex-col items-center mt-12 space-y-2 flex-start">
+        <span>{t("switchToAnotherWorkspace")}</span>
+        <select defaultValue={appState.plugin.settings.subdomain} className="dropdown" style={{ width: "fit-content" }} onChange={switchWorkspace}>
+          {otherWorkspaces.map((ws) => (
+            <option key={ws} value={ws}>
+              {ws}
+            </option>
+          ))}
+        </select>
+      </div>
+    ) : (
+      <div />
+    );
+  };
+
+  const JoinAnotherWorkspace = () => {
+    return (
+      <a className="pt-8" onClick={() => setAction("register")}>
+        {t("joinAnotherWorkspace")}
+      </a>
+    );
+  };
+
+  function workspaceChosen(wsId: string, wsName: string) {
+    workspaceId.current = wsId;
+    workspaceName.current = wsName;
+    setAction("login");
+  }
+
+  type StatusProps = {
+    children?: JSX.Element | JSX.Element[];
+  };
+
+  const Status = ({ children }: StatusProps) => {
+    const backNavigation = (
+      <>
+        <div className="h-4"></div>
+        <div className="flex justify-between overflow-none">
+          <a className="flex items-center space-x-1 truncate cursor-pointer" onClick={() => setAction("none")}>
+            <ArrowNarrowLeftIcon className="w-4 h-4" />
+            <span>{t("back")}</span>
+          </a>
+        </div>
+      </>
+    );
+    switch (action) {
+      case "login":
+        return (
+          <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+            <div className="w-form">
+              <Login workspaceId={workspaceId.current} workspaceName={workspaceName.current} navigation={backNavigation} />
+            </div>
+          </div>
+        );
+      case "register":
+        return (
+          <div className="fixed inset-0 flex flex-col justify-center p-8">
+            <SetWorkspace success={workspaceChosen} navigation={backNavigation} />
+          </div>
+        );
+      default:
+        return (
+          <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+            {children}
+            <ContinueButton />
+            <WorkspaceSwitch />
+            <JoinAnotherWorkspace />
+          </div>
+        );
+    }
+  };
 
   return (
     <AppContext.Provider value={appProviderState}>
-      <div ref={sekundRoot} className="fixed inset-0 w-full overflow-auto main sekund">
+      <div ref={sekundRoot} className="sekund">
         {(() => {
           switch (appState.generalState) {
             case "allGood":
@@ -80,100 +180,81 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
               return (
                 <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2 animate-pulse">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                    </svg>
+                    <CloudIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:connecting')} https://{appState.plugin?.settings.subdomain}.sekund.io/</div>
+                  <div className="flex flex-col space-y-4 text-center">
+                    {t("plugin:connecting")}...
+                    <div className="font-medium text-obs-accent">{appState.plugin?.settings.subdomain}</div>
+                  </div>
                   <Loader className="h-20" />
                 </div>
               );
-            case "loginError":
+            case "loginError": {
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <Status>
                   <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                    </svg>
+                    <ExclamationCircleIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:loginError')}</div>
-                  <div className="mt-2 text-sm text-center ">{t('plugin:loginErrorDesc')}</div>
-                  <APIInfo />
-                </div>
+                  <div className="text-center ">{t("plugin:loginError")}</div>
+                  <div className="mt-2 text-sm text-center ">{t("plugin:loginErrorDesc")}</div>
+                </Status>
               );
+            }
             case "noApiKey":
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <Status>
                   <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <EmojiSadIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:noApiKey')}</div>
-                  <div className="mt-2 text-sm text-center ">{t('plugin:noApiKeyDesc')}</div>
-                  <APIInfo />
-                </div>
+                  <div className="text-center ">{t("plugin:noApiKey")}</div>
+                  <div className="mt-2 text-sm text-center ">{t("plugin:noApiKeyDesc")}</div>
+                </Status>
               );
             case "noSettings":
               return (
                 <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
-                  <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div className="text-center ">{t('plugin:noSettings')}</div>
-                  <div className="mt-2 text-sm text-center ulink"><Trans components={{ a: <a /> }}>{t('plugin:noSettingsDesc')}</Trans></div>
-                  <APIInfo />
+                  <Onboarding />
                 </div>
               );
             case "noSubdomain":
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <Status>
                   <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <EmojiSadIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:noSubdomain')}</div>
-                  <div className="mt-2 text-sm text-center "><Trans components={{ a: <a /> }}>{t('plugin:noSubdomainDesc')}</Trans></div>
-                  <APIInfo />
-                </div>
+                  <div className="text-center ">{t("plugin:noSubdomain")}</div>
+                  <div className="mt-2 text-sm text-center ">
+                    <Trans components={{ a: <a /> }}>{t("plugin:noSubdomainDesc")}</Trans>
+                  </div>
+                </Status>
               );
             case "noSuchSubdomain":
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <Status>
                   <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <EmojiSadIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:noSuchSubdomain')}</div>
-                  <APIInfo />
-                </div>
+                  <div className="text-center ">{t("plugin:noSuchSubdomain")}</div>
+                </Status>
               );
             case "offline":
               return (
                 <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
-                    </svg>
+                    <StatusOfflineIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:offline')}</div>
-                  <div className="mt-2 text-sm text-center">{t('plugin:offlineDesc')}</div>
+                  <div className="text-center ">{t("plugin:offline")}</div>
+                  <div className="mt-2 text-sm text-center">{t("plugin:offlineDesc")}</div>
                 </div>
               );
             case "unknownError":
               return (
                 <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
-                    </svg>
+                    <EmojiSadIcon className="w-6 h-6" />
                   </div>
-                  <div className="text-center ">{t('plugin:unknownError')}</div>
-                  <div className="mt-2 text-sm text-center ">{t('plugin:unknownErrorDesc')}</div>
+                  <div className="text-center ">{t("plugin:unknownError")}</div>
+                  <div className="mt-2 text-sm text-center ">{t("plugin:unknownErrorDesc")}</div>
                 </div>
               );
           }

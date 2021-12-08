@@ -50,6 +50,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   }
 
   function handleSync() {
+    console.log("handleSync", publishing, fileSynced, fetching);
     if (!publishing && !fileSynced && !fetching) {
       syncUp();
     }
@@ -158,7 +159,9 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   }
 
   function isOwnNote(note: Note) {
-    return note.userId.equals(userProfile._id);
+    if (note.userId && note.userId.equals) {
+      return note.userId.equals(userProfile._id);
+    }
   }
 
   // render

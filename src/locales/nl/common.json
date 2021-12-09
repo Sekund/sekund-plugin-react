@@ -82,5 +82,13 @@
     "joinSekundWorkspace": "Word lid van de Sekund-werkruimte",
     "recommended": "aanbevolen",
     "joinAnotherWorkspace": "Word lid van een andere werkruimte",
-    "chooseThisOptionIfInvited": "Kies dit als u een uitnodiging voor een specifieke werkruimte hebt ontvangen."
+    "chooseThisOptionIfInvited": "Kies dit als u een uitnodiging voor een specifieke werkruimte hebt ontvangen.",
+    "switchToAnotherWorkspace": "Overschakelen naar een andere werkruimte",
+    "name": "Naam",
+    "bio": "Bio",
+    "introduceYourself": "Stel jezelf voor",
+    "describeYourself": "Beschrijf jezelf",
+    "disconnect": "Loskoppelen",
+    "deleteAllData": "Wis al uw gegevens",
+    "account": "Rekening"
 }

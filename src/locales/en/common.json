@@ -82,5 +82,13 @@
     "joinSekundWorkspace": "Join the Sekund workspace",
     "recommended": "recommended",
     "joinAnotherWorkspace": "Join another workspace",
-    "chooseThisOptionIfInvited": "Choose this if you have received an invitation to a specific workspace."
+    "chooseThisOptionIfInvited": "Choose this if you have received an invitation to a specific workspace.",
+    "switchToAnotherWorkspace": "Switch to another workspace",
+    "name": "Name",
+    "bio": "Bio",
+    "introduceYourself": "Introduce yourself",
+    "describeYourself": "Describe yourself",
+    "disconnect": "Disconnect",
+    "deleteAllData": "Delete all your data",
+    "account": "Account"
 }

@@ -99,6 +99,13 @@ export default class SekundPluginReact extends Plugin {
     eventsWatcher?.removeEventListener(this.notesListenerId);
   }
 
+  public disconnect() {
+    this.settings.deleteApiKey(this.settings.subdomain);
+    this.settings.subdomain = "";
+    this.saveSettings();
+    this.attemptConnection(true);
+  }
+
   registerViews(specs: { type: string; View: Constructor<SekundView> }[]) {
     for (const spec of specs) {
       const { type, View } = spec;

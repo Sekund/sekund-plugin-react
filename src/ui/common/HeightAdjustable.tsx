@@ -2,11 +2,6 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 
 const HeightAdjustableContext = createContext({} as any);
 
-type Props = {
-  initialHeight: Number;
-  parentComponent: React.MutableRefObject<HTMLDivElement>;
-};
-
 export const HeightAdjustable = ({ children, initialHeight, parentComponent, ...props }) => {
   const [adjustedHeight, setAdjustedHeight] = useState<number>(initialHeight);
   const yDividerPos = useRef<number | null>(null);

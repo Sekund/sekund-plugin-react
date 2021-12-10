@@ -1,6 +1,7 @@
 import Login from "@/ui/auth/Login";
 import Register from "@/ui/auth/Register";
 import SetWorkspace from "@/ui/auth/SetWorkspace";
+import { PUBLIC_APP_ID } from "@/_constants";
 import { ArrowNarrowLeftIcon, QuestionMarkCircleIcon, SparklesIcon } from "@heroicons/react/solid";
 import { Tooltip } from "@mui/material";
 import { Box } from "@mui/system";
@@ -24,12 +25,8 @@ export default function Onboarding({ close, sbPage, sbWorkspace }: Props) {
 
   const { t } = useTranslation(["common", "plugin"], { i18n: i18nConf });
 
-  function registerStage() {
-    setPage("register");
-  }
-
   function chooseSekundWorkspace() {
-    workspaceId.current = "sekund-ttmmm";
+    workspaceId.current = PUBLIC_APP_ID;
     workspaceName.current = "sekund";
     setWorkspace("sekund");
     setPage("chooseNextStep");
@@ -136,7 +133,7 @@ export default function Onboarding({ close, sbPage, sbWorkspace }: Props) {
       case "register":
         return (
           <>
-            <Register workspaceId={workspaceId.current} workspaceName={workspaceName.current} />
+            <Register workspaceId={workspaceId.current} workspaceName={workspaceName.current} backToLogin={() => setPage("login")} />
             <div className="h-2"></div>
             <div className="flex justify-between overflow-none">
               <Back toPage="chooseNextStep" />

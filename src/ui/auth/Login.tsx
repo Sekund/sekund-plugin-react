@@ -25,10 +25,10 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
   const { appState } = useAppContext();
   const emailField = useRef<any>();
   const passwordField = useRef<any>();
-  passwordField;
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [busy, setBusy] = useState(false);
   const [badEmailFormat, setBadEmailFormat] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [page, setPage] = useState<Page>(sbPage || "login");
@@ -37,6 +37,20 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
     const fieldType = passwordField.current?.type;
     passwordField.current.type = fieldType === "password" ? "text" : "password";
     setPasswordVisible(!passwordVisible);
+  }
+
+  function checkFormIsValid() {
+    const validEmail = !!validateEmail(emailField.current.value);
+    const formIsValid = validEmail && passwordField.current.value.length >= 8;
+    setFormIsValid(formIsValid);
+    return formIsValid;
+  }
+
+  function onKeyUp(evt: React.KeyboardEvent) {
+    const valid = checkFormIsValid();
+    if (valid && evt.code === "Enter") {
+      signIn();
+    }
   }
 
   function lostPassword() {
@@ -58,19 +72,22 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
     }
     const appUser = await logIn();
     if (appUser) {
-      const apiKeyService = new ApiKeyService(appUser, workspaceName);
+      const apiKeyService = new ApiKeyService(appUser);
       const { key } = await apiKeyService.ensureApiKey();
       await appState.plugin?.addApiKey(workspaceName, key);
       appState.plugin?.attemptConnection();
+    } else {
+      console.log("login error");
     }
   }
 
   async function logIn() {
     try {
+      setBusy(true);
       const appUser = await new Realm.App(workspaceId).logIn(Realm.Credentials.emailPassword(emailField.current.value, passwordField.current.value));
       return appUser;
     } catch (error) {
-      console.log("there was an error", error);
+      setBusy(false);
       setOpenAlert(true);
       setAlertMessage("Login error, please try again");
     }
@@ -90,12 +107,29 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
             <div className="inline-block w-full">
               <div className="pb-1 text-obs-muted">{t("emailAddress")}</div>
               <div className="relative">
-                <input className="w-full" key="email" type="text" ref={emailField} placeholder={t("yourEmailAddress")} />
+                <input
+                  autoFocus
+                  className="w-full"
+                  onKeyUp={busy ? undefined : onKeyUp}
+                  disabled={busy}
+                  key="email"
+                  type="text"
+                  ref={emailField}
+                  placeholder={t("yourEmailAddress")}
+                />
                 <Tooltip open={badEmailFormat} setOpen={(o) => setBadEmailFormat(o)} text={t("badEmailFormat")} />
               </div>
               <div className="py-1 text-obs-muted">{t("password")}</div>
               <div className="relative flex items-center">
-                <input className="w-full" key="password" ref={passwordField} type="password" placeholder="••••••••" />
+                <input
+                  className="w-full"
+                  key="password"
+                  disabled={busy}
+                  onKeyUp={busy ? undefined : onKeyUp}
+                  ref={passwordField}
+                  type="password"
+                  placeholder="••••••••"
+                />
                 {passwordVisible ? (
                   <EyeIcon onClick={togglePasswordVisible} className="absolute z-10 w-4 h-4 right-2 text-obs-muted hover:text-obs-normal" />
                 ) : (
@@ -103,11 +137,19 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
                 )}
               </div>
               <div className="h-2"></div>
-              <button onClick={signIn} className="flex items-center justify-center w-full mt-4 mr-0 space-x-1 text-center mod-cta ">
-                <span>{t("signIn")}</span>
-                <LoginIcon className="w-4 h-4 transform rotate-180" />
+              <button
+                onClick={busy ? undefined : signIn}
+                className={`flex items-center justify-center w-full mt-4 mr-0 space-x-1 text-center ${formIsValid ? "mod-cta" : ""}`}
+              >
+                {busy ? (
+                  <Loader className="w-8 h-8" />
+                ) : (
+                  <>
+                    <span>{t("signIn")}</span>
+                    <LoginIcon className="w-4 h-4 transform rotate-180" />
+                  </>
+                )}
               </button>
-              {busy ? <Loader className="h-20 text-obs-muted" /> : null}
               <div className="flex flex-col">
                 <div className="h-4" />
                 <a className="text-sm truncate cursor-pointer" onClick={lostPassword}>

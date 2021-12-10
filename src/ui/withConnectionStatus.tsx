@@ -87,7 +87,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
   }
 
   const ContinueButton = () => (
-    <button className="flex items-center mt-4 space-x-1 mod-cta" onClick={() => setAction("login")}>
+    <button className="flex items-center mt-4 space-x-1 mod-cta" onClick={() => setAction("register")}>
       <span>{t("continue")}</span>
       <ArrowRightIcon className="w-4 h-4" />
     </button>
@@ -147,7 +147,11 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
         return (
           <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
             <div className="w-form">
-              <Login workspaceId={workspaceId.current} workspaceName={workspaceName.current} navigation={backNavigation} />
+              <Login
+                workspaceId={workspaceId.current}
+                workspaceName={workspaceName.current || appState.plugin?.subdomain || "error"}
+                navigation={backNavigation}
+              />
             </div>
           </div>
         );

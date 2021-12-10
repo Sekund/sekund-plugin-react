@@ -7,9 +7,8 @@ import React, { Dispatch } from "react";
 import * as Realm from "realm-web";
 
 export async function getApiKeyConnection(realmApp: Realm.App, apiKey: string): Promise<Realm.User | null> {
-  const credentials = Realm.Credentials.apiKey(apiKey);
   try {
-    return await realmApp.logIn(credentials);
+    return await realmApp.logIn(Realm.Credentials.apiKey(apiKey));
   } catch (err) {
     return null;
   }

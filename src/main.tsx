@@ -1,5 +1,4 @@
 import { Note } from "@/domain/Note";
-import ApiKeyService from "@/services/ApiKeyService";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
@@ -9,15 +8,12 @@ import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
-import SekundGroupsView from "@/ui/groups/SekundGroupsView";
-import SekundHomeView from "@/ui/home/SekundHomeView";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
-import SekundPeoplesView from "@/ui/peoples/SekundPeoplesView";
 import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, setCurrentNoteState, setGeneralState } from "@/utils";
-import { GROUPS_VIEW_TYPE, HOME_VIEW_TYPE, MAIN_VIEW_TYPE, PEOPLES_VIEW_TYPE, PUBLIC_APIKEY, PUBLIC_APP_ID } from "@/_constants";
+import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
@@ -80,19 +76,14 @@ export default class SekundPluginReact extends Plugin {
       commands.ribbonDisplayCommands();
     });
 
-    this.registerViews([
-      { type: HOME_VIEW_TYPE, View: SekundHomeView },
-      { type: PEOPLES_VIEW_TYPE, View: SekundPeoplesView },
-      { type: GROUPS_VIEW_TYPE, View: SekundGroupsView },
-      { type: MAIN_VIEW_TYPE, View: SekundMainView },
-    ]);
+    this.registerViews([{ type: MAIN_VIEW_TYPE, View: SekundMainView }]);
 
     // this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => this.refreshPanes());
   }
 
   onunload(): void {
-    [HOME_VIEW_TYPE, PEOPLES_VIEW_TYPE, GROUPS_VIEW_TYPE, MAIN_VIEW_TYPE].forEach((t) => {
+    [MAIN_VIEW_TYPE].forEach((t) => {
       this.app.workspace.getLeavesOfType(t).forEach((leaf) => leaf.detach());
     });
     const eventsWatcher = EventsWatcherService.instance;
@@ -184,15 +175,15 @@ export default class SekundPluginReact extends Plugin {
   }
 
   public async getRealmAppId(subdomain: string): Promise<string | "noSubdomain" | "noSuchSubdomain"> {
-    const publicUser = await getApiKeyConnection(new Realm.App(PUBLIC_APP_ID), PUBLIC_APIKEY);
+    const anonymousUser = await new Realm.App(PUBLIC_APP_ID).logIn(Realm.Credentials.anonymous());
     if (subdomain.trim() === "") {
       return "noSubdomain";
     }
-    if (publicUser) {
-      const subdomains = publicUser.mongoClient("mongodb-atlas").db("meta").collection("subdomains");
+    if (anonymousUser) {
+      const subdomains = anonymousUser.mongoClient("mongodb-atlas").db("meta").collection("subdomains");
       const record = await subdomains.findOne({ subdomain });
       if (record) {
-        this.updateMetaDocuments(publicUser);
+        this.updateMetaDocuments(anonymousUser);
         return record.app_id;
       }
       return "noSuchSubdomain";

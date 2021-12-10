@@ -11,11 +11,12 @@ type Page = "sendConfirmationLink" | "confirmationLinkSent";
 type Props = {
   workspaceId: string;
   workspaceName: string;
+  backToLogin: () => void;
   sbPage?: Page;
 };
 
-export default function Register({ workspaceId, workspaceName, sbPage }: Props) {
-  const { t } = useTranslation(["common", "plugin"], { i18n: i18nConf });
+export default function Register({ workspaceId, workspaceName, sbPage, backToLogin }: Props) {
+  const { i18n, t } = useTranslation(["common", "plugin"], { i18n: i18nConf });
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [page, setPage] = useState<"sendConfirmationLink" | "confirmationLinkSent">(sbPage || "sendConfirmationLink");
@@ -72,7 +73,7 @@ export default function Register({ workspaceId, workspaceName, sbPage }: Props) 
           </div>
           <div className="flex flex-col items-center">
             <div className="inline-block w-full">
-              <button className="flex items-center justify-center w-full mt-4 mr-0 text-center mod-cta ">
+              <button className="flex items-center justify-center w-full mt-4 mr-0 text-center mod-cta" onClick={backToLogin}>
                 <span>{t("backToLogin")}</span>
               </button>
             </div>

@@ -2,7 +2,6 @@ import { useAppContext } from "@/state/AppContext";
 import Loader from "@/ui/common/LoaderComponent";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import { Snackbar, Alert, Box, Tooltip } from "@mui/material";
-import { info } from "console";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18nConf from "../../i18n.config";
@@ -15,12 +14,18 @@ type Props = {
 export default function ({ success, navigation }: Props) {
   const { t } = useTranslation(["common", "plugin"], { i18n: i18nConf });
   const { appState } = useAppContext();
+  const [workspaceValue, setWorkspaceValue] = useState("");
   const workspaceField = useRef<any>();
-  const passwordField = useRef<any>();
-  passwordField;
   const [busy, setBusy] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+
+  const onKeyUp = (evt: React.KeyboardEvent) => {
+    setWorkspaceValue(workspaceField.current.value);
+    if (evt.code === "Enter" && workspaceField.current.value.length >= 2) {
+      verifyTeam();
+    }
+  };
 
   async function verifyTeam() {
     setBusy(true);
@@ -45,15 +50,16 @@ export default function ({ success, navigation }: Props) {
         <div className="pb-1 text-obs-muted">{t("whatWorkspaceId")}</div>
         <div className="relative flex items-center">
           <input
+            autoFocus
             className="w-full"
             ref={workspaceField}
-            // defaultValue={subdomain ? subdomain : undefined}
             key="subdomain"
             pattern="^([a-zA-Z0-9]([-a-zA-Z0-9]{0,14}[a-zA-Z0-9])?)$"
             type="text"
+            onKeyUp={busy ? undefined : onKeyUp}
             placeholder={t("plugin:workspaceID")}
           />
-          <div className="absolute pt-1 text-sm text-obs-muted right-1">
+          <div className="absolute pt-1 text-sm text-obs-muted right-2">
             <Tooltip title={info} arrow>
               <Box sx={{ display: "inline" }}>
                 <QuestionMarkCircleIcon className="w-4 h-4 cursor-pointer" />
@@ -62,7 +68,10 @@ export default function ({ success, navigation }: Props) {
           </div>
         </div>
         <div className="h-2"></div>
-        <button onClick={busy ? undefined : verifyTeam} className={`m-0 mt-4 text-center ${busy ? "animate-pulse" : "mod-cta"}`}>
+        <button
+          onClick={busy ? undefined : verifyTeam}
+          className={`m-0 mt-4 text-center ${!busy && workspaceValue.length >= 2 ? "mod-cta" : ""} ${busy ? "animate-pulse" : ""}`}
+        >
           {busy ? (
             <div className="flex items-center justify-center w-full space-x-1">
               <span>{t("verifying")}</span>

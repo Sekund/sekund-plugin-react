@@ -1,6 +1,6 @@
 {
 	"name": "sekund-plugin-react",
-	"version": "1.0.12",
+	"version": "1.0.13",
 	"description": "This is an Obsidian Plugin for Sekund (https://sekund.io)",
 	"main": "main.js",
 	"scripts": {

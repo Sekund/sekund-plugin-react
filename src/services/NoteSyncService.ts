@@ -14,6 +14,7 @@ import {
 } from "@/state/NoteStates";
 import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
 import { encode } from "base64-arraybuffer";
+import ObjectID from "bson-objectid";
 import mime from "mime-types";
 import { DataAdapter, TFile, Vault } from "obsidian";
 
@@ -101,12 +102,16 @@ export default class NoteSyncService extends ServerlessService {
     return await callFunction(this.plugin, "getNoteByPath", [path, userId]);
   }
 
-  async syncDown(path: string, userId: string) {
+  async getNoteById(id: ObjectID): Promise<Note | undefined> {
+    return await callFunction(this.plugin, "getNote", [id.toString()]);
+  }
+
+  async syncDown(id: ObjectID, userId: string) {
     const ownNote = userId === GlobalState.instance.appState.userProfile._id.toString();
     const rootDir = ownNote ? "" : `__sekund__/${userId}/`;
-    const note = await this.getNoteByPath(path, userId);
+    const note = await this.getNoteById(id);
     if (note) {
-      const fullPath = `${rootDir}${path}`;
+      const fullPath = `${rootDir}${note.path}`;
       const noteFile = this.vault.getAbstractFileByPath(fullPath);
       const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime > note.updated;
       if (!upToDate) {
@@ -132,7 +137,7 @@ ${note.content}`;
         console.log("ERROR: Could not open file ", noteFile);
       }
     } else {
-      console.log("ERROR: No remote file to sync down ", path, userId);
+      console.log("ERROR: No remote file to sync down ", id, userId);
     }
   }
 

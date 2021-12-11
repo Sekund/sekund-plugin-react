@@ -63,6 +63,9 @@ export default function NoteComments({ note }: Props) {
   async function addComment() {
     if (appState.remoteNote) {
       const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
+      if (textarea.value.trim() === "") {
+        return;
+      }
       const now = Date.now();
       NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin?.user.customData._id, now);
       const updtLocalComments = [
@@ -86,10 +89,14 @@ export default function NoteComments({ note }: Props) {
           updated: now,
         },
       });
-      textarea.value = "";
+      console.log("setting cursor at the beginning of the text area");
+      setTimeout(() => {
+        textarea.value = "";
+        textarea.focus();
+        textarea.setSelectionRange(0, 0);
+      }, 10);
     }
   }
-
   function removeLocalComment(noteComment: NoteComment) {
     const comments = localComments.filter((c) => c.created !== noteComment.created && c.updated !== noteComment.updated);
     const now = Date.now();
@@ -120,6 +127,12 @@ export default function NoteComments({ note }: Props) {
     }
   }
 
+  function handleKeyPress(e: React.KeyboardEvent) {
+    if (!e.shiftKey && e.code === "Enter") {
+      addComment();
+    }
+  }
+
   return (
     <div className="px-2 mt-1 mb-16">
       <div className={`sm:col-span-2`}>
@@ -130,6 +143,7 @@ export default function NoteComments({ note }: Props) {
           <textarea
             onInput={autoexpand}
             onChange={(e) => setAreaText(e.target.value)}
+            onKeyPress={handleKeyPress}
             id="sekund-comment"
             name="message"
             rows={2}

@@ -7,6 +7,7 @@ import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 import React, { useEffect, useReducer, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,7 +15,7 @@ import { useTranslation } from "react-i18next";
 export type HomeComponentProps = {
   view: { addAppDispatch: Function };
   notesService: NotesService | undefined;
-  syncDown: (path: string, userId: string) => void;
+  syncDown: (id: ObjectID, userId: string) => void;
   fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 

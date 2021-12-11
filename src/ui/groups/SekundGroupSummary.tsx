@@ -8,7 +8,7 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid } from "@/utils";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import { AdjustmentsIcon, DotsHorizontalIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 type Props = {
@@ -64,12 +64,12 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);
     return (
-      <div className="flex items-center p-1 overflow-hidden" onClick={editAllowed ? () => editGroup(group) : undefined}>
+      <div className="flex items-center p-1 overflow-hidden space-x-1" onClick={editAllowed ? () => editGroup(group) : undefined}>
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>
 
-        {editAllowed ? <DotsHorizontalIcon className="w-4 h-4" /> : ""}
+        {editAllowed ? <AdjustmentsIcon className="w-4 h-4" /> : ""}
       </div>
     );
   }

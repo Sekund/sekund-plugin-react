@@ -8,13 +8,14 @@ import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch, wait } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
 
 export type PeoplesComponentProps = {
   view: { addAppDispatch: Function };
   notesService: NotesService | undefined;
-  syncDown: (path: string, userId: string) => void;
+  syncDown: (id: ObjectID, userId: string) => void;
   fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
@@ -61,7 +62,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown, fetc
 
   function noteClicked(note: Note) {
     touch(appDispatch, note);
-    syncDown(note.path, note.userId.toString());
+    syncDown(note._id, note.userId.toString());
   }
 
   if (notes && notes.length > 0) {

@@ -33,7 +33,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     notesService,
     unpublish: () => {},
     syncUp: () => {},
-    syncDown: (path: string, userId: string) => {},
+    syncDown: (id: ObjectID, userId: string) => {},
   });
 
   return <InjectedHomeComponent />;
@@ -73,7 +73,7 @@ SomePeoples.args = {
   peoples,
   groups,
   note: someNote,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const Empty = Template.bind({});
@@ -84,7 +84,7 @@ Empty.args = {
   peoples: [],
   groups: [],
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const Error = Template.bind({});
@@ -100,7 +100,7 @@ Unpublished.args = {
   peoples,
   groups,
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const PublishedAndSynced = Template.bind({});
@@ -111,7 +111,7 @@ PublishedAndSynced.args = {
   peoples,
   groups,
   note: someNote,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const PublishedNotSharing = Template.bind({});
@@ -122,7 +122,7 @@ PublishedNotSharing.args = {
   peoples,
   groups,
   note: { ...someNote, sharing: {} },
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const PublishedSharingNoComments = Template.bind({});
@@ -133,7 +133,7 @@ PublishedSharingNoComments.args = {
   peoples,
   groups,
   note: { ...someNote, comments: [] },
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const PublishedAndNotSynced = Template.bind({});
@@ -144,7 +144,7 @@ PublishedAndNotSynced.args = {
   peoples,
   groups,
   note: someNote,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const Publishing = Template.bind({});
@@ -165,7 +165,7 @@ FetchingRemoteNote.args = {
   peoples,
   groups,
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const Updating = Template.bind({});
@@ -176,7 +176,7 @@ Updating.args = {
   peoples,
   groups,
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
 };
 
 export const NoLocalFile = Template.bind({});

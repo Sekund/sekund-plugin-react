@@ -22,7 +22,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
   const fetchUnread = async () => {};
 
-  const InjectedHomeComponent = SekundGroupsComponentHOC({ view: wrapper, peoplesService, fetchUnread, syncDown: (path: string) => {} });
+  const InjectedHomeComponent = SekundGroupsComponentHOC({ view: wrapper, peoplesService, fetchUnread, syncDown: (id: ObjectID) => {} });
 
   return <InjectedHomeComponent />;
 };

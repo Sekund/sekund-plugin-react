@@ -27,30 +27,30 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
 export const Welcome = Template.bind({});
 Welcome.args = {
-  sbPage: "welcome",
+  firstPage: "welcome",
   workspaceId: "Sekund",
 };
 
 export const ChooseTeam = Template.bind({});
 ChooseTeam.args = {
-  sbPage: "chooseWorkspace",
+  firstPage: "chooseWorkspace",
   workspaceId: "wicked-problems",
 };
 
 export const ChooseNextStep = Template.bind({});
 ChooseNextStep.args = {
-  sbPage: "chooseNextStep",
+  firstPage: "chooseNextStep",
   sbWorkspace: "wicked-problems",
 };
 
 export const Login = Template.bind({});
 Login.args = {
-  sbPage: "login",
+  firstPage: "login",
   workspaceId: "wicked-problems",
 };
 
 export const Register = Template.bind({});
 Register.args = {
-  sbPage: "register",
+  firstPage: "register",
   workspaceId: "wicked-problems",
 };

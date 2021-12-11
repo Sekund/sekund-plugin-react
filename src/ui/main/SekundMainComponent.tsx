@@ -15,6 +15,7 @@ import SekundSettings from "@/ui/settings/SekundSettings";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
 import { CloudUploadIcon, CogIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +23,7 @@ export type MainComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
   notesService: NotesService | undefined;
-  syncDown: (path: string, userId: string) => void;
+  syncDown: (id: ObjectID, userId: string) => void;
   syncUp: () => void;
   unpublish: () => void;
 };

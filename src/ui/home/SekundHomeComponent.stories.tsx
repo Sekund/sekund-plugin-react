@@ -2,6 +2,7 @@ import notes from "@/mockdata/NotesMock";
 import NotesService from "@/services/NotesService";
 import AppStateWrapper from "@/storybook/AppStateWrapper";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 import React from "react";
 import SekundHomeComponentHOC, { SekundHomeComponent } from "./SekundHomeComponent";
@@ -21,7 +22,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
   const fetchUnread = async () => {};
 
-  const InjectedHomeComponent = SekundHomeComponentHOC({ view: wrapper, notesService, fetchUnread, syncDown: (path: string) => {} });
+  const InjectedHomeComponent = SekundHomeComponentHOC({ view: wrapper, notesService, fetchUnread, syncDown: (id: ObjectID) => {} });
 
   return <InjectedHomeComponent />;
 };

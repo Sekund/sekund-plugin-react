@@ -35,7 +35,6 @@ export default class EventsWatcherService extends ServerlessService {
         this.watching = true;
         for await (const change of cursor) {
           this.resumeToken = change._id;
-          console.log("event", change);
           switch (change.operationType) {
             case "insert": {
               const { fullDocument } = change;

@@ -13,12 +13,12 @@ type Page = "welcome" | "chooseWorkspace" | "chooseNextStep" | "login" | "regist
 
 type Props = {
   close?: () => void;
-  sbPage?: Page;
+  firstPage?: Page;
   sbWorkspace?: string;
 };
 
-export default function Onboarding({ close, sbPage, sbWorkspace }: Props) {
-  const [page, setPage] = useState<Page>(sbPage || "welcome");
+export default function Onboarding({ close, firstPage, sbWorkspace }: Props) {
+  const [page, setPage] = useState<Page>(firstPage || "welcome");
   const workspaceId = useRef("");
   const workspaceName = useRef("");
   const [workspace, setWorkspace] = useState(sbWorkspace);

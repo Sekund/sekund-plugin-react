@@ -79,47 +79,6 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
     }
   }, []);
 
-  function switchWorkspace(evt: any) {
-    if (!appState.plugin) return;
-    appState.plugin.settings.apiKey = evt.target.value;
-    appState.plugin.saveSettings();
-    appState.plugin.attemptConnection(true);
-  }
-
-  const ContinueButton = () => (
-    <button className="flex items-center mt-4 space-x-1 mod-cta" onClick={() => setAction("register")}>
-      <span>{t("continue")}</span>
-      <ArrowRightIcon className="w-4 h-4" />
-    </button>
-  );
-
-  const WorkspaceSwitch = () => {
-    if (!appState.plugin) return <div />;
-    const otherWorkspaces = Object.keys(appState.plugin.settings.apiKeys);
-    return otherWorkspaces.length > 1 ? (
-      <div className="flex flex-col items-center mt-12 space-y-2 flex-start">
-        <span>{t("switchToAnotherWorkspace")}</span>
-        <select defaultValue={appState.plugin.settings.subdomain} className="dropdown" style={{ width: "fit-content" }} onChange={switchWorkspace}>
-          {otherWorkspaces.map((ws) => (
-            <option key={ws} value={ws}>
-              {ws}
-            </option>
-          ))}
-        </select>
-      </div>
-    ) : (
-      <div />
-    );
-  };
-
-  const JoinAnotherWorkspace = () => {
-    return (
-      <a className="pt-8" onClick={() => setAction("register")}>
-        {t("joinAnotherWorkspace")}
-      </a>
-    );
-  };
-
   function workspaceChosen(wsId: string, wsName: string) {
     workspaceId.current = wsId;
     workspaceName.current = wsName;
@@ -165,9 +124,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
         return (
           <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
             {children}
-            <ContinueButton />
-            <WorkspaceSwitch />
-            <JoinAnotherWorkspace />
+            <Onboarding firstPage="chooseWorkspace" />
           </div>
         );
     }

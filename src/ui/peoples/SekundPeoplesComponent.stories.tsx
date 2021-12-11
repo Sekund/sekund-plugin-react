@@ -7,6 +7,7 @@ import SekundPeoplesComponentHOC, { SekundPeoplesComponent } from "./SekundPeopl
 import "/global.css";
 import notes from "@/mockdata/NotesMock";
 import NotesService from "@/services/NotesService";
+import ObjectID from "bson-objectid";
 
 export default {
   title: "Sekund/Peoples",
@@ -22,7 +23,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
   const fetchUnread = async () => {};
 
-  const InjectedHomeComponent = SekundPeoplesComponentHOC({ view: wrapper, notesService, fetchUnread, syncDown: (path: string) => {} });
+  const InjectedHomeComponent = SekundPeoplesComponentHOC({ view: wrapper, notesService, fetchUnread, syncDown: (id: ObjectID) => {} });
 
   return <InjectedHomeComponent />;
 };

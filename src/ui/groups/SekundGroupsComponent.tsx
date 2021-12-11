@@ -12,13 +12,14 @@ import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
 import { EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export type GroupsComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
-  syncDown: (path: string, userId: string) => void;
+  syncDown: (id: ObjectID, userId: string) => void;
   fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
@@ -74,7 +75,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
   }
 
   function noteClicked(note: Note) {
-    syncDown(note.path, note.userId.toString());
+    syncDown(note._id, note.userId.toString());
     touch(appDispatch, note);
   }
 

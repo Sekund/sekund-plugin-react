@@ -1,6 +1,7 @@
 import { someNote } from "@/mockdata/NotesMock";
 import AppStateWrapper from "@/storybook/AppStateWrapper";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 import React from "react";
 import SekundNoteComponentHOC, { SekundNoteComponent } from "./SekundNoteComponent";
@@ -19,7 +20,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   const InjectedNoteComponent = SekundNoteComponentHOC({
     view: wrapper,
     syncUp: () => {},
-    syncDown: (path: string, userId: string) => {},
+    syncDown: (id: ObjectID, userId: string) => {},
     unpublish: () => {},
   });
 

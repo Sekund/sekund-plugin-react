@@ -9,14 +9,15 @@ import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid } from "@/utils";
-import { CheckIcon, DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
+import { AdjustmentsIcon, CheckIcon, DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
   view: { addAppDispatch: Function };
   syncUp: () => void;
-  syncDown: (path: string, userId: string) => void;
+  syncDown: (id: ObjectID, userId: string) => void;
   unpublish: () => void;
 };
 
@@ -43,7 +44,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
       const currentRemoteNote = GlobalState.instance.appState.remoteNote;
       if (currentRemoteNote && evt.data._id.equals(currentRemoteNote._id)) {
         if (evt.updateTime > currentRemoteNote.updated) {
-          syncDown(currentRemoteNote.path, currentRemoteNote.userId.toString());
+          syncDown(currentRemoteNote._id, currentRemoteNote.userId.toString());
         }
       }
     })();
@@ -133,7 +134,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     }
     children.push(
       <a key="sharing.edit" className="flex items-center ml-1">
-        <DotsHorizontalIcon className="w-4 h-4" />
+        <AdjustmentsIcon className="w-4 h-4 text-obs-normal" />
       </a>
     );
     if (children.length > 1) {
@@ -261,8 +262,8 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
       <div className="fixed z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted">
         <div className="flex justify-between">
           {currentFile ? (
-            <div className="flex items-center space-x-1">
-              <span>{currentFile?.name.replace(/\.md/, "")}</span>
+            <div className="flex items-center space-x-1 overflow-auto">
+              <span className="truncate">{currentFile?.name.replace(/\.md/, "")}</span>
               {remoteNote && isOwnNote(remoteNote) ? (
                 <span className="flex items-center" title={t("plugin:deleteFromSekund")} onClick={handleUnpublish}>
                   <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>

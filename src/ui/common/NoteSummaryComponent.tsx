@@ -101,12 +101,14 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   function summaryContents() {
     return (
       <>
-        <div className={`${readStatusClass()}`}>{note.title.replace(".md", "")}</div>
+        <div className={`${readStatusClass()}`}>
+          {isCurrentNote() ? "❯" : ""} {note.title.replace(".md", "")}
+        </div>
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
           {note.comments && note.comments.length > 0 ? (
             <div key="cmts" className="flex items-center">
-              <ChatAlt2Icon className="w-4 h-4" />
+              <ChatAlt2Icon className="w-4 h-4 text-obs-normal" />
               {note.comments.length}
             </div>
           ) : null}
@@ -117,9 +119,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   function summary() {
     return (
       <div
-        className={`flex flex-col px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${
-          isCurrentNote() ? "bg-obs-tertiary" : ""
-        }`}
+        className={`flex flex-col px-3 py-2 text-sm cursor-pointer hover:bg-obs-primary ${isCurrentNote() ? "bg-obs-primary" : ""}`}
         onClick={noteClicked}
       >
         {summaryContents()}
@@ -132,9 +132,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     if (author) {
       return (
         <div
-          className={`flex space-x-2 items-center px-3 py-2 text-sm transition cursor-pointer bg-obs-primary-alt hover:bg-obs-tertiary ${
-            isCurrentNote() ? "bg-obs-tertiary" : ""
-          }`}
+          className={`flex space-x-2 items-center px-3 py-2 text-sm cursor-pointer hover:bg-obs-primary ${isCurrentNote() ? "bg-obs-primary" : ""}`}
           onClick={noteClicked}
         >
           <div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>

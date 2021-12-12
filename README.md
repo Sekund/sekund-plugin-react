@@ -4,7 +4,7 @@ Start installing the [obsidian42-brat plugin](https://github.com/TfTHacker/obsid
 
 In the plugin's main command prompt (available when clicking on its ribbon icon), choose "Add a beta plugin for testing", like so:
 
-![image](https://user-images.githubusercontent.com/41804/145723319-9e569b3c-a9d1-4e63-9a1c-d084b021454a.png)
+![image](https://user-images.githubusercontent.com/41804/145723378-aecdd556-c825-4a03-a376-c65e243082fd.png)
 
 ...then enter 'Sekund/sekund-plugin-react)
 

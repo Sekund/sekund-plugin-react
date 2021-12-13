@@ -73,10 +73,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(
-      listenerId,
-      new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment"], filterIncomingChanges)
-    );
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
     fetchUnread();
     return () => {
       eventsWatcher?.removeEventListener(listenerId);

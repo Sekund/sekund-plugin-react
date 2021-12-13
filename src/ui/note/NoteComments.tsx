@@ -89,7 +89,6 @@ export default function NoteComments({ note }: Props) {
           updated: now,
         },
       });
-      console.log("setting cursor at the beginning of the text area");
       setTimeout(() => {
         textarea.value = "";
         textarea.focus();

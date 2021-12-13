@@ -38,7 +38,6 @@ export default class NoteSyncService extends ServerlessService {
 
   async renameNote({ name, path }: TFile, oldPath: string) {
     const remoteNote = await this.getNoteByPath(oldPath);
-    console.log("rename note");
     if (remoteNote) {
       await callFunction(this.plugin, "renameNote", [remoteNote._id, name, path]);
     }
@@ -182,13 +181,14 @@ ${note.content}`;
       const content = await file.vault.read(file);
       const links = this.plugin.app.metadataCache.resolvedLinks[file.path];
       const assets = links ? Object.keys(links) : [];
+      const fileStat = await this.fsAdapter.stat(file.path);
       await callFunction(this.plugin, "upsertNote", [
         {
           path: file.path,
           title: file.name,
           content,
-          created: file.stat.ctime,
-          updated: file.stat.mtime,
+          created: fileStat && fileStat.ctime > 0 ? fileStat.ctime : fileStat?.mtime,
+          updated: fileStat?.mtime,
           assets,
         },
       ]);

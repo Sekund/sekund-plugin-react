@@ -6,7 +6,7 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid, touch, wait } from "@/utils";
+import { makeid, touch } from "@/utils";
 import { EmojiSadIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer } from "react";

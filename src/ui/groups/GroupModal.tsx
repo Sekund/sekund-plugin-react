@@ -9,6 +9,7 @@ import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { usePeoplesContext } from "@/state/PeoplesContext";
 import { PeoplesActionKind } from "@/state/PeoplesReducer";
+import { makeid } from "@/utils";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -99,7 +100,10 @@ export default function GroupModal({ open, setOpen, group }: Props) {
     const { peoples } = localGroup;
     peoples.forEach((p) =>
       children.push(
-        <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
+        <div
+          key={p._id ? p._id.toString() : p.name || makeid(5)}
+          className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary"
+        >
           {peopleAvatar(p, 6)}
           <span className="ml-2 truncate">{`${p.name || p.email}`}</span>
           <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>

@@ -1,5 +1,6 @@
 import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
@@ -10,7 +11,7 @@ import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import GroupModal from "@/ui/groups/GroupModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { touch } from "@/utils";
+import { makeid, touch } from "@/utils";
 import { EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useState } from "react";
@@ -30,7 +31,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
-  const [mode, setMode] = useState<"none" | "group">("none");
+  const [mode] = useState<"none" | "group">("none");
   const notesProviderState = {
     notesState,
     notesDispatch,
@@ -61,8 +62,28 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
   useEffect(() => {
     if (appState.generalState === "allGood") {
       fetchGroups();
+      watchEvents();
     }
   }, [appState.generalState]);
+
+  async function watchEvents() {
+    if (!appState.plugin) {
+      return;
+    }
+    const listenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(
+      listenerId,
+      new SekundEventListener(["group.add", "group.upsert"], async () => {
+        await fetchGroups();
+        await fetchUnread();
+      })
+    );
+    return () => {
+      eventsWatcher?.removeEventListener(listenerId);
+    };
+  }
 
   function editGroup(group: Group) {
     setCurrentGroup(group);

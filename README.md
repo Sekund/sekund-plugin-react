@@ -1,5 +1,7 @@
 ## Install
 
+#### NB: this plugin's components are documented in a dedicated storybook available <a href="https://sekund.github.io/sekund-plugin-react/?path=/story/sekund-home--some-notes&globals=locale:en" target="_blank">here</a>
+
 Start by installing the [obsidian42-brat plugin](https://github.com/TfTHacker/obsidian42-brat).
 
 In the plugin's main command prompt (available when clicking on its ribbon icon), choose "Add a beta plugin for testing", like so:

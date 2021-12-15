@@ -107,6 +107,10 @@
     margin-left: auto;
     margin-right: auto
   }
+  .sekund .my-2 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem
+  }
   .sekund .mt-1 {
     margin-top: 0.25rem
   }

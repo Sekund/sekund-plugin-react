@@ -9,7 +9,7 @@ import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid } from "@/utils";
-import { AdjustmentsIcon, CheckIcon, DotsHorizontalIcon, TrashIcon } from "@heroicons/react/solid";
+import { AdjustmentsIcon, CheckIcon, CloudDownloadIcon, TrashIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -175,10 +175,17 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   if (!currentFile && remoteNote) {
     return (
       <div className="flex flex-col items-center justify-center w-full h-full p-2">
-        <span className={`p-2 mb-2 text-xs text-center text-obs-muted`}>{t("plugin:deleteFromSekundDesc")}</span>
+        <span className={`p-2 mb-2 text-xs text-center text-obs-normal`}>
+          {t("noteCannotBeFoundLocally", { noteTitle: remoteNote.title.replace(".md", "") })}
+        </span>
         <button onClick={handleUnpublish} className="flex items-center">
           <TrashIcon className="w-4 h-4 mr-1" />
           {t("plugin:deleteFromSekund")}
+        </button>
+        <span className={`p-2 my-2 text-xs text-center text-obs-muted`}>{t("plugin:deleteFromSekundDesc")}</span>
+        <button onClick={() => syncDown(remoteNote._id, userProfile._id.toString())} className="flex items-center mt-2">
+          <CloudDownloadIcon className="w-4 h-4 mr-1" />
+          <span>{t("downloadNote")}</span>
         </button>
       </div>
     );

@@ -90,5 +90,7 @@
     "describeYourself": "Descríbase",
     "disconnect": "Desconectar",
     "deleteAllData": "Borra todos tus datos",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "noteCannotBeFoundLocally": "Tu nota \"{{noteTitle}}\" no se puede encontrar localmente. ¿Bórralo?",
+    "downloadNote": "Descargar nota"
 }

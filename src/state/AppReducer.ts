@@ -29,7 +29,7 @@ export type NoteState = {
   publishing: boolean;
   fetching: boolean;
   updating: boolean;
-  isShared: boolean;
+  exists: boolean;
 };
 
 export type AppState = {
@@ -53,7 +53,7 @@ export const initialAppState: AppState = {
     publishing: false,
     fetching: false,
     updating: false,
-    isShared: false,
+    exists: false,
   },
   locale: "en",
   currentFile: undefined,

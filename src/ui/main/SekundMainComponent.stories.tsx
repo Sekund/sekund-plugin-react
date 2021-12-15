@@ -1,3 +1,4 @@
+import { Note } from "@/domain/Note";
 import notes, { someNote } from "@/mockdata/NotesMock";
 import peoples from "@/mockdata/PeoplesMock";
 import users from "@/mockdata/Users";
@@ -33,6 +34,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     notesService,
     unpublish: () => {},
     syncUp: () => {},
+    noLocalFile: (note: Note) => {},
     syncDown: (id: ObjectID, userId: string) => {},
   });
 

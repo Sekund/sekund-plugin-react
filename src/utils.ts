@@ -24,7 +24,7 @@ export function setGeneralState(dispatchers: Array<React.Dispatch<AppAction>>, g
 
 export function setCurrentNoteState(
   dispatchers: Array<React.Dispatch<AppAction>>,
-  nState: NoteState | null,
+  nState: NoteState | undefined | null,
   local: TFile | undefined | null,
   remote: Note | undefined | null
 ) {

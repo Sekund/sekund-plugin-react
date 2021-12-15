@@ -1,3 +1,4 @@
+import { Note } from "@/domain/Note";
 import i18next from "@/i18n.config";
 import NoteSyncService from "@/services/NoteSyncService";
 import SekundMainComponent, { MainComponentProps } from "@/ui/main/SekundMainComponent";
@@ -24,6 +25,10 @@ export default class SekundMainView extends SekundView {
     NoteSyncService.instance.syncDown(id, userId);
   }
 
+  noLocalFile(note: Note) {
+    NoteSyncService.instance.noLocalFile(note);
+  }
+
   unpublish() {
     NoteSyncService.instance.unpublish();
   }
@@ -40,6 +45,7 @@ export default class SekundMainView extends SekundView {
       syncDown: this.syncDown,
       syncUp: this.syncUp,
       unpublish: this.unpublish,
+      noLocalFile: this.noLocalFile,
     } as MainComponentProps;
     const InjectedTabsComponent = SekundMainComponent(props);
     ReactDOM.render(<InjectedTabsComponent />, this.containerEl.children[1]);

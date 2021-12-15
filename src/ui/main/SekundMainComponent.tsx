@@ -24,6 +24,7 @@ export type MainComponentProps = {
   peoplesService: PeoplesService | undefined;
   notesService: NotesService | undefined;
   syncDown: (id: ObjectID, userId: string) => void;
+  noLocalFile: (note: Note) => void;
   syncUp: () => void;
   unpublish: () => void;
 };

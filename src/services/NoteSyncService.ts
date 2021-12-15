@@ -4,6 +4,7 @@ import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
 import GlobalState from "@/state/GlobalState";
 import {
+  NO_LOCAL_FILE,
   OWN_NOTE_FETCHING,
   OWN_NOTE_LOCAL,
   OWN_NOTE_OUTDATED,
@@ -73,7 +74,7 @@ export default class NoteSyncService extends ServerlessService {
     // note state is irrevant here, the only relevant info is the note
     // the note component just needs to decide what to display based on
     // whether the note is an own note or a shared one
-    setCurrentNoteState(this.plugin.dispatchers, null, null, note);
+    setCurrentNoteState(this.plugin.dispatchers, NO_LOCAL_FILE, null, note);
   }
 
   async compareNotes(file: TFile) {

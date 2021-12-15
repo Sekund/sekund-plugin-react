@@ -21,8 +21,9 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   } as NotesService;
 
   const fetchUnread = async () => {};
+  const noLocalFile = async () => {};
 
-  const InjectedHomeComponent = SekundHomeComponentHOC({ view: wrapper, notesService, fetchUnread, syncDown: (id: ObjectID) => {} });
+  const InjectedHomeComponent = SekundHomeComponentHOC({ view: wrapper, notesService, noLocalFile, fetchUnread, syncDown: (id: ObjectID) => {} });
 
   return <InjectedHomeComponent />;
 };

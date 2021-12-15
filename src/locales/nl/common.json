@@ -90,5 +90,7 @@
     "describeYourself": "Beschrijf jezelf",
     "disconnect": "Loskoppelen",
     "deleteAllData": "Wis al uw gegevens",
-    "account": "Rekening"
+    "account": "Rekening",
+    "noteCannotBeFoundLocally": "Je notitie \"{{noteTitle}}\" kan niet lokaal worden gevonden. Verwijder het?",
+    "downloadNote": "Opmerking downloaden"
 }

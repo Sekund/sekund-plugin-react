@@ -16,10 +16,11 @@ export type HomeComponentProps = {
   view: { addAppDispatch: Function };
   notesService: NotesService | undefined;
   syncDown: (id: ObjectID, userId: string) => void;
+  noLocalFile: (note: Note) => void;
   fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundHomeComponent = ({ notesService, syncDown, className, fetchUnread }: HomeComponentProps) => {
+export const SekundHomeComponent = ({ notesService, noLocalFile, className, fetchUnread }: HomeComponentProps) => {
   const { t } = useTranslation(["common", "plugin"]);
   const { appState, appDispatch } = useAppContext();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -86,7 +87,7 @@ export const SekundHomeComponent = ({ notesService, syncDown, className, fetchUn
       }
     } else {
       console.log("no file, we should ask the user if they want to restore the note");
-      // syncDown(note.path, note.userId.toString())
+      noLocalFile(note);
     }
     touch(appDispatch, note);
   }

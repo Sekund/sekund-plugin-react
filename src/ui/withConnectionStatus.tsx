@@ -20,6 +20,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
   const [action, setAction] = useState<"none" | "login" | "register">("none");
   const workspaceId = useRef("");
   const workspaceName = useRef("");
+  const [retryVisible, setRetryVisible] = useState(false);
 
   const localizedAppState = window.moment
     ? { ...GlobalState.instance.appState, id: makeid(3), locale: (window.moment as any).locale() }
@@ -85,6 +86,10 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
     setAction("login");
   }
 
+  function retry() {
+    appState.plugin?.attemptConnection(true);
+  }
+
   type StatusProps = {
     children?: JSX.Element | JSX.Element[];
   };
@@ -138,6 +143,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
             case "allGood":
               return <WrappedComponent {...props} />;
             case "connecting":
+              setTimeout(() => setRetryVisible(true), 5000);
               return (
                 <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2 animate-pulse">
@@ -148,6 +154,11 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                     <div className="font-medium text-obs-accent">{appState.plugin?.settings.subdomain}</div>
                   </div>
                   <Loader className="h-20" />
+                  {retryVisible ? (
+                    <button className="mt-2 mr-0 mod-cta" onClick={retry}>
+                      Retry
+                    </button>
+                  ) : null}
                 </div>
               );
             case "loginError": {
@@ -168,7 +179,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                     <EmojiSadIcon className="w-6 h-6" />
                   </div>
                   <div className="text-center ">{t("plugin:noApiKey")}</div>
-                  <div className="mt-2 text-sm text-center ">{t("plugin:noApiKeyDesc")}</div>
+                  <div className="mt-2 text-sm text-center">{t("plugin:noApiKeyDesc")}</div>
                 </Status>
               );
             case "noSettings":
@@ -210,13 +221,15 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
               );
             case "unknownError":
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
-                  <div className="flex justify-center mb-2">
-                    <EmojiSadIcon className="w-6 h-6" />
+                <Status>
+                  <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                    <div className="flex justify-center mb-2">
+                      <EmojiSadIcon className="w-6 h-6" />
+                    </div>
+                    <div className="text-center ">{t("plugin:unknownError")}</div>
+                    <div className="mt-2 text-sm text-center ">{t("plugin:unknownErrorDesc")}</div>
                   </div>
-                  <div className="text-center ">{t("plugin:unknownError")}</div>
-                  <div className="mt-2 text-sm text-center ">{t("plugin:unknownErrorDesc")}</div>
-                </div>
+                </Status>
               );
           }
         })()}

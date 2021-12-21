@@ -269,14 +269,18 @@ export default class SekundPluginReact extends Plugin {
         if (user) {
           this.authenticatedUsers[this.settings.subdomain] = user;
 
-          new UsersService(this);
-          new NoteSyncService(this);
-          new NotesService(this);
-          new PeoplesService(this);
-          new GroupsService(this);
-          new EventsWatcherService(this);
+          try {
+            new UsersService(this);
+            new NoteSyncService(this);
+            new NotesService(this);
+            new PeoplesService(this);
+            new GroupsService(this);
+            new EventsWatcherService(this);
 
-          this.watchNotes();
+            this.watchNotes();
+          } catch (err) {
+            return "unknownError";
+          }
 
           const userProfile = await UsersService.instance.fetchUser();
 

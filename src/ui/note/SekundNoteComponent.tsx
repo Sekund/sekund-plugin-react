@@ -122,7 +122,11 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     }
     if (sharing && sharing.peoples && sharing.peoples.length > 0) {
       if (sharing.groups && sharing.groups.length > 0) {
-        children.push(<span key="sharing.plus">+</span>);
+        children.push(
+          <span className="mr-1" key="sharing.plus">
+            +
+          </span>
+        );
       }
       children.push(
         <div key="sharing.people" className="flex -space-x-1 overflow-hidden">

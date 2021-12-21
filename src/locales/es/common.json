@@ -56,7 +56,7 @@
     "createPasswordDesc": "¡Su contraseña debe tener al menos 8 caracteres, contener tanto letras como números, caracteres en mayúsculas y minúsculas y, como mínimo, un símbolo especial, por ejemplo, ! @ # ? ] ",
     "verifying": "Verificando...",
     "onboardingWelcome": "¡Bienvenido! Para usar Sekund, debes ser invitado a unirte a un espacio de trabajo.",
-    "createYourOwnWorkspace": "¿Quieres crear tu propio espacio de trabajo? Por favor, <a href=\"mailto:hi@candide.me\">contacta con nosotros</a>, y cuéntanos tu proyecto.",
+    "createYourOwnWorkspace": "¿Quieres crear tu propio espacio de trabajo? Por favor, <a href=\"https://www.sekund.io/contact\">contacta con nosotros</a>, y cuéntanos tu proyecto.",
     "addWorkspace": "Añadir un espacio de trabajo",
     "signInToWorkspace": "Iniciar sesión en el espacio de trabajo",
     "registerToWorkspace": "Regístrese en el espacio de trabajo",

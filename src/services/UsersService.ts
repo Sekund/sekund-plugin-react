@@ -29,7 +29,7 @@ export default class UsersService extends ServerlessService {
           console.log("done");
         }
       } catch (err) {
-        console.log("error watching users");
+        console.log("error watching users", err);
       }
     }
   }
@@ -69,11 +69,7 @@ export default class UsersService extends ServerlessService {
     const atlasUsers = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("users");
     const pNonNullValues = Object.entries(p).reduce((a: any, [k, v]) => (v == null ? a : ((a[k] = v), a)), {});
     if (atlasUsers) {
-      const found = await atlasUsers.updateOne(
-        { _id: new ObjectID(this.plugin.user.customData._id) },
-        { $set: { ...pNonNullValues } },
-        { upsert: true }
-      );
+      await atlasUsers.updateOne({ _id: new ObjectID(this.plugin.user.customData._id) }, { $set: { ...pNonNullValues } }, { upsert: true });
     }
   }
 }

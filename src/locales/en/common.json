@@ -56,7 +56,7 @@
     "createPasswordDesc": "Your password must be at least 8 characters long, contain both letters and numbers, uppercase and lowercase characters and at a minimum one special symbol, e.g., ! @ # ? ]",
     "verifying": "Verifying...",
     "onboardingWelcome": "Welcome! In order to use Sekund, you must be invited to join a workspace.",
-    "createYourOwnWorkspace": "Want to create your own workspace? Please <a href=\\\"mailto:hi@candide.me\\\">contact us</a>, and tell us about your project.",
+    "createYourOwnWorkspace": "Want to create your own workspace? Please <a href=\"https://www.sekund.io/contact\">contact us</a>, and tell us about your project.",
     "addWorkspace": "Add a workspace",
     "signInToWorkspace": "Sign in to workspace",
     "registerToWorkspace": "Register to workspace",

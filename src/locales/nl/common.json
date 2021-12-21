@@ -56,7 +56,7 @@
     "createPasswordDesc": "Uw wachtwoord moet ten minste 8 tekens lang zijn, zowel letters als cijfers bevatten, hoofdletters en kleine letters en ten minste één speciaal symbool, bijv. @ # ? ] ",
     "verifying": "Verifiëren...",
     "onboardingWelcome": "Welkom! Om Sekund te kunnen gebruiken, moet u uitgenodigd worden om deel te nemen aan een werkruimte.",
-    "createYourOwnWorkspace": "Wilt u uw eigen werkruimte te creëren? Neem dan <a href=\"mailto:hi@candide.me\">contact met ons op</a>, en vertel ons over uw project.",
+    "createYourOwnWorkspace": "Wilt u uw eigen werkruimte te creëren? Neem dan <a href=\"https://www.sekund.io/contact\">contact met ons op</a>, en vertel ons over uw project.",
     "addWorkspace": "Een werkruimte toevoegen",
     "signInToWorkspace": "Inloggen op de werkruimte",
     "registerToWorkspace": "Registreer op werkruimte",

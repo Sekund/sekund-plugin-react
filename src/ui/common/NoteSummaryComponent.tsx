@@ -11,7 +11,6 @@ import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { isUnread, makeid } from "@/utils";
 import { ChatAlt2Icon } from "@heroicons/react/solid";
-import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
@@ -26,10 +25,11 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   const { i18n } = useTranslation();
   const { appState } = useAppContext();
 
-  const { notesDispatch } = useNotesContext();
+  const { notesState, notesDispatch } = useNotesContext();
 
-  const { remoteNote } = appState;
   const { unreadNotes, noteUpdates } = appState;
+  const { note: currentNote } = notesState;
+  const [isActiveNote, setIsActiveNote] = useState(false);
   const [note, setNote] = useState(noteSummary);
 
   useEffect(() => {
@@ -45,6 +45,18 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
       setNote({ ...note, isRead: Date.now() });
     }
   }, [unreadNotes]);
+
+  useEffect(() => {
+    if (appState.remoteNote) {
+      notesDispatch({ type: NotesActionKind.SetNote, payload: appState.remoteNote });
+    }
+  }, [appState.remoteNote]);
+
+  useEffect(() => {
+    if (currentNote?._id.equals(note._id)) {
+      setIsActiveNote(true);
+    } else setIsActiveNote(false);
+  }, [currentNote]);
 
   useEffect(() => {
     const listenerId = makeid(5);
@@ -85,14 +97,12 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     return isUnread(note) ? "font-bold" : "";
   }
 
-  function isCurrentNote() {
-    return note._id.equals(remoteNote?._id || new ObjectID());
-  }
-
   async function noteClicked() {
     if (NotesService.instance) {
       await NotesService.instance.setNoteIsRead(note._id);
     }
+    setIsActiveNote(true);
+    notesDispatch({ type: NotesActionKind.SetNote, payload: note });
     notesDispatch({ type: NotesActionKind.SetNoteIsRead, payload: note._id });
     handleNoteClicked(note);
     setNote({ ...note, isRead: Date.now() });
@@ -102,7 +112,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     return (
       <>
         <div className={`${readStatusClass()}`}>
-          {isCurrentNote() ? "❯" : ""} {note.title.replace(".md", "")}
+          {isActiveNote ? "❯" : ""} {note.title.replace(".md", "")}
         </div>
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
@@ -119,7 +129,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   function summary() {
     return (
       <div
-        className={`flex flex-col px-3 py-2 text-sm cursor-pointer hover:bg-obs-primary ${isCurrentNote() ? "bg-obs-primary" : ""}`}
+        className={`flex flex-col px-3 py-2 text-sm cursor-pointer hover:bg-obs-secondary ${isActiveNote ? "bg-obs-secondary" : ""}`}
         onClick={noteClicked}
       >
         {summaryContents()}
@@ -132,7 +142,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     if (author) {
       return (
         <div
-          className={`flex space-x-2 items-center px-3 py-2 text-sm cursor-pointer hover:bg-obs-primary ${isCurrentNote() ? "bg-obs-primary" : ""}`}
+          className={`flex space-x-2 items-center px-3 py-2 text-sm cursor-pointer hover:bg-obs-secondary ${isActiveNote ? "bg-obs-secondary" : ""}`}
           onClick={noteClicked}
         >
           <div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>

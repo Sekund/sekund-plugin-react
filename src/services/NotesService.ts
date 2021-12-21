@@ -27,7 +27,10 @@ export default class NotesService extends ServerlessService {
 
   async getNotes(oldest: number, limit: number): Promise<Note[]> {
     const userNotes: Note[] = await callFunction(this.plugin, "userNotes", [oldest, limit]);
-    return userNotes.sort((a, b) => b.updated - a.updated);
+    if (userNotes && userNotes.length > 0) {
+      return userNotes.sort((a, b) => b.updated - a.updated);
+    }
+    return [];
   }
 
   async hasMoreNotes(last: Note): Promise<number> {

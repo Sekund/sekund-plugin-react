@@ -91,6 +91,10 @@ export default function NoteComments({ note }: Props) {
       });
       setTimeout(() => {
         textarea.value = "";
+        textarea.style.height = "initial";
+        if (textarea.parentNode) {
+          (textarea.parentNode as HTMLElement).dataset.replicatedValue = "";
+        }
         textarea.focus();
         textarea.setSelectionRange(0, 0);
       }, 10);

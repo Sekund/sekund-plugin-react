@@ -14,7 +14,7 @@ export default class SekundMainView extends SekundView {
   }
 
   getDisplayText(): string {
-    return `Sekund: ${i18next.t("plugin:openPeoplesView")}`;
+    return `Sekund`;
   }
 
   getIcon(): string {

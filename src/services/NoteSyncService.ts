@@ -46,7 +46,6 @@ export default class NoteSyncService extends ServerlessService {
 
   async renameSharedNote(note: Note) {
     if (!GlobalState.instance.appState.userProfile._id.equals(note.userId)) {
-      console.log("renamesharednote", note);
       // hack: the backend adds the previous path field to enable this use case
       const previousPath = (note as unknown as any).previousPath;
       const previousNotePath = `__sekund__/${note.userId.toString()}/${previousPath}`;
@@ -92,7 +91,7 @@ export default class NoteSyncService extends ServerlessService {
       if (!rNote) {
         setCurrentNoteState(this.plugin.dispatchers, OWN_NOTE_LOCAL, file, null);
       } else {
-        const fileSynced = !!rNote && rNote.updated === stat.mtime;
+        const fileSynced = !!rNote && rNote.modified === stat.mtime;
         setCurrentNoteState(this.plugin.dispatchers, fileSynced ? OWN_NOTE_UPTODATE : OWN_NOTE_OUTDATED, file, rNote);
       }
     }
@@ -113,7 +112,7 @@ export default class NoteSyncService extends ServerlessService {
     if (note) {
       const fullPath = `${rootDir}${note.path}`;
       const noteFile = this.vault.getAbstractFileByPath(fullPath);
-      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime > note.updated;
+      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime === note.modified;
       if (!upToDate) {
         const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
         await this.createDirs(dirs);
@@ -121,7 +120,7 @@ export default class NoteSyncService extends ServerlessService {
           ? note.content
           : `---
 _id: ${note._id.toString()}
-updated: ${note.updated}
+modified: ${note.modified}
 ---
 
 ${note.content}`;
@@ -137,6 +136,7 @@ ${note.content}`;
         console.log("ERROR: Could not open file ", noteFile);
       }
     } else {
+      setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, undefined, note);
       console.log("ERROR: No remote file to sync down ", id, userId);
     }
   }
@@ -189,6 +189,7 @@ ${note.content}`;
           title: file.name,
           content,
           created: fileStat && fileStat.ctime > 0 ? fileStat.ctime : fileStat?.mtime,
+          modified: fileStat?.mtime,
           updated: fileStat?.mtime,
           assets,
         },

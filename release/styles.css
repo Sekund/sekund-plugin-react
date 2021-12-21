@@ -1,32 +1,4 @@
-.sekund .container {
-    width: 100%
-  }
-  @media (min-width: 640px) {
-    .sekund .container {
-      max-width: 640px
-    }
-  }
-  @media (min-width: 768px) {
-    .sekund .container {
-      max-width: 768px
-    }
-  }
-  @media (min-width: 1024px) {
-    .sekund .container {
-      max-width: 1024px
-    }
-  }
-  @media (min-width: 1280px) {
-    .sekund .container {
-      max-width: 1280px
-    }
-  }
-  @media (min-width: 1536px) {
-    .sekund .container {
-      max-width: 1536px
-    }
-  }
-  .sekund .sr-only {
+.sekund .sr-only {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -515,8 +487,8 @@
   .sekund .bg-secondary {
     background-color: var(--color-bg-secondary)
   }
-  .sekund .hover\:bg-obs-primary:hover {
-    background-color: var(--background-primary)
+  .sekund .hover\:bg-obs-secondary:hover {
+    background-color: var(--background-secondary)
   }
   .sekund .hover\:bg-obs-tertiary:hover {
     background-color: var(--background-tertiary)

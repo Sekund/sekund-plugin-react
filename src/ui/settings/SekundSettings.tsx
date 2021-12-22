@@ -146,7 +146,7 @@ export default function SekundSettings({ close }: Props) {
 
   const Bio = () => {
     if (state.edit.bio) {
-      return <textarea ref={bioArea} onKeyPress={saveBio} defaultValue={state.bio || ""} />;
+      return <textarea ref={bioArea} spellCheck="false" onKeyPress={saveBio} defaultValue={state.bio || ""} />;
     }
     return <div className="inline-block">{state.bio}</div>;
   };

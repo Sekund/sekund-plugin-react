@@ -90,6 +90,7 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
             onChange={(evt) => setUserComment(evt.target.value)}
             className="p-1 mt-1 mr-4 input"
             defaultValue={comment.text}
+            spellCheck="false"
           />
         </div>
       );

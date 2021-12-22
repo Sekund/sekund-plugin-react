@@ -150,6 +150,7 @@ export default function NoteComments({ note }: Props) {
             id="sekund-comment"
             name="message"
             rows={2}
+            spellCheck="false"
             className="relative block w-full px-2 py-1 text-sm border rounded-md"
             aria-describedby="message-max"
             defaultValue={""}

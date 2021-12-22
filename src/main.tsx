@@ -240,7 +240,7 @@ export default class SekundPluginReact extends Plugin {
       return "allGood";
     }
 
-    if (GlobalState.instance.appState.generalState === "connecting") {
+    if (!force && GlobalState.instance.appState.generalState === "connecting") {
       return "connecting";
     }
 

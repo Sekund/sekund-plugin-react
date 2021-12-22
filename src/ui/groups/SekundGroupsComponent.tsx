@@ -75,7 +75,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["group.add", "group.upsert"], async () => {
+      new SekundEventListener(["group.add", "group.upsert", "group.delete"], async () => {
         await fetchGroups();
         await fetchUnread();
       })

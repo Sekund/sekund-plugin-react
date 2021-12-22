@@ -13,7 +13,7 @@ import {
   SHARED_NOTE_SYNCHRONIZING,
   SHARED_NOTE_UPTODATE,
 } from "@/state/NoteStates";
-import { isSharedNoteFile, setCurrentNoteState } from "@/utils";
+import { isSharedNoteFile, mkdirs, setCurrentNoteState } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
 import mime from "mime-types";
@@ -142,14 +142,7 @@ ${note.content}`;
   }
 
   async createDirs(path: string) {
-    let directories = ".";
-    for (const dir of path.split("/")) {
-      directories = `${directories}/${dir}`;
-      const dirExists = await this.fsAdapter.exists(directories);
-      if (!dirExists) {
-        await this.fsAdapter.mkdir(directories);
-      }
-    }
+    mkdirs(path, this.fsAdapter);
   }
 
   async uploadDependencies(assets: Array<string>, noteId: string) {

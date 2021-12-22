@@ -1,8 +1,7 @@
 import { Note } from "@/domain/Note";
 import NotesService from "@/services/NotesService";
 import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
-import ObjectID from "bson-objectid";
-import { TFile } from "obsidian";
+import { DataAdapter, TFile } from "obsidian";
 import React, { Dispatch } from "react";
 import * as Realm from "realm-web";
 
@@ -95,3 +94,14 @@ export const validateEmail = (email: string) => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 };
+
+export async function mkdirs(path: string, fsAdapter: DataAdapter) {
+  let directories = ".";
+  for (const dir of path.split("/")) {
+    directories = `${directories}/${dir}`;
+    const dirExists = await fsAdapter.exists(directories);
+    if (!dirExists) {
+      await fsAdapter.mkdir(directories);
+    }
+  }
+}

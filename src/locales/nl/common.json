@@ -92,5 +92,6 @@
     "deleteAllData": "Wis al uw gegevens",
     "account": "Rekening",
     "noteCannotBeFoundLocally": "Je notitie \"{{noteTitle}}\" kan niet lokaal worden gevonden. Verwijder het?",
-    "downloadNote": "Opmerking downloaden"
+    "downloadNote": "Opmerking downloaden",
+    "tryAgain": "Probeer opnieuw"
 }

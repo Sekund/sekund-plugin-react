@@ -27,20 +27,21 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   const forceUpdate = () => setState(state + 1);
   const [sharingOptions, setSharingOptions] = useState<SelectOption[]>([]);
   const selectInput = useRef<any>();
-  const shade = useRef<any>()
+  const shade = useRef<any>();
 
   // remove those pesky resize handles when showing this modal, and restore
   // them when it closes
   useEffect(() => {
-    loadOptions("")
-  }, [open])
+    loadOptions("");
+  }, [open]);
 
   async function loadOptions(inputValue: string) {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
-    if (userProfile) { alreadySharing.push(userProfile._id) }
-    const found = await UsersService.instance
-      .findUsers(inputValue.toLowerCase(), alreadySharing);
-    setSharingOptions(found)
+    if (userProfile) {
+      alreadySharing.push(userProfile._id);
+    }
+    const found = await UsersService.instance.findUsers(inputValue.toLowerCase(), alreadySharing);
+    setSharingOptions(found);
   }
 
   async function removeGroup(g: Group) {
@@ -77,15 +78,19 @@ export default function SharingModal({ open, setOpen, note }: Props) {
     const closeButtonClasses = "rounded-md cursor-pointer hover:text-secondary focus:outline-none w-4 h-4 m-2";
     if (sharing?.groups?.length !== 0) {
       const { groups } = sharing;
-      groups?.forEach((g, idx) =>
-        children.push(
-          <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
-            {groupAvatar(g, 6)}
-            <span className="ml-2 truncate">{g.name}</span>
-            <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
-          </div>
-        )
-      );
+      groups?.forEach((g, idx) => {
+        if (g) {
+          children.push(
+            <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
+              {groupAvatar(g, 6)}
+              <span className="ml-2 truncate">{g.name}</span>
+              <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
+            </div>
+          );
+        } else {
+          console.log("empty group here", note);
+        }
+      });
     }
     if (sharing?.peoples?.length !== 0) {
       if (sharing === undefined) return null;
@@ -104,33 +109,43 @@ export default function SharingModal({ open, setOpen, note }: Props) {
   }
 
   return (
-    <div ref={shade} onClick={(evt) => { if (evt.target === shade.current) { setOpen(false) } }} className="fixed inset-0 z-20 flex flex-col items-center justify-center bg-obs-cover">
+    <div
+      ref={shade}
+      onClick={(evt) => {
+        if (evt.target === shade.current) {
+          setOpen(false);
+        }
+      }}
+      className="fixed inset-0 z-20 flex flex-col items-center justify-center bg-obs-cover"
+    >
       <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
         <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">
-          <div className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none" onClick={() => setOpen(false)}>
-            <span className="sr-only">{t('close')}</span>
+          <div
+            className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none"
+            onClick={() => setOpen(false)}
+          >
+            <span className="sr-only">{t("close")}</span>
             <XIcon className="w-6 h-6" aria-hidden="true" />
           </div>
         </div>
         <div className="text-lg font-medium leading-6 text-primary">{t("plugin:setSharingOptions")}</div>
         <div className="max-w-xl mt-2 text-sm text-secondary">
-          <p>{t('plugin:shareWithWhom')}</p>
+          <p>{t("plugin:shareWithWhom")}</p>
         </div>
         <div className="flex items-center mt-3 space-x-2">
           <div className="self-start flex-grow overflow-hidden truncate">
-            <select
-              ref={selectInput}
-              className="min-w-full pl-2 pr-4 truncate dropdown"
-            >
-              <option key="none" value="none">--</option>
+            <select ref={selectInput} className="min-w-full pl-2 pr-4 truncate dropdown">
+              <option key="none" value="none">
+                --
+              </option>
               {sharingOptions.map((option: SelectOption) => (
-                <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>{option.label}</option>
+                <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>
+                  {option.label}
+                </option>
               ))}
             </select>
           </div>
-          <button onClick={() => addSelectedUserOrGroup()}>
-            {t('add')}
-          </button>
+          <button onClick={() => addSelectedUserOrGroup()}>{t("add")}</button>
         </div>
         <div className="mt-5 sm:mt-6 text-secondary">{shares()}</div>
       </div>

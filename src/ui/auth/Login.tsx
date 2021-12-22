@@ -75,7 +75,7 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
       const apiKeyService = new ApiKeyService(appUser);
       const { key } = await apiKeyService.ensureApiKey();
       await appState.plugin?.addApiKey(workspaceName, key);
-      appState.plugin?.attemptConnection();
+      appState.plugin?.attemptConnection(true);
     } else {
       console.log("login error");
     }

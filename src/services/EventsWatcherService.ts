@@ -42,7 +42,6 @@ export default class EventsWatcherService extends ServerlessService {
                 for (const evtType of listener.eventTypes) {
                   if (fullDocument.type === evtType) {
                     listener.callback(fullDocument);
-                    continue;
                   }
                 }
               }

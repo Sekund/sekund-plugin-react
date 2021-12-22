@@ -43,6 +43,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
   }, [appState.locale]);
 
   useEffect(() => {
+    setRetryVisible(false);
     setAction("none");
   }, [appState.generalState]);
 
@@ -88,6 +89,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
 
   function retry() {
     appState.plugin?.attemptConnection(true);
+    setRetryVisible(false);
   }
 
   type StatusProps = {
@@ -143,7 +145,6 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
             case "allGood":
               return <WrappedComponent {...props} />;
             case "connecting":
-              setTimeout(() => setRetryVisible(true), 5000);
               return (
                 <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2 animate-pulse">
@@ -156,7 +157,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                   <Loader className="h-20" />
                   {retryVisible ? (
                     <button className="mt-2 mr-0 mod-cta" onClick={retry}>
-                      Retry
+                      {t("tryAgain")}
                     </button>
                   ) : null}
                 </div>

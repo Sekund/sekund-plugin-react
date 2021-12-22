@@ -50,10 +50,8 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
     eventsWatcher?.addEventListener(
       listenerId,
       new SekundEventListener(["group.add", "group.upsert"], async () => {
-        if (expandedRef.current) {
-          await fetchGroupNotes();
-          await fetchUnread();
-        }
+        await fetchGroupNotes();
+        await fetchUnread();
       })
     );
     return () => {
@@ -64,7 +62,7 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);
     return (
-      <div className="flex items-center p-1 overflow-hidden space-x-1" onClick={editAllowed ? () => editGroup(group) : undefined}>
+      <div className="flex items-center p-1 space-x-1 overflow-hidden cursor-pointer" onClick={editAllowed ? () => editGroup(group) : undefined}>
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>
@@ -79,7 +77,7 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
       <div className="flex flex-col" style={{ borderRight: "none", borderLeft: "none" }}>
         <div
           key={group._id.toString()}
-          className="flex items-center justify-between w-full mx-auto bg-obs-primary-alt hover:bg-obs-tertiary"
+          className="flex items-center justify-between w-full mx-auto cursor-pointer bg-obs-primary-alt hover:bg-obs-primary"
           onClick={toggleExpanded}
         >
           <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer">

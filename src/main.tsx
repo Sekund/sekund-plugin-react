@@ -12,7 +12,7 @@ import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
-import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, setCurrentNoteState, setGeneralState } from "@/utils";
+import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, mkdirs, setCurrentNoteState, setGeneralState } from "@/utils";
 import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -195,8 +195,10 @@ export default class SekundPluginReact extends Plugin {
   private async updateMetaDocuments(publicUser: any) {
     const documents = publicUser.mongoClient("mongodb-atlas").db("meta").collection("documents");
     const readme = await documents.findOne({ title: "**README**" });
+    const path = "__sekund__/**README**.md";
     if (readme) {
-      await this.app.vault.adapter.write("__sekund__/**README**.md", readme.content);
+      await mkdirs(path, this.app.vault.adapter);
+      await this.app.vault.adapter.write(path, readme.content);
     }
   }
 

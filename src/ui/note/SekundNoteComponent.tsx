@@ -58,7 +58,9 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   }
 
   function handleUnpublish() {
-    unpublish();
+    if (confirm(t("areYouSure"))) {
+      unpublish();
+    }
   }
 
   function uploadButtonLabel() {
@@ -276,8 +278,8 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
             <div className="flex items-center space-x-1 overflow-auto">
               <span className="truncate">{currentFile?.name.replace(/\.md/, "")}</span>
               {remoteNote && isOwnNote(remoteNote) ? (
-                <span className="flex items-center" title={t("plugin:deleteFromSekund")} onClick={handleUnpublish}>
-                  <TrashIcon className="w-4 h-4 mr-1"></TrashIcon>
+                <span className="flex items-center" onClick={handleUnpublish}>
+                  <TrashIcon aria-label={t("plugin:deleteFromSekund")} className="w-4 h-4 mr-1"></TrashIcon>
                 </span>
               ) : null}
             </div>

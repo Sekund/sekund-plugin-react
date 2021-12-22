@@ -124,6 +124,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setViewType("home");
                   setShowViews(false);
                 }}
+                aria-label={t("yourNotes")}
                 className={`flex items-center px-2 mr-0 space-x-2 rounded-none opacity-${viewType === "home" ? "100" : "50"} cursor-pointer`}
               >
                 {unreadNotes.home.length > 0 ? (
@@ -146,6 +147,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setViewType("peoples");
                   setShowViews(false);
                 }}
+                aria-label={t("yourContactsNotes")}
                 className={`flex items-center pr-2 mr-0 space-x-2 rounded-none opacity-${viewType === "peoples" ? "100" : "50"} cursor-pointer`}
               >
                 {unreadNotes.peoples.length > 0 ? (
@@ -168,6 +170,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setViewType("groups");
                   setShowViews(false);
                 }}
+                aria-label={t("groupNotes")}
                 className={`flex items-center mr-0 space-x-2 rounded-none opacity-${viewType === "groups" ? "100" : "50"} cursor-pointer`}
               >
                 {unreadNotes.groups.length > 0 ? (
@@ -194,7 +197,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               <ChevronDownIcon className="w-6 h-6" />
             </div> */}
               <div className="cursor-pointer" onClick={() => setSettings(true)}>
-                <CogIcon className="w-6 h-6" />
+                <CogIcon aria-label={t("settings")} className="w-6 h-6" />
               </div>
             </div>
             {/* {showTeams ? (

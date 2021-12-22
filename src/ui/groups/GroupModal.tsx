@@ -114,7 +114,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   }
 
   function destroy() {
-    const confirmed = confirm("Are you sure?");
+    const confirmed = confirm(t("areYouSure"));
     if (confirmed && group !== null && group._id) {
       GroupsService.instance.deleteGroup(group._id);
       peoplesDispatch({ type: PeoplesActionKind.RemoveGroup, payload: localGroup });

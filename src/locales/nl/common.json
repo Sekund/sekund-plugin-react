@@ -93,5 +93,9 @@
     "account": "Rekening",
     "noteCannotBeFoundLocally": "Je notitie \"{{noteTitle}}\" kan niet lokaal worden gevonden. Verwijder het?",
     "downloadNote": "Opmerking downloaden",
-    "tryAgain": "Probeer opnieuw"
+    "tryAgain": "Probeer opnieuw",
+    "yourContactsNotes": "Notities van uw contacten",
+    "groupNotes": "Groepsnotities",
+    "yourNotes": "Uw notities",
+    "areYouSure": "Ben je zeker?"
 }

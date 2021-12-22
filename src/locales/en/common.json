@@ -93,5 +93,9 @@
     "account": "Account",
     "noteCannotBeFoundLocally": "Your note \"{{noteTitle}}\" cannot be found locally. Delete it?",
     "downloadNote": "Download note",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "yourContactsNotes": "Your contacts' notes",
+    "groupNotes": "Group notes",
+    "yourNotes": "Your notes",
+    "areYouSure": "Are you sure?"
 }

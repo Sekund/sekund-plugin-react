@@ -93,5 +93,9 @@
     "account": "Cuenta",
     "noteCannotBeFoundLocally": "Tu nota \"{{noteTitle}}\" no se puede encontrar localmente. ¿Bórralo?",
     "downloadNote": "Descargar nota",
-    "tryAgain": "Intentar otra vez"
+    "tryAgain": "Intentar otra vez",
+    "yourContactsNotes": "Las notas de tus contactos",
+    "groupNotes": "Notas del grupo",
+    "yourNotes": "Sus notas",
+    "areYouSure": "¿Está seguro?"
 }

@@ -487,11 +487,11 @@
   .sekund .bg-secondary {
     background-color: var(--color-bg-secondary)
   }
+  .sekund .hover\:bg-obs-primary:hover {
+    background-color: var(--background-primary)
+  }
   .sekund .hover\:bg-obs-secondary:hover {
     background-color: var(--background-secondary)
-  }
-  .sekund .hover\:bg-obs-tertiary:hover {
-    background-color: var(--background-tertiary)
   }
   .sekund .hover\:bg-primary:hover {
     background-color: var(--color-bg-primary)

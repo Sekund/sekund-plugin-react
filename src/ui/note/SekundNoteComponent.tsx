@@ -143,18 +143,14 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         <AdjustmentsIcon className="w-4 h-4 text-obs-normal" />
       </a>
     );
-    if (children.length > 1) {
+    if (remoteNote && isOwnNote(remoteNote) && children.length > 1) {
       return (
         <div key="sharing.share" onClick={() => setShowSharingModal(true)} className="flex items-center flex-shrink-0 cursor-pointer">
           {children}
         </div>
       );
     }
-    return (
-      <button key="sharing.share" type="button">
-        {t("plugin:Share")}
-      </button>
-    );
+    return null;
   }
 
   function renderSharingDialog() {

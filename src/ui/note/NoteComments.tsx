@@ -67,7 +67,7 @@ export default function NoteComments({ note }: Props) {
         return;
       }
       const now = Date.now();
-      NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin?.user.customData._id, now);
+      NotesService.instance.addNoteComment(appState.remoteNote._id, textarea.value, plugin?.user.customData._id as string, now);
       const updtLocalComments = [
         ...localComments,
         {

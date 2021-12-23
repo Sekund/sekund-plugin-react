@@ -53,7 +53,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
 
   function renderNewGroupDialog() {
     if (showNewGroupModal) {
-      return <GroupModal open={showNewGroupModal} setOpen={setShowNewGroupModal} group={currentGroup} />;
+      return <GroupModal userId={appState.userProfile._id} open={showNewGroupModal} setOpen={setShowNewGroupModal} group={currentGroup} />;
     } else {
       return null;
     }

@@ -62,7 +62,7 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);
     return (
-      <div className="flex items-center p-1 space-x-1 overflow-hidden cursor-pointer" onClick={editAllowed ? () => editGroup(group) : undefined}>
+      <div className="flex items-center p-1 ml-1 space-x-1 overflow-hidden cursor-pointer" onClick={editAllowed ? () => editGroup(group) : undefined}>
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>

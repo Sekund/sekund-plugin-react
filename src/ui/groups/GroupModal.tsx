@@ -11,6 +11,7 @@ import { usePeoplesContext } from "@/state/PeoplesContext";
 import { PeoplesActionKind } from "@/state/PeoplesReducer";
 import { makeid } from "@/utils";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -18,9 +19,10 @@ type Props = {
   open: boolean;
   setOpen: (v: boolean) => void;
   group: Group | null;
+  userId: ObjectID;
 };
 
-export default function GroupModal({ open, setOpen, group }: Props) {
+export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const [commitEnabled, setCommitEnabled] = useState(false);
   const commitButton = useRef<HTMLButtonElement>(null);
@@ -28,7 +30,6 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   const shade = useRef<any>();
 
   const { appState } = useAppContext();
-  const { userProfile } = appState;
 
   if (group === null) {
     group = { peoples: [] as Array<People> } as Group;
@@ -49,7 +50,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
   }, [localGroup]);
 
   async function loadOptions(inputValue: string) {
-    const found = (await UsersService.instance.findUsers(inputValue.toLowerCase(), [userProfile._id])).filter(
+    const found = (await UsersService.instance.findUsers(inputValue.toLowerCase(), [userId])).filter(
       (userOrGroup) => userOrGroup.value.type === "user"
     );
     setTeamMembers(found);
@@ -64,7 +65,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
 
   async function removePeople(p: People) {
     if (localGroup) {
-      if (p._id.equals(userProfile._id)) {
+      if (p._id.equals(userId)) {
         alert("You cannot remove yourself.");
         return;
       }
@@ -106,7 +107,7 @@ export default function GroupModal({ open, setOpen, group }: Props) {
         >
           {peopleAvatar(p, 6)}
           <span className="ml-2 truncate">{`${p.name || p.email}`}</span>
-          <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
+          <XIcon onClick={() => removePeople(p)} className={`${closeButtonClasses} flex-shrink-0`}></XIcon>
         </div>
       )
     );
@@ -192,7 +193,9 @@ export default function GroupModal({ open, setOpen, group }: Props) {
             </button>
           </div>
         </div>
-        <div className="flex flex-wrap mt-5 sm:mt-6 text-secondary">{members()}</div>
+        <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "calc(100vh - 400px)" }}>
+          {members()}
+        </div>
         <div className="flex items-center justify-between mt-4">
           {deleteButton()}
           <div className="flex justify-end space-x-2">

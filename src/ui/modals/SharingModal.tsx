@@ -7,8 +7,8 @@ import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
-import { useAppContext } from "@/state/AppContext";
 import { XIcon } from "@heroicons/react/solid";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -16,14 +16,13 @@ type Props = {
   open: boolean;
   setOpen: (v: boolean) => void;
   note: Note;
+  userId: ObjectID;
 };
 
-export default function SharingModal({ open, setOpen, note }: Props) {
+export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const { sharing } = note;
   const [state, setState] = useState(0);
-  const { appState } = useAppContext();
-  const { userProfile } = appState;
   const forceUpdate = () => setState(state + 1);
   const [sharingOptions, setSharingOptions] = useState<SelectOption[]>([]);
   const selectInput = useRef<any>();
@@ -37,9 +36,7 @@ export default function SharingModal({ open, setOpen, note }: Props) {
 
   async function loadOptions(inputValue: string) {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
-    if (userProfile) {
-      alreadySharing.push(userProfile._id);
-    }
+    alreadySharing.push(userId);
     const found = await UsersService.instance.findUsers(inputValue.toLowerCase(), alreadySharing);
     setSharingOptions(found);
   }
@@ -105,7 +102,11 @@ export default function SharingModal({ open, setOpen, note }: Props) {
         )
       );
     }
-    return <div className="flex flex-wrap truncate">{children}</div>;
+    return (
+      <div className="flex flex-wrap overflow-auto" style={{ maxHeight: "calc(100vh - 400px)" }}>
+        {children}
+      </div>
+    );
   }
 
   return (

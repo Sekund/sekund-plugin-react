@@ -159,7 +159,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
 
   function renderSharingDialog() {
     if (showSharingModal && remoteNote) {
-      return <SharingModal open={showSharingModal} setOpen={setShowSharingModal} note={remoteNote}></SharingModal>;
+      return <SharingModal userId={userProfile._id} open={showSharingModal} setOpen={setShowSharingModal} note={remoteNote}></SharingModal>;
     } else {
       return null;
     }

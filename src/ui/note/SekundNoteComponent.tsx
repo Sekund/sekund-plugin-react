@@ -272,7 +272,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         <div className="flex justify-between">
           {currentFile ? (
             <div className="flex items-center space-x-1 overflow-auto">
-              <span className="truncate">{currentFile?.name.replace(/\.md/, "")}</span>
+              <span className="truncate text-obs-normal">{currentFile?.name.replace(/\.md/, "")}</span>
               {remoteNote && isOwnNote(remoteNote) ? (
                 <span className="flex items-center" onClick={handleUnpublish}>
                   <TrashIcon aria-label={t("plugin:deleteFromSekund")} className="w-4 h-4 mr-1"></TrashIcon>

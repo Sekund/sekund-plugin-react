@@ -67,11 +67,15 @@ export default function SekundSettings({ close }: Props) {
 
   function saveName(evt: KeyboardEvent) {
     if (evt.code === "Enter") {
-      const edit = { ...state.edit, name: false };
-      userProfile.current.name = nameField.current.value;
-      UsersService.instance.saveUser(userProfile.current);
-      setState({ ...state, name: nameField.current.value, edit });
+      saveNameValue();
     }
+  }
+
+  function saveNameValue() {
+    const edit = { ...state.edit, name: false };
+    userProfile.current.name = nameField.current.value;
+    UsersService.instance.saveUser(userProfile.current);
+    setState({ ...state, name: nameField.current.value, edit });
   }
 
   function saveBio(evt: KeyboardEvent) {
@@ -139,7 +143,14 @@ export default function SekundSettings({ close }: Props) {
 
   const Name = () => {
     if (state.edit.name) {
-      return <input ref={nameField} onKeyPress={saveName} defaultValue={state.name || ""} />;
+      return (
+        <div className="flex justify-center space-x-2 f-full">
+          <input ref={nameField} type="text" onKeyPress={saveName} defaultValue={state.name || ""} placeholder={t("name")} />
+          <button className="mr-0 capitalize" onClick={saveNameValue}>
+            {t("save")} ⏎
+          </button>
+        </div>
+      );
     }
     return <div className="inline-block">{state.name}</div>;
   };
@@ -156,9 +167,9 @@ export default function SekundSettings({ close }: Props) {
       <div className="relative flex justify-center py-1 space-x-1 text-lg">
         <CogIcon className="w-6 h-6" />
         <span className="capitalize">{t("settings")}</span>
-        <XIcon className="absolute w-8 h-8 cursor-pointer right-1" onClick={close} />
+        <XIcon className="absolute w-6 h-6 cursor-pointer right-1 top-1" onClick={close} />
       </div>
-      <section className="mt-4">
+      <section className="p-2 mt-4 hover:bg-obs-secondary">
         <div className="flex justify-between">
           <div className="text-lg capitalize">{t("avatar")}</div>
           <SectionButton field="avatar" />
@@ -183,7 +194,7 @@ export default function SekundSettings({ close }: Props) {
           <UploadWidget />
         </div>
       </section>
-      <section className="mt-2">
+      <section className="p-2 mt-2 hover:bg-obs-secondary">
         <div className="flex justify-between">
           <div className="text-lg capitalize">{t("name")}</div>
           <SectionButton field="name" />
@@ -196,7 +207,7 @@ export default function SekundSettings({ close }: Props) {
           <div className="w-full py-2 text-center text-obs-muted">{t("introduceYourself")}</div>
         )}
       </section>
-      <section className="mt-2">
+      <section className="p-2 mt-2 hover:bg-obs-secondary">
         <div className="flex justify-between">
           <div className="text-lg capitalize">{t("bio")}</div>
           <SectionButton field="bio" />
@@ -209,7 +220,7 @@ export default function SekundSettings({ close }: Props) {
           <div className="w-full py-2 text-center text-obs-muted">{t("describeYourself")}</div>
         )}
       </section>
-      <section className="mt-2">
+      <section className="p-2 mt-2 mb-8 hover:bg-obs-secondary">
         <div className="flex justify-between">
           <div className="text-lg capitalize">{t("account")}</div>
         </div>

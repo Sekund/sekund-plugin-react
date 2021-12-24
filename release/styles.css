@@ -30,6 +30,9 @@
   .sekund .top-0 {
     top: 0px
   }
+  .sekund .top-1 {
+    top: 0.25rem
+  }
   .sekund .-top-3 {
     top: -0.75rem
   }

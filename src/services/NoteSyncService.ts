@@ -111,7 +111,7 @@ export default class NoteSyncService extends ServerlessService {
     const note = await this.getNoteById(id);
     if (note) {
       const fullPath = `${rootDir}${note.path}`;
-      const noteFile = this.vault.getAbstractFileByPath(fullPath);
+      let noteFile = this.vault.getAbstractFileByPath(fullPath);
       const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime === note.modified;
       if (!upToDate) {
         const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
@@ -128,6 +128,7 @@ ${note.content}`;
           await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
         }
         await this.fsAdapter.write(fullPath, noteContents);
+        noteFile = this.vault.getAbstractFileByPath(fullPath);
       }
       if (noteFile && noteFile instanceof TFile) {
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
@@ -167,6 +168,53 @@ ${note.content}`;
     }
   }
 
+  findInclusions(content: string) {
+    const inclusionsRe = /!\[\[(.*?)\]\]/gm;
+
+    const matches = content.match(inclusionsRe);
+
+    const inclusions: string[] = [];
+    if (matches) {
+      for (const match of matches) {
+        inclusions.push(match.substring(3, match.length - 2).replace(/#\^[a-z0-9]*/, ""));
+      }
+    }
+    return inclusions;
+  }
+
+  findLinks(content: string) {
+    const linksRe = /\[\[(.*?)\]\]/gm;
+    const matches = content.match(linksRe);
+
+    const links: string[] = [];
+    if (matches) {
+      for (const match of matches) {
+        links.push(match.substring(2, match.length - 2));
+      }
+    }
+    return links;
+  }
+
+  /**
+   * We want upload file references only if they exist, that is if they are
+   * in the resolvedLinks metadata. However, inclusions as parsed from the
+   * markdown file will refer to files by their name only, unless the same
+   * file name exists at different paths.
+   */
+  fileRefsIntersectingResolvedLinks(fileReferences: string[], links: Record<string, number>) {
+    const fullPaths: string[] = [];
+    const existingPaths = Object.keys(links);
+    fileReferences.forEach((fileReference) => {
+      existingPaths.forEach((fullPath) => {
+        const truncated = fullPath.replace(fileReference, "");
+        if (fullPath.length - truncated.length === fileReference.length) {
+          fullPaths.push(fullPath);
+        }
+      });
+    });
+    return fullPaths;
+  }
+
   async syncFile() {
     const file = GlobalState.instance.appState.currentFile;
     if (file && GlobalState.instance.appState && this.plugin.user) {
@@ -174,7 +222,7 @@ ${note.content}`;
       setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_SYNCHRONIZING : SHARED_NOTE_SYNCHRONIZING, undefined, undefined);
       const content = await file.vault.read(file);
       const links = this.plugin.app.metadataCache.resolvedLinks[file.path];
-      const assets = links ? Object.keys(links) : [];
+      const assets = this.fileRefsIntersectingResolvedLinks(this.findInclusions(content), links);
       const fileStat = await this.fsAdapter.stat(file.path);
       await callFunction(this.plugin, "upsertNote", [
         {

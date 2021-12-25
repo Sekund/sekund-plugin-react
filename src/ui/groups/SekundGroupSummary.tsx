@@ -49,7 +49,7 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["modifySharingGroups"], async () => {
+      new SekundEventListener(["modifySharingGroups", "note.delete"], async () => {
         await fetchGroupNotes();
         await fetchUnread();
       })

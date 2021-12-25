@@ -43,7 +43,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown, fetc
     const eventsWatcher = EventsWatcherService.instance;
 
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listListenerId, new SekundEventListener(["modifySharingPeoples"], reloadList));
+    eventsWatcher?.addEventListener(listListenerId, new SekundEventListener(["modifySharingPeoples", "note.delete"], reloadList));
     return () => {
       eventsWatcher?.removeEventListener(listListenerId);
     };

@@ -10,7 +10,6 @@ import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
-import PluginCommands from "@/ui/PluginCommands";
 import SekundView from "@/ui/SekundView";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, mkdirs, setCurrentNoteState, setGeneralState } from "@/utils";
 import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
@@ -70,10 +69,8 @@ export default class SekundPluginReact extends Plugin {
     new GlobalState();
     addIcons();
 
-    const commands = new PluginCommands(this);
     this.addRibbonIcon("sekund-icon", "Sekund Panes", (evt: MouseEvent) => {
-      // Called when the user clicks the icon.
-      commands.ribbonDisplayCommands();
+      this.showPane(MAIN_VIEW_TYPE);
     });
 
     this.registerViews([{ type: MAIN_VIEW_TYPE, View: SekundMainView }]);

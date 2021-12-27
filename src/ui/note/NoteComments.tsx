@@ -6,9 +6,9 @@ import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import { AppActionKind } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
+import CommentComponent from "@/ui/note/CommentComponent";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import { dispatch, makeid } from "@/utils";
-import Markdown from "markdown-to-jsx";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -126,39 +126,6 @@ export default function NoteComments({ note }: Props) {
     setAreaText((textarea.value = ""));
   }
 
-  function autoexpand() {
-    const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
-    if (textarea.parentNode) {
-      (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value;
-    }
-  }
-
-  function handleKeyPress(e: React.KeyboardEvent) {
-    if (!e.shiftKey && e.code === "Enter") {
-      addComment();
-    }
-  }
-
-  function togglePreview() {
-    if (preview) {
-      setPreview(!preview);
-      setTimeout(() => {
-        const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
-        if (textarea.parentNode) {
-          (textarea.parentNode as HTMLElement).dataset.replicatedValue = areaText;
-          textarea.value = areaText;
-        }
-      }, 10);
-    } else {
-      const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
-      if (textarea.parentNode) {
-        setAreaText(textarea.value);
-        (textarea.parentNode as HTMLElement).dataset.replicatedValue = "";
-      }
-      setPreview(!preview);
-    }
-  }
-
   return (
     <div className="px-2 mt-1 mb-16">
       <div className={`sm:col-span-2`}>
@@ -166,30 +133,18 @@ export default function NoteComments({ note }: Props) {
           <label htmlFor="message" className="flex items-center h-10 space-x-2 text-obs-muted">
             <span>{peopleAvatar(userProfile, 8)}</span> <span>{t("you")}</span>
           </label>
-          <button className={`mr-0 ${areaText === "" ? "text-obs-faint" : "text-obs-normal"}`} onClick={togglePreview}>
+          <a className={`mr-0 ${areaText === "" ? "text-obs-faint" : "text-obs-normal"}`} onClick={() => setPreview(!preview)}>
             {preview ? t("edit") : t("preview")}
-          </button>
+          </a>
         </div>
-        {preview ? (
-          <div className="mt-1 px-2 pt-2">
-            <Markdown>{areaText}</Markdown>
-          </div>
-        ) : (
-          <div className="mt-1 grow-wrap">
-            <textarea
-              onInput={autoexpand}
-              onChange={(e) => setAreaText(e.target.value)}
-              onKeyPress={handleKeyPress}
-              id="sekund-comment"
-              name="message"
-              rows={2}
-              spellCheck="false"
-              className="relative block w-full px-2 py-1 text-sm border rounded-md"
-              aria-describedby="message-max"
-              defaultValue={""}
-            />
-          </div>
-        )}
+        <CommentComponent
+          editMode={true}
+          setEditMode={(b) => {}}
+          commentId="sekund-comment"
+          commentText={areaText}
+          preview={preview}
+          setCommentText={(ct) => setAreaText(ct)}
+        />
       </div>
       {preview ? null : (
         <div className="flex justify-end w-full mt-2">

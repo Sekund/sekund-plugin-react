@@ -2,6 +2,7 @@ import { NoteComment } from "@/domain/NoteComment";
 import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
+import CommentComponent from "@/ui/note/CommentComponent";
 import { Popover } from "@headlessui/react";
 import { DotsHorizontalIcon, PencilIcon, TrashIcon } from "@heroicons/react/solid";
 import Markdown from "markdown-to-jsx";
@@ -21,12 +22,12 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   const { userProfile, remoteNote } = appState;
 
   const [editMode, setEditMode] = useState(false);
+  const [preview, setPreview] = useState(false);
   const [userComment, setUserComment] = useState<string | null>(null);
   const area = useRef<HTMLDivElement>(null);
 
   const guestId = userProfile?._id;
   const popoverButtonRef = useRef<any>();
-  let globalClickListener: EventListener;
 
   useEffect(() => {
     if (!editMode && userComment) {
@@ -38,17 +39,6 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
         }
       }, 20);
     }
-    if (editMode) {
-      const commentId = `comment-${comment.updated}`;
-      globalClickListener = (e) => {
-        const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
-        if (!e.composedPath().includes(textarea)) {
-          window.removeEventListener("click", globalClickListener);
-          setEditMode(false);
-        }
-      };
-      setTimeout(() => window.addEventListener("click", globalClickListener, false), 20);
-    }
   }, [editMode]);
 
   function deleteComment(created: number, updated: number) {
@@ -58,55 +48,15 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     removeLocalComment(comment);
   }
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.code === "Enter") {
-      if (!e.shiftKey) {
-        setEditMode(false);
-      }
-    }
-    if (e.code === "Escape") {
-      setUserComment(comment.text);
-      setEditMode(false);
-    }
-  }
-
-  function autoexpand(commentId: string) {
-    const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
-    if (textarea && textarea.parentNode) {
-      (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value;
-    }
-  }
-
-  function commentText() {
-    if (editMode) {
-      const commentId = `comment-${comment.updated}`;
-      setTimeout(() => autoexpand(commentId), 1);
-      return (
-        <div className="grow-wrap">
-          <textarea
-            onInput={() => autoexpand(commentId)}
-            id={commentId}
-            onKeyDown={(e: any) => handleKeydown(e)}
-            onChange={(evt) => setUserComment(evt.target.value)}
-            className="p-1 mt-1 mr-4 input"
-            defaultValue={comment.text}
-            spellCheck="false"
-          />
-        </div>
-      );
-    }
-    return <Markdown>{comment.text}</Markdown>;
-  }
-
   function clickPopover() {
     popoverButtonRef?.current?.click();
   }
 
   function commentActions(noteComment: NoteComment) {
-    if (!guestId) {
-      return null;
-    }
-    if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
+    // if (!guestId) {
+    //   return null;
+    // }
+    if (true) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
           <Popover.Button
@@ -145,8 +95,6 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     }
   }
 
-  const { image, name, email } = comment.author;
-
   return (
     <div key={comment.created} className="flex items-start">
       <div className="flex-shrink-0">{peopleAvatar(comment.author, 8)}</div>
@@ -154,12 +102,28 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
         ref={area}
         className={`flex flex-col px-3 pt-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}
       >
-        <div className="flex items-center mb-2 space-x-2 ">
-          <ReactTimeAgo className="text-obs-muted" date={+comment.created} locale={i18n.language} />
-          {commentActions(comment)}
+        <div className="flex justify-between">
+          <div className="flex items-center mb-2 space-x-2 ">
+            <ReactTimeAgo className="text-obs-muted" date={+comment.created} locale={i18n.language} />
+            {commentActions(comment)}
+          </div>
+          {editMode ? (
+            <a className={`mr-0 ${comment.text === "" ? "text-obs-faint" : "text-obs-normal"}`} onClick={() => setPreview(!preview)}>
+              {preview ? t("edit") : t("preview")}
+            </a>
+          ) : null}
         </div>
-        {commentText()}
-        {editMode ? (
+
+        <CommentComponent
+          editMode={editMode}
+          setEditMode={setEditMode}
+          commentId={`skn-comment-${comment.updated}`}
+          commentText={comment.text}
+          preview={preview}
+          setCommentText={setUserComment}
+        />
+
+        {!preview && editMode ? (
           <div className="flex items-center justify-end w-full mt-2 text-xs nowrap">
             <span className="nowrap">Press: </span>
             <span className="p-1 truncate rounded-md bg-primary text-primary">␛</span>

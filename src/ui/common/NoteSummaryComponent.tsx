@@ -64,7 +64,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["note.addComment", "note.editComment", "note.removeComment", "note.rename"], (fullDocument: any) => {
+      new SekundEventListener(["note.addComment", "note.removeComment", "note.rename"], (fullDocument: any) => {
         const updtNote: Note = fullDocument.data;
         if (note._id.equals(updtNote._id)) {
           updateNote(updtNote);

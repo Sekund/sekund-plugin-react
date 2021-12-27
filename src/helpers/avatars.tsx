@@ -55,7 +55,8 @@ const StyledBadge = styled(BadgeUnstyled)`
 `;
 
 export function peopleAvatar(people: PeopleId, size: number, badge?: number) {
-  if (people.image) return avatarImage(people.image, people._id, size, badge);
+  const identifier: string = (people.name ? people.name : people.email) || "";
+  if (people.image) return avatarImage(people.image, identifier, people._id, size, badge);
   else if (people.email) return emailAvatar(people.email, people._id, size, badge);
   else if (people.name) return nameAvatar(people.name, people._id, size, badge);
   return null;
@@ -85,14 +86,14 @@ export function nameAvatar(name: string, id: ObjectID, size: number, badge?: num
   if (badge) {
     return (
       <StyledBadge key={id.toString()} badgeContent={badge} overlap="circular">
-        <Avatar className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
+        <Avatar aria-label={name} className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
           {getInitials(name)}
         </Avatar>
       </StyledBadge>
     );
   }
   return (
-    <Avatar key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
+    <Avatar aria-label={name} key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
       {getInitials(name)}
     </Avatar>
   );
@@ -102,26 +103,28 @@ export function emailAvatar(email: string, id: ObjectID, size: number, badge?: n
   if (badge) {
     return (
       <StyledBadge key={id.toString()} badgeContent={badge} overlap="circular">
-        <Avatar className={`h-${size} w-${size} flex-shrink-0`}>{getInitials(email)}</Avatar>
+        <Avatar aria-label={email} className={`h-${size} w-${size} flex-shrink-0`}>
+          {getInitials(email)}
+        </Avatar>
       </StyledBadge>
     );
   }
   return (
-    <Avatar key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`}>
+    <Avatar aria-label={email} key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`}>
       {getInitials(email)}
     </Avatar>
   );
 }
 
-export function avatarImage(image: string, id: ObjectID, size: number, badge?: number) {
+export function avatarImage(image: string, identifier: string, id: ObjectID, size: number, badge?: number) {
   if (badge) {
     return (
       <StyledBadge key={id.toString()} badgeContent={badge} overlap="circular">
-        <Avatar src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>
+        <Avatar aria-label={identifier} src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>
       </StyledBadge>
     );
   }
-  return <Avatar key={id.toString()} src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>;
+  return <Avatar aria-label={identifier} key={id.toString()} src={image} className={`h-${size} w-${size} rounded-full`}></Avatar>;
 }
 
 export function getInitials(fullName: string): string {

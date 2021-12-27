@@ -53,10 +53,10 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   }
 
   function commentActions(noteComment: NoteComment) {
-    // if (!guestId) {
-    //   return null;
-    // }
-    if (true) {
+    if (!guestId) {
+      return null;
+    }
+    if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
           <Popover.Button

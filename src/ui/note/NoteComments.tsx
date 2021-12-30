@@ -187,34 +187,35 @@ export default function NoteComments({ note }: Props) {
             <Picker
               theme={appState.isDark ? "dark" : "light"}
               set="apple"
-              perLine={6}
-              emojiSize={34}
+              perLine={8}
+              emojiSize={20}
               showPreview={false}
               color={"#009688"}
               onSelect={(emoji) => insertEmoji(emoji)}
             />
           </div>
-        ) : (
-          <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer text-obs-muted hover:text-obs-normal" onClick={() => setEmojis(true)} />
-        )}
+        ) : null}
         {preview ? null : (
-          <div className="flex justify-end w-full mt-2">
-            <button
-              className={`mr-2 ${areaText === "" ? "text-obs-faint" : "text-obs-normal"}`}
-              onClick={areaText === "" ? undefined : clearComment}
-              type="button"
-            >
-              {t("clear")}
-            </button>
-            <button
-              className={`mr-0 ${areaText === "" ? "text-obs-faint" : "text-obs-normal mod-cta"}`}
-              ref={sendButton}
-              onClick={areaText === "" ? undefined : addComment}
-              type="button"
-            >
-              {t("send")}
-            </button>
-          </div>
+          <>
+            <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer text-obs-muted hover:text-obs-normal" onClick={() => setEmojis(true)} />
+            <div className="flex justify-end w-full mt-2">
+              <button
+                className={`mr-2 ${areaText === "" ? "text-obs-faint" : "text-obs-normal"}`}
+                onClick={areaText === "" ? undefined : clearComment}
+                type="button"
+              >
+                {t("clear")}
+              </button>
+              <button
+                className={`mr-0 ${areaText === "" ? "text-obs-faint" : "text-obs-normal mod-cta"}`}
+                ref={sendButton}
+                onClick={areaText === "" ? undefined : addComment}
+                type="button"
+              >
+                {t("send")}
+              </button>
+            </div>
+          </>
         )}
       </div>
       <div className="flex flex-col mt-4 space-y-4">

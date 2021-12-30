@@ -2,13 +2,13 @@ import { NoteComment } from "@/domain/NoteComment";
 import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
-import { useEmojiContext } from "@/state/EmojiContext";
-import { EmojiActionKind } from "@/state/EmojiReducer";
+import EmojiContext, { useEmojiContext } from "@/state/EmojiContext";
+import EmojiReducer, { EmojiActionKind, initialEmojiState } from "@/state/EmojiReducer";
 import CommentComponent from "@/ui/note/CommentComponent";
 import { Popover } from "@headlessui/react";
 import { DotsHorizontalIcon, EmojiHappyIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
 import { Picker } from "emoji-mart";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
@@ -28,8 +28,12 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   const [userComment, setUserComment] = useState<string | null>(null);
   const area = useRef<HTMLDivElement>(null);
   const [emojis, setEmojis] = useState(false);
-  const { emojiDispatch } = useEmojiContext();
+  const [emojiState, emojiDispatch] = useReducer(EmojiReducer, initialEmojiState);
   const picker = useRef<any>();
+  const emojiProviderState = {
+    emojiState,
+    emojiDispatch,
+  };
 
   const guestId = userProfile?._id;
   const popoverButtonRef = useRef<any>();
@@ -139,14 +143,16 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
           ) : null}
         </div>
 
-        <CommentComponent
-          editMode={editMode}
-          setEditMode={setEditMode}
-          commentId={`skn-comment-${comment.updated}`}
-          commentText={comment.text}
-          preview={preview}
-          setCommentText={setUserComment}
-        />
+        <EmojiContext.Provider value={emojiProviderState}>
+          <CommentComponent
+            editMode={editMode}
+            setEditMode={setEditMode}
+            commentId={`skn-comment-${comment.updated}`}
+            commentText={comment.text}
+            preview={preview}
+            setCommentText={setUserComment}
+          />
+        </EmojiContext.Provider>
 
         {!preview && editMode ? (
           <div className="justify-between relative">

@@ -123,6 +123,7 @@ export default function NoteComments({ note }: Props) {
       setTimeout(() => {
         textarea.value = "";
         textarea.style.height = "initial";
+        setAreaText("");
         if (textarea.parentNode) {
           (textarea.parentNode as HTMLElement).dataset.replicatedValue = "";
         }
@@ -151,6 +152,10 @@ export default function NoteComments({ note }: Props) {
 
   function clearComment() {
     const textarea = document.getElementById("sekund-comment") as HTMLTextAreaElement;
+    setAreaText("");
+    if (textarea.parentNode) {
+      (textarea.parentNode as HTMLElement).dataset.replicatedValue = "";
+    }
     setAreaText((textarea.value = ""));
   }
 

@@ -36,6 +36,10 @@ export default function CommentComponent({ editMode, setEditMode, commentId, com
       if (!e.shiftKey) {
         if (textarea.current) {
           updateText(textarea.current.value);
+          textarea.current.value = "";
+          if (textarea.current.parentNode) {
+            (textarea.current.parentNode as HTMLElement).dataset.replicatedValue = "";
+          }
         }
         setEditMode(false);
       }

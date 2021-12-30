@@ -9,8 +9,13 @@ import GlobalState from "@/state/GlobalState";
 import CommentComponent from "@/ui/note/CommentComponent";
 import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import { dispatch, makeid } from "@/utils";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Picker } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
+import { EmojiHappyIcon } from "@heroicons/react/outline";
+import EmojiContext from "@/state/EmojiContext";
+import EmojiReducer, { EmojiActionKind, initialEmojiState } from "@/state/EmojiReducer";
 
 type Props = {
   note: Note;
@@ -25,6 +30,14 @@ export default function NoteComments({ note }: Props) {
 
   const sendButton = useRef<HTMLButtonElement>(null);
   const [areaText, setAreaText] = useState("");
+  const [emojiState, emojiDispatch] = useReducer(EmojiReducer, initialEmojiState);
+  const emojiProviderState = {
+    emojiState,
+    emojiDispatch,
+  };
+
+  const [emojis, setEmojis] = useState(false);
+  const picker = useRef<any>();
 
   const [localComments, setLocalComments] = useState<Array<NoteComment>>(remoteNote?.comments || []);
 
@@ -37,6 +50,21 @@ export default function NoteComments({ note }: Props) {
       eventsWatcher?.removeEventListener(listenerId);
     };
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (picker.current && event.target && !picker.current.contains(event.target as any)) {
+        setEmojis(false);
+      }
+    }
+
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [picker]);
 
   function reloadNote(evt: any) {
     (async () => {
@@ -126,6 +154,11 @@ export default function NoteComments({ note }: Props) {
     setAreaText((textarea.value = ""));
   }
 
+  function insertEmoji(emoji: any) {
+    emojiDispatch({ type: EmojiActionKind.SetEmoji, payload: emoji });
+    setEmojis(false);
+  }
+
   return (
     <div className="px-2 mt-1 mb-16">
       <div className={`sm:col-span-2`}>
@@ -137,34 +170,53 @@ export default function NoteComments({ note }: Props) {
             {preview ? t("edit") : t("preview")}
           </a>
         </div>
-        <CommentComponent
-          editMode={true}
-          setEditMode={(b) => {}}
-          commentId="sekund-comment"
-          commentText={areaText}
-          preview={preview}
-          setCommentText={(ct) => setAreaText(ct)}
-        />
+        <EmojiContext.Provider value={emojiProviderState}>
+          <CommentComponent
+            editMode={true}
+            setEditMode={(b) => {}}
+            commentId="sekund-comment"
+            commentText={areaText}
+            preview={preview}
+            setCommentText={(ct) => setAreaText(ct)}
+          />
+        </EmojiContext.Provider>
       </div>
-      {preview ? null : (
-        <div className="flex justify-end w-full mt-2">
-          <button
-            className={`mr-2 ${areaText === "" ? "text-obs-faint" : "text-obs-normal"}`}
-            onClick={areaText === "" ? undefined : clearComment}
-            type="button"
-          >
-            {t("clear")}
-          </button>
-          <button
-            className={`mr-0 ${areaText === "" ? "text-obs-faint" : "text-obs-normal mod-cta"}`}
-            ref={sendButton}
-            onClick={areaText === "" ? undefined : addComment}
-            type="button"
-          >
-            {t("send")}
-          </button>
-        </div>
-      )}
+      <div className="flex items-center justify-between relative">
+        {emojis ? (
+          <div className="absolute z-40 top-2" ref={picker}>
+            <Picker
+              theme="dark"
+              set="apple"
+              perLine={6}
+              emojiSize={34}
+              showPreview={false}
+              color={"#009688"}
+              onSelect={(emoji) => insertEmoji(emoji)}
+            />
+          </div>
+        ) : (
+          <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer" onClick={() => setEmojis(true)} />
+        )}
+        {preview ? null : (
+          <div className="flex justify-end w-full mt-2">
+            <button
+              className={`mr-2 ${areaText === "" ? "text-obs-faint" : "text-obs-normal"}`}
+              onClick={areaText === "" ? undefined : clearComment}
+              type="button"
+            >
+              {t("clear")}
+            </button>
+            <button
+              className={`mr-0 ${areaText === "" ? "text-obs-faint" : "text-obs-normal mod-cta"}`}
+              ref={sendButton}
+              onClick={areaText === "" ? undefined : addComment}
+              type="button"
+            >
+              {t("send")}
+            </button>
+          </div>
+        )}
+      </div>
       <div className="flex flex-col mt-4 space-y-4">
         {localComments
           ?.sort((a, b) => (a.created > b.created ? -1 : 1))

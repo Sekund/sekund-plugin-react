@@ -103,3 +103,12 @@
 .sekund a {
 	cursor: pointer;
 }
+
+.sekund .emoji-mart-scroll {
+	border-bottom: 0;
+	margin-bottom: 6px;
+}
+
+.sekund .emoji-mart-scroll + .emoji-mart-bar {
+	display: none;
+}

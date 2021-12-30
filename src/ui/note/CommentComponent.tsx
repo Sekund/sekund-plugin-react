@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Markdown from "markdown-to-jsx";
+import { useEmojiContext } from "@/state/EmojiContext";
 
 type Props = {
   commentId: string;
@@ -12,14 +13,23 @@ type Props = {
 };
 
 export default function CommentComponent({ editMode, setEditMode, commentId, commentText, preview, setCommentText }: Props) {
-  // let globalClickListener: EventListener;
   const textarea = useRef<HTMLTextAreaElement>(null);
   const [areaText, setAreaText] = useState(commentText);
+  const { emojiState } = useEmojiContext();
 
   function updateText(v: string) {
     setCommentText(v);
     setAreaText(v);
   }
+
+  useEffect(() => {
+    if (emojiState && emojiState.emoji) {
+      if (textarea.current && textarea.current.setRangeText) {
+        //if setRangeText function is supported by current browser
+        textarea.current.setRangeText(emojiState.emoji.native);
+      }
+    }
+  }, [emojiState]);
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.code === "Enter") {

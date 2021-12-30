@@ -34,6 +34,7 @@ export type NoteState = {
 
 export type AppState = {
   generalState: GeneralState;
+  isDark: boolean;
   currentNoteState: NoteState;
   remoteNote: Note | undefined;
   currentFile: TFile | undefined;
@@ -47,6 +48,7 @@ export type AppState = {
 
 export const initialAppState: AppState = {
   generalState: "offline",
+  isDark: false,
   remoteNote: undefined,
   currentNoteState: {
     fileSynced: false,
@@ -75,6 +77,7 @@ export enum AppActionKind {
   SetUnreadNotes,
   SetNoteIsRead,
   SetNoteUpdates,
+  SetIsDark,
 }
 
 export type AppAction = {
@@ -122,6 +125,9 @@ export default function AppReducer(state: AppState, action: AppAction): AppState
       break;
     case AppActionKind.SetNoteUpdates:
       newState = { ...state, noteUpdates: state.noteUpdates ? { ...state.noteUpdates, ...payload } : payload };
+      break;
+    case AppActionKind.SetIsDark:
+      newState = { ...state, isDark: payload };
       break;
     default:
       newState = state;

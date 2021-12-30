@@ -185,7 +185,7 @@ export default function NoteComments({ note }: Props) {
         {emojis ? (
           <div className="absolute z-40 top-2" ref={picker}>
             <Picker
-              theme="dark"
+              theme={appState.isDark ? "dark" : "light"}
               set="apple"
               perLine={6}
               emojiSize={34}
@@ -195,7 +195,7 @@ export default function NoteComments({ note }: Props) {
             />
           </div>
         ) : (
-          <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer" onClick={() => setEmojis(true)} />
+          <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer text-obs-muted hover:text-obs-normal" onClick={() => setEmojis(true)} />
         )}
         {preview ? null : (
           <div className="flex justify-end w-full mt-2">

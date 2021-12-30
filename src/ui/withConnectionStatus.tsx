@@ -1,5 +1,5 @@
-import AppContext from "@/state/AppContext";
-import AppReducer from "@/state/AppReducer";
+import AppContext, { useAppContext } from "@/state/AppContext";
+import AppReducer, { AppActionKind } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import Login from "@/ui/auth/Login";
 import SetWorkspace from "@/ui/auth/SetWorkspace";
@@ -61,6 +61,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
       if (darkModeElement) {
         var isDark = darkModeElement.classList.contains("theme-dark");
         sekundRoot.current.classList.add(isDark ? "dark" : "light");
+        appDispatch({ type: AppActionKind.SetIsDark, payload: isDark });
         const sekundRootElement = sekundRoot.current;
         var observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
@@ -72,6 +73,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
                 } else {
                   sekundRootElement.classList.remove("dark");
                 }
+                appDispatch({ type: AppActionKind.SetIsDark, payload: isDark });
               }
             }
           });

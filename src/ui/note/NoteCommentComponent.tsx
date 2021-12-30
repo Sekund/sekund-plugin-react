@@ -2,10 +2,12 @@ import { NoteComment } from "@/domain/NoteComment";
 import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
+import { useEmojiContext } from "@/state/EmojiContext";
+import { EmojiActionKind } from "@/state/EmojiReducer";
 import CommentComponent from "@/ui/note/CommentComponent";
 import { Popover } from "@headlessui/react";
-import { DotsHorizontalIcon, PencilIcon, TrashIcon } from "@heroicons/react/solid";
-import Markdown from "markdown-to-jsx";
+import { DotsHorizontalIcon, EmojiHappyIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
+import { Picker } from "emoji-mart";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
@@ -25,9 +27,27 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   const [preview, setPreview] = useState(false);
   const [userComment, setUserComment] = useState<string | null>(null);
   const area = useRef<HTMLDivElement>(null);
+  const [emojis, setEmojis] = useState(false);
+  const { emojiDispatch } = useEmojiContext();
+  const picker = useRef<any>();
 
   const guestId = userProfile?._id;
   const popoverButtonRef = useRef<any>();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (picker.current && event.target && !picker.current.contains(event.target as any)) {
+        setEmojis(false);
+      }
+    }
+
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [picker]);
 
   useEffect(() => {
     if (!editMode && userComment) {
@@ -50,6 +70,11 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
 
   function clickPopover() {
     popoverButtonRef?.current?.click();
+  }
+
+  function insertEmoji(emoji: any) {
+    emojiDispatch({ type: EmojiActionKind.SetEmoji, payload: emoji });
+    setEmojis(false);
   }
 
   function commentActions(noteComment: NoteComment) {
@@ -124,15 +149,31 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
         />
 
         {!preview && editMode ? (
-          <div className="flex items-center justify-end w-full mt-2 text-xs nowrap">
-            <span className="nowrap">Press: </span>
-            <span className="p-1 truncate rounded-md bg-primary text-primary">␛</span>
-            <span className="truncate"> to cancel, </span>
-            <span className="p-1 truncate rounded-md bg-primary text-primary">⇧-Enter</span>
-            <span className="truncate"> for newline, </span>
-            <span className="p-1 truncate rounded-md bg-primary text-primary">Enter</span>
-            <span className="truncate"></span>
-            <span className="truncate"> to save.</span>
+          <div className="justify-between relative">
+            <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer text-obs-muted hover:text-obs-normal" onClick={() => setEmojis(true)} />
+            <div className="flex items-center justify-end w-full mt-2 text-xs nowrap">
+              <span className="nowrap">Press: </span>
+              <span className="p-1 truncate rounded-md bg-primary text-primary">␛</span>
+              <span className="truncate"> to cancel, </span>
+              <span className="p-1 truncate rounded-md bg-primary text-primary">⇧-Enter</span>
+              <span className="truncate"> for newline, </span>
+              <span className="p-1 truncate rounded-md bg-primary text-primary">Enter</span>
+              <span className="truncate"></span>
+              <span className="truncate"> to save.</span>
+            </div>
+            {emojis ? (
+              <div className="absolute z-40 top-2" ref={picker}>
+                <Picker
+                  theme={appState.isDark ? "dark" : "light"}
+                  set="apple"
+                  perLine={8}
+                  emojiSize={20}
+                  showPreview={false}
+                  color={"#009688"}
+                  onSelect={(emoji) => insertEmoji(emoji)}
+                />
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

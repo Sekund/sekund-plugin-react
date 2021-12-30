@@ -14,7 +14,6 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-  console.log("wrapper with parameters", args);
   const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale);
 
   const InjectedNoteComponent = SekundNoteComponentHOC({

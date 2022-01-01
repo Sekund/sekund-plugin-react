@@ -1,41 +1,39 @@
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
+import { useCommentContext } from "@/state/CommentContext";
+import { CommentActionKind } from "@/state/CommentReducer";
 import Markdown from "markdown-to-jsx";
-import { useEmojiContext } from "@/state/EmojiContext";
+import React, { useEffect, useRef } from "react";
 
 type Props = {
   commentId: string;
-  commentText: string;
-  preview: boolean;
   editMode: boolean;
   setEditMode: (b: boolean) => void;
-  setCommentText: (ct: string) => void;
 };
 
-export default function CommentComponent({ editMode, setEditMode, commentId, commentText, preview, setCommentText }: Props) {
+export default function CommentComponent({ editMode, setEditMode, commentId }: Props) {
   const textarea = useRef<HTMLTextAreaElement>(null);
-  const [areaText, setAreaText] = useState(commentText);
-  const { emojiState } = useEmojiContext();
+  const { commentState, commentDispatch } = useCommentContext();
+  const initialText = useRef(commentState.commentText.text);
+  const { commentText, preview } = commentState;
 
-  function updateText(v: string) {
-    setCommentText(v);
-    setAreaText(v);
+  function updateText(v: string, commit: boolean) {
+    commentDispatch({ type: CommentActionKind.SetCommentText, payload: { text: v, commit } });
   }
 
   useEffect(() => {
-    if (emojiState && emojiState.emoji) {
+    if (commentState && commentState.emoji) {
       if (textarea.current && textarea.current.setRangeText) {
-        textarea.current.setRangeText(emojiState.emoji.native);
-        updateText(textarea.current.value);
+        textarea.current.setRangeText(commentState.emoji.native);
+        commentDispatch({ type: CommentActionKind.SetEmoji, payload: undefined });
+        updateText(textarea.current.value, false);
       }
     }
-  }, [emojiState]);
+  }, [commentState]);
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.code === "Enter") {
       if (!e.shiftKey) {
         if (textarea.current) {
-          updateText(textarea.current.value);
+          updateText(textarea.current.value, true);
           textarea.current.value = "";
           if (textarea.current.parentNode) {
             (textarea.current.parentNode as HTMLElement).dataset.replicatedValue = "";
@@ -46,7 +44,7 @@ export default function CommentComponent({ editMode, setEditMode, commentId, com
     }
     if (e.code === "Escape") {
       if (textarea.current) {
-        updateText(commentText);
+        updateText(initialText.current, false);
       }
       setEditMode(false);
     }
@@ -63,7 +61,7 @@ export default function CommentComponent({ editMode, setEditMode, commentId, com
     if (preview) {
       return (
         <div className="-mt-2">
-          <Markdown options={{ forceBlock: true }}>{areaText}</Markdown>
+          <Markdown options={{ forceBlock: true }}>{commentText.text}</Markdown>
         </div>
       );
     } else {
@@ -75,9 +73,9 @@ export default function CommentComponent({ editMode, setEditMode, commentId, com
             onInput={() => autoexpand(commentId)}
             id={commentId}
             onKeyDown={(e: any) => handleKeydown(e)}
-            onChange={(evt) => updateText(evt.target.value)}
+            onChange={(evt) => updateText(evt.target.value, false)}
             className="p-1 mt-1 input resize-y"
-            defaultValue={areaText}
+            defaultValue={commentText.text}
             spellCheck="false"
           />
         </div>
@@ -86,7 +84,7 @@ export default function CommentComponent({ editMode, setEditMode, commentId, com
   }
   return (
     <div className="-mt-2">
-      <Markdown options={{ forceBlock: true }}>{areaText}</Markdown>
+      <Markdown options={{ forceBlock: true }}>{commentText.text}</Markdown>
     </div>
   );
 }

@@ -2,8 +2,8 @@ import { NoteComment } from "@/domain/NoteComment";
 import { peopleAvatar } from "@/helpers/avatars";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
-import EmojiContext, { useEmojiContext } from "@/state/EmojiContext";
-import EmojiReducer, { EmojiActionKind, initialEmojiState } from "@/state/EmojiReducer";
+import CommentContext, { useCommentContext } from "@/state/CommentContext";
+import CommentReducer, { CommentActionKind, initialCommentState } from "@/state/CommentReducer";
 import CommentComponent from "@/ui/note/CommentComponent";
 import { Popover } from "@headlessui/react";
 import { DotsHorizontalIcon, EmojiHappyIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
@@ -24,15 +24,14 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   const { userProfile, remoteNote } = appState;
 
   const [editMode, setEditMode] = useState(false);
-  const [preview, setPreview] = useState(false);
   const [userComment, setUserComment] = useState<string | null>(null);
   const area = useRef<HTMLDivElement>(null);
   const [emojis, setEmojis] = useState(false);
-  const [emojiState, emojiDispatch] = useReducer(EmojiReducer, initialEmojiState);
+  const [commentState, commentDispatch] = useReducer(CommentReducer, initialCommentState);
   const picker = useRef<any>();
-  const emojiProviderState = {
-    emojiState,
-    emojiDispatch,
+  const commentProviderState = {
+    commentState,
+    commentDispatch,
   };
 
   const guestId = userProfile?._id;
@@ -54,16 +53,21 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   }, [picker]);
 
   useEffect(() => {
-    if (!editMode && userComment) {
+    commentDispatch({ type: CommentActionKind.SetCommentText, payload: { text: comment.text, commit: false } });
+  }, []);
+
+  useEffect(() => {
+    if (commentState.commentText.commit) {
+      setUserComment(commentState.commentText.text);
       setTimeout(async () => {
         if (remoteNote) {
-          editLocalComment({ ...comment, text: userComment });
-          await NotesService.instance.editComment(remoteNote._id, userComment, comment.created, comment.updated);
+          editLocalComment({ ...comment, text: commentState.commentText.text });
+          await NotesService.instance.editComment(remoteNote._id, commentState.commentText.text, comment.created, comment.updated);
           setUserComment(null);
         }
       }, 20);
     }
-  }, [editMode]);
+  }, [commentState.commentText]);
 
   function deleteComment(created: number, updated: number) {
     if (remoteNote) {
@@ -77,7 +81,7 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   }
 
   function insertEmoji(emoji: any) {
-    emojiDispatch({ type: EmojiActionKind.SetEmoji, payload: emoji });
+    commentDispatch({ type: CommentActionKind.SetEmoji, payload: emoji });
     setEmojis(false);
   }
 
@@ -124,6 +128,8 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     }
   }
 
+  const { preview } = commentState;
+
   return (
     <div key={comment.created} className="flex items-start">
       <div className="flex-shrink-0">{peopleAvatar(comment.author, 8)}</div>
@@ -137,22 +143,18 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
             {commentActions(comment)}
           </div>
           {editMode ? (
-            <a className={`mr-0 ${comment.text === "" ? "text-obs-faint" : "text-obs-normal"}`} onClick={() => setPreview(!preview)}>
+            <a
+              className={`mr-0 ${comment.text === "" ? "text-obs-faint" : "text-obs-normal"}`}
+              onClick={() => commentDispatch({ type: CommentActionKind.SetPreview, payload: !preview })}
+            >
               {preview ? t("edit") : t("preview")}
             </a>
           ) : null}
         </div>
 
-        <EmojiContext.Provider value={emojiProviderState}>
-          <CommentComponent
-            editMode={editMode}
-            setEditMode={setEditMode}
-            commentId={`skn-comment-${comment.updated}`}
-            commentText={comment.text}
-            preview={preview}
-            setCommentText={setUserComment}
-          />
-        </EmojiContext.Provider>
+        <CommentContext.Provider value={commentProviderState}>
+          <CommentComponent editMode={editMode} setEditMode={setEditMode} commentId={`skn-comment-${comment.updated}`} />
+        </CommentContext.Provider>
 
         {!preview && editMode ? (
           <div className="justify-between relative">

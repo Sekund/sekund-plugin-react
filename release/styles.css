@@ -27,6 +27,14 @@
     bottom: 0px;
     left: 0px
   }
+  .sekund .inset-x-0 {
+    left: 0px;
+    right: 0px
+  }
+  .sekund .inset-y-20 {
+    top: 5rem;
+    bottom: 5rem
+  }
   .sekund .top-0 {
     top: 0px
   }
@@ -94,6 +102,10 @@
   .sekund .my-2 {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem
+  }
+  .sekund .my-12 {
+    margin-top: 3rem;
+    margin-bottom: 3rem
   }
   .sekund .mt-1 {
     margin-top: 0.25rem
@@ -350,9 +362,6 @@
   .sekund .resize-y {
     resize: vertical
   }
-  .sekund .resize {
-    resize: both
-  }
   .sekund .flex-col {
     flex-direction: column
   }
@@ -408,9 +417,6 @@
     --tw-space-y-reverse: 0;
     margin-top: calc(1px * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(1px * var(--tw-space-y-reverse))
-  }
-  .sekund .self-start {
-    align-self: flex-start
   }
   .sekund .overflow-auto {
     overflow: auto

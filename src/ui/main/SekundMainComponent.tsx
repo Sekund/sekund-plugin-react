@@ -9,12 +9,13 @@ import { BlueBadge, GreenBadge, OrangeBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
+import SekundInbox from "@/ui/inbox/SekundInbox";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
-import { CloudUploadIcon, CogIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import { CloudUploadIcon, CogIcon, InboxIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -45,6 +46,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const { appState, appDispatch } = useAppContext();
   const [, setShowViews] = useState(false);
   const [settings, setSettings] = useState(false);
+  const [inbox, setInbox] = useState(false);
   const [viewType, setViewType] = useState<ViewType>("home");
   const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 });
   const previousView = usePrevious(viewType);
@@ -115,9 +117,14 @@ export const SekundMainComponent = (props: MainComponentProps) => {
           <SekundSettings close={() => setSettings(false)} />
         </div>
       ) : null}
+      {inbox ? (
+        <div className="fixed inset-0 z-30 grid h-screen bg-obs-primary">
+          <SekundInbox close={() => setInbox(false)} />
+        </div>
+      ) : null}
       <div ref={sekundMainComponentRoot} className="fixed inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
         <div className={`flex items-center justify-between w-full py-1`}>
-          <div className="flex flex-col items-center mt-1 ml-2 text-obs-muted">
+          <div className="flex flex-col items-center mt-1 ml-2">
             <div className="flex items-center" onClick={showViewTypes}>
               <div
                 onClick={() => {
@@ -125,7 +132,9 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("yourNotes")}
-                className={`flex items-center px-2 mr-0 space-x-2 rounded-none opacity-${viewType === "home" ? "100" : "50"} cursor-pointer`}
+                className={`flex items-center px-2 mr-0 space-x-2 rounded-none ${
+                  viewType === "home" ? "text-obs-muted" : "text-obs-faint"
+                } cursor-pointer`}
               >
                 {unreadNotes.home.length > 0 ? (
                   <GreenBadge
@@ -136,10 +145,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                       horizontal: "right",
                     }}
                   >
-                    <CloudUploadIcon className="w-6 h-6 text-obs-normal" />
+                    <CloudUploadIcon className="w-6 h-6" />
                   </GreenBadge>
                 ) : (
-                  <CloudUploadIcon className="w-6 h-6 text-obs-normal" />
+                  <CloudUploadIcon className="w-6 h-6" />
                 )}
               </div>
               <div
@@ -148,7 +157,9 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("yourContactsNotes")}
-                className={`flex items-center pr-2 mr-0 space-x-2 rounded-none opacity-${viewType === "peoples" ? "100" : "50"} cursor-pointer`}
+                className={`flex items-center pr-2 mr-0 space-x-2 rounded-none ${
+                  viewType === "peoples" ? "text-obs-muted" : "text-obs-faint"
+                } cursor-pointer`}
               >
                 {unreadNotes.peoples.length > 0 ? (
                   <BlueBadge
@@ -159,10 +170,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                       horizontal: "right",
                     }}
                   >
-                    <UsersIcon className="w-6 h-6 text-obs-normal" />
+                    <UsersIcon className="w-6 h-6" />
                   </BlueBadge>
                 ) : (
-                  <UsersIcon className="w-6 h-6 text-obs-normal" />
+                  <UsersIcon className="w-6 h-6" />
                 )}
               </div>
               <div
@@ -171,7 +182,9 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("groupNotes")}
-                className={`flex items-center mr-0 space-x-2 rounded-none opacity-${viewType === "groups" ? "100" : "50"} cursor-pointer`}
+                className={`flex items-center mr-0 space-x-2 rounded-none ${
+                  viewType === "groups" ? "text-obs-muted" : "text-obs-faint"
+                } cursor-pointer`}
               >
                 {unreadNotes.groups.length > 0 ? (
                   <OrangeBadge
@@ -182,22 +195,25 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                       horizontal: "right",
                     }}
                   >
-                    <UserGroupIcon className="w-6 h-6 text-obs-normal" />
+                    <UserGroupIcon className="w-6 h-6" />
                   </OrangeBadge>
                 ) : (
-                  <UserGroupIcon className="w-6 h-6 text-obs-normal" />
+                  <UserGroupIcon className="w-6 h-6" />
                 )}
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center mt-1 mr-2 text-obs-muted">
-            <div className="flex items-center">
+          <div className="flex flex-col items-center mt-1 mr-2">
+            <div className="flex items-center space-x-2">
               {/* <div className="flex items-center" onClick={showTeamsMenu}>
               <span>{appState.plugin?.settings.subdomain}</span>
               <ChevronDownIcon className="w-6 h-6" />
             </div> */}
+              <div className="cursor-pointer" onClick={() => setInbox(true)}>
+                <InboxIcon aria-label={t("inbox")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
+              </div>
               <div className="cursor-pointer" onClick={() => setSettings(true)}>
-                <CogIcon aria-label={t("settings")} className="w-6 h-6" />
+                <CogIcon aria-label={t("settings")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
               </div>
             </div>
             {/* {showTeams ? (

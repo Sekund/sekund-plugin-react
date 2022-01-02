@@ -140,7 +140,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     }
     children.push(
       <a key="sharing.edit" className="flex items-center ml-1">
-        <AdjustmentsIcon className="w-4 h-4 text-obs-normal" />
+        <AdjustmentsIcon aria-label={t("plugin:setSharingOptions")} className="w-4 h-4 text-obs-normal" />
       </a>
     );
     if (remoteNote && isOwnNote(remoteNote) && children.length > 1) {

@@ -98,5 +98,11 @@
     "groupNotes": "Group notes",
     "yourNotes": "Your notes",
     "areYouSure": "Are you sure?",
-    "preview": "Preview"
+    "preview": "Preview",
+    "missingSomeone": "Missing someone?",
+    "requestSharingPermission": "Request sharing permission",
+    "searchByFullnameOrEmail": "Search by full name or email",
+    "sendRequest": "Send request",
+    "selectUserOrGroup": "Select user or group",
+    "inbox": "Inbox"
 }

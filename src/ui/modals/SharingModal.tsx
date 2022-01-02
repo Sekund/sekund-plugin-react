@@ -7,6 +7,7 @@ import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
+import AddUser from "@/ui/common/AddUser";
 import { XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
@@ -24,12 +25,12 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const { sharing } = note;
   const [state, setState] = useState(0);
   const forceUpdate = () => setState(state + 1);
-  const [sharingOptions, setSharingOptions] = useState<SelectOption[]>([]);
+  const [sharingGroupsOptions, setSharingGroupsOptions] = useState<SelectOption[]>([]);
+  const [sharingPeoplesOptions, setSharingPeoplesOptions] = useState<SelectOption[]>([]);
   const selectInput = useRef<any>();
   const shade = useRef<any>();
+  const [addUser, setAddUser] = useState(false);
 
-  // remove those pesky resize handles when showing this modal, and restore
-  // them when it closes
   useEffect(() => {
     loadOptions("");
   }, [open]);
@@ -38,7 +39,8 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
     alreadySharing.push(userId);
     const found = await UsersService.instance.findUsers(inputValue.toLowerCase(), alreadySharing);
-    setSharingOptions(found);
+    setSharingGroupsOptions(found.filter((o) => o.value.type === "group"));
+    setSharingPeoplesOptions(found.filter((o) => o.value.type === "user"));
   }
 
   async function removeGroup(g: Group) {
@@ -109,6 +111,49 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
     );
   }
 
+  function SharingOptions() {
+    return (
+      <>
+        <div className="text-lg font-medium leading-6 text-primary">{t("plugin:setSharingOptions")}</div>
+        <div className="max-w-xl mt-2 text-sm text-secondary">
+          <p>{t("plugin:shareWithWhom")}</p>
+        </div>
+        <div className="flex flex-col mt-3 space-y-2">
+          <div className="w-full overflow-hidden truncate">
+            <select ref={selectInput} className="min-w-full pl-2 pr-4 truncate dropdown" onChange={addSelectedUserOrGroup}>
+              <option key="none" value="none">
+                {t("selectUserOrGroup")}
+              </option>
+              {sharingGroupsOptions.length > 0 ? (
+                <optgroup label="Groups">
+                  {sharingGroupsOptions.map((option: SelectOption) => (
+                    <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null}
+              {sharingPeoplesOptions.length > 0 ? (
+                <optgroup label="Peoples">
+                  {sharingPeoplesOptions.map((option: SelectOption) => (
+                    <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>
+                      {option.label}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null}
+            </select>
+          </div>
+          <div className="flex flex-col text-sm">
+            <span className="nowrap">{t("missingSomeone")}</span>
+            <a onClick={() => setAddUser(true)}>{t("requestSharingPermission")}</a>
+          </div>
+        </div>
+        <div className="mt-5 sm:mt-6 text-secondary">{shares()}</div>
+      </>
+    );
+  }
+
   return (
     <div
       ref={shade}
@@ -129,26 +174,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
             <XIcon className="w-6 h-6" aria-hidden="true" />
           </div>
         </div>
-        <div className="text-lg font-medium leading-6 text-primary">{t("plugin:setSharingOptions")}</div>
-        <div className="max-w-xl mt-2 text-sm text-secondary">
-          <p>{t("plugin:shareWithWhom")}</p>
-        </div>
-        <div className="flex items-center mt-3 space-x-2">
-          <div className="self-start flex-grow overflow-hidden truncate">
-            <select ref={selectInput} className="min-w-full pl-2 pr-4 truncate dropdown">
-              <option key="none" value="none">
-                --
-              </option>
-              {sharingOptions.map((option: SelectOption) => (
-                <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button onClick={() => addSelectedUserOrGroup()}>{t("add")}</button>
-        </div>
-        <div className="mt-5 sm:mt-6 text-secondary">{shares()}</div>
+        {addUser ? <AddUser done={() => setAddUser(false)} /> : <SharingOptions />}
       </div>
     </div>
   );

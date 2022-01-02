@@ -98,5 +98,11 @@
     "groupNotes": "Notes du groupe",
     "yourNotes": "Vos notes",
     "areYouSure": "Vous êtes sûr ?",
-    "preview": "Prévisualiser"
+    "preview": "Prévisualiser",
+    "missingSomeone": "Quelqu'un vous manque ?",
+    "requestSharingPermission": "Demande d'autorisation de partage",
+    "searchByFullnameOrEmail": "Recherche par nom complet ou par courriel",
+    "sendRequest": "Envoyer la demande",
+    "selectUserOrGroup": "Sélectionner un utilisateur ou un groupe",
+    "inbox": "Boîte de réception"
 }

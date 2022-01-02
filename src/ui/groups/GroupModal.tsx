@@ -6,9 +6,9 @@ import { peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import PeoplesService from "@/services/PeoplesService";
 import UsersService from "@/services/UsersService";
-import { useAppContext } from "@/state/AppContext";
 import { usePeoplesContext } from "@/state/PeoplesContext";
 import { PeoplesActionKind } from "@/state/PeoplesReducer";
+import AddUser from "@/ui/common/AddUser";
 import { makeid } from "@/utils";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
@@ -28,8 +28,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const commitButton = useRef<HTMLButtonElement>(null);
   const { peoplesDispatch } = usePeoplesContext();
   const shade = useRef<any>();
-
-  const { appState } = useAppContext();
+  const [addUser, setAddUser] = useState(false);
 
   if (group === null) {
     group = { peoples: [] as Array<People> } as Group;
@@ -38,8 +37,6 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const [teamMembers, setTeamMembers] = useState<SelectOption[]>([]);
   const selectInput = useRef<any>();
 
-  // remove those pesky resize handles when showing this modal, and restore
-  // them when it closes
   useEffect(() => {
     loadOptions("");
   }, [open]);
@@ -136,6 +133,66 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
     return <div></div>;
   }
 
+  function GroupSpecs() {
+    return (
+      <>
+        {" "}
+        <div>
+          <div className="text-lg font-medium leading-6 text-primary">{localGroup?._id ? t("plugin:editGroup") : t("plugin:addGroup")}</div>
+          <div className="max-w-xl mt-2 text-sm text-secondary">
+            <p>{t("plugin:groupName")}:</p>
+          </div>
+          <div className="mt-3 sm:flex sm:items-center">
+            <input
+              onChange={(evt) => setGroupName(evt.target.value)}
+              defaultValue={group ? group.name : ""}
+              className="w-full input"
+              type="text"
+              placeholder={t("plugin:groupNameDesc")}
+            />
+          </div>
+          <div className="max-w-xl mt-4 text-sm text-secondary">
+            <p>{t("plugin:groupMembers")}:</p>
+          </div>
+          <div className="flex flex-col mt-3 space-y-2">
+            <div className="w-full overflow-hidden truncate">
+              <select className="w-full pl-2 pr-4 truncate dropdown" onChange={addSelectedUser} ref={selectInput}>
+                <>
+                  <option key="none" value="none">
+                    {t("plugin:chooseUser")}
+                  </option>
+                  {teamMembers.map((option: SelectOption) => (
+                    <option key={option.value.id} value={option.value.id}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              </select>
+            </div>
+            <div className="flex flex-col text-sm">
+              <span className="nowrap">{t("missingSomeone")}</span>
+              <a onClick={() => setAddUser(true)}>{t("requestSharingPermission")}</a>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "calc(100vh - 400px)" }}>
+          {members()}
+        </div>
+        <div className="flex items-center justify-between mt-4">
+          {deleteButton()}
+          <div className="flex justify-end space-x-2">
+            <button className="mr-0" onClick={() => setOpen(false)} type="button">
+              {t("cancel")}
+            </button>
+            <button className="mr-0" ref={commitButton} onClick={commitEnabled ? commit : undefined} type="button">
+              {localGroup?._id ? t("update") : t("create")}
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <div
       ref={shade}
@@ -156,57 +213,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
             <XIcon className="w-6 h-6" aria-hidden="true" />
           </div>
         </div>
-        <div>
-          <div className="text-lg font-medium leading-6 text-primary">{localGroup?._id ? t("plugin:editGroup") : t("plugin:addGroup")}</div>
-          <div className="max-w-xl mt-2 text-sm text-secondary">
-            <p>{t("plugin:groupName")}:</p>
-          </div>
-          <div className="mt-3 sm:flex sm:items-center">
-            <input
-              onChange={(evt) => setGroupName(evt.target.value)}
-              defaultValue={group ? group.name : ""}
-              className="w-full input"
-              type="text"
-              placeholder={t("plugin:groupNameDesc")}
-            />
-          </div>
-          <div className="max-w-xl mt-4 text-sm text-secondary">
-            <p>{t("plugin:groupMembers")}:</p>
-          </div>
-          <div className="flex items-center mt-3 space-x-2">
-            <div className="self-start flex-grow overflow-hidden truncate">
-              <select className="min-w-full pl-2 pr-4 truncate dropdown" ref={selectInput}>
-                <>
-                  <option key="none" value="none">
-                    {t("plugin:chooseUser")}
-                  </option>
-                  {teamMembers.map((option: SelectOption) => (
-                    <option key={option.value.id} value={option.value.id}>
-                      {option.label}
-                    </option>
-                  ))}
-                </>
-              </select>
-            </div>
-            <button className="flex-shrink-0" onClick={() => addSelectedUser()}>
-              {t("add")}
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "calc(100vh - 400px)" }}>
-          {members()}
-        </div>
-        <div className="flex items-center justify-between mt-4">
-          {deleteButton()}
-          <div className="flex justify-end space-x-2">
-            <button className="mr-0" onClick={() => setOpen(false)} type="button">
-              {t("cancel")}
-            </button>
-            <button className="mr-0" ref={commitButton} onClick={commitEnabled ? commit : undefined} type="button">
-              {localGroup?._id ? t("update") : t("create")}
-            </button>
-          </div>
-        </div>
+        {addUser ? <AddUser done={() => setAddUser(false)} /> : <GroupSpecs />}
       </div>
     </div>
   );

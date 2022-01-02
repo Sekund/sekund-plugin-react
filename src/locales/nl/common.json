@@ -98,5 +98,11 @@
     "groupNotes": "Groepsnotities",
     "yourNotes": "Uw notities",
     "areYouSure": "Ben je zeker?",
-    "preview": "Voorbeeld"
+    "preview": "Voorbeeld",
+    "missingSomeone": "Mis je iemand?",
+    "requestSharingPermission": "Verzoek toestemming tot delen",
+    "searchByFullnameOrEmail": "Zoeken op volledige naam of e-mail",
+    "sendRequest": "Aanvraag verzenden",
+    "selectUserOrGroup": "Selecteer gebruiker of groep",
+    "inbox": "Inbox"
 }

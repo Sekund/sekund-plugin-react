@@ -80,7 +80,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
       groups?.forEach((g, idx) => {
         if (g) {
           children.push(
-            <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
+            <div key={g._id ? g._id.toString() : idx} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
               {groupAvatar(g, 6)}
               <span className="ml-2 truncate">{g.name}</span>
               <XIcon onClick={() => removeGroup(g)} className={closeButtonClasses}></XIcon>
@@ -96,7 +96,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
       const { peoples } = sharing;
       peoples?.forEach((p) =>
         children.push(
-          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-secondary">
+          <div key={p._id.toString()} className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary">
             {peopleAvatar(p, 6)}
             <span className="ml-2 truncate whitespace-nowrap">{`${p.name || p.email}`}</span>
             <XIcon onClick={() => removePeople(p)} className={closeButtonClasses}></XIcon>
@@ -125,7 +125,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
                 {t("selectUserOrGroup")}
               </option>
               {sharingGroupsOptions.length > 0 ? (
-                <optgroup label="Groups">
+                <optgroup label={t("groups")}>
                   {sharingGroupsOptions.map((option: SelectOption) => (
                     <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>
                       {option.label}
@@ -134,7 +134,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
                 </optgroup>
               ) : null}
               {sharingPeoplesOptions.length > 0 ? (
-                <optgroup label="Peoples">
+                <optgroup label={t("peoples")}>
                   {sharingPeoplesOptions.map((option: SelectOption) => (
                     <option key={option.value.id} value={`${option.value.type}-${option.value.id}`}>
                       {option.label}

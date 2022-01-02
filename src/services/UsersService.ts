@@ -59,10 +59,10 @@ export default class UsersService extends ServerlessService {
   }
 
   async findUsers(letters: string, userIds: ObjectID[]): Promise<SelectOption[]> {
-    const found: { users: any[]; groups: any[] } = (await callFunction(this.plugin, "findUsersAndGroups", [letters, userIds])) || {};
+    const found: { users: any[]; groups: any[] } = (await callFunction(this.plugin, "whitelistedUsersAndGroups", [letters, userIds])) || {};
     return found.users
       .map((user) => ({ label: user.name || user.email, value: { ...user, id: user._id.toString(), type: "user" } }))
-      .concat(found.groups.map((group) => ({ label: `${group.name} (Group)`, value: { ...group, id: group._id.toString(), type: "group" } })));
+      .concat(found.groups.map((group) => ({ label: `${group.name}`, value: { ...group, id: group._id.toString(), type: "group" } })));
   }
 
   async fetchUser(): Promise<Record<string, unknown> | undefined> {

@@ -131,7 +131,7 @@ export default function SekundSettings({ close }: Props) {
         <div className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
           <label className="flex flex-col items-center bg-blue-500 border rounded-md cursor-pointer">
             <span className="text-base leading-normal truncate" style={{ padding: "6px 20px" }}>
-              Select an image…
+              {t("selectAnImage")}
             </span>
             <input ref={fileInput} type="file" onChange={saveAvatarImage} className="hidden" />
           </label>
@@ -163,8 +163,8 @@ export default function SekundSettings({ close }: Props) {
   };
 
   return (
-    <div className="flex flex-col mt-1 w-full px-2">
-      <div className="relative flex justify-center py-1 space-x-1 text-lg">
+    <div className="flex flex-col w-full px-2 mt-1">
+      <div className="relative flex justify-center py-1 space-x-1 text-lg text-obs-muted">
         <CogIcon className="w-6 h-6" />
         <span className="capitalize">{t("settings")}</span>
         <XIcon className="absolute w-6 h-6 cursor-pointer right-1 top-1" onClick={close} />

@@ -99,10 +99,21 @@
     "yourNotes": "Vos notes",
     "areYouSure": "Vous êtes sûr ?",
     "preview": "Prévisualiser",
-    "missingSomeone": "Quelqu'un vous manque ?",
-    "requestSharingPermission": "Demande d'autorisation de partage",
+    "missingSomeone": "Il manque quelqu'un?",
+    "requestSharingPermission": "Demander l'autorisation de partager",
     "searchByFullnameOrEmail": "Recherche par nom complet ou par courriel",
     "sendRequest": "Envoyer la demande",
     "selectUserOrGroup": "Sélectionner un utilisateur ou un groupe",
-    "inbox": "Boîte de réception"
+    "selectAnImage": "Sélectionnez une image",
+    "permissions": "Permissions de partage",
+    "noPermissions": "Aucune autorisation de partage",
+    "noPermissionsDesc": "Vous n'avez encore autorisé personne à partager des notes avec vous.",
+    "permissionStatus": {
+        "requested": "Demandées",
+        "accepted": "Acceptées",
+        "rejected": "Rejetées",
+        "blocked": "Bloquées"
+    },
+    "groups": "Groupes",
+    "peoples": "Contacts"
 }

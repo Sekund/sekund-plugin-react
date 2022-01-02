@@ -4,6 +4,7 @@ import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
+import PermissionsService from "@/services/PermissionsService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
@@ -274,6 +275,7 @@ export default class SekundPluginReact extends Plugin {
             new NotesService(this);
             new PeoplesService(this);
             new GroupsService(this);
+            new PermissionsService(this);
             new EventsWatcherService(this);
 
             this.watchNotes();

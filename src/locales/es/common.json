@@ -104,5 +104,16 @@
     "searchByFullnameOrEmail": "Buscar por nombre completo o por correo electrónico",
     "sendRequest": "Enviar solicitud",
     "selectUserOrGroup": "Seleccionar usuario o grupo",
-    "inbox": "Bandeja de entrada"
+    "selectAnImage": "Seleccione una imagen",
+    "permissions": "Permisos",
+    "noPermissions": "No hay permisos para compartir",
+    "noPermissionsDesc": "No has permitido que nadie comparta notas contigo, todavía.",
+    "permissionStatus": {
+        "requested": "Solicitado",
+        "accepted": "Aceptado",
+        "rejected": "Rechazado",
+        "blocked": "Bloqueado"
+    },
+    "groups": "Grupos",
+    "peoples": "Contactos"
 }

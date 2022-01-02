@@ -1,7 +1,6 @@
 import ObjectID from "bson-objectid";
 import { Group } from "./Group";
 import { NoteComment } from "./NoteComment";
-import PathInfo from "./PathInfo";
 import { People } from "./People";
 
 export interface Note {

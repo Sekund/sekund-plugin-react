@@ -99,10 +99,21 @@
     "yourNotes": "Uw notities",
     "areYouSure": "Ben je zeker?",
     "preview": "Voorbeeld",
-    "missingSomeone": "Mis je iemand?",
+    "missingSomeone": "Mis er iemand?",
     "requestSharingPermission": "Verzoek toestemming tot delen",
     "searchByFullnameOrEmail": "Zoeken op volledige naam of e-mail",
     "sendRequest": "Aanvraag verzenden",
     "selectUserOrGroup": "Selecteer gebruiker of groep",
-    "inbox": "Inbox"
+    "selectAnImage": "Selecteer een afbeelding",
+    "permissions": "Machtigingen delen",
+    "noPermissions": "Geen gedeelde rechten",
+    "noPermissionsDesc": "Je hebt nog niemand toegestaan om notities met je te delen.",
+    "permissionStatus": {
+        "requested": "Gevraagd",
+        "accepted": "Geaccepteerd",
+        "rejected": "Afgewezen",
+        "blocked": "Geblokkeerd"
+    },
+    "groups": "Groepen",
+    "peoples": "Kontakten"
 }

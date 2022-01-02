@@ -104,5 +104,16 @@
     "searchByFullnameOrEmail": "Search by full name or email",
     "sendRequest": "Send request",
     "selectUserOrGroup": "Select user or group",
-    "inbox": "Inbox"
+    "selectAnImage": "Select an image",
+    "permissions": "Sharing permissions",
+    "noPermissions": "No Sharing Permissions",
+    "noPermissionsDesc": "You haven't allowed anyone to share notes with you, yet.",
+    "permissionStatus": {
+        "requested": "Requested",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "blocked": "Blocked"
+    },
+    "groups": "Groups",
+    "peoples": "Peoples"
 }

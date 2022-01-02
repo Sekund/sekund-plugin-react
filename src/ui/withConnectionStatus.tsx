@@ -1,4 +1,4 @@
-import AppContext, { useAppContext } from "@/state/AppContext";
+import AppContext from "@/state/AppContext";
 import AppReducer, { AppActionKind } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import Login from "@/ui/auth/Login";
@@ -6,7 +6,7 @@ import SetWorkspace from "@/ui/auth/SetWorkspace";
 import Loader from "@/ui/common/LoaderComponent";
 import Onboarding from "@/ui/Onboarding";
 import { makeid } from "@/utils";
-import { ArrowNarrowLeftIcon, ArrowRightIcon, CloudIcon, EmojiSadIcon, ExclamationCircleIcon, StatusOfflineIcon } from "@heroicons/react/solid";
+import { ArrowNarrowLeftIcon, CloudIcon, EmojiSadIcon, ExclamationCircleIcon, StatusOfflineIcon } from "@heroicons/react/solid";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import i18nConf from "../i18n.config";

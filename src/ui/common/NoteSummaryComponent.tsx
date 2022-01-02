@@ -115,7 +115,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
           {isActiveNote ? "❯" : ""} {note.title.replace(".md", "")}
         </div>
         <div className="flex items-center justify-between">
-          <ReactTimeAgo className="text-obs-muted" date={+note.created} locale={i18n.language} />
+          <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
           {note.comments && note.comments.length > 0 ? (
             <div key="cmts" className="flex items-center">
               <ChatAlt2Icon className="w-4 h-4 text-obs-normal" />

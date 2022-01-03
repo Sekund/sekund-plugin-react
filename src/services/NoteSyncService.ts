@@ -13,7 +13,7 @@ import {
   SHARED_NOTE_SYNCHRONIZING,
   SHARED_NOTE_UPTODATE,
 } from "@/state/NoteStates";
-import { isSharedNoteFile, mkdirs, setCurrentNoteState } from "@/utils";
+import { isSharedNoteFile, mkdirs, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
 import mime from "mime-types";
@@ -128,7 +128,10 @@ ${note.content}`;
           await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
         }
         await this.fsAdapter.write(fullPath, noteContents);
-        noteFile = this.vault.getAbstractFileByPath(fullPath);
+        while (!noteFile) {
+          noteFile = this.vault.getAbstractFileByPath(fullPath);
+          wait(10);
+        }
       }
       if (noteFile && noteFile instanceof TFile) {
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
@@ -143,7 +146,7 @@ ${note.content}`;
   }
 
   async createDirs(path: string) {
-    mkdirs(path, this.fsAdapter);
+    await mkdirs(path, this.fsAdapter);
   }
 
   async uploadDependencies(assets: Array<string>, noteId: string) {
@@ -205,6 +208,7 @@ ${note.content}`;
     const fullPaths: string[] = [];
     const existingPaths = Object.keys(links);
     fileReferences.forEach((fileReference) => {
+      fileReference = fileReference.substring(0, fileReference.lastIndexOf("|"));
       existingPaths.forEach((fullPath) => {
         const truncated = fullPath.replace(fileReference, "");
         if (fullPath.length - truncated.length === fileReference.length) {

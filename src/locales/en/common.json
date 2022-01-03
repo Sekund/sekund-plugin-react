@@ -115,5 +115,9 @@
         "blocked": "Blocked"
     },
     "groups": "Groups",
-    "peoples": "Peoples"
+    "peoples": "Peoples",
+    "contacts": "Contacts",
+    "yourContacts": "Your contacts",
+    "noSharedNotes": "No notes were shared with you yet.",
+    "noSharedNotesDesc": "Someone needs to share a note with you in order for it to appear here."
 }

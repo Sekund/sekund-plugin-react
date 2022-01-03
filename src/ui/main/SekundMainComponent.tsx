@@ -11,11 +11,11 @@ import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
-import SekundPermissions from "@/ui/permissions/SekundPermissions";
+import SekundPermissions from "@/ui/contacts/SekundContacts";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
-import { CloudUploadIcon, CogIcon, ShieldCheckIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import { CloudUploadIcon, CogIcon, InboxInIcon, ShieldCheckIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -170,10 +170,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                       horizontal: "right",
                     }}
                   >
-                    <UsersIcon className="w-6 h-6" />
+                    <InboxInIcon className="w-6 h-6" />
                   </BlueBadge>
                 ) : (
-                  <UsersIcon className="w-6 h-6" />
+                  <InboxInIcon className="w-6 h-6" />
                 )}
               </div>
               <div
@@ -210,7 +210,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               <ChevronDownIcon className="w-6 h-6" />
             </div> */}
               <div className="cursor-pointer" onClick={() => setShowPermissions(true)}>
-                <ShieldCheckIcon aria-label={t("permissions")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
+                <UsersIcon aria-label={t("yourContacts")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
               </div>
               <div className="cursor-pointer" onClick={() => setShowSettings(true)}>
                 <CogIcon aria-label={t("settings")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />

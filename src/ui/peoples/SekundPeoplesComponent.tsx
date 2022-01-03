@@ -7,7 +7,7 @@ import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesR
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
-import { EmojiSadIcon } from "@heroicons/react/solid";
+import { SparklesIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer } from "react";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,7 @@ export type PeoplesComponentProps = {
 
 export const SekundPeoplesComponent = ({ className, notesService, syncDown, fetchUnread }: PeoplesComponentProps) => {
   const { appState, appDispatch } = useAppContext();
-  const { t } = useTranslation("plugin");
+  const { t } = useTranslation();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
   const notesProviderState = {
     notesState,
@@ -77,10 +77,10 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown, fetc
     return (
       <div className={`${className} flex flex-col items-center justify-center h-full p-8`}>
         <div className="flex justify-center mb-2">
-          <EmojiSadIcon className="w-6 h-6" />
+          <SparklesIcon className="w-6 h-6" />
         </div>
-        <div className="text-center ">{t("plugin:noOne")}</div>
-        <div className="mt-2 text-sm text-center ">{t("plugin:noOneDesc")}</div>
+        <div className="text-center ">{t("noSharedNotes")}</div>
+        <div className="mt-2 text-sm text-center ">{t("noSharedNotesDesc")}</div>
       </div>
     );
 };

@@ -12,7 +12,7 @@ import GroupModal from "@/ui/groups/GroupModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
-import { EmojiSadIcon, PlusIcon } from "@heroicons/react/solid";
+import { PlusIcon, SparklesIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -134,7 +134,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
           ) : (
             <div className={`${className} absolute inset-0 flex flex-col items-center justify-center p-8`}>
               <div className="flex justify-center mb-2">
-                <EmojiSadIcon className="w-6 h-6" />
+                <SparklesIcon className="w-6 h-6" />
               </div>
               <div className="text-center ">{t("plugin:noGroups")}</div>
               <div className="mt-2 text-sm text-center ">{t("plugin:noGroupsDesc")}</div>

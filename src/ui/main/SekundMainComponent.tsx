@@ -209,10 +209,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               <span>{appState.plugin?.settings.subdomain}</span>
               <ChevronDownIcon className="w-6 h-6" />
             </div> */}
-              <div className="cursor-pointer" onClick={() => setShowPermissions(true)}>
+              <div className="flex items-center mr-0 rounded-none cursor-pointer text-obs-muted" onClick={() => setShowPermissions(true)}>
                 <UsersIcon aria-label={t("yourContacts")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
               </div>
-              <div className="cursor-pointer" onClick={() => setShowSettings(true)}>
+              <div className="flex items-center mr-0 rounded-none cursor-pointer text-obs-muted" onClick={() => setShowSettings(true)}>
                 <CogIcon aria-label={t("settings")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
               </div>
             </div>

@@ -77,7 +77,10 @@ export default class SekundPluginReact extends Plugin {
     this.registerViews([{ type: MAIN_VIEW_TYPE, View: SekundMainView }]);
 
     // this.addSettingTab(new SekundSettingsTab(this.app, this));
-    this.app.workspace.onLayoutReady(async () => this.refreshPanes());
+    this.app.workspace.onLayoutReady(async () => {
+      this.refreshPanes();
+      this.showPane(MAIN_VIEW_TYPE);
+    });
   }
 
   onunload(): void {
@@ -195,7 +198,7 @@ export default class SekundPluginReact extends Plugin {
     const readme = await documents.findOne({ title: "**README**" });
     const path = "__sekund__/**README**.md";
     if (readme) {
-      await mkdirs(path, this.app.vault.adapter);
+      await mkdirs("__sekund__", this.app.vault.adapter);
       await this.app.vault.adapter.write(path, readme.content);
     }
   }

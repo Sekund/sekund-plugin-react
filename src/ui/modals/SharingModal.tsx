@@ -32,13 +32,13 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const [addUser, setAddUser] = useState(false);
 
   useEffect(() => {
-    loadOptions("");
+    loadOptions();
   }, [open]);
 
-  async function loadOptions(inputValue: string) {
+  async function loadOptions() {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
     alreadySharing.push(userId);
-    const found = await UsersService.instance.findUsers(inputValue.toLowerCase(), alreadySharing);
+    const found = await UsersService.instance.getWhitelistedUsersAndGroups(alreadySharing);
     setSharingGroupsOptions(found.filter((o) => o.value.type === "group"));
     setSharingPeoplesOptions(found.filter((o) => o.value.type === "user"));
   }

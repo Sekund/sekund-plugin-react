@@ -6,7 +6,7 @@ import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesR
 import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
-import { EmojiSadIcon } from "@heroicons/react/solid";
+import { SparklesIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 import React, { useEffect, useReducer, useRef } from "react";
@@ -108,7 +108,7 @@ export const SekundHomeComponent = ({ notesService, noLocalFile, className, fetc
     return (
       <div className={`${className} absolute inset-0 flex flex-col items-center justify-center p-8`}>
         <div className="flex justify-center mb-2">
-          <EmojiSadIcon className="w-6 h-6" />
+          <SparklesIcon className="w-6 h-6" />
         </div>
         <div className="text-center ">{t("noNotes")}</div>
         <div className="mt-2 text-sm text-center ">{t("plugin:noNotesDesc")}</div>

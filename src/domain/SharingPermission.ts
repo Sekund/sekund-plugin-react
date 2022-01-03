@@ -11,4 +11,5 @@ export interface SharingPermission {
   status: PermissionRequestStatus;
   created: number;
   updated: number;
+  userId: ObjectID;
 }

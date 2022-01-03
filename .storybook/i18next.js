@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 
-const supportedLngs = ["en", "fr", "es", "nl"];
+const supportedLngs = ["en", "fr"];
 
 i18next
   .use(initReactI18next) // passes i18n down to react-i18next
@@ -9,7 +9,7 @@ i18next
     react: {
       useSuspense: false,
     },
-    "language": "en",
+    language: "en",
     ns: ["common"],
     defaultNS: "common",
   });

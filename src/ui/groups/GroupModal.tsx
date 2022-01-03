@@ -38,7 +38,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const selectInput = useRef<any>();
 
   useEffect(() => {
-    loadOptions();
+    loadOptions("");
   }, [open]);
 
   useEffect(() => {
@@ -46,8 +46,10 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
     setCommitEnabled(commitEnabled);
   }, [localGroup]);
 
-  async function loadOptions() {
-    const found = (await UsersService.instance.getWhitelistedUsersAndGroups([userId])).filter((userOrGroup) => userOrGroup.value.type === "user");
+  async function loadOptions(inputValue: string) {
+    const found = (await UsersService.instance.findUsers(inputValue.toLowerCase(), [userId])).filter(
+      (userOrGroup) => userOrGroup.value.type === "user"
+    );
     setTeamMembers(found);
   }
 

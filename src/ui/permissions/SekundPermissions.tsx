@@ -1,9 +1,9 @@
 import { PermissionRequestStatus, SharingPermission } from "@/domain/SharingPermission";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import PermissionsService from "@/services/PermissionsService";
-import PermissionSummaryComponent from "@/ui/contacts/ContactSummaryComponent";
+import PermissionSummaryComponent from "@/ui/permissions/PermissionSummaryComponent";
 import { makeid } from "@/utils";
-import { ExclamationCircleIcon, ShieldCheckIcon, UsersIcon, XIcon } from "@heroicons/react/solid";
+import { ExclamationCircleIcon, ShieldCheckIcon, XIcon } from "@heroicons/react/solid";
 import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 
@@ -79,8 +79,8 @@ export default function SekundPermission({ close, permissionsService }: Props) {
   return (
     <div className="relative flex flex-col w-full px-2">
       <div className="relative flex justify-center py-1 mt-1 space-x-1 text-lg text-obs-muted">
-        <UsersIcon className="w-6 h-6" />
-        <span>{t("yourContacts")}</span>
+        <ShieldCheckIcon className="w-6 h-6" />
+        <span>{t("permissions")}</span>
         <XIcon className="absolute w-6 h-6 cursor-pointer right-1 top-1" onClick={close} />
       </div>
       {permissions && permissions.length > 0 ? (

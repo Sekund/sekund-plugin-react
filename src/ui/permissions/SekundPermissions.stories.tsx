@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import "/global.css";
 
-import SekundContacts from "./SekundContacts";
+import SekundPermissions from "./SekundPermissions";
 import AppReducer, { initialAppState } from "@/state/AppReducer";
 import AppContext from "@/state/AppContext";
 import PermissionsService from "@/services/PermissionsService";
@@ -10,8 +10,8 @@ import ObjectID from "bson-objectid";
 import { PermissionRequestStatus, SharingPermission } from "@/domain/SharingPermission";
 
 export default {
-  title: "Sekund/Contacts",
-  component: SekundContacts,
+  title: "Sekund/Permissions",
+  component: SekundPermissions,
 } as ComponentMeta<any>;
 
 // export interface SharingPermission {
@@ -87,7 +87,7 @@ const Template: ComponentStory<any> = (args) => {
   return (
     <AppContext.Provider value={appProviderState}>
       <div className="sekund">
-        <SekundContacts permissionsService={permissionsService} close={() => {}} />
+        <SekundPermissions permissionsService={permissionsService} close={() => {}} />
       </div>
     </AppContext.Provider>
   );

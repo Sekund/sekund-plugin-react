@@ -100,7 +100,6 @@
     "areYouSure": "Are you sure?",
     "preview": "Preview",
     "missingSomeone": "Missing someone?",
-    "requestSharingPermission": "Request sharing permission",
     "searchByFullnameOrEmail": "Search by full name or email",
     "sendRequest": "Send request",
     "selectUserOrGroup": "Select user or group",
@@ -119,5 +118,16 @@
     "contacts": "Contacts",
     "yourContacts": "Your contacts",
     "noSharedNotes": "No notes were shared with you yet.",
-    "noSharedNotesDesc": "Someone needs to share a note with you in order for it to appear here."
+    "noSharedNotesDesc": "Someone needs to share a note with you in order for it to appear here.",
+    "noContacts": "No Contacts",
+    "noContactsDesc": "You haven't added any contacts, yet",
+    "newContact": "New Contact",
+    "Accept": "Accept",
+    "Block": "Block",
+    "Reject": "Reject",
+    "findAContact": "Find a contact",
+    "contactRequestSent": "Your contact request has been sent ",
+    "nameOrEmailUserNotFound": "Sorry, we could not find a user with that name or email",
+    "searchAnotherContact": "Search another contact",
+    "addToMyContacts": "Add to my contacts"
 }

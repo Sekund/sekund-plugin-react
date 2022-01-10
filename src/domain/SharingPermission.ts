@@ -12,4 +12,5 @@ export interface SharingPermission {
   created: number;
   updated: number;
   userId: ObjectID;
+  userInfo: People;
 }

@@ -100,7 +100,6 @@
     "areYouSure": "Vous êtes sûr ?",
     "preview": "Prévisualiser",
     "missingSomeone": "Il manque quelqu'un?",
-    "requestSharingPermission": "Demander l'autorisation de partager",
     "searchByFullnameOrEmail": "Recherche par nom / email",
     "sendRequest": "Envoyer la requête",
     "selectUserOrGroup": "Sélectionner un utilisateur ou un groupe",
@@ -119,5 +118,16 @@
     "contacts": "Contacts",
     "yourContacts": "Vos contacts",
     "noSharedNotes": "Il n'y a pas encore de notes partagées avec vous.",
-    "noSharedNotesDesc": "Il faut que quelqu'un partage une note avec vous pour qu'elle apparaisse ici."
+    "noSharedNotesDesc": "Il faut que quelqu'un partage une note avec vous pour qu'elle apparaisse ici.",
+    "noContacts": "Aucun contact",
+    "noContactsDesc": "Vous n'avez pas encore ajouté de contacts",
+    "newContact": "Nouveau contact",
+    "Accept": "Accepter",
+    "Block": "Bloquer",
+    "Reject": "Rejeter",
+    "findAContact": "Trouver un contact",
+    "contactRequestSent": "Votre demande de contact a été envoyée",
+    "nameOrEmailUserNotFound": "Aucun utilisateur n'a pu être trouvé par ce nom ou adresse email",
+    "searchAnotherContact": "Rechercher un autre contact",
+    "addToMyContacts": "Ajouter à mes contacts"
 }

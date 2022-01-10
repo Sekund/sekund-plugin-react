@@ -138,8 +138,8 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
               </div>
               <div className="text-center ">{t("plugin:noGroups")}</div>
               <div className="mt-2 text-sm text-center ">{t("plugin:noGroupsDesc")}</div>
-              <button onClick={createGroup} className="flex items-center mt-2 mod-cta">
-                <PlusIcon className="w-4 h-4 mr-1 mod-cta" />
+              <button onClick={createGroup} className="flex items-center mt-2 cursor-pointer mod-cta">
+                <PlusIcon className="w-4 h-4 mr-1" />
                 {t("new_group")}
               </button>
             </div>

@@ -3,7 +3,7 @@ import { useAppContext } from "@/state/AppContext";
 import ResetPassword from "@/ui/auth/ResetPassword";
 import Loader from "@/ui/common/LoaderComponent";
 import Tooltip from "@/ui/common/Tooltip";
-import { validateEmail } from "@/utils";
+import { makeid, validateEmail } from "@/utils";
 import { EyeIcon, EyeOffIcon, LoginIcon } from "@heroicons/react/solid";
 import { Alert, Snackbar } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -73,7 +73,7 @@ export default function Login({ workspaceId, workspaceName, navigation, sbPage }
     const appUser = await logIn();
     if (appUser) {
       const apiKeyService = new ApiKeyService(appUser);
-      const { key } = await apiKeyService.ensureApiKey();
+      const { key } = await apiKeyService.ensureApiKey(appState.plugin?.app.vault.getName() || makeid(12));
       await appState.plugin?.addApiKey(workspaceName, key);
       appState.plugin?.attemptConnection(true);
     } else {

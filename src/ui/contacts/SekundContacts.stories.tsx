@@ -1,27 +1,16 @@
-import React, { useReducer } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import "/global.css";
-
-import SekundContacts from "./SekundContacts";
-import AppReducer, { initialAppState } from "@/state/AppReducer";
-import AppContext from "@/state/AppContext";
-import PermissionsService from "@/services/PermissionsService";
-import ObjectID from "bson-objectid";
 import { PermissionRequestStatus, SharingPermission } from "@/domain/SharingPermission";
+import AppContext from "@/state/AppContext";
+import AppReducer, { initialAppState } from "@/state/AppReducer";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+import ObjectID from "bson-objectid";
+import React, { useReducer } from "react";
+import SekundContacts from "./SekundContacts";
+import "/global.css";
 
 export default {
   title: "Sekund/Contacts",
   component: SekundContacts,
 } as ComponentMeta<any>;
-
-// export interface SharingPermission {
-//   _id: ObjectID;
-//   user?: People;
-//   group?: Group;
-//   status: PermissionRequestStatus;
-//   created: number;
-//   updated: number;
-// }
 
 const peoples = [
   { _id: new ObjectID(), name: "Thibault de Malempré", image: "https://joeschmoe.io/api/v1/a" },
@@ -34,64 +23,80 @@ const peoples = [
   { _id: new ObjectID(), name: "Wrightgobble", image: "https://joeschmoe.io/api/v1/h" },
 ];
 
+const permissions = [
+  {
+    _id: new ObjectID(),
+    user: peoples[0],
+    status: "requested",
+    created: Date.now(),
+    updated: Date.now(),
+  },
+  {
+    _id: new ObjectID(),
+    user: peoples[1],
+    status: "accepted",
+    created: Date.now(),
+    updated: Date.now(),
+  },
+  {
+    _id: new ObjectID(),
+    user: peoples[2],
+    status: "accepted",
+    created: Date.now(),
+    updated: Date.now(),
+  },
+  {
+    _id: new ObjectID(),
+    user: peoples[3],
+    status: "rejected",
+    created: Date.now(),
+    updated: Date.now(),
+  },
+  {
+    _id: new ObjectID(),
+    user: peoples[4],
+    status: "blocked",
+    created: Date.now(),
+    updated: Date.now(),
+  },
+] as SharingPermission[];
+
 const Template: ComponentStory<any> = (args) => {
   const [appState, appDispatch] = useReducer(AppReducer, initialAppState);
   const appProviderState = {
     appState,
     appDispatch,
   };
-  const permissionsService = {
-    getPermissions() {
-      return [
-        {
-          _id: new ObjectID(),
-          user: peoples[0],
-          status: "requested",
-          created: Date.now(),
-          update: Date.now(),
-        },
-        {
-          _id: new ObjectID(),
-          user: peoples[1],
-          status: "accepted",
-          created: Date.now(),
-          update: Date.now(),
-        },
-        {
-          _id: new ObjectID(),
-          user: peoples[2],
-          status: "accepted",
-          created: Date.now(),
-          update: Date.now(),
-        },
-        {
-          _id: new ObjectID(),
-          user: peoples[3],
-          status: "rejected",
-          created: Date.now(),
-          update: Date.now(),
-        },
-        {
-          _id: new ObjectID(),
-          user: peoples[4],
-          status: "blocked",
-          created: Date.now(),
-          update: Date.now(),
-        },
-      ];
-    },
-    setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
-      console.log("setting status", sp, status);
-    },
-  } as unknown as PermissionsService;
+
   return (
     <AppContext.Provider value={appProviderState}>
       <div className="sekund">
-        <SekundContacts permissionsService={permissionsService} close={() => {}} />
+        <SekundContacts permissionsService={args.permissionsService} permissions={permissions} close={() => {}} />
       </div>
     </AppContext.Provider>
   );
 };
 
 export const Example = Template.bind({});
-Example.args = {};
+Example.args = {
+  permissionsService: {
+    getPermissions() {
+      permissions;
+    },
+    setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
+      console.log("setting status", sp, status);
+    },
+  },
+};
+
+export const NoContacts = Template.bind({});
+NoContacts.args = {
+  permissionsService: {
+    getPermissions() {
+      return [];
+    },
+    setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
+      console.log("setting status", sp, status);
+    },
+  },
+};

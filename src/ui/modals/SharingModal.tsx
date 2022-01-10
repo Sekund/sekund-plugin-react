@@ -6,7 +6,9 @@ import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
+import PermissionsService from "@/services/PermissionsService";
 import UsersService from "@/services/UsersService";
+import { useAppContext } from "@/state/AppContext";
 import AddUser from "@/ui/common/AddUser";
 import { XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
@@ -30,6 +32,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const selectInput = useRef<any>();
   const shade = useRef<any>();
   const [addUser, setAddUser] = useState(false);
+  const { userProfile } = useAppContext().appState;
 
   useEffect(() => {
     loadOptions();
@@ -38,9 +41,10 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   async function loadOptions() {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
     alreadySharing.push(userId);
-    const found = await UsersService.instance.getWhitelistedUsersAndGroups(alreadySharing);
-    setSharingGroupsOptions(found.filter((o) => o.value.type === "group"));
-    setSharingPeoplesOptions(found.filter((o) => o.value.type === "user"));
+    const confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);
+    const confirmedGroups = await GroupsService.instance.getConfirmedGroupOptions(userProfile);
+    setSharingGroupsOptions(confirmedGroups);
+    setSharingPeoplesOptions(confirmedContacts);
   }
 
   async function removeGroup(g: Group) {

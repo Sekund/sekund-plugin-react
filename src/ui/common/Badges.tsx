@@ -49,7 +49,7 @@ const StyledBadge = styled(BadgeUnstyled)`
 
 export const AccentedBadge = styled(StyledBadge)`
   & .MuiBadge-badge {
-    background-color: ;
+    background-color: #1f85de;
   }
 
   & .MuiBadge-dot {

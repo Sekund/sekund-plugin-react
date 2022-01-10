@@ -1,11 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Group } from "@/domain/Group";
 import { People } from "@/domain/People";
-import { SelectOption } from "@/domain/Types";
+import { SelectOption, SelectOptionType } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import PeoplesService from "@/services/PeoplesService";
-import UsersService from "@/services/UsersService";
+import PermissionsService from "@/services/PermissionsService";
+import { useAppContext } from "@/state/AppContext";
 import { usePeoplesContext } from "@/state/PeoplesContext";
 import { PeoplesActionKind } from "@/state/PeoplesReducer";
 import AddUser from "@/ui/common/AddUser";
@@ -29,6 +30,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const { peoplesDispatch } = usePeoplesContext();
   const shade = useRef<any>();
   const [addUser, setAddUser] = useState(false);
+  const { userProfile } = useAppContext().appState;
 
   if (group === null) {
     group = { peoples: [] as Array<People> } as Group;
@@ -47,8 +49,8 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   }, [localGroup]);
 
   async function loadOptions() {
-    const found = (await UsersService.instance.getWhitelistedUsersAndGroups([userId])).filter((userOrGroup) => userOrGroup.value.type === "user");
-    setTeamMembers(found);
+    const confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);
+    setTeamMembers(confirmedContacts);
   }
 
   async function addSelectedUser() {

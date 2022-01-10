@@ -58,13 +58,6 @@ export default class UsersService extends ServerlessService {
     return this.usersCache[userId];
   }
 
-  async getWhitelistedUsersAndGroups(userIds: ObjectID[]): Promise<SelectOption[]> {
-    const found: { users: any[]; groups: any[] } = (await callFunction(this.plugin, "whitelistedUsersAndGroups", [userIds])) || {};
-    return found.users
-      .map((user) => ({ label: user.name || user.email, value: { ...user, id: user._id.toString(), type: "user" } }))
-      .concat(found.groups.map((group) => ({ label: `${group.name}`, value: { ...group, id: group._id.toString(), type: "group" } })));
-  }
-
   async findUserByNameOrEmail(nameOrEmail: string): Promise<People> {
     return await callFunction(this.plugin, "findUserByNameOrEmail", [nameOrEmail]);
   }

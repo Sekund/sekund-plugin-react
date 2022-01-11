@@ -33,6 +33,10 @@ export default class GroupsService extends ServerlessService {
     return result;
   }
 
+  async leaveGroup(groupId: ObjectID) {
+    await callFunction(this.plugin, "leaveGroup", [groupId]);
+  }
+
   async getConfirmedGroupOptions(userProfile: People): Promise<SelectOption[]> {
     var groupsColl = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("groups");
     const query = { peoples: userProfile._id };

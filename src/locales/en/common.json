@@ -131,5 +131,6 @@
     "searchAnotherContact": "Search another contact",
     "addToMyContacts": "Add to my contacts",
     "blockedContacts": "Blocked contacts",
-    "wouldLikeToAddYouToTheirContacts": "would like to add you to their contacts"
+    "wouldLikeToAddYouToTheirContacts": "would like to add you to their contacts",
+    "confirmLeaveGroup": "Are you sure you want to leave this group?"
 }

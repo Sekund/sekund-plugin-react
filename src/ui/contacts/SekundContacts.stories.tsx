@@ -1,6 +1,8 @@
+import { People } from "@/domain/People";
 import { PermissionRequestStatus, SharingPermission } from "@/domain/SharingPermission";
+import { someone } from "@/mockdata/PeoplesMock";
 import AppContext from "@/state/AppContext";
-import AppReducer, { initialAppState } from "@/state/AppReducer";
+import AppReducer, { AppActionKind, initialAppState } from "@/state/AppReducer";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import ObjectID from "bson-objectid";
 import React, { useReducer } from "react";
@@ -30,6 +32,8 @@ const permissions = [
     status: "requested",
     created: Date.now(),
     updated: Date.now(),
+    userId: new ObjectID(),
+    userInfo: someone,
   },
   {
     _id: new ObjectID(),
@@ -37,6 +41,8 @@ const permissions = [
     status: "accepted",
     created: Date.now(),
     updated: Date.now(),
+    userId: new ObjectID(),
+    userInfo: someone,
   },
   {
     _id: new ObjectID(),
@@ -44,6 +50,8 @@ const permissions = [
     status: "accepted",
     created: Date.now(),
     updated: Date.now(),
+    userId: new ObjectID(),
+    userInfo: someone,
   },
   {
     _id: new ObjectID(),
@@ -51,6 +59,8 @@ const permissions = [
     status: "rejected",
     created: Date.now(),
     updated: Date.now(),
+    userId: new ObjectID(),
+    userInfo: someone,
   },
   {
     _id: new ObjectID(),
@@ -58,11 +68,13 @@ const permissions = [
     status: "blocked",
     created: Date.now(),
     updated: Date.now(),
+    userId: new ObjectID(),
+    userInfo: someone,
   },
 ] as SharingPermission[];
 
 const Template: ComponentStory<any> = (args) => {
-  const [appState, appDispatch] = useReducer(AppReducer, initialAppState);
+  const [appState, appDispatch] = useReducer(AppReducer, { ...initialAppState, userProfile: someone });
   const appProviderState = {
     appState,
     appDispatch,

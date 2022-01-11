@@ -136,5 +136,8 @@
     "author": "Author",
     "contributors": "Contributors",
     "username": "Username",
-    "nameAlreadyTaken": "Too bad, this name is already taken."
+    "nameAlreadyTaken": "Too bad, this name is already taken.",
+    "youCannotRemoveYourself": "Being the group's creator, you cannot leave it.",
+    "aGroupByThatNameAlreadyExists": "A group by that name already exists.",
+    "unexpectedError": "Unexpected error"
 }

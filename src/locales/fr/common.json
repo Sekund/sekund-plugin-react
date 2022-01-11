@@ -136,5 +136,8 @@
     "author": "Auteur",
     "contributors": "Contributeurs",
     "username": "Nom d'utilisateur",
-    "nameAlreadyTaken": "Dommage, ce nom est déjà pris."
+    "nameAlreadyTaken": "Dommage, ce nom est déjà pris.",
+    "youCannotRemoveYourself": "En tant que créateur de ce groupe, vous ne pouvez pas le quitter.",
+    "aGroupByThatNameAlreadyExists": "Un groupe de ce nom existe déjà.",
+    "unexpectedError": "Erreur inattendue"
 }

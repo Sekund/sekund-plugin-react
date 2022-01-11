@@ -63,7 +63,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   async function removePeople(p: People) {
     if (localGroup) {
       if (p._id.equals(userId)) {
-        alert("You cannot remove yourself.");
+        alert(t("youCannotRemoveYourself"));
         return;
       }
       const updtPeoples = localGroup.peoples?.filter((people) => people._id !== p._id);
@@ -88,7 +88,13 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
         setOpen(false);
       }
     } catch (err) {
-      alert("There was an error");
+      const errorMessage = (err as any).toString();
+      if (errorMessage.indexOf("A group by that name already exists") !== -1) {
+        alert(t("aGroupByThatNameAlreadyExists"));
+        return;
+      }
+
+      alert(t("unexpectedError"));
     }
   }
 

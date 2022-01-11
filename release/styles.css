@@ -99,6 +99,10 @@
     margin-top: 0.5rem;
     margin-bottom: 0.5rem
   }
+  .sekund .my-4 {
+    margin-top: 1rem;
+    margin-bottom: 1rem
+  }
   .sekund .my-12 {
     margin-top: 3rem;
     margin-bottom: 3rem
@@ -177,6 +181,9 @@
   }
   .sekund .hidden {
     display: none
+  }
+  .sekund .h-1 {
+    height: 0.25rem
   }
   .sekund .h-2 {
     height: 0.5rem
@@ -440,6 +447,9 @@
   .sekund .rounded-none {
     border-radius: 0px
   }
+  .sekund .rounded-sm {
+    border-radius: 0.125rem
+  }
   .sekund .rounded {
     border-radius: 0.25rem
   }
@@ -452,6 +462,9 @@
   .sekund .rounded-full {
     border-radius: 9999px
   }
+  .sekund .border-2 {
+    border-width: 2px
+  }
   .sekund .border {
     border-width: 1px
   }
@@ -463,6 +476,12 @@
   }
   .sekund .border-obs-modal {
     border-color: var(--modal-border)
+  }
+  .sekund .border-accent-3 {
+    border-color: var(--accent-3)
+  }
+  .sekund .border-accent-4 {
+    border-color: var(--accent-4)
   }
   .sekund .dark .dark\:border-obs-modal {
     border-color: var(--modal-border)
@@ -680,6 +699,9 @@
   .sekund .text-obs-accent {
     color: var(--text-accent)
   }
+  .sekund .text-accent-3 {
+    color: var(--accent-3)
+  }
   .sekund .text-accent-4 {
     color: var(--accent-4)
   }
@@ -698,8 +720,14 @@
   .sekund .hover\:text-secondary:hover {
     color: var(--color-text-secondary)
   }
+  .sekund .opacity-0 {
+    opacity: 0
+  }
   .sekund .opacity-50 {
     opacity: 0.5
+  }
+  .sekund .opacity-100 {
+    opacity: 1
   }
   .sekund .hover\:opacity-100:hover {
     opacity: 1
@@ -730,6 +758,9 @@
     --tw-sepia: var(--tw-empty,/*!*/ /*!*/);
     --tw-drop-shadow: var(--tw-empty,/*!*/ /*!*/);
     filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+  }
+  .sekund .blur {
+    --tw-blur: blur(8px)
   }
   .sekund {
   --gray-4: #2a2e3b;

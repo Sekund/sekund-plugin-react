@@ -78,4 +78,8 @@ export default class UsersService extends ServerlessService {
       await atlasUsers.updateOne({ _id: new ObjectID(this.plugin.user.customData._id as string) }, { $set: { ...pNonNullValues } }, { upsert: true });
     }
   }
+
+  async isNameTaken(name: string): Promise<boolean> {
+    return await callFunction(this.plugin, "isNameTaken", [name]);
+  }
 }

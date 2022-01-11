@@ -84,7 +84,6 @@
     "joinAnotherWorkspace": "Join another workspace",
     "chooseThisOptionIfInvited": "Choose this if you have received an invitation to a specific workspace.",
     "switchToAnotherWorkspace": "Switch to another workspace",
-    "name": "Name",
     "bio": "Bio",
     "introduceYourself": "Introduce yourself",
     "describeYourself": "Describe yourself",
@@ -132,5 +131,10 @@
     "addToMyContacts": "Add to my contacts",
     "blockedContacts": "Blocked contacts",
     "wouldLikeToAddYouToTheirContacts": "would like to add you to their contacts",
-    "confirmLeaveGroup": "Are you sure you want to leave this group?"
+    "confirmLeaveGroup": "Are you sure you want to leave this group?",
+    "about": "About",
+    "author": "Author",
+    "contributors": "Contributors",
+    "username": "Username",
+    "nameAlreadyTaken": "Too bad, this name is already taken."
 }

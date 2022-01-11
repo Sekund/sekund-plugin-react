@@ -1,5 +1,4 @@
 import { Note } from "@/domain/Note";
-import i18next from "@/i18n.config";
 import NoteSyncService from "@/services/NoteSyncService";
 import SekundMainComponent, { MainComponentProps } from "@/ui/main/SekundMainComponent";
 import SekundView from "@/ui/SekundView";

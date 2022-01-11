@@ -46,7 +46,7 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
       return (
         <span className="flex flex-col">
           <div className="truncate">{ItemName()}</div>
-          <div>wants to add you to their contacts</div>
+          <div>{t("wouldLikeToAddYouToTheirContacts")}</div>
         </span>
       );
     }

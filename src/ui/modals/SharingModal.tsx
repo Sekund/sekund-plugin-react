@@ -7,7 +7,6 @@ import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
-import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import AddUser from "@/ui/common/AddUser";
 import { XIcon } from "@heroicons/react/solid";
@@ -147,10 +146,6 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
                 </optgroup>
               ) : null}
             </select>
-          </div>
-          <div className="flex flex-col text-sm">
-            <span className="nowrap">{t("missingSomeone")}</span>
-            <a onClick={() => setAddUser(true)}>{t("requestSharingPermission")}</a>
           </div>
         </div>
         <div className="mt-5 sm:mt-6 text-secondary">{shares()}</div>

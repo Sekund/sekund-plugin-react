@@ -113,7 +113,7 @@ export default function SekundContacts({ close, permissionsService, permissions 
                   showBlocked ? "text-obs-muted" : "text-obs-faint hover:text-obs-muted"
                 }`}
               >
-                <div className="">Blocked contacts</div>
+                <div className="">{t("blockedContacts")}</div>
                 <div>{showBlocked ? <EyeIcon className="w-5 h-5" /> : <EyeOffIcon className="w-5 h-5" />}</div>
               </div>
               {showBlocked ? Permissions(blockedContacts) : null}

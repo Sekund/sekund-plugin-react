@@ -129,5 +129,7 @@
     "contactRequestSent": "Your contact request has been sent ",
     "nameOrEmailUserNotFound": "Sorry, we could not find a user with that name or email",
     "searchAnotherContact": "Search another contact",
-    "addToMyContacts": "Add to my contacts"
+    "addToMyContacts": "Add to my contacts",
+    "blockedContacts": "Blocked contacts",
+    "wouldLikeToAddYouToTheirContacts": "would like to add you to their contacts"
 }

@@ -1,16 +1,14 @@
 import { BadgeUnstyled } from "@mui/material";
-import { styled } from '@mui/material/styles';
-import React from 'react';
+import { styled } from "@mui/material/styles";
 
 const StyledBadge = styled(BadgeUnstyled)`
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: rgba(0, 0, 0, 0.85);
   font-size: 8px;
   font-variant: tabular-nums;
   list-style: none;
-  font-feature-settings: 'tnum';
+  font-feature-settings: "tnum";
   position: relative;
   display: inline-block;
   line-height: 1;
@@ -49,32 +47,12 @@ const StyledBadge = styled(BadgeUnstyled)`
   }
 `;
 
-export const BlueBadge = styled(StyledBadge)`
-& .MuiBadge-badge {
-  background-color: blue;
-}
+export const AccentedBadge = styled(StyledBadge)`
+  & .MuiBadge-badge {
+    background-color: #1f85de;
+  }
 
-& .MuiBadge-dot {
-  background-color: blue;
-}
-`
-
-export const GreenBadge = styled(StyledBadge)`
-& .MuiBadge-badge {
-  background-color: green;
-}
-
-& .MuiBadge-dot {
-  background-color: green;
-}
-`
-
-export const OrangeBadge = styled(StyledBadge)`
-& .MuiBadge-badge {
-  background-color: orange;
-}
-
-& .MuiBadge-dot {
-  background-color: orange;
-}
-`
+  & .MuiBadge-dot {
+    background-color: #1f85de;
+  }
+`;

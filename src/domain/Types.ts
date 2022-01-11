@@ -5,6 +5,8 @@ export type AT = {
   accessToken: string;
 };
 
-export type SelectOption = { value: { id: string; type: "user" | "group" }; label: string };
+export type SelectOptionType = "user" | "group";
+
+export type SelectOption = { value: { id: string; type: SelectOptionType }; label: string };
 
 export type NoteSummary = Pick<Note, "_id" | "title" | "path" | "comments" | "updated" | "isRead">;

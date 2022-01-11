@@ -2,15 +2,17 @@ import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
+import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid } from "@/utils";
-import { AdjustmentsIcon, DotsHorizontalIcon } from "@heroicons/react/solid";
+import { AdjustmentsIcon, LogoutIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
 import React, { useEffect, useReducer, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 type Props = {
   group: Group;
   editGroup: (group: Group) => void;
@@ -19,6 +21,7 @@ type Props = {
 };
 
 export default function SekundGroupSummary({ group, editGroup, handleNoteClicked, fetchUnread }: Props) {
+  const { t } = useTranslation();
   const expandedRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -43,6 +46,12 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
     setExpanded(expandedRef.current);
   }
 
+  function leaveGroup(group: Group) {
+    if (confirm(t("confirmLeaveGroup"))) {
+      GroupsService.instance.leaveGroup(group._id);
+    }
+  }
+
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
@@ -62,12 +71,15 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);
     return (
-      <div className="flex items-center p-1 ml-1 space-x-1 overflow-hidden cursor-pointer" onClick={editAllowed ? () => editGroup(group) : undefined}>
+      <div
+        className="flex items-center p-1 ml-1 space-x-1 overflow-hidden cursor-pointer"
+        onClick={editAllowed ? () => editGroup(group) : () => leaveGroup(group)}
+      >
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>
 
-        {editAllowed ? <AdjustmentsIcon className="w-4 h-4" /> : ""}
+        {editAllowed ? <AdjustmentsIcon className="w-4 h-4" /> : <LogoutIcon className="w-4 h-4" />}
       </div>
     );
   }

@@ -96,8 +96,8 @@ export const globalTypes = {
       items: [
         { value: "en", right: "🇺🇸", title: "English" },
         { value: "fr", right: "🇫🇷", title: "French" },
-        { value: "nl", right: "🇳🇱", title: "Dutch" },
-        { value: "es", right: "🇪🇸", title: "Spanish" },
+        // { value: "nl", right: "🇳🇱", title: "Dutch" },
+        // { value: "es", right: "🇪🇸", title: "Spanish" },
         // { value: "de", right: "🇩🇪", title: "German" },
         // { value: "it", right: "🇮🇹", title: "Italian" },
         // { value: "pt", right: "🇵🇹", title: "Portuguese" },

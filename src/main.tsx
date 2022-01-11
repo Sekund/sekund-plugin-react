@@ -19,9 +19,10 @@ import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
 import fr from "javascript-time-ago/locale/fr.json";
 import nl from "javascript-time-ago/locale/nl.json";
-import { Plugin, TFile } from "obsidian";
+import { App, Modal, Plugin, TFile } from "obsidian";
 import React from "react";
 import * as Realm from "realm-web";
+import i18next from "@/i18n.config";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);
@@ -123,6 +124,11 @@ export default class SekundPluginReact extends Plugin {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (leaf.view as any).previewMode.rerender(true);
     });
+  }
+
+  public about() {
+    const aboutModal = new AboutModal(this.app);
+    aboutModal.open();
   }
 
   public getCurrentUser() {
@@ -368,6 +374,32 @@ export default class SekundPluginReact extends Plugin {
 
   get dispatchers() {
     return Object.values(this.viewDispatchers);
+  }
+}
+
+class AboutModal extends Modal {
+  constructor(app: App) {
+    super(app);
+  }
+
+  onOpen() {
+    const { contentEl, titleEl } = this;
+    const { t } = i18next;
+    titleEl.innerHTML = `<div style="text-align:center">${t("about")}</div>`;
+    contentEl.innerHTML = `
+    <div style="text-align:center">
+      <p><b>${i18next.t("author")}</b></p>
+      <p style="font-size: 85%">Candide Kemmler</p>
+      <p><b>${i18next.t("contributors")}</b></p>
+      <p style="font-size: 85%">Laurent De Saedeleer (UX)</p>
+      <p style="margin-top:1rem">Version: 1.0.31</p>
+    </div>
+    `;
+  }
+
+  onClose() {
+    let { contentEl } = this;
+    contentEl.empty();
   }
 }
 

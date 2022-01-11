@@ -10,8 +10,8 @@ export interface People {
   name?: string;
   image?: string;
   bio?: string;
-  sharing: number;
-  shared: number;
-  unreadSharing: number;
-  unreadShared: number;
+  sharing?: number;
+  shared?: number;
+  unreadSharing?: number;
+  unreadShared?: number;
 }

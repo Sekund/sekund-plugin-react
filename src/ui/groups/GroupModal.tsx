@@ -1,11 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Group } from "@/domain/Group";
 import { People } from "@/domain/People";
-import { SelectOption } from "@/domain/Types";
+import { SelectOption, SelectOptionType } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import PeoplesService from "@/services/PeoplesService";
-import UsersService from "@/services/UsersService";
+import PermissionsService from "@/services/PermissionsService";
+import { useAppContext } from "@/state/AppContext";
 import { usePeoplesContext } from "@/state/PeoplesContext";
 import { PeoplesActionKind } from "@/state/PeoplesReducer";
 import AddUser from "@/ui/common/AddUser";
@@ -29,6 +30,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const { peoplesDispatch } = usePeoplesContext();
   const shade = useRef<any>();
   const [addUser, setAddUser] = useState(false);
+  const { userProfile } = useAppContext().appState;
 
   if (group === null) {
     group = { peoples: [] as Array<People> } as Group;
@@ -38,7 +40,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   const selectInput = useRef<any>();
 
   useEffect(() => {
-    loadOptions("");
+    loadOptions();
   }, [open]);
 
   useEffect(() => {
@@ -46,11 +48,9 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
     setCommitEnabled(commitEnabled);
   }, [localGroup]);
 
-  async function loadOptions(inputValue: string) {
-    const found = (await UsersService.instance.findUsers(inputValue.toLowerCase(), [userId])).filter(
-      (userOrGroup) => userOrGroup.value.type === "user"
-    );
-    setTeamMembers(found);
+  async function loadOptions() {
+    const confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);
+    setTeamMembers(confirmedContacts);
   }
 
   async function addSelectedUser() {
@@ -63,7 +63,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
   async function removePeople(p: People) {
     if (localGroup) {
       if (p._id.equals(userId)) {
-        alert("You cannot remove yourself.");
+        alert(t("youCannotRemoveYourself"));
         return;
       }
       const updtPeoples = localGroup.peoples?.filter((people) => people._id !== p._id);
@@ -88,7 +88,13 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
         setOpen(false);
       }
     } catch (err) {
-      alert("There was an error");
+      const errorMessage = (err as any).toString();
+      if (errorMessage.indexOf("A group by that name already exists") !== -1) {
+        alert(t("aGroupByThatNameAlreadyExists"));
+        return;
+      }
+
+      alert(t("unexpectedError"));
     }
   }
 

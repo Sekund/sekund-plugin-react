@@ -58,11 +58,8 @@ export default class UsersService extends ServerlessService {
     return this.usersCache[userId];
   }
 
-  async findUsers(letters: string, userIds: ObjectID[]): Promise<SelectOption[]> {
-    const found: { users: any[]; groups: any[] } = (await callFunction(this.plugin, "whitelistedUsersAndGroups", [letters, userIds])) || {};
-    return found.users
-      .map((user) => ({ label: user.name || user.email, value: { ...user, id: user._id.toString(), type: "user" } }))
-      .concat(found.groups.map((group) => ({ label: `${group.name}`, value: { ...group, id: group._id.toString(), type: "group" } })));
+  async findUserByNameOrEmail(nameOrEmail: string): Promise<People> {
+    return await callFunction(this.plugin, "findUserByNameOrEmail", [nameOrEmail]);
   }
 
   async fetchUser(): Promise<Record<string, unknown> | undefined> {
@@ -80,5 +77,9 @@ export default class UsersService extends ServerlessService {
     if (atlasUsers) {
       await atlasUsers.updateOne({ _id: new ObjectID(this.plugin.user.customData._id as string) }, { $set: { ...pNonNullValues } }, { upsert: true });
     }
+  }
+
+  async isNameTaken(name: string): Promise<boolean> {
+    return await callFunction(this.plugin, "isNameTaken", [name]);
   }
 }

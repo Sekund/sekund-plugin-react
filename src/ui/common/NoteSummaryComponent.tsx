@@ -112,7 +112,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     return (
       <>
         <div className={`${readStatusClass()}`}>
-          {isActiveNote ? "❯" : ""} {note.title.replace(".md", "")}
+          {isActiveNote ? "❯" : isUnread(note) ? <span className="text-lg">•</span> : ""} {note.title.replace(".md", "")}
         </div>
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
@@ -130,6 +130,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     return (
       <div
         className={`flex flex-col px-3 py-2 text-sm cursor-pointer hover:bg-obs-secondary ${isActiveNote ? "bg-obs-secondary" : ""}`}
+        style={isUnread(note) ? { borderLeft: "6px solid #1F85DE" } : {}}
         onClick={noteClicked}
       >
         {summaryContents()}
@@ -143,6 +144,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
       return (
         <div
           className={`flex space-x-2 items-center px-3 py-2 text-sm cursor-pointer hover:bg-obs-secondary ${isActiveNote ? "bg-obs-secondary" : ""}`}
+          style={isUnread(note) ? { borderLeft: "6px solid #1F85DE" } : {}}
           onClick={noteClicked}
         >
           <div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>

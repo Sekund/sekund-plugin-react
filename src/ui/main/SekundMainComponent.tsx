@@ -1,21 +1,23 @@
 import { Note } from "@/domain/Note";
+import { SharingPermission } from "@/domain/SharingPermission";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
+import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
 import { AppActionKind, filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
-import { BlueBadge, GreenBadge, OrangeBadge } from "@/ui/common/Badges";
+import { AccentedBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
+import SekundPermissions from "@/ui/contacts/SekundContacts";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
-import SekundPermissions from "@/ui/permissions/SekundPermissions";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
-import { CloudUploadIcon, CogIcon, ShieldCheckIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
+import { CloudUploadIcon, CogIcon, InboxInIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -45,6 +47,8 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   const { appState, appDispatch } = useAppContext();
   const [, setShowViews] = useState(false);
+  const [sharingPermissionRequests, setSharingPermissionRequests] = useState<SharingPermission[]>([]);
+  const [sharingPermissions, setSharingPermissions] = useState<SharingPermission[]>([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showPermissions, setShowPermissions] = useState(false);
   const [viewType, setViewType] = useState<ViewType>("home");
@@ -74,14 +78,26 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
   useEffect(() => {
     const listenerId = makeid(5);
+    const permissionsListenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadPermissions));
     eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
+
     fetchUnread();
+    loadPermissions();
+
     return () => {
+      eventsWatcher?.removeEventListener(permissionsListenerId);
       eventsWatcher?.removeEventListener(listenerId);
     };
   }, []);
+
+  async function loadPermissions() {
+    const permissions = await PermissionsService.instance.getPermissions();
+    setSharingPermissionRequests(permissions.filter((p) => p.status === "requested" && p.userId.equals(appState.userProfile._id)));
+    setSharingPermissions(permissions);
+  }
 
   async function filterIncomingChanges(fullDocument: any) {
     const updtNote: Note = fullDocument.data;
@@ -119,7 +135,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       ) : null}
       {showPermissions ? (
         <div className="fixed inset-0 z-30 grid h-screen bg-obs-primary">
-          <SekundPermissions close={() => setShowPermissions(false)} />
+          <SekundPermissions close={() => setShowPermissions(false)} permissions={sharingPermissions} />
         </div>
       ) : null}
       <div ref={sekundMainComponentRoot} className="fixed inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
@@ -132,12 +148,12 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("yourNotes")}
-                className={`flex items-center px-2 mr-0 space-x-2 rounded-none ${
-                  viewType === "home" ? "text-obs-muted" : "text-obs-faint"
+                className={`flex items-center px-2 mr-0 space-x-2 rounded-none text-obs-muted  ${
+                  viewType === "home" ? "opacity-100" : "opacity-50"
                 } cursor-pointer`}
               >
                 {unreadNotes.home.length > 0 ? (
-                  <GreenBadge
+                  <AccentedBadge
                     badgeContent={unreadNotes.home.length}
                     overlap="circular"
                     anchorOrigin={{
@@ -146,7 +162,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                     }}
                   >
                     <CloudUploadIcon className="w-6 h-6" />
-                  </GreenBadge>
+                  </AccentedBadge>
                 ) : (
                   <CloudUploadIcon className="w-6 h-6" />
                 )}
@@ -157,12 +173,12 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("yourContactsNotes")}
-                className={`flex items-center pr-2 mr-0 space-x-2 rounded-none ${
-                  viewType === "peoples" ? "text-obs-muted" : "text-obs-faint"
+                className={`flex items-center pr-2 mr-0 space-x-2 rounded-none text-obs-muted ${
+                  viewType === "peoples" ? "opacity-100" : "opacity-50"
                 } cursor-pointer`}
               >
                 {unreadNotes.peoples.length > 0 ? (
-                  <BlueBadge
+                  <AccentedBadge
                     badgeContent={unreadNotes.peoples.length}
                     overlap="circular"
                     anchorOrigin={{
@@ -170,10 +186,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                       horizontal: "right",
                     }}
                   >
-                    <UsersIcon className="w-6 h-6" />
-                  </BlueBadge>
+                    <InboxInIcon className="w-6 h-6" />
+                  </AccentedBadge>
                 ) : (
-                  <UsersIcon className="w-6 h-6" />
+                  <InboxInIcon className="w-6 h-6" />
                 )}
               </div>
               <div
@@ -182,13 +198,13 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("groupNotes")}
-                className={`flex items-center mr-0 space-x-2 rounded-none ${
-                  viewType === "groups" ? "text-obs-muted" : "text-obs-faint"
+                className={`flex items-center mr-0 space-x-2 rounded-none text-obs-muted ${
+                  viewType === "groups" ? "opacity-100" : "opacity-50"
                 } cursor-pointer`}
               >
                 {unreadNotes.groups.length > 0 ? (
-                  <OrangeBadge
-                    badgeContent={unreadNotes.groups.length}
+                  <AccentedBadge
+                    badgeContent={`${unreadNotes.groups.length}`}
                     overlap="circular"
                     anchorOrigin={{
                       vertical: "top",
@@ -196,7 +212,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                     }}
                   >
                     <UserGroupIcon className="w-6 h-6" />
-                  </OrangeBadge>
+                  </AccentedBadge>
                 ) : (
                   <UserGroupIcon className="w-6 h-6" />
                 )}
@@ -209,11 +225,18 @@ export const SekundMainComponent = (props: MainComponentProps) => {
               <span>{appState.plugin?.settings.subdomain}</span>
               <ChevronDownIcon className="w-6 h-6" />
             </div> */}
-              <div className="cursor-pointer" onClick={() => setShowPermissions(true)}>
-                <ShieldCheckIcon aria-label={t("permissions")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
+              <div className="flex items-center mr-0 rounded-none cursor-pointer text-obs-muted" onClick={() => setShowPermissions(true)}>
+                <div className="flex flex-col">
+                  <UsersIcon aria-label={t("yourContacts")} className="w-6 h-6 opacity-50 text-obs-muted hover:opacity-100" />
+                  <div
+                    className={`w-6 h-1 border-2 border-solid rounded-sm border-accent-3 ${
+                      sharingPermissionRequests && sharingPermissionRequests.length > 0 ? "opacity-100" : "opacity-0"
+                    }`}
+                  ></div>
+                </div>
               </div>
-              <div className="cursor-pointer" onClick={() => setShowSettings(true)}>
-                <CogIcon aria-label={t("settings")} className="w-6 h-6 text-obs-faint hover:text-obs-muted" />
+              <div className="flex items-center mr-0 rounded-none cursor-pointer text-obs-muted" onClick={() => setShowSettings(true)}>
+                <CogIcon aria-label={t("settings")} className="w-6 h-6 opacity-50 text-obs-muted hover:opacity-100" />
               </div>
             </div>
             {/* {showTeams ? (

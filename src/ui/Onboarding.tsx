@@ -57,7 +57,7 @@ export default function Onboarding({ close, firstPage, sbWorkspace }: Props) {
             <div className="flex justify-center mb-2">
               <SparklesIcon className="w-6 h-6" />
             </div>
-            <div>{t("plugin:noSettings")}</div>
+            <div className="text-accent-3">{t("plugin:noSettings")}</div>
 
             <div className="pt-2 pb-8 text-sm text-left">
               <span>{t("onboardingWelcome")}&nbsp;</span>
@@ -68,7 +68,7 @@ export default function Onboarding({ close, firstPage, sbWorkspace }: Props) {
               </Tooltip>
             </div>
 
-            <div className="mb-4">{t("chooseOne")}</div>
+            <div className="mb-4 text-accent-3">{t("chooseOne")}</div>
             <button onClick={chooseSekundWorkspace}>{t("joinSekundWorkspace")}</button>
             <div className="pt-1 text-sm text-obs-muted">({t("recommended")})</div>
             <button onClick={() => setPage("chooseWorkspace")} className="mt-5">

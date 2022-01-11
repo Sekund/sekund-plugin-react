@@ -1,4 +1,6 @@
 import { Group } from "@/domain/Group";
+import { People } from "@/domain/People";
+import { SelectOption } from "@/domain/Types";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
@@ -29,6 +31,19 @@ export default class GroupsService extends ServerlessService {
   async getGroupPeoples(groupId: ObjectID) {
     const result: any = await callFunction(this.plugin, "getGroupPeoples", [groupId]);
     return result;
+  }
+
+  async leaveGroup(groupId: ObjectID) {
+    await callFunction(this.plugin, "leaveGroup", [groupId]);
+  }
+
+  async getConfirmedGroupOptions(userProfile: People): Promise<SelectOption[]> {
+    var groupsColl = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.subdomain).collection("groups");
+    const query = { peoples: userProfile._id };
+
+    const groups = await groupsColl.find(query);
+
+    return groups.map((g) => ({ value: { id: g._id.toString(), type: "group" }, label: g.name }));
   }
 
   async upsertGroup(group: Group): Promise<Group | null> {

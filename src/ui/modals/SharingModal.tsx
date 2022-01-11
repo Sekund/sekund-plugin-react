@@ -6,7 +6,8 @@ import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
-import UsersService from "@/services/UsersService";
+import PermissionsService from "@/services/PermissionsService";
+import { useAppContext } from "@/state/AppContext";
 import AddUser from "@/ui/common/AddUser";
 import { XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
@@ -30,17 +31,19 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const selectInput = useRef<any>();
   const shade = useRef<any>();
   const [addUser, setAddUser] = useState(false);
+  const { userProfile } = useAppContext().appState;
 
   useEffect(() => {
-    loadOptions("");
+    loadOptions();
   }, [open]);
 
-  async function loadOptions(inputValue: string) {
+  async function loadOptions() {
     const alreadySharing = sharing.peoples?.map((p) => p._id) || [];
     alreadySharing.push(userId);
-    const found = await UsersService.instance.findUsers(inputValue.toLowerCase(), alreadySharing);
-    setSharingGroupsOptions(found.filter((o) => o.value.type === "group"));
-    setSharingPeoplesOptions(found.filter((o) => o.value.type === "user"));
+    const confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);
+    const confirmedGroups = await GroupsService.instance.getConfirmedGroupOptions(userProfile);
+    setSharingGroupsOptions(confirmedGroups);
+    setSharingPeoplesOptions(confirmedContacts);
   }
 
   async function removeGroup(g: Group) {
@@ -143,10 +146,6 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
                 </optgroup>
               ) : null}
             </select>
-          </div>
-          <div className="flex flex-col text-sm">
-            <span className="nowrap">{t("missingSomeone")}</span>
-            <a onClick={() => setAddUser(true)}>{t("requestSharingPermission")}</a>
           </div>
         </div>
         <div className="mt-5 sm:mt-6 text-secondary">{shares()}</div>

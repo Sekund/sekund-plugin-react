@@ -1,6 +1,6 @@
 import ObjectID from "bson-objectid";
 
-export type PeopleId = Pick<People, "name" | "image" | "email" | "_id">;
+export type PeopleId = Pick<People, "name" | "image" | "email" | "_id" | "bio">;
 
 export interface People {
   _id: ObjectID;

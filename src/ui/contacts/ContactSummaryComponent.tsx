@@ -29,7 +29,11 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
 
   function ItemName() {
     if (user) {
-      return user.name ? user.name : user.email;
+      if (userInfo._id.equals(userProfile._id)) {
+        return user.name ? user.name : user.email;
+      } else {
+        return userInfo.name ? userInfo.name : userInfo.email;
+      }
     }
     if (group) {
       return group.name;

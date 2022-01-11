@@ -55,7 +55,10 @@ const StyledBadge = styled(BadgeUnstyled)`
 `;
 
 export function peopleAvatar(people: PeopleId, size: number, badge?: number) {
-  const identifier: string = (people.name ? people.name : people.email) || "";
+  let identifier: string = (people.name ? people.name : people.email) || "";
+  if (people.bio) {
+    identifier += "\n" + people.bio;
+  }
   if (people.image) return avatarImage(people.image, identifier, people._id, size, badge);
   else if (people.email) return emailAvatar(people.email, people._id, size, badge);
   else if (people.name) return nameAvatar(people.name, people._id, size, badge);

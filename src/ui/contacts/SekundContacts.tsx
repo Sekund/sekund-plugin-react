@@ -33,7 +33,11 @@ export default function SekundContacts({ close, permissionsService, permissions 
     if (!permissionsService) {
       permissionsService = PermissionsService.instance;
     }
-    await permissionsService.setStatus(sp, status);
+    if (["rejected", "blocked"].includes(status) && confirm(t("areYouSure"))) {
+      await permissionsService.setStatus(sp, status);
+    } else {
+      await permissionsService.setStatus(sp, status);
+    }
   }
 
   function sortItems(a: SharingPermission, b: SharingPermission): number {

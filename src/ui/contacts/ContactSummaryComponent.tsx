@@ -65,6 +65,10 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
     return <span className="truncate">{ItemName()}</span>;
   }
 
+  function handleClick(sharingPermission: SharingPermission, status: PermissionRequestStatus) {
+    setStatus(sharingPermission, status);
+  }
+
   function Actions() {
     switch (status) {
       case "requested":
@@ -74,21 +78,21 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
               <a
                 aria-label={t("Block")}
                 className="text-red-500 rounded-full opacity-50 hover:opacity-100"
-                onClick={() => setStatus(sharingPermission, "blocked")}
+                onClick={() => handleClick(sharingPermission, "blocked")}
               >
                 <BanIcon className="w-6 h-6" />
               </a>
               <a
                 aria-label={t("Reject")}
                 className="text-red-500 rounded-full opacity-50 hover:opacity-100"
-                onClick={() => setStatus(sharingPermission, "rejected")}
+                onClick={() => handleClick(sharingPermission, "rejected")}
               >
                 <XCircleIcon className="w-6 h-6" />
               </a>
               <a
                 aria-label={t("Accept")}
                 className="text-green-500 rounded-full opacity-50 hover:opacity-100"
-                onClick={() => setStatus(sharingPermission, "accepted")}
+                onClick={() => handleClick(sharingPermission, "accepted")}
               >
                 <CheckCircleIcon className="w-6 h-6" />
               </a>
@@ -100,7 +104,7 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
               <a
                 aria-label={capitalize(t("cancel"))}
                 className="text-red-500 rounded-full opacity-50 hover:opacity-100"
-                onClick={() => setStatus(sharingPermission, "rejected")}
+                onClick={() => handleClick(sharingPermission, "rejected")}
               >
                 <XCircleIcon className="w-6 h-6" />
               </a>
@@ -113,14 +117,14 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
             <a
               aria-label={t("Block")}
               className="text-red-500 rounded-full opacity-50 hover:opacity-100"
-              onClick={() => setStatus(sharingPermission, "blocked")}
+              onClick={() => handleClick(sharingPermission, "blocked")}
             >
               <BanIcon className="w-6 h-6" />
             </a>
             <a
               aria-label={t("Reject")}
               className="text-red-500 rounded-full opacity-50 hover:opacity-100"
-              onClick={() => setStatus(sharingPermission, "rejected")}
+              onClick={() => handleClick(sharingPermission, "rejected")}
             >
               <XCircleIcon className="w-6 h-6" />
             </a>
@@ -132,7 +136,7 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
             <a
               aria-label={t("Accept")}
               className="text-green-500 rounded-full opacity-50 hover:opacity-100"
-              onClick={() => setStatus(sharingPermission, "accepted")}
+              onClick={() => handleClick(sharingPermission, "accepted")}
             >
               <CheckCircleIcon className="w-6 h-6" />
             </a>

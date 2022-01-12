@@ -33,8 +33,11 @@ export default function SekundContacts({ close, permissionsService, permissions 
     if (!permissionsService) {
       permissionsService = PermissionsService.instance;
     }
-    if (["rejected", "blocked"].includes(status) && confirm(t("areYouSure"))) {
-      await permissionsService.setStatus(sp, status);
+    if (status === "rejected" || status === "blocked") {
+      const confirmed = confirm(t("areYouSure"));
+      if (confirmed) {
+        await permissionsService.setStatus(sp, status);
+      }
     } else {
       await permissionsService.setStatus(sp, status);
     }

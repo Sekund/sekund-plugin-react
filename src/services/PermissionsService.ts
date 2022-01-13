@@ -37,6 +37,7 @@ export default class PermissionsService extends ServerlessService {
   async getConfirmedContactOptions(userProfile: People): Promise<SelectOption[]> {
     const permissions = await this.getPermissions();
     const confirmedContacts = permissions
+      .filter((p) => p.status === "accepted")
       .map((p) => {
         if (p.user && p.user._id.equals(userProfile._id)) {
           return p.userInfo;

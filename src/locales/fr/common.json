@@ -139,5 +139,8 @@
     "nameAlreadyTaken": "Dommage, ce nom est déjà pris.",
     "youCannotRemoveYourself": "En tant que créateur de ce groupe, vous ne pouvez pas le quitter.",
     "aGroupByThatNameAlreadyExists": "Un groupe de ce nom existe déjà.",
-    "unexpectedError": "Erreur inattendue"
+    "unexpectedError": "Erreur inattendue",
+    "yes": "Oui",
+    "no": "Non",
+    "alreadyRegistered": "Avez-vous déjà un compte?"
 }

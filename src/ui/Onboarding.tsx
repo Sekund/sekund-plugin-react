@@ -107,13 +107,16 @@ export default function Onboarding({ close, firstPage, sbWorkspace }: Props) {
               <div className="mb-8 text-xl text-center">
                 <div className="font-medium text-obs-accent">{workspace}</div>
               </div>
+              <div className="pt-2 pb-8 text-sm text-center">
+                <span>{t("alreadyRegistered")}</span>
+              </div>
             </div>
-            <div className="flex flex-col items-center space-y-4 w-form">
-              <button onClick={() => setPage("login")}>{t("signIn")}</button>
-              <button onClick={() => setPage("register")}>{t("register")}</button>
+            <div className="flex justify-center w-form">
+              <button onClick={() => setPage("login")}>{t("yes")}</button>
+              <button onClick={() => setPage("register")}>{t("no")}</button>
               <div className="h-4"></div>
             </div>
-            <div className="flex justify-between w-form overflow-none">
+            <div className="flex justify-between mt-8 w-form overflow-none">
               <Back toPage={workspaceName.current === "sekund" ? "welcome" : "chooseWorkspace"} />
             </div>
           </div>

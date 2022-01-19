@@ -34,7 +34,6 @@ export default function SekundGroupSummary({ group, editGroup, handleNoteClicked
 
   async function fetchGroupNotes() {
     const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
-    groupNotes.sort((a: Note, b: Note) => a.created - b.created);
     notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes });
   }
 

@@ -28,7 +28,7 @@ export default class NotesService extends ServerlessService {
   async getNotes(oldest: number, limit: number): Promise<Note[]> {
     const userNotes: Note[] = await callFunction(this.plugin, "userNotes", [oldest, limit]);
     if (userNotes && userNotes.length > 0) {
-      return userNotes.sort((a, b) => b.updated - a.updated);
+      return this.sortNotes(userNotes, false);
     }
     return [];
   }
@@ -93,7 +93,7 @@ export default class NotesService extends ServerlessService {
   }
 
   async getSharedNotes(people: string) {
-    return await callFunction(this.plugin, "sharedNotes", [people]);
+    return this.sortNotes(await callFunction(this.plugin, "sharedNotes", [people]), false);
   }
 
   async getSharingNotes(people: string) {
@@ -101,7 +101,15 @@ export default class NotesService extends ServerlessService {
   }
 
   async getGroupNotes(groupId: string) {
-    return await callFunction(this.plugin, "groupNotes", [groupId]);
+    const notes = await callFunction(this.plugin, "groupNotes", [groupId]);
+    return this.sortNotes(notes, true);
+  }
+
+  sortNotes(notes: Note[], group: boolean) {
+    if (group) {
+      return notes.sort((a, b) => (b.pinned ? b.updated + 1000000000 : b.updated) - (a.pinned ? a.updated + 1000000000 : a.updated));
+    }
+    return notes.sort((a, b) => b.updated - a.updated);
   }
 
   async getUnreadNotes() {

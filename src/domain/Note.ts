@@ -18,6 +18,7 @@ export interface Note {
   isRead: number;
   readCount: number;
   backlinksCount: number;
+  pinned: boolean;
 
   comments: NoteComment[];
 

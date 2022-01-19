@@ -224,6 +224,9 @@
   .sekund .max-h-4 {
     max-height: 1rem
   }
+  .sekund .w-3 {
+    width: 0.75rem
+  }
   .sekund .w-4 {
     width: 1rem
   }

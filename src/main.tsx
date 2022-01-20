@@ -392,7 +392,7 @@ class AboutModal extends Modal {
       <p style="font-size: 85%">Candide Kemmler</p>
       <p><b>${i18next.t("contributors")}</b></p>
       <p style="font-size: 85%">Laurent De Saedeleer (UX)</p>
-      <p style="margin-top:1rem">Version: 1.0.36</p>
+      <p style="margin-top:1rem">Version: 1.0.37</p>
     </div>
     `;
   }

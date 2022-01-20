@@ -125,7 +125,12 @@ modified: ${note.modified}
 
 ${note.content}`;
         if (note.assets && note.assets.length > 0) {
-          await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
+          const assets = [...new Set(note.assets)];
+          if (assets.length > 1) {
+            this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
+          } else {
+            await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
+          }
         }
         await this.fsAdapter.write(fullPath, noteContents);
         while (!noteFile) {
@@ -134,6 +139,7 @@ ${note.content}`;
         }
       }
       if (noteFile && noteFile instanceof TFile) {
+        noteFile.stat.mtime = note.modified;
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
         this.plugin.app.workspace.activeLeaf?.openFile(noteFile);
       } else {
@@ -162,13 +168,15 @@ ${note.content}`;
     });
   }
 
+  async downloadDependency(path: string, noteUserId: string, noteId: string) {
+    const file: any = await callFunction(this.plugin, "download", [`${noteUserId}/${noteId}/${path}`]);
+    const dependencyPath = `__sekund__/${noteUserId}/${path}`;
+    await this.createDirs(dependencyPath.substring(0, dependencyPath.lastIndexOf("/")));
+    await this.fsAdapter.writeBinary(dependencyPath, file.buffer);
+  }
+
   async downloadDependencies(assets: Array<string>, noteUserId: string, noteId: string) {
-    for (const path of assets) {
-      const file: any = await callFunction(this.plugin, "download", [`${noteUserId}/${noteId}/${path}`]);
-      const dependencyPath = `__sekund__/${noteUserId}/${path}`;
-      await this.createDirs(dependencyPath.substring(0, dependencyPath.lastIndexOf("/")));
-      await this.fsAdapter.writeBinary(dependencyPath, file.buffer);
-    }
+    await Promise.all(assets.map((p) => this.downloadDependency(p, noteUserId, noteId)));
   }
 
   findInclusions(content: string) {

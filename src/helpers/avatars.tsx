@@ -89,14 +89,14 @@ export function nameAvatar(name: string, id: ObjectID, size: number, badge?: num
   if (badge) {
     return (
       <StyledBadge key={id.toString()} badgeContent={badge} overlap="circular">
-        <Avatar aria-label={name} className={`h-${size} w-${size} flex-shrink-0 bg-obs-primary`} alt={name}>
+        <Avatar aria-label={name} className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
           {getInitials(name)}
         </Avatar>
       </StyledBadge>
     );
   }
   return (
-    <Avatar aria-label={name} key={id.toString()} className={`h-${size} w-${size} flex-shrink-0 bg-obs-primary`} alt={name}>
+    <Avatar aria-label={name} key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`} alt={name}>
       {getInitials(name)}
     </Avatar>
   );
@@ -106,14 +106,14 @@ export function emailAvatar(email: string, id: ObjectID, size: number, badge?: n
   if (badge) {
     return (
       <StyledBadge key={id.toString()} badgeContent={badge} overlap="circular">
-        <Avatar aria-label={email} className={`h-${size} w-${size} flex-shrink-0 bg-obs-primary`}>
+        <Avatar aria-label={email} className={`h-${size} w-${size} flex-shrink-0`}>
           {getInitials(email)}
         </Avatar>
       </StyledBadge>
     );
   }
   return (
-    <Avatar aria-label={email} key={id.toString()} className={`h-${size} w-${size} flex-shrink-0 bg-obs-primary`}>
+    <Avatar aria-label={email} key={id.toString()} className={`h-${size} w-${size} flex-shrink-0`}>
       {getInitials(email)}
     </Avatar>
   );

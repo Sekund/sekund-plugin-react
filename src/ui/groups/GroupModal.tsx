@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Group } from "@/domain/Group";
 import { People } from "@/domain/People";
-import { SelectOption, SelectOptionType } from "@/domain/Types";
+import { SelectOption } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import PeoplesService from "@/services/PeoplesService";
@@ -197,7 +197,7 @@ export default function GroupModal({ open, setOpen, group, userId }: Props) {
                 </div>
               </div>
             </div>
-            <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "calc(100vh - 400px)" }}>
+            <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "200px" }}>
               {members()}
             </div>
             <div className="flex items-center justify-between mt-4">

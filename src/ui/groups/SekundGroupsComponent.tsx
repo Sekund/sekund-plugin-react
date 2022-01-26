@@ -8,7 +8,8 @@ import NotesReducer, { initialNotesState } from "@/state/NotesReducer";
 import PeoplesContext from "@/state/PeoplesContext";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
-import GroupModal from "@/ui/groups/GroupModal";
+import GroupEditModal from "@/ui/groups/GroupEditModal";
+import GroupDisplayModal from "@/ui/groups/GroupDisplayModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
@@ -28,7 +29,8 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
   const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation();
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
-  const [showNewGroupModal, setShowNewGroupModal] = useState(false);
+  const [showGroupEditModal, setShowGroupEditModal] = useState(false);
+  const [showGroupDisplayModal, setShowGroupDisplayModal] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
   const [mode] = useState<"none" | "group">("none");
@@ -51,9 +53,19 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
     peoplesDispatch({ type: PeoplesActionKind.SetGroups, payload: groups });
   }
 
-  function renderNewGroupDialog() {
-    if (showNewGroupModal) {
-      return <GroupModal userId={appState.userProfile._id} open={showNewGroupModal} setOpen={setShowNewGroupModal} group={currentGroup} />;
+  function renderGroupEditDialog() {
+    if (showGroupEditModal) {
+      return <GroupEditModal userId={appState.userProfile._id} open={showGroupEditModal} setOpen={setShowGroupEditModal} group={currentGroup} />;
+    } else {
+      return null;
+    }
+  }
+
+  function renderGroupDisplayDialog() {
+    if (showGroupDisplayModal && currentGroup) {
+      return (
+        <GroupDisplayModal userId={appState.userProfile._id} open={showGroupDisplayModal} setOpen={setShowGroupDisplayModal} group={currentGroup} />
+      );
     } else {
       return null;
     }
@@ -87,12 +99,17 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
 
   function editGroup(group: Group) {
     setCurrentGroup(group);
-    setShowNewGroupModal(true);
+    setShowGroupEditModal(true);
+  }
+
+  function displayGroup(group: Group) {
+    setCurrentGroup(group);
+    setShowGroupDisplayModal(true);
   }
 
   function createGroup() {
     setCurrentGroup(null);
-    setShowNewGroupModal(true);
+    setShowGroupEditModal(true);
   }
 
   function noteClicked(note: Note) {
@@ -122,6 +139,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
                           group={group}
                           handleNoteClicked={noteClicked}
                           editGroup={editGroup}
+                          displayGroup={displayGroup}
                         />
                       );
                     })}
@@ -144,7 +162,8 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
               </button>
             </div>
           )}
-          {renderNewGroupDialog()}
+          {renderGroupEditDialog()}
+          {renderGroupDisplayDialog()}
         </>
       </NotesContext.Provider>
     </PeoplesContext.Provider>

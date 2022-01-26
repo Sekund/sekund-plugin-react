@@ -142,5 +142,6 @@
     "unexpectedError": "Erreur inattendue",
     "yes": "Oui",
     "no": "Non",
-    "alreadyRegistered": "Avez-vous déjà un compte?"
+    "alreadyRegistered": "Avez-vous déjà un compte?",
+    "leaveThisGroup": "Quitter ce groupe"
 }

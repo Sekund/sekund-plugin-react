@@ -2,14 +2,14 @@ import { Group } from "@/domain/Group";
 import { someone } from "@/mockdata/PeoplesMock";
 import AppContext from "@/state/AppContext";
 import AppReducer, { initialAppState } from "@/state/AppReducer";
-import GroupModal from "@/ui/groups/GroupModal";
+import GroupModal from "@/ui/groups/GroupEditModal";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import ObjectID from "bson-objectid";
 import React, { useReducer } from "react";
 import "/global.css";
 
 export default {
-  title: "Sekund/Group Modal",
+  title: "Sekund/Group Edit Modal",
   component: GroupModal,
 } as ComponentMeta<typeof GroupModal>;
 

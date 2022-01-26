@@ -23,7 +23,7 @@ type Props = {
   userId: ObjectID;
 };
 
-export default function GroupModal({ open, setOpen, group, userId }: Props) {
+export default function GroupEditModal({ open, setOpen, group, userId }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const [commitEnabled, setCommitEnabled] = useState(false);
   const commitButton = useRef<HTMLButtonElement>(null);

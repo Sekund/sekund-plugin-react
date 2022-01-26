@@ -10,7 +10,7 @@ import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { isUnread, makeid } from "@/utils";
-import { ChatAlt2Icon } from "@heroicons/react/solid";
+import { ChatAlt2Icon, EyeIcon } from "@heroicons/react/solid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
@@ -138,12 +138,20 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
         </div>
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
-          {note.comments && note.comments.length > 0 ? (
-            <div key="cmts" className="flex items-center">
-              <ChatAlt2Icon className="w-4 h-4 text-obs-normal" />
-              {note.comments.length}
-            </div>
-          ) : null}
+          <div className="flex items-center space-x-1">
+            {note.readCount && note.readCount > 0 ? (
+              <div key="readCount" className="flex items-center space-x-2">
+                <EyeIcon className="w-3 h-3 text-obs-normal" />
+                {note.readCount}
+              </div>
+            ) : null}
+            {note.comments && note.comments.length > 0 ? (
+              <div key="cmts" className="flex items-center space-x-2">
+                <ChatAlt2Icon className="w-4 h-4 text-obs-normal" />
+                {note.comments.length}
+              </div>
+            ) : null}
+          </div>
         </div>
       </>
     );

@@ -12,7 +12,7 @@ import GroupEditModal from "@/ui/groups/GroupEditModal";
 import GroupDisplayModal from "@/ui/groups/GroupDisplayModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid, touch } from "@/utils";
+import { touch, makeid } from "@/utils";
 import { PlusIcon, SparklesIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useState } from "react";

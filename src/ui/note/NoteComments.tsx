@@ -185,7 +185,7 @@ export default function NoteComments({ note }: Props) {
           <CommentComponent editMode={true} setEditMode={(b) => {}} commentId="sekund-comment" />
         </CommentContext.Provider>
       </div>
-      <div className="flex items-center justify-between relative">
+      <div className="relative flex items-center justify-between">
         {emojis ? (
           <div className="absolute z-40 top-2" ref={picker}>
             <Picker

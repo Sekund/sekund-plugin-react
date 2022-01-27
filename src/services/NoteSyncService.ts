@@ -1,4 +1,5 @@
 import { Note } from "@/domain/Note";
+import { mkdirs } from "@/fileutils";
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
@@ -13,7 +14,7 @@ import {
   SHARED_NOTE_SYNCHRONIZING,
   SHARED_NOTE_UPTODATE,
 } from "@/state/NoteStates";
-import { isSharedNoteFile, mkdirs, setCurrentNoteState, wait } from "@/utils";
+import { isSharedNoteFile, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
 import mime from "mime-types";
@@ -172,8 +173,8 @@ ${note.content}`;
   async downloadDependency(path: string, noteUserId: string, noteId: string) {
     const file: any = await callFunction(this.plugin, "download", [`${noteUserId}/${noteId}/${path}`]);
     const dependencyPath = `__sekund__/${noteUserId}/${path}`;
-    await this.createDirs(dependencyPath.substring(0, dependencyPath.lastIndexOf("/")));
-    await this.fsAdapter.writeBinary(dependencyPath, file.buffer);
+    await this.createDirs(normalizePath(dependencyPath.substring(0, dependencyPath.lastIndexOf("/"))));
+    await this.fsAdapter.writeBinary(normalizePath(dependencyPath), file.buffer);
   }
 
   async downloadDependencies(assets: Array<string>, noteUserId: string, noteId: string) {
@@ -236,7 +237,7 @@ ${note.content}`;
       const content = await file.vault.read(file);
       const links = this.plugin.app.metadataCache.resolvedLinks[file.path];
       const assets = this.fileRefsIntersectingResolvedLinks(this.findInclusions(content), links);
-      const fileStat = await this.fsAdapter.stat(file.path);
+      const fileStat = await this.fsAdapter.stat(normalizePath(file.path));
       await callFunction(this.plugin, "upsertNote", [
         {
           path: file.path,

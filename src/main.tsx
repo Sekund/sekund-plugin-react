@@ -12,7 +12,7 @@ import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import SekundView from "@/ui/SekundView";
-import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, mkdirs, setCurrentNoteState, setGeneralState, touch } from "@/utils";
+import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState, makeid } from "@/utils";
 import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
@@ -23,6 +23,7 @@ import { App, Modal, normalizePath, Plugin, TFile } from "obsidian";
 import React from "react";
 import * as Realm from "realm-web";
 import i18next from "@/i18n.config";
+import { mkdirs } from "@/fileutils";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);

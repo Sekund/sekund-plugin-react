@@ -1,7 +1,7 @@
 import { Note } from "@/domain/Note";
 import NotesService from "@/services/NotesService";
 import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
-import { DataAdapter, TFile } from "obsidian";
+import { TFile } from "obsidian";
 import React, { Dispatch } from "react";
 import * as Realm from "realm-web";
 
@@ -57,16 +57,6 @@ export function originalPath(file: TFile): string {
   return file.path.startsWith("__sekund__") ? file.path.split("/").slice(2).join("/") : file.path;
 }
 
-export function makeid(length: number): string {
-  var result = "";
-  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 export function hourMinSec(time: number) {
   const d = new Date(time);
   return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
@@ -95,18 +85,17 @@ export const validateEmail = (email: string) => {
     );
 };
 
-export async function mkdirs(path: string, fsAdapter: DataAdapter) {
-  let directories = ".";
-  for (const dir of path.split("/")) {
-    directories = `${directories}/${dir}`;
-    const dirExists = await fsAdapter.exists(directories);
-    if (!dirExists) {
-      await fsAdapter.mkdir(directories);
-    }
-  }
-}
-
 export function capitalize(word: string) {
   if (!word) return word;
   return word[0].toUpperCase() + word.substr(1).toLowerCase();
+}
+
+export function makeid(length: number): string {
+  var result = "";
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }

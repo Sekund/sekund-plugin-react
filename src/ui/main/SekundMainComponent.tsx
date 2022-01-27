@@ -16,7 +16,7 @@ import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid, touch } from "@/utils";
+import { touch, makeid } from "@/utils";
 import { CloudUploadIcon, CogIcon, InboxInIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";

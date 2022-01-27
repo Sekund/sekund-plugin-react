@@ -8,7 +8,6 @@ import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
 import { SparklesIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
-import { TFile } from "obsidian";
 import React, { useEffect, useReducer, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -78,17 +77,7 @@ export const SekundHomeComponent = ({ notesService, noLocalFile, className, fetc
   }, [appState.generalState]);
 
   async function openNoteFile(note: Note) {
-    const file = appState.plugin?.app.vault.getAbstractFileByPath(note.path);
-    if (file) {
-      if (appState.plugin?.app.workspace.activeLeaf) {
-        appState.plugin.app.workspace.activeLeaf.openFile(file as TFile);
-      } else {
-        console.log("no active leaf");
-      }
-    } else {
-      console.log("no file, we should ask the user if they want to restore the note");
-      noLocalFile(note);
-    }
+    await appState.plugin?.openNoteFile(note);
     touch(appDispatch, note);
   }
 

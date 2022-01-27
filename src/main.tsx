@@ -12,14 +12,14 @@ import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import SekundView from "@/ui/SekundView";
-import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, mkdirs, setCurrentNoteState, setGeneralState } from "@/utils";
+import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, mkdirs, setCurrentNoteState, setGeneralState, touch } from "@/utils";
 import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
 import fr from "javascript-time-ago/locale/fr.json";
 import nl from "javascript-time-ago/locale/nl.json";
-import { App, Modal, Plugin, TFile } from "obsidian";
+import { App, Modal, normalizePath, Plugin, TFile } from "obsidian";
 import React from "react";
 import * as Realm from "realm-web";
 import i18next from "@/i18n.config";
@@ -204,8 +204,22 @@ export default class SekundPluginReact extends Plugin {
     const readme = await documents.findOne({ title: "**README**" });
     const path = "__sekund__/**README**.md";
     if (readme) {
-      await mkdirs("__sekund__", this.app.vault.adapter);
-      await this.app.vault.adapter.write(path, readme.content);
+      await mkdirs(normalizePath("__sekund__"), this.app.vault.adapter);
+      await this.app.vault.adapter.write(normalizePath(path), readme.content);
+    }
+  }
+
+  public async openNoteFile(note: Note) {
+    const file = this.app.vault.getAbstractFileByPath(normalizePath(note.path));
+    if (file) {
+      if (this.app.workspace.activeLeaf) {
+        await this.app.workspace.activeLeaf.openFile(file as TFile);
+      } else {
+        console.log("no active leaf");
+      }
+    } else {
+      console.log("no file, we should ask the user if they want to restore the note");
+      NoteSyncService.instance.noLocalFile(note);
     }
   }
 

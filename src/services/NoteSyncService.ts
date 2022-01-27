@@ -17,7 +17,7 @@ import { isSharedNoteFile, mkdirs, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
 import mime from "mime-types";
-import { DataAdapter, TFile, Vault } from "obsidian";
+import { DataAdapter, normalizePath, TFile, Vault } from "obsidian";
 
 export default class NoteSyncService extends ServerlessService {
   private static _instance: NoteSyncService;
@@ -48,8 +48,8 @@ export default class NoteSyncService extends ServerlessService {
     if (!GlobalState.instance.appState.userProfile._id.equals(note.userId)) {
       // hack: the backend adds the previous path field to enable this use case
       const previousPath = (note as unknown as any).previousPath;
-      const previousNotePath = `__sekund__/${note.userId.toString()}/${previousPath}`;
-      const updatedNotePath = `__sekund__/${note.userId.toString()}/${note.path}`;
+      const previousNotePath = normalizePath(`__sekund__/${note.userId.toString()}/${previousPath}`);
+      const updatedNotePath = normalizePath(`__sekund__/${note.userId.toString()}/${note.path}`);
       const previousNoteFile = this.vault.getAbstractFileByPath(previousNotePath);
       if (previousNoteFile) {
         const updatedNoteDirs = updatedNotePath.substring(0, updatedNotePath.lastIndexOf("/"));
@@ -111,7 +111,7 @@ export default class NoteSyncService extends ServerlessService {
     const note = await this.getNoteById(id);
     if (note) {
       const fullPath = `${rootDir}${note.path}`;
-      let noteFile = this.vault.getAbstractFileByPath(fullPath);
+      let noteFile = this.vault.getAbstractFileByPath(normalizePath(fullPath));
       const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime === note.modified;
       if (!upToDate) {
         const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
@@ -132,9 +132,9 @@ ${note.content}`;
             await this.downloadDependencies(note.assets, note.userId.toString(), note._id.toString());
           }
         }
-        await this.fsAdapter.write(fullPath, noteContents);
+        await this.fsAdapter.write(normalizePath(fullPath), noteContents);
         while (!noteFile) {
-          noteFile = this.vault.getAbstractFileByPath(fullPath);
+          noteFile = this.vault.getAbstractFileByPath(normalizePath(fullPath));
           wait(10);
         }
       }
@@ -152,12 +152,13 @@ ${note.content}`;
   }
 
   async createDirs(path: string) {
-    await mkdirs(path, this.fsAdapter);
+    await mkdirs(normalizePath(path), this.fsAdapter);
   }
 
   async uploadDependencies(assets: Array<string>, noteId: string) {
     const userId = GlobalState.instance.appState.userProfile._id.toString();
     assets.forEach(async (path) => {
+      path = normalizePath(path);
       const assetFile = this.vault.getAbstractFileByPath(path);
       if (assetFile) {
         const blob = await this.fsAdapter.readBinary(path);

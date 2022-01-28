@@ -17,33 +17,22 @@ type Props = {
   open: boolean;
   setOpen: (v: boolean) => void;
   group: Group;
-  userId: ObjectID;
 };
 
-export default function GroupDisplayModal({ open, setOpen, group, userId }: Props) {
+export default function GroupDisplayModal({ open, setOpen, group }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
-  const [commitEnabled, setCommitEnabled] = useState(false);
-  const commitButton = useRef<HTMLButtonElement>(null);
-  const { peoplesDispatch } = usePeoplesContext();
   const shade = useRef<any>();
-  const [addUser, setAddUser] = useState(false);
   const { userProfile } = useAppContext().appState;
 
   if (group === null) {
     group = { peoples: [] as Array<People> } as Group;
   }
-  const [localGroup, setLocalGroup] = useState<Group>({ ...group });
+  const [localGroup] = useState<Group>({ ...group });
   const [teamMembers, setTeamMembers] = useState<SelectOption[]>([]);
-  const selectInput = useRef<any>();
 
   useEffect(() => {
     loadOptions();
   }, [open]);
-
-  useEffect(() => {
-    const commitEnabled = localGroup?.name !== undefined && localGroup?.name.length > 0 && localGroup?.peoples.length > 0;
-    setCommitEnabled(commitEnabled);
-  }, [localGroup]);
 
   async function loadOptions() {
     const confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);

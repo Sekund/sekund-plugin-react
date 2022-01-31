@@ -4,7 +4,6 @@ import { NoteSummary } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
-import NoteSyncService from "@/services/NoteSyncService";
 import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
@@ -84,9 +83,11 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   }, [noteUpdates]);
 
   async function updateNote(updtNote: NoteSummary) {
-    const fullNote = await NoteSyncService.instance.getNoteById(updtNote._id);
-    if (fullNote) {
-      setNote(fullNote);
+    if (appState.plugin?.notesSyncService) {
+      const fullNote = await appState.plugin?.notesSyncService.getNoteById(updtNote._id);
+      if (fullNote) {
+        setNote(fullNote);
+      }
     }
   }
 

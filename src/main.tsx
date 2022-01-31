@@ -108,6 +108,10 @@ export default class SekundPluginReact extends Plugin {
     }
   }
 
+  public get notesSyncService() {
+    return NoteSyncService.instance;
+  }
+
   async showPane(type: string) {
     if (this.app.workspace.getLeavesOfType(type).length == 0) {
       await this.app.workspace.getRightLeaf(false).setViewState({

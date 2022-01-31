@@ -6,6 +6,7 @@ import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
+import Loader from "@/ui/common/LoaderComponent";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid } from "@/utils";
 import { AdjustmentsIcon } from "@heroicons/react/solid";
@@ -25,6 +26,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
   const expandedRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
+  const [loading, setLoading] = useState(true);
   const notesProviderState = {
     notesState,
     notesDispatch,
@@ -33,16 +35,20 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
   const { userProfile } = appState;
 
   async function fetchGroupNotes() {
-    const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
-    notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes });
+    setLoading(true);
+    if (NotesService.instance) {
+      const groupNotes = await NotesService.instance.getGroupNotes(group._id.toString());
+      notesDispatch({ type: NotesActionKind.ResetNotes, payload: groupNotes });
+    }
+    setLoading(false);
   }
 
   async function toggleExpanded() {
-    if (!expandedRef.current) {
-      fetchGroupNotes();
-    }
     expandedRef.current = !expandedRef.current;
     setExpanded(expandedRef.current);
+    if (expandedRef.current) {
+      fetchGroupNotes();
+    }
   }
 
   useEffect(() => {
@@ -60,6 +66,16 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
       eventsWatcher?.removeEventListener(listenerId);
     };
   }, []);
+
+  function Content() {
+    return loading ? (
+      <div className="flex items-center justify-center">
+        <Loader className="w-20 h-20" />
+      </div>
+    ) : (
+      <NoteSummariesPanel context="groups" handleNoteClicked={handleNoteClicked} />
+    );
+  }
 
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);
@@ -90,7 +106,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
           </div>
           {groupMembers(group)}
         </div>
-        {expanded ? <NoteSummariesPanel context="groups" handleNoteClicked={handleNoteClicked} /> : null}
+        {expanded ? <Content /> : null}
       </div>
     </NotesContext.Provider>
   );

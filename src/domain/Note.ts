@@ -17,6 +17,7 @@ export interface Note {
   assets: Array<string>;
   isRead: number;
   readCount: number;
+  refCount: number;
   backlinksCount: number;
   pinned: boolean;
 

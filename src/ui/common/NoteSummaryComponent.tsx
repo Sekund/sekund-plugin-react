@@ -4,13 +4,14 @@ import { NoteSummary } from "@/domain/Types";
 import { peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
+import NoteSyncService from "@/services/NoteSyncService";
 import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { isUnread, makeid } from "@/utils";
-import { ChatAlt2Icon, EyeIcon } from "@heroicons/react/solid";
+import { ChatAlt2Icon, EyeIcon, LinkIcon } from "@heroicons/react/solid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
@@ -64,7 +65,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["note.addComment", "note.removeComment", "note.rename"], (fullDocument: any) => {
+      new SekundEventListener(["note.addComment", "note.removeComment", "note.rename", "note.metadataUpdate"], async (fullDocument: any) => {
         const updtNote: Note = fullDocument.data;
         if (note._id.equals(updtNote._id)) {
           updateNote(updtNote);
@@ -82,15 +83,11 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     }
   }, [noteUpdates]);
 
-  function updateNote(updtNote: NoteSummary) {
-    setNote({
-      ...note,
-      updated: updtNote.updated,
-      isRead: updtNote.isRead,
-      comments: updtNote.comments,
-      path: updtNote.path,
-      title: updtNote.title,
-    });
+  async function updateNote(updtNote: NoteSummary) {
+    const fullNote = await NoteSyncService.instance.getNoteById(updtNote._id);
+    if (fullNote) {
+      setNote(fullNote);
+    }
   }
 
   function readStatusClass() {
@@ -139,6 +136,12 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
           <div className="flex items-center space-x-1">
+            {note.refCount && note.refCount > 0 ? (
+              <div key="refCount" className="flex items-center space-x-2">
+                <LinkIcon className="w-3 h-3 text-obs-normal" />
+                {note.refCount}
+              </div>
+            ) : null}
             {note.readCount && note.readCount > 0 ? (
               <div key="readCount" className="flex items-center space-x-2">
                 <EyeIcon className="w-3 h-3 text-obs-normal" />
@@ -156,6 +159,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
       </>
     );
   }
+
   function summary() {
     return (
       <div

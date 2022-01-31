@@ -1,6 +1,7 @@
 import { Note } from "@/domain/Note";
 import { mkdirs } from "@/fileutils";
 import SekundPluginReact from "@/main";
+import ReferencesService from "@/services/ReferencesService";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
 import GlobalState from "@/state/GlobalState";
@@ -17,6 +18,7 @@ import {
 import { isSharedNoteFile, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
+import { t } from "i18next";
 import mime from "mime-types";
 import { DataAdapter, normalizePath, TFile, Vault } from "obsidian";
 
@@ -36,6 +38,14 @@ export default class NoteSyncService extends ServerlessService {
     this.fsAdapter = plugin.app.vault.adapter;
     this.vault = plugin.app.vault;
     NoteSyncService._instance = this;
+    this.plugin.app.metadataCache.on("changed", (f: TFile, ctx?: any) => this.fileChanged(f, ctx));
+  }
+
+  fileChanged(f: TFile, ctx?: any) {
+    console.log("file changed, updating references");
+    setTimeout(() => {
+      ReferencesService.instance.updateReferences();
+    }, 100);
   }
 
   async renameNote({ name, path }: TFile, oldPath: string) {

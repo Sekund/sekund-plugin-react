@@ -24,6 +24,7 @@ import React from "react";
 import * as Realm from "realm-web";
 import i18next from "@/i18n.config";
 import { mkdirs } from "@/fileutils";
+import ReferencesService from "@/services/ReferencesService";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);
@@ -301,6 +302,7 @@ export default class SekundPluginReact extends Plugin {
             new GroupsService(this);
             new PermissionsService(this);
             new EventsWatcherService(this);
+            new ReferencesService(this);
 
             this.watchNotes();
           } catch (err) {

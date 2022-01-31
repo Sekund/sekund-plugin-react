@@ -98,11 +98,10 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
         <div
           key={group._id.toString()}
           className="flex items-center justify-between w-full mx-auto cursor-pointer bg-obs-primary-alt hover:bg-obs-primary"
-          onClick={toggleExpanded}
         >
-          <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer">
+          <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer" onClick={toggleExpanded}>
             <div className="flex">{groupAvatar(group, 10)}</div>
-            <div className="truncate text-md text-primary">{group.name}</div>
+            <div className="truncate text-md text-primary hover:underline">{group.name}</div>
           </div>
           {groupMembers(group)}
         </div>

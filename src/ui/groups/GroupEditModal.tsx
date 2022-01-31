@@ -49,8 +49,21 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
   }, [localGroup]);
 
   async function loadOptions() {
-    const confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);
+    let confirmedContacts = await PermissionsService.instance.getConfirmedContactOptions(userProfile);
+    confirmedContacts = confirmedContacts.filter((option) => isNotAGroupMember(option.value.id));
     setTeamMembers(confirmedContacts);
+  }
+
+  function isNotAGroupMember(id: string): boolean {
+    if (!group) {
+      return false;
+    }
+    for (const p of group.peoples) {
+      if (p._id.equals(new ObjectID(id))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   async function addSelectedUser() {

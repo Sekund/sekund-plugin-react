@@ -6,9 +6,8 @@ import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
-import Loader from "@/ui/common/LoaderComponent";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
-import { makeid } from "@/utils";
+import { makeid, wait } from "@/utils";
 import { AdjustmentsIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
 import React, { useEffect, useReducer, useRef, useState } from "react";
@@ -67,16 +66,6 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
     };
   }, []);
 
-  function Content() {
-    return loading ? (
-      <div className="flex items-center justify-center">
-        <Loader className="w-20 h-20" />
-      </div>
-    ) : (
-      <NoteSummariesPanel context="groups" handleNoteClicked={handleNoteClicked} />
-    );
-  }
-
   function groupMembers(group: Group): JSX.Element {
     const editAllowed = group.userId.equals(userProfile._id);
     return (
@@ -105,7 +94,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
           </div>
           {groupMembers(group)}
         </div>
-        {expanded ? <Content /> : null}
+        {expanded ? <NoteSummariesPanel context="groups" loading={loading} handleNoteClicked={handleNoteClicked} /> : null}
       </div>
     </NotesContext.Provider>
   );

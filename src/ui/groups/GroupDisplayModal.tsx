@@ -6,10 +6,8 @@ import { peopleAvatar } from "@/helpers/avatars";
 import GroupsService from "@/services/GroupsService";
 import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
-import { usePeoplesContext } from "@/state/PeoplesContext";
 import { makeid } from "@/utils";
 import { LogoutIcon, XIcon } from "@heroicons/react/solid";
-import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 

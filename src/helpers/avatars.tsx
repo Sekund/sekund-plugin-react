@@ -69,10 +69,10 @@ export function groupAvatar(group: Group, size: number, badge?: number) {
   if (!group || !group._id) {
     return null;
   }
-  if (badge) {
+  if (badge && badge > 0) {
     return (
-      <StyledBadge key={group._id.toString()} badgeContent={badge}>
-        <Avatar className={`h-${size} w-${size} flex-shrink-0 bg-gray-800`} variant="rounded" alt={group.name}>
+      <StyledBadge key={group._id.toString()} variant="dot" badgeContent={badge} overlap="circular">
+        <Avatar className={`h-${size} w-${size} flex-shrink-0 bg-gray-800`} variant="square" alt={group.name}>
           {getInitials(group.name)}
         </Avatar>
       </StyledBadge>

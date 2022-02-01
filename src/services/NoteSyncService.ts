@@ -42,7 +42,6 @@ export default class NoteSyncService extends ServerlessService {
   }
 
   fileChanged(f: TFile, ctx?: any) {
-    console.log("file changed, updating references");
     setTimeout(() => {
       ReferencesService.instance.updateReferences();
     }, 100);

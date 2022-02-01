@@ -10,6 +10,7 @@ import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid, wait } from "@/utils";
 import { AdjustmentsIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
+import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 type Props = {
@@ -31,7 +32,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
     notesDispatch,
   };
   const { appState } = useAppContext();
-  const { userProfile } = appState;
+  const { userProfile, unreadNotes } = appState;
 
   async function fetchGroupNotes() {
     setLoading(true);
@@ -81,6 +82,20 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
     );
   }
 
+  function badge() {
+    let count = 0;
+    for (const groupNote of unreadNotes.groups) {
+      if (groupNote.sharing.groups) {
+        for (const noteGroup of groupNote.sharing.groups) {
+          if ((noteGroup as unknown as ObjectID).equals(group._id)) {
+            count += 1;
+          }
+        }
+      }
+    }
+    return count;
+  }
+
   return (
     <NotesContext.Provider value={notesProviderState}>
       <div className="flex flex-col" style={{ borderRight: "none", borderLeft: "none" }}>
@@ -89,7 +104,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
           className="flex items-center justify-between w-full mx-auto cursor-pointer bg-obs-primary-alt hover:bg-obs-primary"
         >
           <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer" onClick={toggleExpanded}>
-            <div className="flex">{groupAvatar(group, 10)}</div>
+            <div className="flex">{groupAvatar(group, 10, badge())}</div>
             <div className="truncate text-md text-primary hover:underline">{group.name}</div>
           </div>
           {groupMembers(group)}

@@ -10,7 +10,7 @@ This plugin for Obsidian makes it possible to share notes with friends and/or co
 
 Once they have confirmed that they know you, you can start sharing your notes with them, and they will be able to do the same.
 
-When people see your shared note, clicking on its title in the plugin will download the note in a special folder called **sekund** in their vault, which means that they will be able to link to it.
+When people see your shared note, clicking on its title in the plugin will download the note in a special folder called `__sekund__` in their vault, which means that they will be able to link to it.
 
 ### Markdown comments
 
@@ -28,4 +28,4 @@ Anyone can create a group. Notes shared with a group will be visible with all it
 
 ### Links counter
 
-An experimental feature lets you see how many people have linked to your note. It can be conceived of like an improvement to the “like” functionality in conventional social network.
+An experimental feature lets you see how many people have linked to your note

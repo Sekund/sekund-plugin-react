@@ -28,4 +28,4 @@ Anyone can create a group. Notes shared with a group will be visible with all it
 
 ### Links counter
 
-An experimental feature lets you see how many people have linked to your note. It can be conceived of like an improvement to the “like” functionality in conventional social network.
+An experimental feature lets you see how many people have linked to your note

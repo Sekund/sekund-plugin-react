@@ -1,6 +1,6 @@
 ## Obsidian Social Plugin
 
-![screenshot-full](https://raw.githubusercontent.com/Sekund/sekund-plugin-react/master/images/screenshot-full.png)
+![screenshot-full](screenshot-full.png)
 
 ### Start by adding some contacts
 

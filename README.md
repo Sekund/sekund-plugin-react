@@ -1,15 +1,31 @@
-## Install
+## Obsidian Social Plugin
 
-#### NB: this plugin's components are documented in a dedicated storybook available <a href="https://sekund.github.io/sekund-plugin-react/?path=/story/sekund-home--some-notes&globals=locale:en" target="_blank">here</a>
+![screenshot-full](https://raw.githubusercontent.com/Sekund/sekund-plugin-react/master/images/screenshot-full.png)
 
-Start by installing the [obsidian42-brat plugin](https://github.com/TfTHacker/obsidian42-brat).
+### Start by adding some contacts
 
-In the plugin's main command prompt (available when clicking on its ribbon icon), choose "Add a beta plugin for testing", like so:
+This plugin for Obsidian makes it possible to share notes with friends and/or colleagues. Being essentially a social network, the first step will be to start adding people to your contacts.
 
-![image](https://user-images.githubusercontent.com/41804/145723378-aecdd556-c825-4a03-a376-c65e243082fd.png)
+### ... then share some notes
 
-...then enter 'Sekund/sekund-plugin-react)
+Once they have confirmed that they know you, you can start sharing your notes with them, and they will be able to do the same.
 
-![image](https://user-images.githubusercontent.com/41804/145723280-38d55268-0f0c-429f-b21c-8d4f0fbade11.png)
+When people see your shared note, clicking on its title in the plugin will download the note in a special folder called **sekund** in their vault, which means that they will be able to link to it.
 
-Next, please enable the plugin, and you are good to go.
+### Markdown comments
+
+There is a commenting UI which supports markdown, and even emojis.
+
+Notes downloaded in this way are meant to be read-only, and updates to your notes will be instantly visible to people with whom you have shared them. You just have to hit the “Update” button after you have made some change.
+
+### Include notes & images
+
+Inclusions are supported, which means that direct dependencies: included notes, images, videos,… of your notes will be sent alongside you original note.
+
+### Groups
+
+Anyone can create a group. Notes shared with a group will be visible with all its members.
+
+### Links counter
+
+An experimental feature lets you see how many people have linked to your note. It can be conceived of like an improvement to the “like” functionality in conventional social network.

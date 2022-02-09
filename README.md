@@ -24,7 +24,7 @@ Inclusions are supported, which means that direct dependencies: included notes, 
 
 ### Groups
 
-Anyone can create a group. Notes shared with a group will be visible with all its members.
+Anyone can create a group. Notes shared with a group will be visible to all its members.
 
 ### Links counter
 

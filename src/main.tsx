@@ -361,8 +361,6 @@ export default class SekundPluginReact extends Plugin {
       if (view) {
         if (isSharedNoteFile(file)) {
           view.getState().mode = "preview";
-        } else {
-          view.getState().mode = "source";
         }
       }
       NoteSyncService.instance.compareNotes(file);
@@ -411,7 +409,7 @@ class AboutModal extends Modal {
       <p style="font-size: 85%">Candide Kemmler</p>
       <p><b>${i18next.t("contributors")}</b></p>
       <p style="font-size: 85%">Laurent De Saedeleer (UX)</p>
-      <p style="margin-top:1rem">Version: 1.0.43</p>
+      <p style="margin-top:1rem">Version: 1.0.44</p>
     </div>
     `;
   }

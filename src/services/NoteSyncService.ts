@@ -126,14 +126,7 @@ export default class NoteSyncService extends ServerlessService {
       if (!upToDate) {
         const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
         await this.createDirs(dirs);
-        const noteContents = ownNote
-          ? note.content
-          : `---
-_id: ${note._id.toString()}
-modified: ${note.modified}
----
-
-${note.content}`;
+        const noteContents = note.content;
         if (note.assets && note.assets.length > 0) {
           const assets = [...new Set(note.assets)];
           if (assets.length > 1) {

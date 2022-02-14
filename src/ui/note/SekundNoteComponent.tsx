@@ -180,7 +180,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         <span className={`p-2 mb-2 text-xs text-center text-obs-normal`}>
           {t("noteCannotBeFoundLocally", { noteTitle: remoteNote.title.replace(".md", "") })}
         </span>
-        <button onClick={handleUnpublish} className="flex items-center">
+        <button onClick={handleUnpublish} className="flex items-center cursor-pointer">
           <TrashIcon className="w-4 h-4 mr-1" />
           {t("plugin:deleteFromSekund")}
         </button>

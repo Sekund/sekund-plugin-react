@@ -1,10 +1,13 @@
 import { Note } from "@/domain/Note";
+import { mkdirs } from "@/fileutils";
+import i18next from "@/i18n.config";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import GroupsService from "@/services/GroupsService";
 import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
+import ReferencesService from "@/services/ReferencesService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
@@ -12,19 +15,16 @@ import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import SekundView from "@/ui/SekundView";
-import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, setCurrentNoteState, setGeneralState, makeid } from "@/utils";
+import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, setCurrentNoteState, setGeneralState } from "@/utils";
 import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
 import fr from "javascript-time-ago/locale/fr.json";
 import nl from "javascript-time-ago/locale/nl.json";
-import { App, Modal, normalizePath, Plugin, TFile } from "obsidian";
+import { App, MarkdownView, Modal, normalizePath, Plugin, TFile } from "obsidian";
 import React from "react";
 import * as Realm from "realm-web";
-import i18next from "@/i18n.config";
-import { mkdirs } from "@/fileutils";
-import ReferencesService from "@/services/ReferencesService";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);
@@ -126,7 +126,7 @@ export default class SekundPluginReact extends Plugin {
 
   refreshPanes() {
     this.app.workspace.getLeavesOfType("markdown").forEach((leaf) => {
-      if (leaf.getViewState().state.mode.includes("preview"))
+      if ((leaf.view as MarkdownView).getMode() === "preview")
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (leaf.view as any).previewMode.rerender(true);
     });
@@ -218,8 +218,8 @@ export default class SekundPluginReact extends Plugin {
   public async openNoteFile(note: Note) {
     const file = this.app.vault.getAbstractFileByPath(normalizePath(note.path));
     if (file) {
-      if (this.app.workspace.activeLeaf) {
-        await this.app.workspace.activeLeaf.openFile(file as TFile);
+      if (this.app.workspace.getLeaf()) {
+        await this.app.workspace.getLeaf().openFile(file as TFile);
       } else {
         console.log("no active leaf");
       }
@@ -247,7 +247,8 @@ export default class SekundPluginReact extends Plugin {
       await this.attemptConnection();
     }
 
-    window.addEventListener(
+    this.registerDomEvent(
+      window,
       "online",
       (this.onlineListener = () =>
         setTimeout(() => {
@@ -255,7 +256,8 @@ export default class SekundPluginReact extends Plugin {
         }, 1000))
     );
 
-    window.addEventListener(
+    this.registerDomEvent(
+      window,
       "offline",
       (this.offlineListener = () => {
         this.updateOnlineStatus();
@@ -355,16 +357,12 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
     if (file) {
-      const leaf = this.app.workspace.activeLeaf;
-      if (leaf) {
+      const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+      if (view) {
         if (isSharedNoteFile(file)) {
-          const state = leaf.getViewState();
-          state.state.mode = "preview";
-          leaf.setViewState(state);
+          view.getState().mode = "preview";
         } else {
-          const state = leaf.getViewState();
-          state.state.mode = "source";
-          leaf.setViewState(state);
+          view.getState().mode = "source";
         }
       }
       NoteSyncService.instance.compareNotes(file);

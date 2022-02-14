@@ -1,7 +1,6 @@
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
-import { hashCode } from "@/utils";
 
 export default class ReferencesService extends ServerlessService {
   private static _instance: ReferencesService;
@@ -24,9 +23,7 @@ export default class ReferencesService extends ServerlessService {
   }
 
   private async populateReferencesCache() {
-    console.log("populating references cache");
     const allNoteReferences: string[] = await callFunction(this.plugin, "getNoteReferences");
-    console.log("references: ", allNoteReferences);
     this.referencesCache = new Set<string>();
     allNoteReferences.forEach((nr) => this.referencesCache.add(nr));
   }
@@ -42,7 +39,6 @@ export default class ReferencesService extends ServerlessService {
     }
     const toDelete = [...this.referencesCache].filter((nr) => !localReferences.has(nr));
     const toAdd = [...localReferences].filter((nr) => !this.referencesCache.has(nr));
-    console.log("update note references", toDelete, toAdd);
     if (toDelete.length > 0 || toAdd.length > 0) {
       await callFunction(this.plugin, "updateNoteReferences", [toAdd, toDelete]);
       this.populateReferencesCache();

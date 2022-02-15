@@ -144,7 +144,7 @@ export default class NoteSyncService extends ServerlessService {
       if (noteFile && noteFile instanceof TFile) {
         noteFile.stat.mtime = note.modified;
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
-        this.plugin.app.workspace.activeLeaf?.openFile(noteFile);
+        this.plugin.app.workspace.getLeaf().openFile(noteFile);
       } else {
         console.log("ERROR: Could not open file ", noteFile);
       }

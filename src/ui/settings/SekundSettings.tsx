@@ -255,7 +255,7 @@ export default function SekundSettings({ close }: Props) {
           </div>
           <div className="flex flex-col items-center mt-2">
             <div className="text-sm">
-              <span className="capitalize">{t("workspace")}</span>: <span className="text-obs-accent">{appState.plugin?.subdomain}</span>
+              <span>{t("workspace")}</span>: <span className="text-obs-accent">{appState.plugin?.subdomain}</span>
             </div>
             <div className="text-sm text-obs-muted">{userProfile.current.email}</div>
           </div>

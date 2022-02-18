@@ -219,8 +219,8 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
                 <button className="mr-0" onClick={() => setOpen(false)} type="button">
                   {t("cancel")}
                 </button>
-                <button className="mr-0" ref={commitButton} onClick={commitEnabled ? commit : undefined} type="button">
-                  {localGroup?._id ? t("update") : t("create")}
+                <button className="mr-0 overflow-hidden" ref={commitButton} onClick={commitEnabled ? commit : undefined} type="button">
+                  <span className="truncate">{localGroup?._id ? t("update") : t("create")}</span>
                 </button>
               </div>
             </div>

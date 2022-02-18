@@ -1,7 +1,8 @@
-import { Note } from "@/domain/Note";
+import { Group } from "@/domain/Group";
+import { isSharing, Note } from "@/domain/Note";
 import { PeopleId } from "@/domain/People";
 import { NoteSummary } from "@/domain/Types";
-import { peopleAvatar } from "@/helpers/avatars";
+import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import UsersService from "@/services/UsersService";
@@ -10,8 +11,8 @@ import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { isUnread, makeid } from "@/utils";
-import { ChatAlt2Icon, EyeIcon, LinkIcon } from "@heroicons/react/solid";
-import React, { useEffect, useState } from "react";
+import { ChatAlt2Icon, EyeIcon, LinkIcon, ShareIcon } from "@heroicons/react/solid";
+import React, { MouseEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
 
@@ -19,10 +20,11 @@ type Props = {
   noteSummary: Note;
   context: ViewType;
   handleNoteClicked: (note: Note) => void;
+  setShowSharingModal: (b: boolean) => void;
 };
 
-export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context }: Props) {
-  const { i18n } = useTranslation();
+export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context, setShowSharingModal }: Props) {
+  const { i18n, t } = useTranslation();
   const { appState } = useAppContext();
 
   const { notesState, notesDispatch } = useNotesContext();
@@ -31,6 +33,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   const { note: currentNote } = notesState;
   const [isActiveNote, setIsActiveNote] = useState(false);
   const [note, setNote] = useState(noteSummary);
+  const { userProfile } = appState;
 
   useEffect(() => {
     let found = false;
@@ -95,7 +98,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     return isUnread(note) ? "font-bold" : "";
   }
 
-  async function noteClicked() {
+  async function noteClicked(evt: MouseEvent) {
     if (NotesService.instance) {
       await NotesService.instance.setNoteIsRead(note._id);
     }
@@ -126,13 +129,79 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     );
   }
 
+  function sharingGroups(groups: Group[]) {
+    return (
+      <div className="flex p-1 -space-x-1 overflow-hidden">
+        {groups.map((group, idx) => {
+          return <React.Fragment key={idx}>{groupAvatar(group, 6)}</React.Fragment>;
+        })}
+      </div>
+    );
+  }
+
+  function sharing(sharing) {
+    let children: Array<JSX.Element> = [];
+    if (sharing && sharing.groups && sharing.groups.length > 0) {
+      children.push(
+        <div key="sharing.groups" className="flex -space-x-1 overflow-hidden">
+          {sharingGroups(sharing.groups)}
+        </div>
+      );
+    }
+    if (sharing && sharing.peoples && sharing.peoples.length > 0) {
+      if (sharing.groups && sharing.groups.length > 0) {
+        children.push(
+          <span className="mr-1" key="sharing.plus">
+            +
+          </span>
+        );
+      }
+      children.push(
+        <div key="sharing.people" className="flex -space-x-1 overflow-hidden">
+          {sharing.peoples.map((people, idx) => {
+            return <React.Fragment key={idx}>{peopleAvatar(people, 5)}</React.Fragment>;
+          })}
+        </div>
+      );
+    }
+    children.push(
+      <a key="sharing.edit" className="flex items-center ml-1">
+        <ShareIcon aria-label={t("plugin:setSharingOptions")} className="w-4 h-4 text-obs-normal" />
+      </a>
+    );
+    if (note && isOwnNote(note) && children.length > 1) {
+      return (
+        <div
+          key="sharing.share"
+          onClick={(evt) => {
+            setShowSharingModal(true);
+            evt.stopPropagation();
+          }}
+          className="flex items-center flex-shrink-0 cursor-pointer"
+        >
+          {children}
+        </div>
+      );
+    }
+    return null;
+  }
+
+  function isOwnNote(note: Note) {
+    if (note.userId && note.userId.equals) {
+      return note.userId.equals(userProfile._id);
+    }
+  }
+
   function summaryContents() {
     return (
-      <>
-        <div className={`${readStatusClass()}`}>
-          {isActiveNote ? "❯ " : isUnread(note) ? <span className="text-lg">•</span> : ""}
-          {note.title.replace(".md", "")}
-          {context === "groups" && note.pinned ? <PinIcon /> : null}
+      <div className="flex flex-col space-y-1">
+        <div className="flex justify-between items-center">
+          <div className={`${readStatusClass()}`}>
+            {isActiveNote ? "❯ " : isUnread(note) ? <span className="text-lg">•</span> : ""}
+            {note.title.replace(".md", "")}
+            {context === "groups" && note.pinned ? <PinIcon /> : null}
+          </div>
+          <div>{note && isSharing(note) ? sharing(note.sharing) : null}</div>
         </div>
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
@@ -157,7 +226,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
             ) : null}
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -193,5 +262,6 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   if (context === "groups" || context === "peoples") {
     return withAvatar(summary());
   }
+
   return summary();
 }

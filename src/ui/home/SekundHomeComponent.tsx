@@ -3,6 +3,7 @@ import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
+import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
@@ -84,11 +85,7 @@ export const SekundHomeComponent = ({ notesService, className, fetchUnread }: Ho
     return (
       <NotesContext.Provider value={notesProviderState}>
         <div className={`${className} flex flex-col w-full overflow-auto space-y-1px`}>
-          {notes?.map((note: Note) => (
-            <React.Fragment key={note._id.toString()}>
-              <NoteSummaryComponent context="home" noteSummary={note} handleNoteClicked={openNoteFile} />
-            </React.Fragment>
-          ))}
+          <NoteSummariesPanel context="home" handleNoteClicked={openNoteFile} />
         </div>
       </NotesContext.Provider>
     );

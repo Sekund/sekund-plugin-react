@@ -249,7 +249,15 @@ export default function SekundSettings({ close }: Props) {
         </section>
         <section className="p-2 mt-2 mb-8 hover:bg-obs-secondary">
           <div className="flex justify-between">
-            <div className="text-lg capitalize">{t("account")}</div>
+            <div className="flex">
+              <div className="text-lg capitalize">{t("account")}</div>
+            </div>
+          </div>
+          <div className="flex flex-col items-center mt-2">
+            <div className="text-sm">
+              <span className="capitalize">{t("workspace")}</span>: <span className="text-obs-accent">{appState.plugin?.subdomain}</span>
+            </div>
+            <div className="text-sm text-obs-muted">{userProfile.current.email}</div>
           </div>
           <div className="flex flex-col items-center justify-center mt-3 space-y-4">
             <button className="w-48 mr-0 text-center" onClick={disconnect}>

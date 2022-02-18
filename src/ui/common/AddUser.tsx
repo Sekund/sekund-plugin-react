@@ -81,7 +81,7 @@ export default function AddUser({ usersService, permissionsService, done }: Prop
             className={`mt-8  cursor-pointer ${hasMadeARequest && found ? "text-obs-faint" : "mod-cta"}`}
             onClick={hasMadeARequest && found ? undefined : sendRequest}
           >
-            {t("sendRequest")}
+            {t("searchUser")}
           </button>
         </div>
 
@@ -107,7 +107,7 @@ export default function AddUser({ usersService, permissionsService, done }: Prop
             )}
 
             <button className={`my-4 mod-cta cursor-pointer`} onClick={contactRequestSent ? () => nameOrEmailField.current.focus() : addToMyContacts}>
-              {contactRequestSent ? t("searchAnotherContact") : t("addToMyContacts")}
+              {contactRequestSent ? t("searchAnotherContact") : t("sendContactRequest")}
             </button>
           </>
         ) : hasMadeARequest ? (

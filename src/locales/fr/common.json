@@ -143,5 +143,8 @@
     "yes": "Oui",
     "no": "Non",
     "alreadyRegistered": "Avez-vous déjà un compte?",
-    "leaveThisGroup": "Quitter ce groupe"
+    "leaveThisGroup": "Quitter ce groupe",
+    "workspace": "Espace de travail",
+    "searchUser": "Rechercher utilisateur",
+    "sendContactRequest": "Envoyer demande de contact"
 }

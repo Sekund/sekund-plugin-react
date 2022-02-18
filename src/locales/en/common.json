@@ -143,5 +143,8 @@
     "yes": "Yes",
     "no": "No",
     "alreadyRegistered": "Do you already have an account?",
-    "leaveThisGroup": "Leave this group"
+    "leaveThisGroup": "Leave this group",
+    "workspace": "Workspace",
+    "searchUser": "Search user",
+    "sendContactRequest": "Send contact request"
 }

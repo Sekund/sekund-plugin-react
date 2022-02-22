@@ -4,7 +4,6 @@ import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
-import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { touch } from "@/utils";
 import { SparklesIcon } from "@heroicons/react/solid";

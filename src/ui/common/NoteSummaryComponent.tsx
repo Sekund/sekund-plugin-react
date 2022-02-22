@@ -58,6 +58,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   useEffect(() => {
     if (currentNote?._id.equals(note._id)) {
       setIsActiveNote(true);
+      setNote(currentNote);
     } else setIsActiveNote(false);
   }, [currentNote]);
 

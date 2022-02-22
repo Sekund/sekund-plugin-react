@@ -91,7 +91,7 @@
     "deleteAllData": "Delete all your data",
     "account": "Account",
     "noteCannotBeFoundLocally": "Your note \"{{noteTitle}}\" cannot be found locally. Delete it?",
-    "downloadNote": "Download note",
+    "downloadNote": "Return note to local vault",
     "tryAgain": "Try again",
     "yourContactsNotes": "Your contacts' notes",
     "groupNotes": "Group notes",

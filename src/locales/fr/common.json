@@ -91,7 +91,7 @@
     "deleteAllData": "Effacer toutes vos données",
     "account": "Compte",
     "noteCannotBeFoundLocally": "Votre note \"{{noteTitle}}\" n'a pas pu être trouvée localement. L'effacer?",
-    "downloadNote": "Télécharger la note",
+    "downloadNote": "Réintégrer la note au coffre-fort local",
     "tryAgain": "Essayer à nouveau",
     "yourContactsNotes": "Les notes de vos contacts",
     "groupNotes": "Notes du groupe",

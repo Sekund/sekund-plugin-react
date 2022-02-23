@@ -79,7 +79,6 @@ export default class SekundPluginReact extends Plugin {
 
     this.registerViews([{ type: MAIN_VIEW_TYPE, View: SekundMainView }]);
 
-    // this.addSettingTab(new SekundSettingsTab(this.app, this));
     this.app.workspace.onLayoutReady(async () => {
       this.refreshPanes();
       this.showPane(MAIN_VIEW_TYPE);
@@ -126,9 +125,7 @@ export default class SekundPluginReact extends Plugin {
 
   refreshPanes() {
     this.app.workspace.getLeavesOfType("markdown").forEach((leaf) => {
-      if ((leaf.view as MarkdownView).getMode() === "preview")
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (leaf.view as any).previewMode.rerender(true);
+      if (leaf.view instanceof MarkdownView && leaf.view.getMode() === "preview") leaf.view.previewMode.rerender(true);
     });
   }
 
@@ -218,13 +215,8 @@ export default class SekundPluginReact extends Plugin {
   public async openNoteFile(note: Note) {
     const file = this.app.vault.getAbstractFileByPath(normalizePath(note.path));
     if (file) {
-      if (this.app.workspace.getLeaf()) {
-        await this.app.workspace.getLeaf().openFile(file as TFile);
-      } else {
-        console.log("no active leaf");
-      }
+      await this.app.workspace.getLeaf().openFile(file as TFile);
     } else {
-      console.log("no file, we should ask the user if they want to restore the note");
       NoteSyncService.instance.noLocalFile(note);
     }
   }
@@ -360,10 +352,16 @@ export default class SekundPluginReact extends Plugin {
       const view = this.app.workspace.getActiveViewOfType(MarkdownView);
       if (view) {
         if (isSharedNoteFile(file)) {
-          view.getState().mode = "preview";
+          const state = view.leaf.getViewState();
+          state.state.mode = "preview";
+          view.leaf.setViewState(state);
+        } else {
+          const state = view.leaf.getViewState();
+          state.state.mode = "source";
+          view.leaf.setViewState(state);
         }
+        NoteSyncService.instance.compareNotes(file);
       }
-      NoteSyncService.instance.compareNotes(file);
     }
   };
 

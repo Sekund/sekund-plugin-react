@@ -18,7 +18,7 @@ Once they have confirmed that they know you, you can start sharing your notes wi
 
 When people see your shared note, clicking on its title in the plugin will download the note in a special folder called `__sekund__` in their vault, which means that they will be able to link to it.
 
-[Youtube Video](https://www.youtube.com/watch?v=yqSHnBzKqrY)
+[Youtube Video](https://www.youtube.com/watch?v=dYRIT0TjHdA)
 
 ### Markdown comments
 

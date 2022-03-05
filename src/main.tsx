@@ -196,6 +196,7 @@ export default class SekundPluginReact extends Plugin {
         this.updateMetaDocuments(anonymousUser);
         return record.app_id;
       }
+      anonymousUser.logOut();
       return "noSuchSubdomain";
     } else {
       return "unknownError";
@@ -203,12 +204,16 @@ export default class SekundPluginReact extends Plugin {
   }
 
   private async updateMetaDocuments(publicUser: any) {
+    // remove **README** file that's creating issues with Android
+    const file = this.app.vault.getAbstractFileByPath(normalizePath("__sekund__/**README**.md"));
+    if (file) {
+      await this.app.vault.delete(file);
+    }
     const documents = publicUser.mongoClient("mongodb-atlas").db("meta").collection("documents");
     const readme = await documents.findOne({ title: "**README**" });
-    const path = "__sekund__/**README**.md";
     if (readme) {
       await mkdirs(normalizePath("__sekund__"), this.app.vault.adapter);
-      await this.app.vault.adapter.write(normalizePath(path), readme.content);
+      await this.app.vault.adapter.write(normalizePath("__sekund__/README.md"), readme.content);
     }
   }
 

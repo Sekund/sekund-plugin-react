@@ -1,7 +1,8 @@
 import { Note } from "@/domain/Note";
 import NotesService from "@/services/NotesService";
 import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
-import { TFile } from "obsidian";
+import GlobalState from "@/state/GlobalState";
+import { TFile, TFolder } from "obsidian";
 import React, { Dispatch } from "react";
 import * as Realm from "realm-web";
 
@@ -50,11 +51,12 @@ export function cssProp(name: string) {
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
 export function isSharedNoteFile(file: TFile): boolean {
-  return file.path.startsWith("__sekund__");
+  return file.path.startsWith(GlobalState.instance.appState.plugin?.settings.sekundFolderPath || "__sekund__");
 }
 
 export function originalPath(file: TFile): string {
-  return file.path.startsWith("__sekund__") ? file.path.split("/").slice(2).join("/") : file.path;
+  const sekundFolderPath = GlobalState.instance.appState.plugin?.settings.sekundFolderPath || "__sekund__";
+  return file.path.startsWith(sekundFolderPath) ? file.path.split("/").slice(2).join("/") : file.path;
 }
 
 export function hourMinSec(time: number) {

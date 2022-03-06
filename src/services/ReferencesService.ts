@@ -1,6 +1,7 @@
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
+import GlobalState from "@/state/GlobalState";
 
 export default class ReferencesService extends ServerlessService {
   private static _instance: ReferencesService;
@@ -30,11 +31,12 @@ export default class ReferencesService extends ServerlessService {
 
   public async updateReferences() {
     const resolvedLinks = this.plugin.app.metadataCache.resolvedLinks;
-    const paths = Object.keys(resolvedLinks).filter((p) => !p.startsWith("__sekund__"));
+    const sekundFolderPath = GlobalState.instance.appState.plugin?.settings.sekundFolderPath;
+    const paths = Object.keys(resolvedLinks).filter((p) => !p.startsWith(sekundFolderPath || "__sekund__"));
     const localReferences: Set<string> = new Set<string>();
     for (const path of paths) {
       const references = resolvedLinks[path];
-      const referencePaths = Object.keys(references).filter((rp) => rp.startsWith("__sekund__"));
+      const referencePaths = Object.keys(references).filter((rp) => rp.startsWith(sekundFolderPath || "__sekund__"));
       referencePaths.forEach((referencePath) => localReferences.add(referencePath));
     }
     const toDelete = [...this.referencesCache].filter((nr) => !localReferences.has(nr));

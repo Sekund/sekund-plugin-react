@@ -58,8 +58,9 @@ export default class NoteSyncService extends ServerlessService {
     if (!GlobalState.instance.appState.userProfile._id.equals(note.userId)) {
       // hack: the backend adds the previous path field to enable this use case
       const previousPath = (note as unknown as any).previousPath;
-      const previousNotePath = normalizePath(`__sekund__/${note.userId.toString()}/${previousPath}`);
-      const updatedNotePath = normalizePath(`__sekund__/${note.userId.toString()}/${note.path}`);
+      const sekundFolderPath = GlobalState.instance.appState.plugin?.settings.sekundFolderPath || "__sekund__";
+      const previousNotePath = normalizePath(`${sekundFolderPath}/${note.userId.toString()}/${previousPath}`);
+      const updatedNotePath = normalizePath(`${sekundFolderPath}/${note.userId.toString()}/${note.path}`);
       const previousNoteFile = this.vault.getAbstractFileByPath(previousNotePath);
       if (previousNoteFile) {
         const updatedNoteDirs = updatedNotePath.substring(0, updatedNotePath.lastIndexOf("/"));
@@ -117,7 +118,8 @@ export default class NoteSyncService extends ServerlessService {
 
   async syncDown(id: ObjectID, userId: string) {
     const ownNote = userId === GlobalState.instance.appState.userProfile._id.toString();
-    const rootDir = ownNote ? "" : `__sekund__/${userId}/`;
+    const sekundFolderPath = GlobalState.instance.appState.plugin?.settings.sekundFolderPath || "__sekund__";
+    const rootDir = ownNote ? "" : `${sekundFolderPath}/${userId}/`;
     const note = await this.getNoteById(id);
     if (note) {
       const fullPath = `${rootDir}${note.path}`;
@@ -174,7 +176,8 @@ export default class NoteSyncService extends ServerlessService {
 
   async downloadDependency(path: string, noteUserId: string, noteId: string) {
     const file: any = await callFunction(this.plugin, "download", [`${noteUserId}/${noteId}/${path}`]);
-    const dependencyPath = `__sekund__/${noteUserId}/${path}`;
+    const sekundFolderPath = GlobalState.instance.appState.plugin?.settings.sekundFolderPath;
+    const dependencyPath = `${sekundFolderPath}/${noteUserId}/${path}`;
     await this.createDirs(normalizePath(dependencyPath.substring(0, dependencyPath.lastIndexOf("/"))));
     await this.fsAdapter.writeBinary(normalizePath(dependencyPath), file.buffer);
   }

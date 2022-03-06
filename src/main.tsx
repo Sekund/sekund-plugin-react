@@ -15,6 +15,7 @@ import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import SekundView from "@/ui/SekundView";
+import { FolderSuggest } from "@/ui/settings/FolderSuggest";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, setCurrentNoteState, setGeneralState } from "@/utils";
 import { MAIN_VIEW_TYPE, PUBLIC_APP_ID } from "@/_constants";
 import TimeAgo from "javascript-time-ago";
@@ -22,7 +23,7 @@ import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
 import fr from "javascript-time-ago/locale/fr.json";
 import nl from "javascript-time-ago/locale/nl.json";
-import { App, MarkdownView, Modal, normalizePath, Plugin, TFile } from "obsidian";
+import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
 import React from "react";
 import * as Realm from "realm-web";
 
@@ -34,8 +35,17 @@ TimeAgo.addLocale(es);
 class SekundPluginSettings {
   private _apiKeys: { [subdomain: string]: string } = {};
   public subdomain = "";
+  public _sekundFolderPath = "__sekund__";
 
   public constructor() {}
+
+  get sekundFolderPath() {
+    return this._sekundFolderPath || "__sekund__";
+  }
+
+  set sekundFolderPath(s: string) {
+    this._sekundFolderPath = s;
+  }
 
   get apiKey() {
     return this._apiKeys[this.subdomain];
@@ -69,6 +79,7 @@ export default class SekundPluginReact extends Plugin {
 
   async onload() {
     await this.loadSettings();
+    this.addSettingTab(new SekundSettingsTab(this.app, this));
 
     new GlobalState();
     addIcons();
@@ -205,15 +216,15 @@ export default class SekundPluginReact extends Plugin {
 
   private async updateMetaDocuments(publicUser: any) {
     // remove **README** file that's creating issues with Android
-    const file = this.app.vault.getAbstractFileByPath(normalizePath("__sekund__/**README**.md"));
+    const file = this.app.vault.getAbstractFileByPath(normalizePath(`${this.settings.sekundFolderPath}/**README**.md`));
     if (file) {
       await this.app.vault.delete(file);
     }
     const documents = publicUser.mongoClient("mongodb-atlas").db("meta").collection("documents");
     const readme = await documents.findOne({ title: "**README**" });
     if (readme) {
-      await mkdirs(normalizePath("__sekund__"), this.app.vault.adapter);
-      await this.app.vault.adapter.write(normalizePath("__sekund__/README.md"), readme.content);
+      await mkdirs(normalizePath(this.settings.sekundFolderPath), this.app.vault.adapter);
+      await this.app.vault.adapter.write(normalizePath(`${this.settings.sekundFolderPath}/README.md`), readme.content);
     }
   }
 
@@ -374,7 +385,7 @@ export default class SekundPluginReact extends Plugin {
     if (!isSharedNoteFile(file) && oldPath) {
       NoteSyncService.instance.renameNote(file, oldPath);
     } else {
-      console.log("file inside __sekund__ folder was renamed, thus doing nothing");
+      console.log("file inside sekund folder was renamed, thus doing nothing");
     }
   };
 
@@ -394,6 +405,18 @@ export default class SekundPluginReact extends Plugin {
 
   get dispatchers() {
     return Object.values(this.viewDispatchers);
+  }
+
+  async moveFolder(previousFolderPath: string, newFolderPath: string) {
+    if (previousFolderPath === newFolderPath || newFolderPath === "" || newFolderPath === "/") {
+      return;
+    }
+    const previousFolder = this.app.vault.getAbstractFileByPath(previousFolderPath);
+    if (previousFolder && previousFolder instanceof TFolder) {
+      for (const child of previousFolder.children) {
+        await this.app.vault.rename(child, `${newFolderPath}/${child.name}`);
+      }
+    }
   }
 }
 
@@ -423,48 +446,42 @@ class AboutModal extends Modal {
   }
 }
 
-// class SekundSettingsTab extends PluginSettingTab {
-//   plugin: SekundPluginReact;
+class SekundSettingsTab extends PluginSettingTab {
+  plugin: SekundPluginReact;
 
-//   constructor(app: App, plugin: SekundPluginReact) {
-//     super(app, plugin);
-//     this.plugin = plugin;
-//   }
+  constructor(app: App, plugin: SekundPluginReact) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
 
-//   hide(): void {
-//     this.plugin.saveSettings();
-//     setTimeout(() => this.plugin.attemptConnection(), 100);
-//   }
+  hide(): void {
+    this.plugin.saveSettings();
+    setTimeout(() => this.plugin.attemptConnection(), 100);
+  }
 
-//   display(): void {
-//     let { containerEl } = this;
+  display(): void {
+    let { containerEl } = this;
 
-//     containerEl.empty();
+    containerEl.empty();
 
-//     new Setting(containerEl)
-//       .setName("Sekund API Key")
-//       .setDesc("To retrieve your API key, go to your Sekund Account Page -> API Key")
-//       .addText((text) =>
-//         text
-//           .setPlaceholder("Paste your Sekund API Key here")
-//           .setValue(this.plugin.settings.apiKey || "")
-//           .onChange(async (value) => {
-//             this.plugin.settings.apiKey = value;
-//             await this.plugin.saveSettings();
-//           })
-//       );
-
-//     new Setting(containerEl)
-//       .setName("Sekund subdomain")
-//       .setDesc("Specify your Sekund subdomain (e.g. [TEAM_NAME].sekund.io)")
-//       .addText((text) =>
-//         text
-//           .setPlaceholder("Subdomain")
-//           .setValue(this.plugin.settings.subdomain || "")
-//           .onChange(async (value) => {
-//             this.plugin.settings.subdomain = value;
-//             await this.plugin.saveSettings();
-//           })
-//       );
-//   }
-// }
+    new Setting(containerEl)
+      .setName("Sekund Folder")
+      .setDesc("Sekund needs a special folder to store the notes that people share with you")
+      .addSearch((cb) => {
+        new FolderSuggest(this.app, cb.inputEl);
+        cb.setPlaceholder("Example: folder1/folder2")
+          .setValue(this.plugin.settings.sekundFolderPath)
+          .onChange(async (new_folder) => {
+            if (await this.plugin.app.vault.adapter.exists(normalizePath(new_folder))) {
+              // not doing this as it stops doing its job halfway for some
+              // unknown reason
+              setTimeout(async () => {
+                await this.plugin.moveFolder(this.plugin.settings.sekundFolderPath, normalizePath(new_folder));
+                this.plugin.settings.sekundFolderPath = new_folder;
+                this.plugin.saveSettings();
+              }, 1);
+            }
+          });
+      });
+  }
+}

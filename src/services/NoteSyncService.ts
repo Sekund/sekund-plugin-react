@@ -122,7 +122,7 @@ export default class NoteSyncService extends ServerlessService {
     if (note) {
       const fullPath = `${rootDir}${note.path}`;
       let noteFile = this.vault.getAbstractFileByPath(normalizePath(fullPath));
-      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime === note.modified;
+      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime >= note.modified;
       if (!upToDate) {
         const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
         await this.createDirs(dirs);
@@ -142,7 +142,9 @@ export default class NoteSyncService extends ServerlessService {
         }
       }
       if (noteFile && noteFile instanceof TFile) {
-        noteFile.stat.mtime = note.modified;
+        if (noteFile.stat.mtime < note.modified) {
+          noteFile.stat.mtime = note.modified;
+        }
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
         this.plugin.app.workspace.getLeaf().openFile(noteFile);
       } else {

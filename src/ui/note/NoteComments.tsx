@@ -227,7 +227,7 @@ export default function NoteComments({ note }: Props) {
           ?.sort((a, b) => (a.created > b.created ? -1 : 1))
           .map((noteComment) => {
             return (
-              <Fragment key={noteComment.created}>
+              <Fragment key={noteComment.updated}>
                 <NoteCommentComponent comment={noteComment} removeLocalComment={removeLocalComment} editLocalComment={editLocalComment} />
               </Fragment>
             );

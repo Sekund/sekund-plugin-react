@@ -38,14 +38,14 @@ export default class NoteSyncService extends ServerlessService {
     this.fsAdapter = plugin.app.vault.adapter;
     this.vault = plugin.app.vault;
     NoteSyncService._instance = this;
-    this.plugin.app.metadataCache.on("changed", (f: TFile, ctx?: any) => this.fileChanged(f, ctx));
+    // this.plugin.app.metadataCache.on("changed", (f: TFile, ctx?: any) => this.fileChanged(f, ctx));
   }
 
-  fileChanged(f: TFile, ctx?: any) {
-    setTimeout(() => {
-      ReferencesService.instance.updateReferences();
-    }, 100);
-  }
+  // fileChanged(f: TFile, ctx?: any) {
+  //   setTimeout(() => {
+  //     ReferencesService.instance.updateReferences();
+  //   }, 100);
+  // }
 
   async renameNote({ name, path }: TFile, oldPath: string) {
     const remoteNote = await this.getNoteByPath(oldPath);

@@ -196,7 +196,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   function summaryContents() {
     return (
       <div className="flex flex-col space-y-1">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div className={`${readStatusClass()}`}>
             {isActiveNote ? "❯ " : isUnread(note) ? <span className="text-lg">•</span> : ""}
             {note.title.replace(".md", "")}
@@ -207,12 +207,12 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
         <div className="flex items-center justify-between">
           <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
           <div className="flex items-center space-x-1">
-            {note.refCount && note.refCount > 0 ? (
+            {/* {note.refCount && note.refCount > 0 ? (
               <div key="refCount" className="flex items-center space-x-2">
                 <LinkIcon className="w-3 h-3 text-obs-normal" />
                 {note.refCount}
               </div>
-            ) : null}
+            ) : null} */}
             {note.readCount && note.readCount > 0 ? (
               <div key="readCount" className="flex items-center space-x-2">
                 <EyeIcon className="w-3 h-3 text-obs-normal" />

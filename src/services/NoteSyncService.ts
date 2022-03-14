@@ -182,7 +182,13 @@ export default class NoteSyncService extends ServerlessService {
   }
 
   async downloadDependencies(assets: Array<string>, noteUserId: string, noteId: string) {
-    await Promise.all(assets.map((p) => this.downloadDependency(p, noteUserId, noteId)));
+    for (const p of assets) {
+      try {
+        await this.downloadDependency(p, noteUserId, noteId);
+      } catch (err) {
+        console.log("failed to download asset", p);
+      }
+    }
   }
 
   findInclusions(content: string) {

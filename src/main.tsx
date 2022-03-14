@@ -360,10 +360,6 @@ export default class SekundPluginReact extends Plugin {
           const state = view.leaf.getViewState();
           state.state.mode = "preview";
           view.leaf.setViewState(state);
-        } else {
-          const state = view.leaf.getViewState();
-          state.state.mode = "source";
-          view.leaf.setViewState(state);
         }
         NoteSyncService.instance.compareNotes(file);
       }

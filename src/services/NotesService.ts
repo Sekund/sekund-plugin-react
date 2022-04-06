@@ -92,14 +92,6 @@ export default class NotesService extends ServerlessService {
     return allSharedNotes.sort((a, b) => b.updated - a.updated);
   }
 
-  async getSharedNotes(people: string) {
-    return this.sortNotes(await callFunction(this.plugin, "sharedNotes", [people]), false);
-  }
-
-  async getSharingNotes(people: string) {
-    return await callFunction(this.plugin, "sharingNotes", [people]);
-  }
-
   async getGroupNotes(groupId: string) {
     const notes = await callFunction(this.plugin, "groupNotes", [groupId]);
     return this.sortNotes(notes, true);

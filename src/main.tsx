@@ -7,7 +7,7 @@ import NotesService from "@/services/NotesService";
 import NoteSyncService from "@/services/NoteSyncService";
 import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
-import ReferencesService from "@/services/ReferencesService";
+// import ReferencesService from "@/services/ReferencesService";
 import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
@@ -316,7 +316,7 @@ export default class SekundPluginReact extends Plugin {
             new GroupsService(this);
             new PermissionsService(this);
             new EventsWatcherService(this);
-            new ReferencesService(this);
+            // new ReferencesService(this);
 
             this.watchNotes();
           } catch (err) {
@@ -370,10 +370,6 @@ export default class SekundPluginReact extends Plugin {
         if (isSharedNoteFile(file)) {
           const state = view.leaf.getViewState();
           state.state.mode = "preview";
-          view.leaf.setViewState(state);
-        } else {
-          const state = view.leaf.getViewState();
-          state.state.mode = "source";
           view.leaf.setViewState(state);
         }
         NoteSyncService.instance.compareNotes(file);
@@ -435,7 +431,7 @@ class AboutModal extends Modal {
       <p style="font-size: 85%">Candide Kemmler</p>
       <p><b>${i18next.t("contributors")}</b></p>
       <p style="font-size: 85%">Laurent De Saedeleer (UX)</p>
-      <p style="margin-top:1rem">Version: 1.0.50</p>
+      <p style="margin-top:1rem">Version: 1.0.52</p>
     </div>
     `;
   }

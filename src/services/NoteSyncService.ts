@@ -38,14 +38,14 @@ export default class NoteSyncService extends ServerlessService {
     this.fsAdapter = plugin.app.vault.adapter;
     this.vault = plugin.app.vault;
     NoteSyncService._instance = this;
-    this.plugin.app.metadataCache.on("changed", (f: TFile, ctx?: any) => this.fileChanged(f, ctx));
+    // this.plugin.app.metadataCache.on("changed", (f: TFile, ctx?: any) => this.fileChanged(f, ctx));
   }
 
-  fileChanged(f: TFile, ctx?: any) {
-    setTimeout(() => {
-      ReferencesService.instance.updateReferences();
-    }, 100);
-  }
+  // fileChanged(f: TFile, ctx?: any) {
+  //   setTimeout(() => {
+  //     ReferencesService.instance.updateReferences();
+  //   }, 100);
+  // }
 
   async renameNote({ name, path }: TFile, oldPath: string) {
     const remoteNote = await this.getNoteByPath(oldPath);
@@ -124,7 +124,7 @@ export default class NoteSyncService extends ServerlessService {
     if (note) {
       const fullPath = `${rootDir}${note.path}`;
       let noteFile = this.vault.getAbstractFileByPath(normalizePath(fullPath));
-      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime === note.modified;
+      const upToDate = noteFile && noteFile instanceof TFile && noteFile.stat.mtime >= note.modified;
       if (!upToDate) {
         const dirs = fullPath.substring(0, fullPath.lastIndexOf("/"));
         await this.createDirs(dirs);
@@ -144,7 +144,9 @@ export default class NoteSyncService extends ServerlessService {
         }
       }
       if (noteFile && noteFile instanceof TFile) {
-        noteFile.stat.mtime = note.modified;
+        if (noteFile.stat.mtime < note.modified) {
+          noteFile.stat.mtime = note.modified;
+        }
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
         this.plugin.app.workspace.getLeaf().openFile(noteFile);
       } else {
@@ -183,7 +185,13 @@ export default class NoteSyncService extends ServerlessService {
   }
 
   async downloadDependencies(assets: Array<string>, noteUserId: string, noteId: string) {
-    await Promise.all(assets.map((p) => this.downloadDependency(p, noteUserId, noteId)));
+    for (const p of assets) {
+      try {
+        await this.downloadDependency(p, noteUserId, noteId);
+      } catch (err) {
+        console.log("failed to download asset", p);
+      }
+    }
   }
 
   findInclusions(content: string) {

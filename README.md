@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X8X3C08KJ)
+
 ## Obsidian Social Plugin
 
 ![screenshot-full](screenshot-full.png)

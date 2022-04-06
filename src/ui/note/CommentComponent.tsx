@@ -52,7 +52,7 @@ export default function CommentComponent({ editMode, setEditMode, commentId }: P
 
   function autoexpand(commentId: string) {
     const textarea = document.getElementById(commentId) as HTMLTextAreaElement;
-    if (textarea.parentNode) {
+    if (textarea && textarea.parentNode) {
       (textarea.parentNode as HTMLElement).dataset.replicatedValue = textarea.value;
     }
   }
@@ -74,7 +74,7 @@ export default function CommentComponent({ editMode, setEditMode, commentId }: P
             id={commentId}
             onKeyDown={(e: any) => handleKeydown(e)}
             onChange={(evt) => updateText(evt.target.value, false)}
-            className="p-1 mt-1 input resize-y"
+            className="p-1 mt-1 resize-y input"
             defaultValue={commentText.text}
             spellCheck="false"
           />

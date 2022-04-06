@@ -236,7 +236,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
       <div
         className={`flex flex-col px-3 py-2 text-sm cursor-pointer hover:bg-obs-secondary ${isActiveNote ? "bg-obs-secondary" : ""}`}
         style={isUnread(note) ? { borderLeft: "6px solid #1F85DE" } : {}}
-        onClick={noteClicked}
+        onMouseDown={noteClicked}
       >
         {summaryContents()}
       </div>
@@ -250,7 +250,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
         <div
           className={`flex space-x-2 items-center px-3 py-2 text-sm cursor-pointer hover:bg-obs-secondary ${isActiveNote ? "bg-obs-secondary" : ""}`}
           style={isUnread(note) ? { borderLeft: "6px solid #1F85DE" } : {}}
-          onClick={noteClicked}
+          onMouseDown={noteClicked}
         >
           <div className="flex-shrink-0">{peopleAvatar(author, 8)}</div>
           <div className="flex flex-col flex-grow">{summaryContents()}</div>

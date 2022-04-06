@@ -146,5 +146,8 @@
     "leaveThisGroup": "Leave this group",
     "workspace": "Workspace",
     "searchUser": "Search user",
-    "sendContactRequest": "Send contact request"
+    "sendContactRequest": "Send contact request",
+    "sekundFolder": "Sekund Folder",
+    "sekundFolderDesc": "Sekund needs a special folder to store the notes<br/>\nthat people share with you.",
+    "sekundFolderWarning": "Warning: if you already had files under a previous \"Sekund folder\",<br/>\nplease move them manually into to the new one, as this operation<br/>\ncan unfortunately not be automated."
 }

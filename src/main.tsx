@@ -35,17 +35,9 @@ TimeAgo.addLocale(es);
 class SekundPluginSettings {
   private _apiKeys: { [subdomain: string]: string } = {};
   public subdomain = "";
-  public _sekundFolderPath = "__sekund__";
+  public sekundFolderPath = "__sekund__";
 
   public constructor() {}
-
-  get sekundFolderPath() {
-    return this._sekundFolderPath || "__sekund__";
-  }
-
-  set sekundFolderPath(s: string) {
-    this._sekundFolderPath = s;
-  }
 
   get apiKey() {
     return this._apiKeys[this.subdomain];
@@ -154,17 +146,20 @@ export default class SekundPluginReact extends Plugin {
     if (settings && settings.apiKey) {
       this.settings = new SekundPluginSettings();
       this.settings.subdomain = settings.subdomain;
+      this.settings.sekundFolderPath = settings.sekundFolderPath;
       this.settings.addApiKey(settings.subdomain, settings.apiKey);
       this.saveSettings();
     } else {
       if (settings) {
         this.settings = new SekundPluginSettings();
         this.settings.subdomain = settings.subdomain;
+        this.settings.sekundFolderPath = settings.sekundFolderPath;
         for (const subdomain of Object.keys(settings._apiKeys)) {
           this.settings.addApiKey(subdomain, settings._apiKeys[subdomain]);
         }
       } else {
         this.settings = new SekundPluginSettings();
+        this.settings.sekundFolderPath = "__sekund__";
       }
     }
   }
@@ -222,6 +217,7 @@ export default class SekundPluginReact extends Plugin {
     }
     const documents = publicUser.mongoClient("mongodb-atlas").db("meta").collection("documents");
     const readme = await documents.findOne({ title: "**README**" });
+    await this.loadSettings();
     if (readme) {
       await mkdirs(normalizePath(this.settings.sekundFolderPath), this.app.vault.adapter);
       await this.app.vault.adapter.write(normalizePath(`${this.settings.sekundFolderPath}/README.md`), readme.content);
@@ -457,25 +453,32 @@ class SekundSettingsTab extends PluginSettingTab {
 
   display(): void {
     let { containerEl } = this;
+    const { t } = i18next;
 
     containerEl.empty();
 
+    function getFolderDescFragment() {
+      const fragment = document.createDocumentFragment();
+      const desc = document.createElement("p");
+      desc.innerHTML = t("sekundFolderDesc");
+      fragment.appendChild(desc);
+      const warning = document.createElement("p");
+      warning.innerHTML = t("sekundFolderWarning");
+      fragment.appendChild(warning);
+      return fragment;
+    }
+
     new Setting(containerEl)
-      .setName("Sekund Folder")
-      .setDesc("Sekund needs a special folder to store the notes that people share with you")
+      .setName(t("sekundFolder"))
+      .setDesc(getFolderDescFragment())
       .addSearch((cb) => {
         new FolderSuggest(this.app, cb.inputEl);
         cb.setPlaceholder("Example: folder1/folder2")
           .setValue(this.plugin.settings.sekundFolderPath)
           .onChange(async (new_folder) => {
             if (await this.plugin.app.vault.adapter.exists(normalizePath(new_folder))) {
-              // not doing this as it stops doing its job halfway for some
-              // unknown reason
-              setTimeout(async () => {
-                await this.plugin.moveFolder(this.plugin.settings.sekundFolderPath, normalizePath(new_folder));
-                this.plugin.settings.sekundFolderPath = new_folder;
-                this.plugin.saveSettings();
-              }, 1);
+              this.plugin.settings.sekundFolderPath = new_folder;
+              this.plugin.saveSettings();
             }
           });
       });

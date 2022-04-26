@@ -22,6 +22,7 @@ i18next
     },
     ns: ["common", "plugin"],
     defaultNS: "common",
+    fallbackLng: "en",
   });
 
 export default i18next;

@@ -10,6 +10,8 @@ export interface People {
   name?: string;
   image?: string;
   bio?: string;
+  twitterHandle?: string;
+  linkedInPage?: string;
   sharing?: number;
   shared?: number;
   unreadSharing?: number;

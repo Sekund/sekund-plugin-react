@@ -149,5 +149,9 @@
     "sendContactRequest": "Envoyer demande de contact",
     "sekundFolder": "Dossier Sekund",
     "sekundFolderDesc": "Sekund a besoin d'un dossier spécial pour stocker les notes<br>\nqui sont partagées avec vous.",
-    "sekundFolderWarning": "Attention: Si des fichiers étaient déjà présents dans un<br/>\nprécédent \"dossier Sekund\", veuillez les déplacer manuellement<br/>\ndans le nouveau, car cette opération n'est malheureusement<br/>\npas automatisable."
+    "sekundFolderWarning": "Attention: Si des fichiers étaient déjà présents dans un<br/>\nprécédent \"dossier Sekund\", veuillez les déplacer manuellement<br/>\ndans le nouveau, car cette opération n'est malheureusement<br/>\npas automatisable.",
+    "twitterHandle": "Pseudo Twitter",
+    "linkedInPage": "Page LinkedIn",
+    "yourTwitterHandle": "Votre pseudo Twitter",
+    "yourLinkedInPage": "Votre page LinkedIn"
 }

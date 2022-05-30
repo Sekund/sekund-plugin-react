@@ -371,6 +371,12 @@
   .sekund .cursor-pointer {
     cursor: pointer
   }
+  .sekund .select-text {
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text
+  }
   .sekund .resize-y {
     resize: vertical
   }
@@ -891,14 +897,6 @@
 
   .sm\:block {
     display: block
-  }
-
-  .sm\:flex {
-    display: flex
-  }
-
-  .sm\:items-center {
-    align-items: center
   }
 }
 

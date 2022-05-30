@@ -181,7 +181,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
               <div className="max-w-xl mt-2 text-sm text-secondary">
                 <p>{t("plugin:groupName")}:</p>
               </div>
-              <div className="mt-3 sm:flex sm:items-center">
+              <div className="mt-3 flex-col">
                 <input
                   onChange={(evt) => setGroupName(evt.target.value)}
                   defaultValue={group ? group.name : ""}
@@ -189,6 +189,10 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
                   type="text"
                   placeholder={t("plugin:groupNameDesc")}
                 />
+                <div className="flex items-center pl-2 text-xs space-x-1 mt-1">
+                  <span>ID:</span>
+                  <span className="select-text">{group._id.toString()}</span>
+                </div>
               </div>
               <div className="max-w-xl mt-4 text-sm text-secondary">
                 <p>{t("plugin:groupMembers")}:</p>

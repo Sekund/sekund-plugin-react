@@ -153,5 +153,7 @@
     "twitterHandle": "Twitter handle",
     "linkedInPage": "LinkedIn page",
     "yourTwitterHandle": "Your Twitter handle",
-    "yourLinkedInPage": "Your LinkedIn page"
+    "yourLinkedInPage": "Your LinkedIn page",
+    "personalPage": "Personal page",
+    "yourPersonalPage": "Your personal page"
 }

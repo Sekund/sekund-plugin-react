@@ -5,4 +5,7 @@ export interface NoteComment {
   author: PeopleId;
   created: number;
   updated: number;
+  isWeb?: boolean;
+  authorName?: string;
+  authorEmail?: string;
 }

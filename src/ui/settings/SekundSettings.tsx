@@ -17,6 +17,7 @@ type State = {
   avatarImage: string | undefined;
   name: string | undefined;
   linkedInPage: string | undefined;
+  personalPage: string | undefined;
   twitterHandle: string | undefined;
   bio: string | undefined;
   edit: {
@@ -25,6 +26,7 @@ type State = {
     name: boolean;
     linkedInPage: boolean;
     twitterHandle: boolean;
+    personalPage: boolean;
   };
 };
 
@@ -35,6 +37,7 @@ export default function SekundSettings({ close }: Props) {
   const nameField = useRef<any>();
   const linkedInPageField = useRef<any>();
   const twitterHandleField = useRef<any>();
+  const personalPageField = useRef<any>();
   const bioArea = useRef<any>();
   const fileInput = useRef<any>();
 
@@ -43,6 +46,7 @@ export default function SekundSettings({ close }: Props) {
     name: userProfile.current.name,
     twitterHandle: userProfile.current.twitterHandle,
     linkedInPage: userProfile.current.linkedInPage,
+    personalPage: userProfile.current.personalPage,
     bio: userProfile.current.bio,
     edit: {
       avatar: false,
@@ -50,6 +54,7 @@ export default function SekundSettings({ close }: Props) {
       name: false,
       linkedInPage: false,
       twitterHandle: false,
+      personalPage: false,
     },
   });
 
@@ -85,6 +90,12 @@ export default function SekundSettings({ close }: Props) {
     }
   }
 
+  function savePersonalPage(evt: KeyboardEvent) {
+    if (evt.code === "Enter") {
+      savePersonalPageValue();
+    }
+  }
+
   function saveTwitterHandle(evt: KeyboardEvent) {
     if (evt.code === "Enter") {
       saveTwitterHandleValue();
@@ -95,6 +106,17 @@ export default function SekundSettings({ close }: Props) {
     if (evt.code === "Enter") {
       saveLinkedInPageValue();
     }
+  }
+
+  async function savePersonalPageValue() {
+    if (personalPageField.current.value === userProfile.current.personalPage) {
+      setState({ ...state, edit: { ...state.edit, personalPage: false } });
+      return;
+    }
+    const edit = { ...state.edit, personalPage: false };
+    userProfile.current.personalPage = personalPageField.current.value;
+    UsersService.instance.saveUser(userProfile.current);
+    setState({ ...state, personalPage: personalPageField.current.value, edit });
   }
 
   async function saveNameValue() {
@@ -158,7 +180,7 @@ export default function SekundSettings({ close }: Props) {
     appState.plugin?.disconnect();
   }
 
-  const SectionButton = ({ field }: { field: "avatar" | "bio" | "name" | "linkedInPage" | "twitterHandle" }) => {
+  const SectionButton = ({ field }: { field: "avatar" | "bio" | "name" | "linkedInPage" | "twitterHandle" | "personalPage" }) => {
     if (state.edit[field]) {
       return (
         <button className="mr-0" onClick={() => editField(field, false)}>
@@ -179,6 +201,9 @@ export default function SekundSettings({ close }: Props) {
           break;
         case "linkedInPage":
           label = state.linkedInPage ? t("edit") : t("add");
+          break;
+        case "personalPage":
+          label = state.personalPage ? t("edit") : t("add");
           break;
         case "bio":
           label = state.bio ? t("edit") : t("add");
@@ -240,6 +265,26 @@ export default function SekundSettings({ close }: Props) {
       );
     }
     return <div className="inline-block">{state.twitterHandle}</div>;
+  };
+
+  const PersonalPage = () => {
+    if (state.edit.personalPage) {
+      return (
+        <div className="flex justify-center space-x-2 f-full">
+          <input
+            ref={personalPageField}
+            type="text"
+            onKeyPress={savePersonalPage}
+            defaultValue={state.personalPage || ""}
+            placeholder={t("yourPersonalPage")}
+          />
+          <button className="mr-0 capitalize" onClick={savePersonalPageValue}>
+            {t("save")} ⏎
+          </button>
+        </div>
+      );
+    }
+    return <div className="inline-block">{state.personalPage}</div>;
   };
 
   const LinkedInPage = () => {
@@ -322,6 +367,19 @@ export default function SekundSettings({ close }: Props) {
             </div>
           ) : (
             <div className="w-full py-2 text-center text-obs-muted">{t("introduceYourself")}</div>
+          )}
+        </section>
+        <section className="p-2 mt-2 hover:bg-obs-secondary">
+          <div className="flex justify-between">
+            <div className="text-lg">{t("personalPage")}</div>
+            <SectionButton field="personalPage" />
+          </div>
+          {(state.personalPage && state.personalPage.length > 0) || state.edit.personalPage ? (
+            <div className="flex justify-center py-2">
+              <PersonalPage />
+            </div>
+          ) : (
+            <div className="w-full py-2 text-center text-obs-muted">{t("yourPersonalPage")}</div>
           )}
         </section>
         <section className="p-2 mt-2 hover:bg-obs-secondary">

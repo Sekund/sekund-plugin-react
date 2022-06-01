@@ -12,6 +12,7 @@ export interface People {
   bio?: string;
   twitterHandle?: string;
   linkedInPage?: string;
+  personalPage?: string;
   sharing?: number;
   shared?: number;
   unreadSharing?: number;

@@ -7,6 +7,7 @@ import CommentReducer, { CommentActionKind, initialCommentState } from "@/state/
 import CommentComponent from "@/ui/note/CommentComponent";
 import { Popover } from "@headlessui/react";
 import { DotsHorizontalIcon, EmojiHappyIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
+import { ChatIcon } from "@heroicons/react/solid";
 import { Picker } from "emoji-mart";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -89,7 +90,7 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     if (!guestId) {
       return null;
     }
-    if (noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) {
+    if ((noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) || noteComment.isWeb) {
       return (
         <Popover className="flex items-center flex-shrink-0 ">
           <Popover.Button
@@ -111,16 +112,18 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
                 <TrashIcon className="w-5 h-5" />
                 <span>{t("Delete")}</span>
               </a>
-              <a
-                onClick={() => {
-                  setEditMode(true);
-                  clickPopover();
-                }}
-                className="flex items-center px-1 py-1 space-x-2 rounded-lg"
-              >
-                <PencilIcon className="w-5 h-5" />
-                <span>{t("Edit")}</span>
-              </a>
+              {noteComment.isWeb ? null : (
+                <a
+                  onClick={() => {
+                    setEditMode(true);
+                    clickPopover();
+                  }}
+                  className="flex items-center px-1 py-1 space-x-2 rounded-lg"
+                >
+                  <PencilIcon className="w-5 h-5" />
+                  <span>{t("Edit")}</span>
+                </a>
+              )}
             </div>
           </Popover.Panel>
         </Popover>
@@ -132,7 +135,13 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
 
   return (
     <div key={comment.created} className="flex items-start">
-      <div className="flex-shrink-0">{peopleAvatar(comment.author, 8)}</div>
+      {comment.isWeb ? (
+        <div className="flex-shrink-0 text-obs-muted">
+          <ChatIcon className="w-8 h-8" />
+        </div>
+      ) : (
+        <div className="flex-shrink-0">{peopleAvatar(comment.author, 8)}</div>
+      )}
       <div
         ref={area}
         className={`flex flex-col px-3 pt-2 text-sm rounded-lg text-primary bg-secondary whitespace-pre-wrap ${editMode ? "w-full" : ""}`}
@@ -153,7 +162,12 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
         </div>
 
         <CommentContext.Provider value={commentProviderState}>
-          <CommentComponent editMode={editMode} setEditMode={setEditMode} commentId={`skn-comment-${comment.updated}`} />
+          <CommentComponent
+            editMode={editMode}
+            setEditMode={setEditMode}
+            commentId={`skn-comment-${comment.updated}`}
+            webComment={comment.isWeb ? comment : undefined}
+          />
         </CommentContext.Provider>
 
         {!preview && editMode ? (

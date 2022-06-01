@@ -1,3 +1,4 @@
+import { NoteComment } from "@/domain/NoteComment";
 import { useCommentContext } from "@/state/CommentContext";
 import { CommentActionKind } from "@/state/CommentReducer";
 import Markdown from "markdown-to-jsx";
@@ -7,9 +8,10 @@ type Props = {
   commentId: string;
   editMode: boolean;
   setEditMode: (b: boolean) => void;
+  webComment?: NoteComment;
 };
 
-export default function CommentComponent({ editMode, setEditMode, commentId }: Props) {
+export default function CommentComponent({ editMode, setEditMode, commentId, webComment }: Props) {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const { commentState, commentDispatch } = useCommentContext();
   const initialText = useRef(commentState.commentText.text);
@@ -84,6 +86,15 @@ export default function CommentComponent({ editMode, setEditMode, commentId }: P
   }
   return (
     <div className="-mt-2">
+      {webComment ? (
+        <div className="flex items-center text-obs-muted">
+          <span>{webComment.authorName}&nbsp;</span>
+          <span>
+            (<a href={`mailto:${webComment.authorEmail}`}>{webComment.authorEmail}</a>)
+          </span>
+          <span>:</span>
+        </div>
+      ) : null}
       <Markdown options={{ forceBlock: true }}>{commentText.text}</Markdown>
     </div>
   );

@@ -155,5 +155,6 @@
     "yourTwitterHandle": "Votre pseudo Twitter",
     "yourLinkedInPage": "Votre page LinkedIn",
     "personalPage": "Page personnelle",
-    "yourPersonalPage": "Votre page personnelle"
+    "yourPersonalPage": "Votre page personnelle",
+    "readingTime": "Lecture {{val, number}} min."
 }

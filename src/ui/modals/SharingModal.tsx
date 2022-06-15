@@ -9,7 +9,7 @@ import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
 import AddUser from "@/ui/common/AddUser";
-import { XIcon } from "@heroicons/react/solid";
+import { LinkIcon, XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const forceUpdate = () => setState(state + 1);
   const [sharingGroupsOptions, setSharingGroupsOptions] = useState<SelectOption[]>([]);
   const [sharingPeoplesOptions, setSharingPeoplesOptions] = useState<SelectOption[]>([]);
+  const [hasPublicLink, setHasPublicLink] = useState<boolean>(note.hasPublicLink!!);
   const selectInput = useRef<any>();
   const shade = useRef<any>();
   const [addUser, setAddUser] = useState(false);
@@ -114,10 +115,36 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
     );
   }
 
+  async function createPublicLink() {
+    await NotesService.instance.addPublicLink(note._id);
+    note.hasPublicLink = true;
+    setHasPublicLink(true);
+  }
+
+  async function removePublicLink() {
+    await NotesService.instance.removePublicLink(note._id);
+    note.hasPublicLink = false;
+    setHasPublicLink(false);
+  }
+
   function SharingOptions() {
     return (
       <>
         <div className="text-lg font-medium leading-6 text-primary">{t("plugin:setSharingOptions")}</div>
+        <div className="max-w-xl mt-2 text-sm text-secondary">
+          {hasPublicLink ? (
+            <div className="flex items-center space-x-1">
+              <a href={`https://public.sekund.org/${note._id}/${encodeURI(note.title.replace(".md", "").replace(" ", "_"))}`}>
+                <span>{t("plugin:publicLink")}</span>
+              </a>
+              <a className="underline" onClick={() => removePublicLink()}>
+                ({t("plugin:remove")})
+              </a>
+            </div>
+          ) : (
+            <a onClick={() => createPublicLink()}>{t("plugin:createPublicLink")}</a>
+          )}
+        </div>
         <div className="max-w-xl mt-2 text-sm text-secondary">
           <p>{t("plugin:shareWithWhom")}</p>
         </div>

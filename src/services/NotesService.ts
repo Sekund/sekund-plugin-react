@@ -42,6 +42,14 @@ export default class NotesService extends ServerlessService {
     return 0;
   }
 
+  async addPublicLink(noteId: ObjectID) {
+    return await callFunction(this.plugin, "addPublicLink", [noteId]);
+  }
+
+  async removePublicLink(noteId: ObjectID) {
+    return await callFunction(this.plugin, "removePublicLink", [noteId]);
+  }
+
   async removeSharingPeople(noteId: ObjectID, people: People) {
     return await callFunction(this.plugin, "removeSharingPeople", [noteId, people._id]);
   }

@@ -155,5 +155,6 @@
     "yourTwitterHandle": "Your Twitter handle",
     "yourLinkedInPage": "Your LinkedIn page",
     "personalPage": "Personal page",
-    "yourPersonalPage": "Your personal page"
+    "yourPersonalPage": "Your personal page",
+    "readingTime": "Reading time {{val, number}} min."
 }

@@ -50,5 +50,8 @@
     "yourShares": "Vos partages",
     "addApiKey": "Ajouter une clé API…",
     "selectAnotherWorkspace": "Sélectionnez un autre espace de travail",
-    "workspaceID": "ID de l'espace de travail"
+    "workspaceID": "ID de l'espace de travail",
+    "publicLink": "Lien public",
+    "remove": "retirer",
+    "createPublicLink": "Créer un lien public"
 }

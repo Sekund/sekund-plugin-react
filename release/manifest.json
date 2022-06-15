@@ -6,5 +6,5 @@
 	"minAppVersion": "0.12.19",
 	"description": "Share your notes. Gather feedback.",
 	"authorUrl": "https://sekund.io/",
-	"isDesktopOnly": true
+	"isDesktopOnly": false
 }

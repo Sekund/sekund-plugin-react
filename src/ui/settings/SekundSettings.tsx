@@ -5,9 +5,10 @@ import { useAppContext } from "@/state/AppContext";
 import { CogIcon, UserCircleIcon, XIcon } from "@heroicons/react/solid";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
-import mime from "mime-types";
 import React, { KeyboardEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+const extName = require("ext-name");
 
 type Props = {
   close: () => void;
@@ -70,7 +71,7 @@ export default function SekundSettings({ close }: Props) {
       if (fr.result) {
         const buffer: ArrayBuffer = fr.result as ArrayBuffer;
         const base64 = encode(buffer);
-        const mimeType = mime.lookup(file.name);
+        const mimeType = extName.mime(file.name);
         const avatarImage = `avatars/${userProfile.current._id.toString()}/${file.name}`;
         if (appState.plugin) {
           await callFunction(appState.plugin, "upload", [base64, avatarImage, mimeType, true]);

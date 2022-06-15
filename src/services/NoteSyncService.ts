@@ -19,8 +19,9 @@ import { isSharedNoteFile, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
 import { t } from "i18next";
-import mime from "mime-types";
 import { DataAdapter, normalizePath, TFile, Vault } from "obsidian";
+
+const extName = require("ext-name");
 
 export default class NoteSyncService extends ServerlessService {
   private static _instance: NoteSyncService;
@@ -148,7 +149,7 @@ export default class NoteSyncService extends ServerlessService {
           noteFile.stat.mtime = note.modified;
         }
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
-        this.plugin.app.workspace.getLeaf().openFile(noteFile);
+        this.plugin.app.workspace.getMostRecentLeaf().openFile(noteFile);
       } else {
         console.log("ERROR: Could not open file ", noteFile);
       }
@@ -170,7 +171,7 @@ export default class NoteSyncService extends ServerlessService {
       if (assetFile) {
         const blob = await this.fsAdapter.readBinary(path);
         const base64 = encode(blob);
-        const mimeType = mime.lookup(assetFile.name);
+        const mimeType = extName.mime(assetFile.name);
         await callFunction(this.plugin, "upload", [base64, `${userId}/${noteId}/${assetFile.path}`, mimeType]);
       }
     });

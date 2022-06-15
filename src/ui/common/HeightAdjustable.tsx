@@ -1,24 +1,52 @@
+import { useAppContext } from "@/state/AppContext";
+import { debounce } from "ts-debounce";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
 const HeightAdjustableContext = createContext({} as any);
 
 export const HeightAdjustable = ({ children, initialHeight, parentComponent, ...props }) => {
-  const [adjustedHeight, setAdjustedHeight] = useState<number>(initialHeight);
+  const [adjustedHeight, setAdjustedHeight] = useState<number>(400);
   const yDividerPos = useRef<number | null>(null);
+  const { appState } = useAppContext();
 
   const onMouseHoldDown = (e: MouseEvent) => {
     yDividerPos.current = e.clientY;
   };
 
+  useEffect(() => {
+    (async () => {
+      console.log("executing effect hook", appState.plugin);
+      if (appState.plugin) {
+        if (!appState.plugin.settings) {
+          await appState.plugin?.loadSettings();
+        }
+        console.log("settings", appState.plugin.settings);
+        if (appState.plugin.settings.notePanelHeight) {
+          setAdjustedHeight(appState.plugin.settings.notePanelHeight);
+        }
+      }
+    })();
+  }, []);
+
   const onMouseHoldUp = () => {
     yDividerPos.current = null;
   };
 
-  const onMouseHoldMove = (e: MouseEvent) => {
+  const onMouseHoldMove = async (e: MouseEvent) => {
     if (yDividerPos.current) {
       const rect = parentComponent.current.getBoundingClientRect();
       var y = e.clientY - rect.top;
       setAdjustedHeight(parentComponent.current.offsetHeight - y);
+      if (appState.plugin) {
+        appState.plugin.settings.notePanelHeight = adjustedHeight;
+        const saveSettings = () => {
+          if (appState.plugin) {
+            appState.plugin.saveData(appState.plugin.settings);
+          }
+        };
+        const save = debounce(saveSettings, 100, { isImmediate: false });
+        save();
+      }
 
       yDividerPos.current = e.clientY;
     }

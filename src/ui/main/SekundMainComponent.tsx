@@ -269,7 +269,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
           {getViewTypeView()}
         </div>
 
-        <HeightAdjustable initialHeight={400} parentComponent={sekundMainComponentRoot}>
+        <HeightAdjustable initialHeight={appState.plugin?.settings.notePanelHeight || 400} parentComponent={sekundMainComponentRoot}>
           <HeightAdjustableHandle />
           <div className="relative h-full overflow-auto bg-obs-primary">
             <SekundNoteComponent {...props} />

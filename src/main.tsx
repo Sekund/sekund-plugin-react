@@ -35,6 +35,7 @@ TimeAgo.addLocale(es);
 class SekundPluginSettings {
   private _apiKeys: { [subdomain: string]: string } = {};
   public subdomain = "";
+  public notePanelHeight: number | undefined = undefined;
   public sekundFolderPath = "__sekund__";
 
   public constructor() {}
@@ -147,6 +148,7 @@ export default class SekundPluginReact extends Plugin {
       this.settings = new SekundPluginSettings();
       this.settings.subdomain = settings.subdomain;
       this.settings.sekundFolderPath = settings.sekundFolderPath;
+      this.settings.notePanelHeight = settings.notePanelHeight;
       this.settings.addApiKey(settings.subdomain, settings.apiKey);
       this.saveSettings();
     } else {
@@ -154,6 +156,7 @@ export default class SekundPluginReact extends Plugin {
         this.settings = new SekundPluginSettings();
         this.settings.subdomain = settings.subdomain;
         this.settings.sekundFolderPath = settings.sekundFolderPath;
+        this.settings.notePanelHeight = settings.notePanelHeight;
         for (const subdomain of Object.keys(settings._apiKeys)) {
           this.settings.addApiKey(subdomain, settings._apiKeys[subdomain]);
         }
@@ -227,7 +230,7 @@ export default class SekundPluginReact extends Plugin {
   public async openNoteFile(note: Note) {
     const file = this.app.vault.getAbstractFileByPath(normalizePath(note.path));
     if (file) {
-      await this.app.workspace.getLeaf().openFile(file as TFile);
+      await this.app.workspace.getMostRecentLeaf().openFile(file as TFile);
     } else {
       NoteSyncService.instance.noLocalFile(note);
     }

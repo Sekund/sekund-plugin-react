@@ -2,10 +2,13 @@ import { Group } from "@/domain/Group";
 import SharingModal from "@/ui/modals/SharingModal";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import ObjectID from "bson-objectid";
-import React from "react";
+import React, { useReducer } from "react";
 import "/global.css";
 import { someNote } from "@/mockdata/NotesMock";
 import { People } from "@/domain/People";
+import { someone } from "@/mockdata/PeoplesMock";
+import AppContext from "@/state/AppContext";
+import AppReducer, { initialAppState } from "@/state/AppReducer";
 
 export default {
   title: "Sekund/Sharing Modal",
@@ -25,10 +28,17 @@ const peoples = [
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
+  const [appState, appDispatch] = useReducer(AppReducer, { ...initialAppState, userProfile: someone });
+  const appProviderState = {
+    appState,
+    appDispatch,
+  };
   return (
-    <div className="sekund">
-      <SharingModal userId={new ObjectID()} open={true} setOpen={() => {}} note={{ ...someNote, sharing: { peoples } }} />
-    </div>
+    <AppContext.Provider value={appProviderState}>
+      <div className="sekund">
+        <SharingModal userId={new ObjectID()} open={true} setOpen={() => {}} note={{ ...someNote, sharing: { peoples } }} />
+      </div>
+    </AppContext.Provider>
   );
 };
 

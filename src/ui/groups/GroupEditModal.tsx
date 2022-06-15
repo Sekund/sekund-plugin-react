@@ -189,10 +189,12 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
                   type="text"
                   placeholder={t("plugin:groupNameDesc")}
                 />
-                <div className="flex items-center pl-2 text-xs space-x-1 mt-1">
-                  <span>ID:</span>
-                  <span className="select-text">{group._id.toString()}</span>
-                </div>
+                {!group._id ? null : (
+                  <div className="flex items-center pl-2 text-xs space-x-1 mt-1">
+                    <span>ID:</span>
+                    <span className="select-text">{group._id.toString()}</span>
+                  </div>
+                )}
               </div>
               <div className="max-w-xl mt-4 text-sm text-secondary">
                 <p>{t("plugin:groupMembers")}:</p>

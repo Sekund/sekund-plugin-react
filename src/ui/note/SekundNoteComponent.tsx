@@ -6,7 +6,7 @@ import Loader from "@/ui/common/LoaderComponent";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { makeid } from "@/utils";
+import { copyToClipboard, makeid } from "@/utils";
 import { CheckIcon, CloudDownloadIcon, TrashIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
@@ -191,7 +191,12 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         <div className="flex justify-between">
           {currentFile ? (
             <div className="flex items-center space-x-1 overflow-auto">
-              <span className="truncate text-obs-normal">{currentFile?.name.replace(/\.md/, "")}</span>
+              <span
+                className="truncate text-obs-normal cursor-pointer"
+                onClick={() => copyToClipboard(`${remoteNote?._id}/${remoteNote?.title.replace(/\.md/, "")}`)}
+              >
+                {currentFile?.name.replace(/\.md/, "")}
+              </span>
               {remoteNote && isOwnNote(remoteNote) ? (
                 <span className="flex items-center" onClick={handleUnpublish}>
                   <TrashIcon aria-label={t("plugin:deleteFromSekund")} className="w-4 h-4 mr-1"></TrashIcon>

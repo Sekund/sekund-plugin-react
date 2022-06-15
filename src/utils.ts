@@ -111,3 +111,13 @@ export function hashCode(str: string) {
   }
   return hash;
 }
+
+export function copyToClipboard(data: string): void {
+  const listener = (e: ClipboardEvent) => {
+    e.clipboardData!.setData("text/plain", data);
+    e.preventDefault();
+    document.removeEventListener("copy", listener);
+  };
+  document.addEventListener("copy", listener);
+  document.execCommand("copy");
+}

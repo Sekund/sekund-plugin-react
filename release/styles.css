@@ -729,6 +729,9 @@
   .sekund .hover\:text-secondary:hover {
     color: var(--color-text-secondary)
   }
+  .sekund .underline {
+    text-decoration: underline
+  }
   .sekund .hover\:underline:hover {
     text-decoration: underline
   }

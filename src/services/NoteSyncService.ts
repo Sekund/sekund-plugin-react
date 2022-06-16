@@ -1,7 +1,7 @@
 import { Note } from "@/domain/Note";
 import { mkdirs } from "@/fileutils";
+import mime from "@/helpers/extName";
 import SekundPluginReact from "@/main";
-import ReferencesService from "@/services/ReferencesService";
 import ServerlessService from "@/services/ServerlessService";
 import { callFunction } from "@/services/ServiceUtils";
 import GlobalState from "@/state/GlobalState";
@@ -18,10 +18,7 @@ import {
 import { isSharedNoteFile, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
-import { t } from "i18next";
 import { DataAdapter, normalizePath, TFile, Vault } from "obsidian";
-
-const extName = require("ext-name");
 
 export default class NoteSyncService extends ServerlessService {
   private static _instance: NoteSyncService;
@@ -171,7 +168,7 @@ export default class NoteSyncService extends ServerlessService {
       if (assetFile) {
         const blob = await this.fsAdapter.readBinary(path);
         const base64 = encode(blob);
-        const mimeType = extName.mime(assetFile.name);
+        const mimeType = mime(assetFile.name);
         await callFunction(this.plugin, "upload", [base64, `${userId}/${noteId}/${assetFile.path}`, mimeType]);
       }
     });

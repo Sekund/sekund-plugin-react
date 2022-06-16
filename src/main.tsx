@@ -26,6 +26,7 @@ import nl from "javascript-time-ago/locale/nl.json";
 import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
 import React from "react";
 import * as Realm from "realm-web";
+import mime from "@/helpers/extName";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);
@@ -430,7 +431,7 @@ class AboutModal extends Modal {
       <p style="font-size: 85%">Candide Kemmler</p>
       <p><b>${i18next.t("contributors")}</b></p>
       <p style="font-size: 85%">Laurent De Saedeleer (UX)</p>
-      <p style="margin-top:1rem">Version: 1.0.60</p>
+      <p style="margin-top:1rem">Version: 1.0.61</p>
     </div>
     `;
   }

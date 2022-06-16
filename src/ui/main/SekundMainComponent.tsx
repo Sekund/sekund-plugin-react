@@ -129,16 +129,16 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   return (
     <>
       {showSettings ? (
-        <div className="fixed inset-0 z-30 grid h-screen bg-obs-primary">
+        <div className="absolute inset-0 z-30 grid h-screen bg-obs-primary">
           <SekundSettings close={() => setShowSettings(false)} />
         </div>
       ) : null}
       {showPermissions ? (
-        <div className="fixed inset-0 z-30 grid h-screen bg-obs-primary">
+        <div className="absolute inset-0 z-30 grid h-screen bg-obs-primary">
           <SekundPermissions close={() => setShowPermissions(false)} permissions={sharingPermissions} />
         </div>
       ) : null}
-      <div ref={sekundMainComponentRoot} className="fixed inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
+      <div ref={sekundMainComponentRoot} className="absolute inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
         <div className={`flex items-center justify-between w-full py-1`}>
           <div className="flex flex-col items-center mt-1 ml-2">
             <div className="flex items-center" onClick={showViewTypes}>

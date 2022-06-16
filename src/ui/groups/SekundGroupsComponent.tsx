@@ -148,7 +148,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
               )}
             </div>
           ) : (
-            <div className={`${className} absolute inset-0 flex flex-col items-center justify-center p-8`}>
+            <div className={`${className} w-full h-full flex flex-col items-center justify-center p-8`}>
               <div className="flex justify-center mb-2">
                 <SparklesIcon className="w-6 h-6" />
               </div>

@@ -18,7 +18,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   }
   return (
     <div className="sekund">
-      <div className="fixed inset-0 flex flex-col items-center justify-center p-8 sekund">
+      <div className="absolute inset-0 flex flex-col items-center justify-center p-8 sekund">
         <Onboarding {...args} />
       </div>
     </div>

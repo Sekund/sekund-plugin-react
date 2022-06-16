@@ -121,3 +121,7 @@ export function copyToClipboard(data: string): void {
   document.addEventListener("copy", listener);
   document.execCommand("copy");
 }
+
+export function isTouchDevice() {
+  return window.matchMedia("(pointer: coarse)").matches;
+}

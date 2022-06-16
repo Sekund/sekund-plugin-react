@@ -75,7 +75,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown, fetc
     );
   } else
     return (
-      <div className={`${className} flex flex-col items-center justify-center h-full p-8`}>
+      <div className={`${className} w-full flex flex-col items-center justify-center h-full p-8`}>
         <div className="flex justify-center mb-2">
           <SparklesIcon className="w-6 h-6" />
         </div>

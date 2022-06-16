@@ -326,124 +326,126 @@ export default function SekundSettings({ close }: Props) {
 
   return (
     <>
-      <div className="flex flex-col w-full px-2 mt-1">
+      <div className="flex flex-col w-full mt-1 overflow-hidden">
         <div className="relative flex justify-center py-1 space-x-1 text-lg text-obs-muted">
           <CogIcon className="w-6 h-6" />
           <span className="capitalize">{t("settings")}</span>
           <XIcon className="absolute w-6 h-6 cursor-pointer right-1 top-1" onClick={close} />
         </div>
-        <section className="p-2 mt-4 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="text-lg capitalize">{t("avatar")}</div>
-            <SectionButton field="avatar" />
-          </div>
-          <div className="relative w-full text-center">
-            {state.avatarImage ? (
-              <div className="inline-block">
-                {peopleAvatar(
-                  {
-                    _id: new ObjectID(),
-                    name: state.name,
-                    image: state.avatarImage,
-                  },
-                  24
-                )}
+        <div className="px-2 overflow-y-scroll">
+          <section className="p-2 mt-4 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="text-lg capitalize">{t("avatar")}</div>
+              <SectionButton field="avatar" />
+            </div>
+            <div className="relative w-full text-center">
+              {state.avatarImage ? (
+                <div className="inline-block">
+                  {peopleAvatar(
+                    {
+                      _id: new ObjectID(),
+                      name: state.name,
+                      image: state.avatarImage,
+                    },
+                    24
+                  )}
+                </div>
+              ) : (
+                <>
+                  <UserCircleIcon className="inline-block w-24 h-24" />
+                </>
+              )}
+              <UploadWidget />
+            </div>
+          </section>
+          <section className="p-2 mt-2 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="text-lg">{t("username")}</div>
+              <SectionButton field="name" />
+            </div>
+            {(state.name && state.name.length > 0) || state.edit.name ? (
+              <div className="flex justify-center py-2">
+                <Name />
               </div>
             ) : (
-              <>
-                <UserCircleIcon className="inline-block w-24 h-24" />
-              </>
+              <div className="w-full py-2 text-center text-obs-muted">{t("introduceYourself")}</div>
             )}
-            <UploadWidget />
-          </div>
-        </section>
-        <section className="p-2 mt-2 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="text-lg">{t("username")}</div>
-            <SectionButton field="name" />
-          </div>
-          {(state.name && state.name.length > 0) || state.edit.name ? (
-            <div className="flex justify-center py-2">
-              <Name />
+          </section>
+          <section className="p-2 mt-2 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="text-lg">{t("personalPage")}</div>
+              <SectionButton field="personalPage" />
             </div>
-          ) : (
-            <div className="w-full py-2 text-center text-obs-muted">{t("introduceYourself")}</div>
-          )}
-        </section>
-        <section className="p-2 mt-2 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="text-lg">{t("personalPage")}</div>
-            <SectionButton field="personalPage" />
-          </div>
-          {(state.personalPage && state.personalPage.length > 0) || state.edit.personalPage ? (
-            <div className="flex justify-center py-2">
-              <PersonalPage />
+            {(state.personalPage && state.personalPage.length > 0) || state.edit.personalPage ? (
+              <div className="flex justify-center py-2">
+                <PersonalPage />
+              </div>
+            ) : (
+              <div className="w-full py-2 text-center text-obs-muted">{t("yourPersonalPage")}</div>
+            )}
+          </section>
+          <section className="p-2 mt-2 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="text-lg">{t("twitterHandle")}</div>
+              <SectionButton field="twitterHandle" />
             </div>
-          ) : (
-            <div className="w-full py-2 text-center text-obs-muted">{t("yourPersonalPage")}</div>
-          )}
-        </section>
-        <section className="p-2 mt-2 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="text-lg">{t("twitterHandle")}</div>
-            <SectionButton field="twitterHandle" />
-          </div>
-          {(state.twitterHandle && state.twitterHandle.length > 0) || state.edit.twitterHandle ? (
-            <div className="flex justify-center py-2">
-              <TwitterHandle />
+            {(state.twitterHandle && state.twitterHandle.length > 0) || state.edit.twitterHandle ? (
+              <div className="flex justify-center py-2">
+                <TwitterHandle />
+              </div>
+            ) : (
+              <div className="w-full py-2 text-center text-obs-muted">{t("yourTwitterHandle")}</div>
+            )}
+          </section>
+          <section className="p-2 mt-2 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="text-lg">{t("linkedInPage")}</div>
+              <SectionButton field="linkedInPage" />
             </div>
-          ) : (
-            <div className="w-full py-2 text-center text-obs-muted">{t("yourTwitterHandle")}</div>
-          )}
-        </section>
-        <section className="p-2 mt-2 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="text-lg">{t("linkedInPage")}</div>
-            <SectionButton field="linkedInPage" />
-          </div>
-          {(state.linkedInPage && state.linkedInPage.length > 0) || state.edit.linkedInPage ? (
-            <div className="flex justify-center py-2">
-              <LinkedInPage />
+            {(state.linkedInPage && state.linkedInPage.length > 0) || state.edit.linkedInPage ? (
+              <div className="flex justify-center py-2">
+                <LinkedInPage />
+              </div>
+            ) : (
+              <div className="w-full py-2 text-center text-obs-muted">{t("yourLinkedInPage")}</div>
+            )}
+          </section>
+          <section className="p-2 mt-2 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="text-lg capitalize">{t("bio")}</div>
+              <SectionButton field="bio" />
             </div>
-          ) : (
-            <div className="w-full py-2 text-center text-obs-muted">{t("yourLinkedInPage")}</div>
-          )}
-        </section>
-        <section className="p-2 mt-2 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="text-lg capitalize">{t("bio")}</div>
-            <SectionButton field="bio" />
-          </div>
-          {(state.bio && state.bio.length > 0) || state.edit.bio ? (
-            <div className="flex justify-center py-2">
-              <Bio />
+            {(state.bio && state.bio.length > 0) || state.edit.bio ? (
+              <div className="flex justify-center py-2">
+                <Bio />
+              </div>
+            ) : (
+              <div className="w-full py-2 text-center text-obs-muted">{t("describeYourself")}</div>
+            )}
+          </section>
+          <section className="p-2 mt-2 mb-8 hover:bg-obs-secondary">
+            <div className="flex justify-between">
+              <div className="flex">
+                <div className="text-lg capitalize">{t("account")}</div>
+              </div>
             </div>
-          ) : (
-            <div className="w-full py-2 text-center text-obs-muted">{t("describeYourself")}</div>
-          )}
-        </section>
-        <section className="p-2 mt-2 mb-8 hover:bg-obs-secondary">
-          <div className="flex justify-between">
-            <div className="flex">
-              <div className="text-lg capitalize">{t("account")}</div>
+            <div className="flex flex-col items-center mt-2">
+              <div className="text-sm">
+                <span>{t("workspace")}</span>: <span className="text-obs-accent">{appState.plugin?.subdomain}</span>
+              </div>
+              <div className="text-sm text-obs-muted">{userProfile.current.email}</div>
             </div>
-          </div>
-          <div className="flex flex-col items-center mt-2">
-            <div className="text-sm">
-              <span>{t("workspace")}</span>: <span className="text-obs-accent">{appState.plugin?.subdomain}</span>
+            <div className="flex flex-col items-center justify-center mt-3 space-y-4">
+              <button className="w-48 mr-0 text-center" onClick={disconnect}>
+                {t("disconnect")}
+              </button>
+              {/* <button className="w-48 mr-0 text-center text-red-500 bg-red-100">{t("deleteAllData")}</button> */}
             </div>
-            <div className="text-sm text-obs-muted">{userProfile.current.email}</div>
-          </div>
-          <div className="flex flex-col items-center justify-center mt-3 space-y-4">
-            <button className="w-48 mr-0 text-center" onClick={disconnect}>
-              {t("disconnect")}
-            </button>
-            {/* <button className="w-48 mr-0 text-center text-red-500 bg-red-100">{t("deleteAllData")}</button> */}
-          </div>
-        </section>
-        <section className="text-center">
-          <a onClick={about}>{t("about")}</a>
-        </section>
+          </section>
+          <section className="text-center">
+            <a onClick={about}>{t("about")}</a>
+          </section>
+        </div>
       </div>
     </>
   );

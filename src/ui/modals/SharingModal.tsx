@@ -188,7 +188,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
           setOpen(false);
         }
       }}
-      className="fixed inset-0 z-20 flex flex-col items-center justify-center bg-obs-cover"
+      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-obs-cover"
     >
       <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
         <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">

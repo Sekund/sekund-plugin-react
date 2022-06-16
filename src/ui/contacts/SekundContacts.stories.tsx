@@ -83,7 +83,7 @@ const Template: ComponentStory<any> = (args) => {
   return (
     <AppContext.Provider value={appProviderState}>
       <div className="sekund">
-        <SekundContacts permissionsService={args.permissionsService} permissions={permissions} close={() => {}} />
+        <SekundContacts permissionsService={args.permissionsService} permissions={args.permissionsService.getPermissions()} close={() => {}} />
       </div>
     </AppContext.Provider>
   );
@@ -93,7 +93,7 @@ export const Example = Template.bind({});
 Example.args = {
   permissionsService: {
     getPermissions() {
-      permissions;
+      return permissions;
     },
     setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
       console.log("setting status", sp, status);
@@ -106,6 +106,18 @@ NoContacts.args = {
   permissionsService: {
     getPermissions() {
       return [];
+    },
+    setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
+      console.log("setting status", sp, status);
+    },
+  },
+};
+
+export const LotsOfPeople = Template.bind({});
+LotsOfPeople.args = {
+  permissionsService: {
+    getPermissions() {
+      return permissions.map((p) => [p, p, p, p, p, p, p, p, p, p]).flat();
     },
     setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
       console.log("setting status", sp, status);

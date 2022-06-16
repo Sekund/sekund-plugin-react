@@ -90,7 +90,7 @@ export const SekundHomeComponent = ({ notesService, className, fetchUnread }: Ho
     );
   } else
     return (
-      <div className={`${className} absolute inset-0 flex flex-col items-center justify-center p-8`}>
+      <div className={`${className} h-full w-full flex flex-col items-center justify-center p-8`}>
         <div className="flex justify-center mb-2">
           <SparklesIcon className="w-6 h-6" />
         </div>

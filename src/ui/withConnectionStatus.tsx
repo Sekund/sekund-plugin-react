@@ -113,7 +113,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
     switch (action) {
       case "login":
         return (
-          <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
             <div className="w-form">
               <Login
                 workspaceId={workspaceId.current}
@@ -125,13 +125,13 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
         );
       case "register":
         return (
-          <div className="fixed inset-0 flex flex-col justify-center p-8">
+          <div className="absolute inset-0 flex flex-col justify-center p-8">
             <SetWorkspace success={workspaceChosen} navigation={backNavigation} />
           </div>
         );
       default:
         return (
-          <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
             {children}
             <Onboarding firstPage="chooseWorkspace" />
           </div>
@@ -149,7 +149,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
             case "connecting":
               setTimeout(() => setRetryVisible(true), 5000);
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2 animate-pulse">
                     <CloudIcon className="w-6 h-6" />
                   </div>
@@ -188,7 +188,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
               );
             case "noSettings":
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                   <Onboarding />
                 </div>
               );
@@ -215,7 +215,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
               );
             case "offline":
               return (
-                <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2">
                     <StatusOfflineIcon className="w-6 h-6" />
                   </div>
@@ -226,7 +226,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
             case "unknownError":
               return (
                 <Status>
-                  <div className="fixed inset-0 flex flex-col items-center justify-center p-8">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                     <div className="flex justify-center mb-2">
                       <EmojiSadIcon className="w-6 h-6" />
                     </div>

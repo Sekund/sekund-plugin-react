@@ -143,7 +143,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
     if (group?._id) {
       return (
         <button className="mr-0" onClick={destroy} type="button">
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <TrashIcon className="w-4 h-4"></TrashIcon>
           </div>
         </button>
@@ -160,7 +160,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
           setOpen(false);
         }
       }}
-      className="absolute inset-0 flex flex-col items-center justify-center bg-obs-cover"
+      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-obs-cover"
     >
       <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
         <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">
@@ -181,7 +181,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
               <div className="max-w-xl mt-2 text-sm text-secondary">
                 <p>{t("plugin:groupName")}:</p>
               </div>
-              <div className="mt-3 flex-col">
+              <div className="flex-col mt-3">
                 <input
                   onChange={(evt) => setGroupName(evt.target.value)}
                   defaultValue={group ? group.name : ""}
@@ -190,7 +190,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
                   placeholder={t("plugin:groupNameDesc")}
                 />
                 {!group._id ? null : (
-                  <div className="flex items-center pl-2 text-xs space-x-1 mt-1">
+                  <div className="flex items-center pl-2 mt-1 space-x-1 text-xs">
                     <span>ID:</span>
                     <span className="select-text">{group._id.toString()}</span>
                   </div>

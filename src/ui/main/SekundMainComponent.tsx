@@ -9,7 +9,7 @@ import { AppActionKind, filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { AccentedBadge } from "@/ui/common/Badges";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
-import SekundPermissions from "@/ui/contacts/SekundContacts";
+import SekundContacts from "@/ui/contacts/SekundContacts";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
 import { SekundHomeComponent } from "@/ui/home/SekundHomeComponent";
 import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
@@ -129,13 +129,13 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   return (
     <>
       {showSettings ? (
-        <div className="absolute inset-0 z-30 grid h-screen bg-obs-primary">
+        <div className="absolute inset-0 z-30 grid h-full overflow-hidden bg-obs-primary">
           <SekundSettings close={() => setShowSettings(false)} />
         </div>
       ) : null}
       {showPermissions ? (
-        <div className="absolute inset-0 z-30 grid h-screen bg-obs-primary">
-          <SekundPermissions close={() => setShowPermissions(false)} permissions={sharingPermissions} />
+        <div className="absolute inset-0 z-30 grid h-full overflow-hidden bg-obs-primary">
+          <SekundContacts close={() => setShowPermissions(false)} permissions={sharingPermissions} />
         </div>
       ) : null}
       <div ref={sekundMainComponentRoot} className="absolute inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
@@ -241,7 +241,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
             </div>
             {/* {showTeams ? (
             <Popover className="relative">
-              <Popover.Panel className="fixed z-20 right-1" static>
+              <Popover.Panel className="absolute z-20 right-1" static>
                 <div className="flex flex-col">
                   {Object.keys(appState.plugin?.settings.apiKeys || {}).map((subdomain) => {
                     return (
@@ -265,13 +265,13 @@ export const SekundMainComponent = (props: MainComponentProps) => {
           </div>
         </div>
 
-        <div ref={viewRef} className="relative overflow-auto">
+        <div ref={viewRef} className="overflow-auto">
           {getViewTypeView()}
         </div>
 
-        <HeightAdjustable initialHeight={appState.plugin?.settings.notePanelHeight || 400} parentComponent={sekundMainComponentRoot}>
+        <HeightAdjustable parentComponent={sekundMainComponentRoot}>
           <HeightAdjustableHandle />
-          <div className="relative h-full overflow-auto bg-obs-primary">
+          <div className="h-full overflow-auto bg-obs-primary">
             <SekundNoteComponent {...props} />
           </div>
         </HeightAdjustable>

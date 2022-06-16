@@ -1,11 +1,12 @@
 import { useAppContext } from "@/state/AppContext";
 import { debounce } from "ts-debounce";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { isTouchDevice } from "@/utils";
 
 const HeightAdjustableContext = createContext({} as any);
 
-export const HeightAdjustable = ({ children, initialHeight, parentComponent, ...props }) => {
-  const [adjustedHeight, setAdjustedHeight] = useState<number>(400);
+export const HeightAdjustable = ({ children, parentComponent, ...props }) => {
+  const [adjustedHeight, setAdjustedHeight] = useState<number>(300);
   const yDividerPos = useRef<number | null>(null);
   const { appState } = useAppContext();
 
@@ -15,12 +16,11 @@ export const HeightAdjustable = ({ children, initialHeight, parentComponent, ...
 
   useEffect(() => {
     (async () => {
-      console.log("executing effect hook", appState.plugin);
-      if (appState.plugin) {
+      const touchDevice = isTouchDevice();
+      if (!touchDevice && appState.plugin) {
         if (!appState.plugin.settings) {
           await appState.plugin?.loadSettings();
         }
-        console.log("settings", appState.plugin.settings);
         if (appState.plugin.settings.notePanelHeight) {
           setAdjustedHeight(appState.plugin.settings.notePanelHeight);
         }

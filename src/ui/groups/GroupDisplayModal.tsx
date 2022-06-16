@@ -70,10 +70,10 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
           setOpen(false);
         }
       }}
-      className="absolute inset-0 flex flex-col items-center justify-center bg-obs-cover"
+      className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-obs-cover"
     >
       <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
-        <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">
+        <div className="absolute top-0 right-0 z-50 pt-4 pr-4 sm:block">
           <div
             className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none"
             onClick={() => setOpen(false)}
@@ -93,7 +93,7 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
             {members()}
           </div>
           <div className="flex items-center justify-center mt-4">
-            <button className="flex items-center mr-0" onClick={leaveGroup} type="button">
+            <button className="flex items-center justify-center mr-0" onClick={leaveGroup} type="button">
               {t("leaveThisGroup")}
               <LogoutIcon className="w-4 h-4" />
             </button>

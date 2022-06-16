@@ -79,7 +79,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   function uploadButton() {
     return (
       <div className="flex flex-col items-center p-2">
-        <button onClick={handleSync} className={`flex items-center mod-cta  ${fetching || publishing ? "animate-pulse" : ""}`}>
+        <button onClick={handleSync} className={`flex items-center justify-center mod-cta  ${fetching || publishing ? "animate-pulse" : ""}`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className={`w-6 h-6 ${publishing ? "animate-bounce" : ""}`}
@@ -94,7 +94,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
               d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
             />
           </svg>
-          <span className="ml-1">{uploadButtonLabel()}</span>
+          <span className="inline-block ml-1">{uploadButtonLabel()}</span>
         </button>
         <span className="p-2 mt-2 text-xs text-center text-obs-muted">{uploadButtonDesc()}</span>
       </div>
@@ -177,7 +177,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         ) : (
           <NoteComments note={remoteNote} />
         )}
-        <div className={`fixed bottom-0 left-0 right-0 flex flex-col py-1 bg-obs-primary-alt ${footerTextColor}`}>
+        <div className={`absolute bottom-0 left-0 right-0 flex flex-col py-1 bg-obs-primary-alt ${footerTextColor}`}>
           <div className="flex items-center justify-between px-2 text-sm">{children}</div>
         </div>
         {renderSharingDialog()}
@@ -187,12 +187,12 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="fixed z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted">
+      <div className="absolute z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted">
         <div className="flex justify-between">
           {currentFile ? (
             <div className="flex items-center space-x-1 overflow-auto">
               <span
-                className="truncate text-obs-normal cursor-pointer"
+                className="truncate cursor-pointer text-obs-normal"
                 onClick={() => copyToClipboard(`${remoteNote?._id}/${remoteNote?.title.replace(/\.md/, "")}`)}
               >
                 {currentFile?.name.replace(/\.md/, "")}
@@ -207,7 +207,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
             <div>&nbsp;</div>
           )}
           {fileSynced ? (
-            <span className="flex-shrink-0 nowrap flex items-center space-x-1" key="uptd">
+            <span className="flex items-center flex-shrink-0 space-x-1 nowrap" key="uptd">
               <CheckIcon className="w-4 h-4"></CheckIcon>
               {t("uptodate")}
             </span>

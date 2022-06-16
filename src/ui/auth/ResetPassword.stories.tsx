@@ -16,7 +16,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   }
   return (
     <div className="sekund">
-      <div className="fixed inset-0 flex flex-col justify-center p-8">
+      <div className="absolute inset-0 flex flex-col justify-center p-8">
         <ResetPassword {...args} />
       </div>
     </div>

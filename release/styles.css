@@ -12,9 +12,6 @@
   .sekund .static {
     position: static
   }
-  .sekund .fixed {
-    position: fixed
-  }
   .sekund .absolute {
     position: absolute
   }
@@ -81,6 +78,9 @@
   }
   .sekund .z-40 {
     z-index: 40
+  }
+  .sekund .z-50 {
+    z-index: 50
   }
   .sekund .m-0 {
     margin: 0px
@@ -217,9 +217,6 @@
   }
   .sekund .h-full {
     height: 100%
-  }
-  .sekund .h-screen {
-    height: 100vh
   }
   .sekund .max-h-4 {
     max-height: 1rem
@@ -441,6 +438,9 @@
   }
   .sekund .overflow-hidden {
     overflow: hidden
+  }
+  .sekund .overflow-y-scroll {
+    overflow-y: scroll
   }
   .sekund .truncate {
     overflow: hidden;

@@ -53,5 +53,6 @@
     "workspaceID": "Workspace ID",
     "publicLink": "Public link",
     "remove": "remove",
-    "createPublicLink": "Create public link"
+    "createPublicLink": "Create public link",
+    "open": "open"
 }

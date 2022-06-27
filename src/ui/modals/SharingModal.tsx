@@ -9,7 +9,7 @@ import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
 import AddUser from "@/ui/common/AddUser";
-import { LinkIcon, XIcon } from "@heroicons/react/solid";
+import { ExternalLinkIcon, PlusIcon, TrashIcon, XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -134,15 +134,24 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
         <div className="max-w-xl mt-2 text-sm text-secondary">
           {hasPublicLink ? (
             <div className="flex items-center space-x-1">
-              <a href={`https://public.sekund.org/${note._id}/${encodeURI(note.title.replace(".md", "").replace(" ", "_"))}`}>
-                <span>{t("plugin:publicLink")}</span>
+              <span>{t("plugin:publicLink")}:</span>
+              <a
+                className="flex items-center"
+                href={`https://public.sekund.org/${note._id}/${encodeURI(note.title.replace(".md", "").replace(" ", "_"))}`}
+              >
+                <span>{t("open")}</span>
+                <ExternalLinkIcon className="w-4 h-4" />
               </a>
               <a className="underline" onClick={() => removePublicLink()}>
-                ({t("plugin:remove")})
+                <span>({t("plugin:remove")})</span>
+                <TrashIcon className="w-4 h-4" />
               </a>
             </div>
           ) : (
-            <a onClick={() => createPublicLink()}>{t("plugin:createPublicLink")}</a>
+            <a className="flex items-center" onClick={() => createPublicLink()}>
+              <span>{t("plugin:createPublicLink")}</span>
+              <PlusIcon className="w-4 h-4" />
+            </a>
           )}
         </div>
         <div className="max-w-xl mt-2 text-sm text-secondary">

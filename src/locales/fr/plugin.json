@@ -53,5 +53,6 @@
     "workspaceID": "ID de l'espace de travail",
     "publicLink": "Lien public",
     "remove": "retirer",
-    "createPublicLink": "Créer un lien public"
+    "createPublicLink": "Créer un lien public",
+    "open": "ouvrir"
 }

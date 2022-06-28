@@ -88,6 +88,14 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
     setLocalGroup({ ...localGroup, name: gn });
   }
 
+  function setGroupIsPublic(checked: boolean) {
+    setLocalGroup({ ...localGroup, isPublic: checked });
+  }
+
+  function setGroupDescription(desc: string) {
+    setLocalGroup({ ...localGroup, description: desc });
+  }
+
   async function commit() {
     try {
       const expandedGroup = await GroupsService.instance.upsertGroup(localGroup);
@@ -189,12 +197,29 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
                   type="text"
                   placeholder={t("plugin:groupNameDesc")}
                 />
-                {!group._id ? null : (
-                  <div className="flex items-center pl-2 mt-1 space-x-1 text-xs">
-                    <span>ID:</span>
-                    <span className="select-text">{group._id.toString()}</span>
+                <textarea
+                  className="w-full px-3 py-2 mt-2 text-md"
+                  defaultValue={group.description || ""}
+                  placeholder="Group description"
+                  onChange={(evt) => setGroupDescription(evt.target.value)}
+                />
+                <div className="flex items-center justify-between pl-2 mt-1 space-x-2 text-sm">
+                  <div className="flex items-center space-x-1">
+                    <span aria-label={t("plugin:publicGroupDesc")}>{t("plugin:public")}:</span>
+                    <input
+                      aria-label={t("plugin:publicGroupDesc")}
+                      type="checkbox"
+                      defaultChecked={group.isPublic}
+                      onChange={(evt) => setGroupIsPublic(evt.target.checked)}
+                    ></input>
                   </div>
-                )}
+                  {!group._id ? null : (
+                    <div className="flex items-center space-x-1 overflow-hidden">
+                      <span className="flex-shrink-0">ID:</span>
+                      <span className="truncate select-text">{group._id.toString()}</span>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="max-w-xl mt-4 text-sm text-secondary">
                 <p>{t("plugin:groupMembers")}:</p>

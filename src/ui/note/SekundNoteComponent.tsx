@@ -6,8 +6,8 @@ import Loader from "@/ui/common/LoaderComponent";
 import SharingModal from "@/ui/modals/SharingModal";
 import NoteComments from "@/ui/note/NoteComments";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { copyToClipboard, makeid } from "@/utils";
-import { CheckIcon, CloudDownloadIcon, TrashIcon } from "@heroicons/react/solid";
+import { makeid } from "@/utils";
+import { CheckIcon, CloudDownloadIcon, ShareIcon, TrashIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -48,6 +48,18 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     })();
   }
 
+  function isSharedNote() {
+    if (remoteNote && remoteNote.sharing) {
+      if (remoteNote.sharing.peoples && remoteNote.sharing.peoples.length > 0) {
+        return true;
+      }
+      if (remoteNote.sharing.peoples && remoteNote.sharing.peoples.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function SyncButton() {
     if (!remoteNote) return null;
     return (
@@ -74,7 +86,6 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   }
 
   function handleSync() {
-    console.log("handleSync", publishing, fileSynced, fetching);
     if (!publishing && !fileSynced && !fetching) {
       syncUp();
     }
@@ -215,18 +226,18 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
       <div className="absolute z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted">
         <div className="flex justify-between">
           {currentFile ? (
-            <div className="flex items-center space-x-1 overflow-auto">
-              <span
-                className="truncate cursor-pointer text-obs-normal"
-                onClick={() => copyToClipboard(`${remoteNote?._id}/${remoteNote?.title.replace(/\.md/, "")}`)}
-              >
-                {currentFile?.name.replace(/\.md/, "")}
+            <div className="flex items-center space-x-1 overflow-hidden">
+              <span className="flex items-center overflow-hidden cursor-pointer text-obs-normal" onClick={() => setShowSharingModal(true)}>
+                {remoteNote && isSharedNote() ? (
+                  <ShareIcon aria-label={t("plugin:deleteFromSekund")} className="flex-shrink-0 w-4 h-4 mr-1"></ShareIcon>
+                ) : null}
+                <span className="truncate">{currentFile?.name.replace(/\.md/, "")}</span>
+                {remoteNote && isOwnNote(remoteNote) ? (
+                  <span className="flex items-center flex-shrink-0" onClick={handleUnpublish}>
+                    <TrashIcon aria-label={t("plugin:deleteFromSekund")} className="w-4 h-4 mr-1"></TrashIcon>
+                  </span>
+                ) : null}
               </span>
-              {remoteNote && isOwnNote(remoteNote) ? (
-                <span className="flex items-center" onClick={handleUnpublish}>
-                  <TrashIcon aria-label={t("plugin:deleteFromSekund")} className="w-4 h-4 mr-1"></TrashIcon>
-                </span>
-              ) : null}
             </div>
           ) : (
             <div>&nbsp;</div>

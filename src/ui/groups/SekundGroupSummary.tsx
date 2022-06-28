@@ -7,8 +7,8 @@ import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
-import { makeid, wait } from "@/utils";
-import { AdjustmentsIcon } from "@heroicons/react/solid";
+import { makeid } from "@/utils";
+import { AdjustmentsIcon, CheckIcon, RefreshIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useRef, useState } from "react";
@@ -109,7 +109,23 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
           </div>
           {groupMembers(group)}
         </div>
-        {expanded ? <NoteSummariesPanel context="groups" loading={loading} handleNoteClicked={handleNoteClicked} /> : null}
+        {expanded ? (
+          <>
+            {badge() > 0 ? (
+              <div className="flex justify-between px-3 py-1 space-x-2 text-obs-muted">
+                <div className="flex items-center space-x-1 text-sm cursor-pointer hover:underline hover:text-obs-normal">
+                  <span>{t("plugin:updateAll")}</span>
+                  <RefreshIcon className="w-4 h-4" />
+                </div>
+                <div className="flex items-center space-x-1 text-sm cursor-pointer hover:underline hover:text-obs-normal">
+                  <span>{t("plugin:markAllRead")}</span>
+                  <CheckIcon className="w-4 h-4" />
+                </div>
+              </div>
+            ) : null}
+            <NoteSummariesPanel context="groups" loading={loading} handleNoteClicked={handleNoteClicked} />
+          </>
+        ) : null}
       </div>
     </NotesContext.Provider>
   );

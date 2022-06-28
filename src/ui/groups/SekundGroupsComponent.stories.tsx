@@ -18,6 +18,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   const wrapper = new AppStateWrapper(args.gState, args.nState, null, { path: "home/home.md" } as TFile, locale);
   const peoplesService = {
     getUserGroups: () => args.groups,
+    getPublicGroups: () => args.groups,
   } as PeoplesService;
 
   const fetchUnread = async () => {};
@@ -67,6 +68,16 @@ export const NoGroup = Template.bind({});
 NoGroup.args = {
   gState: "allGood",
   groups: [],
+};
+
+export const PublicGroups = Template.bind({});
+const groupDescriptions = [
+  "For pad musicians, that is people who love doing music with primitive controllers made out of squishy plastic squares",
+  "For beach lovers",
+];
+PublicGroups.args = {
+  gState: "allGood",
+  groups: groups.map((g, index) => ({ ...g, description: groupDescriptions[index], isPublic: true })),
 };
 
 export const Error = Template.bind({});

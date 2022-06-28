@@ -54,5 +54,10 @@
     "publicLink": "Public link",
     "remove": "remove",
     "createPublicLink": "Create public link",
-    "open": "open"
+    "open": "open",
+    "publicGroupDesc": "Public groups are visible to everyone – anyone can join",
+    "public": "Public",
+    "browsePublicGroups": "Browse public groups",
+    "updateAll": "Update all",
+    "markAllRead": "Mark all read"
 }

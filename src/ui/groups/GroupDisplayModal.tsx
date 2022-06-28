@@ -93,10 +93,12 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
             {members()}
           </div>
           <div className="flex items-center justify-center mt-4">
-            <button className="flex items-center justify-center mr-0" onClick={leaveGroup} type="button">
-              {t("leaveThisGroup")}
-              <LogoutIcon className="w-4 h-4" />
-            </button>
+            {localGroup.userId.equals(userProfile._id) ? null : (
+              <button className="flex items-center justify-center mr-0" onClick={leaveGroup} type="button">
+                {t("leaveThisGroup")}
+                <LogoutIcon className="w-4 h-4" />
+              </button>
+            )}
           </div>
           <div className="flex items-center justify-end mt-4">
             <button className="mr-0" onClick={() => setOpen(false)} type="button">

@@ -22,6 +22,10 @@ export default class PeoplesService extends ServerlessService {
     return callFunction(this.plugin, "getGroups");
   }
 
+  async getPublicGroups(): Promise<Group[]> {
+    return callFunction(this.plugin, "getPublicGroups");
+  }
+
   async getUserNetworkStats(): Promise<{ nPeoples: number; nGroups: number }> {
     return { nPeoples: (await this.getRawPeoples()).length, nGroups: (await this.getUserGroups()).length };
   }

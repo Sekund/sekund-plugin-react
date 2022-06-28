@@ -8,12 +8,13 @@ import NotesReducer, { initialNotesState } from "@/state/NotesReducer";
 import PeoplesContext from "@/state/PeoplesContext";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
-import GroupEditModal from "@/ui/groups/GroupEditModal";
 import GroupDisplayModal from "@/ui/groups/GroupDisplayModal";
+import GroupEditModal from "@/ui/groups/GroupEditModal";
 import SekundGroupSummary from "@/ui/groups/SekundGroupSummary";
+import SekundPublicGroupSummary from "@/ui/groups/SekundPublicGroupSummary";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { touch, makeid } from "@/utils";
-import { PlusIcon, SparklesIcon } from "@heroicons/react/solid";
+import { makeid, touch } from "@/utils";
+import { ArrowNarrowLeftIcon, PlusIcon, SearchIcon, SparklesIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,6 +30,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
   const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation();
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
+  const [showPublicGroups, setShowPublicGroups] = useState(false);
   const [showGroupEditModal, setShowGroupEditModal] = useState(false);
   const [showGroupDisplayModal, setShowGroupDisplayModal] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
@@ -45,11 +47,19 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
 
   const { groups } = peoplesState;
 
-  async function fetchGroups() {
+  async function fetchUserGroups() {
     if (!peoplesService) {
       peoplesService = PeoplesService.instance;
     }
     const groups = await peoplesService.getUserGroups();
+    peoplesDispatch({ type: PeoplesActionKind.SetGroups, payload: groups });
+  }
+
+  async function fetchPublicGroups() {
+    if (!peoplesService) {
+      peoplesService = PeoplesService.instance;
+    }
+    const groups = await peoplesService.getPublicGroups();
     peoplesDispatch({ type: PeoplesActionKind.SetGroups, payload: groups });
   }
 
@@ -71,7 +81,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
 
   useEffect(() => {
     if (appState.generalState === "allGood") {
-      fetchGroups();
+      fetchUserGroups();
       watchEvents();
     }
   }, [appState.generalState]);
@@ -86,7 +96,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
     eventsWatcher?.addEventListener(
       listenerId,
       new SekundEventListener(["group.add", "group.upsert", "group.delete"], async () => {
-        await fetchGroups();
+        showPublicGroups ? await fetchUserGroups() : await fetchPublicGroups();
         await fetchUnread();
       })
     );
@@ -115,38 +125,158 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
     touch(appDispatch, note);
   }
 
+  async function displayUserGroups() {
+    await fetchUserGroups();
+    setShowPublicGroups(false);
+  }
+
+  async function displayPublicGroups() {
+    await fetchPublicGroups();
+    setShowPublicGroups(true);
+  }
+
+  function UserGroups() {
+    return (
+      <div className={`${className} flex flex-col relative`}>
+        {mode === "none" ? (
+          <>
+            <div className="sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full h-8 px-2 text-xs bg-obs-primary">
+              <div
+                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                onClick={() => displayPublicGroups()}
+              >
+                <SearchIcon className="w-4 h-4" /> <span className="py-0">{t("plugin:browsePublicGroups")}</span>
+              </div>
+              <div
+                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                onClick={createGroup}
+              >
+                <PlusIcon className="w-4 h-4" /> <span className="py-0">{t("new_group")}</span>
+              </div>
+            </div>
+            <div className="flex flex-col space-y-1px w-xl">
+              {groups!.map((group: Group) => {
+                return (
+                  <SekundGroupSummary
+                    key={group._id.toString()}
+                    fetchUnread={fetchUnread}
+                    group={group}
+                    handleNoteClicked={noteClicked}
+                    editGroup={editGroup}
+                    displayGroup={displayGroup}
+                  />
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <NoteSummariesPanel context="groups" handleNoteClicked={noteClicked} />
+        )}
+      </div>
+    );
+  }
+
+  function NoGroups() {
+    return !showPublicGroups ? (
+      <div className={`${className} w-full h-full flex flex-col items-center justify-center p-8`}>
+        <div className="flex justify-center mb-2">
+          <SparklesIcon className="w-6 h-6" />
+        </div>
+        <div className="text-center ">{t("plugin:noGroups")}</div>
+        <div className="mt-2 text-sm text-center ">{t("plugin:noGroupsDesc")}</div>
+        <button onClick={createGroup} className="flex items-center mt-2 cursor-pointer mod-cta">
+          <PlusIcon className="w-4 h-4 mr-1" />
+          <div className="cursor-pointer">{t("new_group")}</div>
+        </button>
+      </div>
+    ) : (
+      <span>"not possible"</span>
+    );
+  }
+
+  function PublicGroups() {
+    return (
+      <div className={`${className} flex flex-col relative`}>
+        <div className="sticky top-0 left-0 right-0 z-10 flex items-center w-full h-8 px-2 text-xs bg-obs-primary">
+          <div
+            className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+            onClick={() => displayUserGroups()}
+          >
+            <ArrowNarrowLeftIcon className="w-4 h-4" /> <span className="py-0">{t("back")}</span>
+          </div>
+        </div>
+        <div className="flex flex-col space-y-1px w-xl">
+          {groups!.map((group: Group) => {
+            return <SekundPublicGroupSummary key={group._id.toString()} group={group} displayGroup={displayGroup} />;
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  function Groups() {
+    return showPublicGroups ? <PublicGroups /> : <UserGroups />;
+  }
+
   return (
     <PeoplesContext.Provider value={peoplesProviderState}>
       <NotesContext.Provider value={notesProviderState}>
         <>
           {groups && groups.length > 0 ? (
-            <div className={`${className} flex flex-col`}>
-              {mode === "none" ? (
-                <>
-                  <div className="flex items-center justify-end w-full h-8 px-2 text-xs">
-                    <div className="flex items-center p-1 space-x-1 border rounded-md mr-2px dark:border-obs-modal text-normal" onClick={createGroup}>
-                      <PlusIcon className="w-4 h-4" /> <span className="py-0">{t("new_group")}</span>
+            showPublicGroups ? (
+              <div className={`${className} flex flex-col relative`}>
+                <div className="sticky top-0 left-0 right-0 z-10 flex items-center w-full h-8 px-2 text-xs bg-obs-primary">
+                  <div
+                    className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                    onClick={() => displayUserGroups()}
+                  >
+                    <ArrowNarrowLeftIcon className="w-4 h-4" /> <span className="py-0">{t("back")}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col space-y-1px w-xl">
+                  {groups!.map((group: Group) => {
+                    return <SekundPublicGroupSummary key={group._id.toString()} group={group} displayGroup={displayGroup} />;
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className={`${className} flex flex-col relative`}>
+                {mode === "none" ? (
+                  <>
+                    <div className="sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full h-8 px-2 text-xs bg-obs-primary">
+                      <div
+                        className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                        onClick={() => displayPublicGroups()}
+                      >
+                        <SearchIcon className="w-4 h-4" /> <span className="py-0">{t("plugin:browsePublicGroups")}</span>
+                      </div>
+                      <div
+                        className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                        onClick={createGroup}
+                      >
+                        <PlusIcon className="w-4 h-4" /> <span className="py-0">{t("new_group")}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col space-y-1px w-xl">
-                    {groups.map((group: Group) => {
-                      return (
-                        <SekundGroupSummary
-                          key={group._id.toString()}
-                          fetchUnread={fetchUnread}
-                          group={group}
-                          handleNoteClicked={noteClicked}
-                          editGroup={editGroup}
-                          displayGroup={displayGroup}
-                        />
-                      );
-                    })}
-                  </div>
-                </>
-              ) : (
-                <NoteSummariesPanel context="groups" handleNoteClicked={noteClicked} />
-              )}
-            </div>
+                    <div className="flex flex-col space-y-1px w-xl">
+                      {groups!.map((group: Group) => {
+                        return (
+                          <SekundGroupSummary
+                            key={group._id.toString()}
+                            fetchUnread={fetchUnread}
+                            group={group}
+                            handleNoteClicked={noteClicked}
+                            editGroup={editGroup}
+                            displayGroup={displayGroup}
+                          />
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <NoteSummariesPanel context="groups" handleNoteClicked={noteClicked} />
+                )}
+              </div>
+            )
           ) : (
             <div className={`${className} w-full h-full flex flex-col items-center justify-center p-8`}>
               <div className="flex justify-center mb-2">

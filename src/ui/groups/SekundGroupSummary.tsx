@@ -8,7 +8,7 @@ import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid } from "@/utils";
-import { AdjustmentsIcon, CheckIcon, RefreshIcon } from "@heroicons/react/solid";
+import { AdjustmentsIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useRef, useState } from "react";
@@ -111,7 +111,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
         </div>
         {expanded ? (
           <>
-            {badge() > 0 ? (
+            {/* {badge() > 0 ? (
               <div className="flex justify-between px-3 py-1 space-x-2 text-obs-muted">
                 <div className="flex items-center space-x-1 text-sm cursor-pointer hover:underline hover:text-obs-normal">
                   <span>{t("plugin:updateAll")}</span>
@@ -122,7 +122,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
                   <CheckIcon className="w-4 h-4" />
                 </div>
               </div>
-            ) : null}
+            ) : null} */}
             <NoteSummariesPanel context="groups" loading={loading} handleNoteClicked={handleNoteClicked} />
           </>
         ) : null}

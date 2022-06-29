@@ -13,6 +13,7 @@ import { ExternalLinkIcon, PlusIcon, TrashIcon, XIcon } from "@heroicons/react/s
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import slugify from "slugify";
 
 type Props = {
   open: boolean;
@@ -135,14 +136,11 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
           {hasPublicLink ? (
             <div className="flex items-center space-x-1">
               <span>{t("plugin:publicLink")}:</span>
-              <a
-                className="flex items-center"
-                href={`https://public.sekund.org/${note._id}/${encodeURI(note.title.replace(".md", "").replace(" ", "_"))}`}
-              >
-                <span>{t("open")}</span>
+              <a className="flex items-center" href={`https://public.sekund.org/${note._id}/${slugify(note.title.replace(".md", ""))}`}>
+                <span>{t("plugin:open")}</span>
                 <ExternalLinkIcon className="w-4 h-4" />
               </a>
-              <a className="underline" onClick={() => removePublicLink()}>
+              <a className="flex items-center" onClick={() => removePublicLink()}>
                 <span>({t("plugin:remove")})</span>
                 <TrashIcon className="w-4 h-4" />
               </a>

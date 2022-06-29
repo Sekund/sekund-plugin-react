@@ -13,6 +13,7 @@ import { AvatarGroup } from "@mui/material";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 type Props = {
   group: Group;
   editGroup: (group: Group) => void;

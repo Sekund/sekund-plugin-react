@@ -18,6 +18,10 @@
   .sekund .relative {
     position: relative
   }
+  .sekund .sticky {
+    position: -webkit-sticky;
+    position: sticky
+  }
   .sekund .inset-0 {
     top: 0px;
     right: 0px;

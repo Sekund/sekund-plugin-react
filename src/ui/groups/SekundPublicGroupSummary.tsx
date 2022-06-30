@@ -30,7 +30,8 @@ export default function SekundPublicGroupSummary({ group, displayGroup }: Props)
 
   function isGroupMember() {
     for (const member of localGroup.peoples) {
-      if (member._id.equals(userProfile._id)) return true;
+      const memberId = member._id || member;
+      if (memberId && memberId.equals(userProfile._id)) return true;
     }
     return false;
   }

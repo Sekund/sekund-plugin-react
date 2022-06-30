@@ -136,12 +136,15 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
           {hasPublicLink ? (
             <div className="flex items-center space-x-1">
               <span>{t("plugin:publicLink")}:</span>
-              <a className="flex items-center" href={`https://public.sekund.org/${note._id}/${slugify(note.title.replace(".md", ""))}`}>
+              <a
+                className="flex items-center underline"
+                href={`https://public.sekund.org/${note._id}/${slugify(note.title.replace(".md", "").toLowerCase())}`}
+              >
                 <span>{t("plugin:open")}</span>
                 <ExternalLinkIcon className="w-4 h-4" />
               </a>
-              <a className="flex items-center" onClick={() => removePublicLink()}>
-                <span>({t("plugin:remove")})</span>
+              <a className="flex items-center underline" onClick={() => removePublicLink()}>
+                <span>{t("plugin:remove")}</span>
                 <TrashIcon className="w-4 h-4" />
               </a>
             </div>

@@ -42,7 +42,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   return (
     <AppContext.Provider value={appProviderState}>
       <div className="sekund">
-        <GroupDisplayModal open={true} setOpen={() => {}} group={group as Group} />
+        <GroupDisplayModal open={true} closeDialog={() => {}} group={group as Group} />
       </div>
     </AppContext.Provider>
   );

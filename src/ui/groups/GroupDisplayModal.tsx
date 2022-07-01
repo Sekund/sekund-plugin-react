@@ -13,11 +13,11 @@ import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
-  setOpen: (v: boolean) => void;
+  closeDialog: () => void;
   group: Group;
 };
 
-export default function GroupDisplayModal({ open, setOpen, group }: Props) {
+export default function GroupDisplayModal({ open, closeDialog, group }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const shade = useRef<any>();
   const { userProfile } = useAppContext().appState;
@@ -58,7 +58,7 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
   async function leaveGroup() {
     if (confirm(t("confirmLeaveGroup"))) {
       await GroupsService.instance.leaveGroup(group._id);
-      setOpen(false);
+      closeDialog();
     }
   }
 
@@ -67,7 +67,7 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
       ref={shade}
       onClick={(evt) => {
         if (evt.target === shade.current) {
-          setOpen(false);
+          closeDialog();
         }
       }}
       className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-obs-cover"
@@ -76,7 +76,7 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
         <div className="absolute top-0 right-0 z-50 pt-4 pr-4 sm:block">
           <div
             className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none"
-            onClick={() => setOpen(false)}
+            onClick={() => closeDialog()}
           >
             <span className="sr-only">{t("close")}</span>
             <XIcon className="w-6 h-6" aria-hidden="true" />
@@ -101,7 +101,7 @@ export default function GroupDisplayModal({ open, setOpen, group }: Props) {
             )}
           </div>
           <div className="flex items-center justify-end mt-4">
-            <button className="mr-0" onClick={() => setOpen(false)} type="button">
+            <button className="mr-0" onClick={() => closeDialog()} type="button">
               {t("cancel")}
             </button>
           </div>

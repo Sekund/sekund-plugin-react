@@ -74,7 +74,7 @@ export default function SekundPublicGroupSummary({ group, displayGroup }: Props)
   function JoinButton() {
     return (
       <button className="flex items-center space-x-1" onClick={join}>
-        <span>{t("joinThisGroup")}</span>
+        <span>{t("plugin:joinThisGroup")}</span>
         <PlusIcon className="w-4 h-4" />
       </button>
     );

@@ -18,12 +18,12 @@ import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
-  setOpen: (v: boolean) => void;
+  closeDialog: () => void;
   group: Group | null;
   userId: ObjectID;
 };
 
-export default function GroupEditModal({ open, setOpen, group, userId }: Props) {
+export default function GroupEditModal({ open, closeDialog, group, userId }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const [commitEnabled, setCommitEnabled] = useState(false);
   const commitButton = useRef<HTMLButtonElement>(null);
@@ -106,7 +106,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
         } else {
           peoplesDispatch({ type: PeoplesActionKind.AddGroup, payload: expandedGroup });
         }
-        setOpen(false);
+        closeDialog();
       }
     } catch (err) {
       const errorMessage = (err as any).toString();
@@ -143,7 +143,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
     if (confirmed && group !== null && group._id) {
       GroupsService.instance.deleteGroup(group._id);
       peoplesDispatch({ type: PeoplesActionKind.RemoveGroup, payload: localGroup });
-      setOpen(false);
+      closeDialog();
     }
   }
 
@@ -165,7 +165,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
       ref={shade}
       onClick={(evt) => {
         if (evt.target === shade.current) {
-          setOpen(false);
+          closeDialog();
         }
       }}
       className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-obs-cover"
@@ -174,7 +174,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
         <div className="absolute top-0 right-0 pt-4 pr-4 sm:block">
           <div
             className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none"
-            onClick={() => setOpen(false)}
+            onClick={() => closeDialog()}
           >
             <span className="sr-only">{t("close")}</span>
             <XIcon className="w-6 h-6" aria-hidden="true" />
@@ -247,7 +247,7 @@ export default function GroupEditModal({ open, setOpen, group, userId }: Props) 
             <div className="flex items-center justify-between mt-4">
               {deleteButton()}
               <div className="flex justify-end space-x-2">
-                <button className="mr-0" onClick={() => setOpen(false)} type="button">
+                <button className="mr-0" onClick={() => closeDialog()} type="button">
                   {t("cancel")}
                 </button>
                 <button className="mr-0 overflow-hidden" ref={commitButton} onClick={commitEnabled ? commit : undefined} type="button">

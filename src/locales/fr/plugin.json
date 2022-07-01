@@ -59,5 +59,7 @@
     "public": "Public",
     "browsePublicGroups": "Groupes publics",
     "updateAll": "Tout mettre à jour",
-    "markAllRead": "Tous marquer lus"
+    "markAllRead": "Tous marquer lus",
+    "browsePublicGroupsDesc": "Rejoignez un groupe public",
+    "joinThisGroup": "Rejoindre ce groupe"
 }

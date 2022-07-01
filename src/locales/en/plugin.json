@@ -59,5 +59,7 @@
     "public": "Public",
     "browsePublicGroups": "Browse public groups",
     "updateAll": "Update all",
-    "markAllRead": "Mark all read"
+    "markAllRead": "Mark all read",
+    "browsePublicGroupsDesc": "Join a public group",
+    "joinThisGroup": "Join this group"
 }

@@ -65,15 +65,25 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
 
   function renderGroupEditDialog() {
     if (showGroupEditModal) {
-      return <GroupEditModal userId={appState.userProfile._id} open={showGroupEditModal} setOpen={setShowGroupEditModal} group={currentGroup} />;
+      return <GroupEditModal userId={appState.userProfile._id} open={showGroupEditModal} closeDialog={closeGroupEditDialog} group={currentGroup} />;
     } else {
       return null;
     }
   }
 
+  function closeGroupEditDialog() {
+    setShowGroupEditModal(false);
+    fetchUserGroups();
+  }
+
+  function closeGroupDisplayDialog() {
+    setShowGroupDisplayModal(false);
+    fetchUserGroups();
+  }
+
   function renderGroupDisplayDialog() {
     if (showGroupDisplayModal && currentGroup) {
-      return <GroupDisplayModal open={showGroupDisplayModal} setOpen={setShowGroupDisplayModal} group={currentGroup} />;
+      return <GroupDisplayModal open={showGroupDisplayModal} closeDialog={closeGroupDisplayDialog} group={currentGroup} />;
     } else {
       return null;
     }
@@ -287,6 +297,12 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
               <button onClick={createGroup} className="flex items-center mt-2 cursor-pointer mod-cta">
                 <PlusIcon className="w-4 h-4 mr-1" />
                 <div className="cursor-pointer">{t("new_group")}</div>
+              </button>
+              <span>{t("or")}</span>
+              <span>{t("plugin:browsePublicGroupsDesc")}</span>
+              <button onClick={displayPublicGroups} className="flex items-center mt-2 cursor-pointer mod-cta">
+                <SearchIcon className="w-4 h-4 mr-1" />
+                <div className="cursor-pointer">{t("plugin:browsePublicGroups")}</div>
               </button>
             </div>
           )}

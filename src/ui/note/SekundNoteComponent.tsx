@@ -53,7 +53,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
       if (remoteNote.sharing.peoples && remoteNote.sharing.peoples.length > 0) {
         return true;
       }
-      if (remoteNote.sharing.peoples && remoteNote.sharing.peoples.length > 0) {
+      if (remoteNote.sharing.groups && remoteNote.sharing.groups.length > 0) {
         return true;
       }
     }
@@ -65,7 +65,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     return (
       <a key="sync" onClick={handleSync} className={`flex items-center justify-center space-x-1 ${footerTextColor}`}>
         <svg
-          className={`w-4 h-4 ${updating ? "animate-spin" : ""}`}
+          className={`w-4 h-4 ${updating ? "animate-spin" : ""} flex-shrink-0`}
           viewBox="0 0 42.676513671875 46.36460876464844"
           width="42.676513671875"
           height="46.36460876464844"
@@ -224,7 +224,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   return (
     <div className="flex flex-col w-full h-full">
       <div className="absolute z-10 flex-shrink-0 w-full px-2 py-1 bg-obs-primary border-obs- text-obs-muted">
-        <div className="flex justify-between">
+        <div className="flex justify-between space-x-2">
           {currentFile ? (
             <div className="flex items-center space-x-1 overflow-hidden">
               <span className="flex items-center overflow-hidden cursor-pointer text-obs-normal" onClick={() => setShowSharingModal(true)}>
@@ -240,14 +240,16 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
           ) : (
             <div>&nbsp;</div>
           )}
-          {fileSynced ? (
-            <span className="flex items-center flex-shrink-0 space-x-1 nowrap" key="uptd">
-              <CheckIcon className="w-4 h-4"></CheckIcon>
-              {t("uptodate")}
-            </span>
-          ) : (
-            <SyncButton />
-          )}
+          <div className="flex-shrink-0">
+            {fileSynced ? (
+              <span className="flex items-center flex-shrink-0 space-x-1 nowrap" key="uptd">
+                <CheckIcon className="w-4 h-4"></CheckIcon>
+                {t("uptodate")}
+              </span>
+            ) : (
+              <SyncButton />
+            )}
+          </div>
         </div>
       </div>
       <div className="flex-grow h-full mt-8 overflow-auto">{mainPanel}</div>

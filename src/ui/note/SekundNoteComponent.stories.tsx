@@ -31,7 +31,7 @@ Unpublished.args = {
   gState: "allGood",
   nState: { fileSynced: false, fetching: false, published: false },
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const PublishedAndSynced = Template.bind({});
@@ -39,7 +39,7 @@ PublishedAndSynced.args = {
   gState: "allGood",
   nState: { published: true, fileSynced: true },
   note: someNote,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const PublishedNotSharing = Template.bind({});
@@ -47,7 +47,7 @@ PublishedNotSharing.args = {
   gState: "allGood",
   nState: { published: true, fileSynced: true },
   note: { ...someNote, sharing: {} },
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const PublishedSharingNoComments = Template.bind({});
@@ -55,7 +55,7 @@ PublishedSharingNoComments.args = {
   gState: "allGood",
   nState: { published: true, fileSynced: true },
   note: { ...someNote, comments: [] },
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const PublishedAndNotSynced = Template.bind({});
@@ -63,7 +63,7 @@ PublishedAndNotSynced.args = {
   gState: "allGood",
   nState: { published: true, fileSynced: false },
   note: someNote,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const Publishing = Template.bind({});
@@ -78,7 +78,7 @@ FetchingRemoteNote.args = {
   gState: "allGood",
   nState: { fetching: true },
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const Updating = Template.bind({});
@@ -86,7 +86,7 @@ Updating.args = {
   gState: "allGood",
   nState: { published: true, updating: true },
   note: null,
-  localFile: { path: "home/home.md", name: "Home" } as TFile,
+  localFile: { path: "home/home.md", name: "My Personal Homepage and Starting Point" } as TFile,
 };
 
 export const NoLocalFile = Template.bind({});

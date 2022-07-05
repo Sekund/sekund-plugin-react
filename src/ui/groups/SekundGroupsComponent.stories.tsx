@@ -33,7 +33,7 @@ const now = Date.now();
 const groups = [
   {
     _id: new ObjectID(),
-    name: "Pads lovers",
+    name: "Pads lovers who really love hitting on small plastic squares",
     created: now,
     updated: now,
     peoples: [

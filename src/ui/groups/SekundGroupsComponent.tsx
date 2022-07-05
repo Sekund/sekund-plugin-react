@@ -152,16 +152,16 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
           <>
             <div className="sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full h-8 px-2 text-xs bg-obs-primary">
               <div
-                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal overflow-hidden"
                 onClick={() => displayPublicGroups()}
               >
-                <SearchIcon className="w-4 h-4" /> <span className="py-0">{t("plugin:browsePublicGroups")}</span>
+                <SearchIcon className="w-4 h-4" /> <span className="py-0 truncate">{t("plugin:browsePublicGroups")}</span>
               </div>
               <div
-                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
+                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal overflow-hidden"
                 onClick={createGroup}
               >
-                <PlusIcon className="w-4 h-4" /> <span className="py-0">{t("new_group")}</span>
+                <PlusIcon className="w-4 h-4" /> <span className="py-0 truncate">{t("new_group")}</span>
               </div>
             </div>
             <div className="flex flex-col space-y-1px w-xl">

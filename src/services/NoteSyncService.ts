@@ -169,7 +169,7 @@ export default class NoteSyncService extends ServerlessService {
         const blob = await this.fsAdapter.readBinary(path);
         const base64 = encode(blob);
         const mimeType = mime(assetFile.name);
-        await callFunction(this.plugin, "upload", [base64, `${userId}/${noteId}/${assetFile.path}`, mimeType]);
+        await callFunction(this.plugin, "upload", [base64, `${userId}/${noteId}/${assetFile.name}`, mimeType]);
       }
     });
   }
@@ -257,7 +257,10 @@ export default class NoteSyncService extends ServerlessService {
           created: fileStat && fileStat.ctime > 0 ? fileStat.ctime : fileStat?.mtime,
           modified: fileStat?.mtime,
           updated: fileStat?.mtime,
-          assets,
+          assets: assets.map((path) => {
+            const pathParts = path.split("/");
+            return pathParts[pathParts.length - 1];
+          }),
         },
       ]);
       const rNote = await this.getNoteByPath(file.path);

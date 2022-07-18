@@ -48,6 +48,12 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     })();
   }
 
+  function maybeShowSharingModal() {
+    if (remoteNote && isOwnNote(remoteNote)) {
+      setShowSharingModal(true);
+    }
+  }
+
   function isSharedNote() {
     if (remoteNote && remoteNote.sharing) {
       if (remoteNote.sharing.peoples && remoteNote.sharing.peoples.length > 0) {
@@ -227,8 +233,11 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         <div className="flex justify-between space-x-2">
           {currentFile ? (
             <div className="flex items-center space-x-1 overflow-hidden">
-              <span className="flex items-center overflow-hidden cursor-pointer text-obs-normal" onClick={() => setShowSharingModal(true)}>
-                {remoteNote && isSharedNote() ? <ShareIcon className="flex-shrink-0 w-4 h-4 mr-1"></ShareIcon> : null}
+              <span
+                className="flex items-center overflow-hidden cursor-pointer text-obs-normal"
+                onClick={remoteNote && isOwnNote(remoteNote) ? maybeShowSharingModal : undefined}
+              >
+                {remoteNote && isOwnNote(remoteNote) ? <ShareIcon className="flex-shrink-0 w-4 h-4 mr-1"></ShareIcon> : null}
                 <span className="truncate">{currentFile?.name.replace(/\.md/, "")}</span>
                 {remoteNote && isOwnNote(remoteNote) ? (
                   <span className="flex items-center flex-shrink-0" onClick={handleUnpublish}>

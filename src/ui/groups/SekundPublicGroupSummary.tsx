@@ -73,8 +73,8 @@ export default function SekundPublicGroupSummary({ group, displayGroup }: Props)
 
   function JoinButton() {
     return (
-      <button className="flex items-center space-x-1" onClick={join}>
-        <span>{t("plugin:joinThisGroup")}</span>
+      <button className="flex items-center flex-shrink-0 space-x-1 overflow-hidden" onClick={join}>
+        <span className="truncate">{t("plugin:joinThisGroup")}</span>
         <PlusIcon className="w-4 h-4" />
       </button>
     );
@@ -93,7 +93,7 @@ export default function SekundPublicGroupSummary({ group, displayGroup }: Props)
         key={group._id.toString()}
         className="flex items-center justify-between w-full mx-auto cursor-pointer bg-obs-primary-alt hover:bg-obs-primary"
       >
-        <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer" onClick={toggleExpanded}>
+        <div className="flex items-center px-3 py-2 space-x-2 overflow-hidden text-sm cursor-pointer" onClick={toggleExpanded}>
           <div className="flex">{groupAvatar(localGroup, 10, 0)}</div>
           <div className="truncate text-md text-primary hover:underline">{localGroup.name}</div>
         </div>

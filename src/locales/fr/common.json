@@ -156,5 +156,7 @@
     "yourLinkedInPage": "Votre page LinkedIn",
     "personalPage": "Page personnelle",
     "yourPersonalPage": "Votre page personnelle",
-    "readingTime": "Lecture {{val, number}} min."
+    "readingTime": "Lecture {{val, number}} min.",
+    "myGroups": "Mes groupes",
+    "joinAPublicGroup": "Rejoignez un groupe public"
 }

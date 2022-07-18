@@ -5,6 +5,7 @@ import { callFunction } from "@/services/ServiceUtils";
 import ServerlessService from "@/services/ServerlessService";
 import SekundPluginReact from "@/main";
 import ObjectID from "bson-objectid";
+import { isUnread } from "@/utils";
 
 export default class NotesService extends ServerlessService {
   private static _instance: NotesService;
@@ -97,7 +98,7 @@ export default class NotesService extends ServerlessService {
 
   async getAllSharedNotes() {
     const allSharedNotes: Note[] = await callFunction(this.plugin, "allSharedNotes");
-    return allSharedNotes.sort((a, b) => b.updated - a.updated);
+    return this.sortNotes(allSharedNotes, false);
   }
 
   async getGroupNotes(groupId: string) {

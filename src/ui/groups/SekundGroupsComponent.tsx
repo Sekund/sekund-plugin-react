@@ -53,6 +53,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
     }
     const groups = await peoplesService.getUserGroups();
     peoplesDispatch({ type: PeoplesActionKind.SetGroups, payload: groups });
+    return groups;
   }
 
   async function fetchPublicGroups() {
@@ -91,8 +92,13 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
 
   useEffect(() => {
     if (appState.generalState === "allGood") {
-      fetchUserGroups();
-      watchEvents();
+      (async () => {
+        watchEvents();
+        const userGroups = await fetchUserGroups();
+        if (userGroups.length === 0) {
+          displayPublicGroups();
+        }
+      })();
     }
   }, [appState.generalState]);
 
@@ -152,13 +158,13 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
           <>
             <div className="sticky top-0 left-0 right-0 z-10 flex items-center justify-between w-full h-8 px-2 text-xs bg-obs-primary">
               <div
-                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal overflow-hidden"
+                className="flex items-center p-1 space-x-1 overflow-hidden border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
                 onClick={() => displayPublicGroups()}
               >
                 <SearchIcon className="w-4 h-4" /> <span className="py-0 truncate">{t("plugin:browsePublicGroups")}</span>
               </div>
               <div
-                className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal overflow-hidden"
+                className="flex items-center p-1 space-x-1 overflow-hidden border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
                 onClick={createGroup}
               >
                 <PlusIcon className="w-4 h-4" /> <span className="py-0 truncate">{t("new_group")}</span>
@@ -186,48 +192,6 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
     );
   }
 
-  function NoGroups() {
-    return !showPublicGroups ? (
-      <div className={`${className} w-full h-full flex flex-col items-center justify-center p-8`}>
-        <div className="flex justify-center mb-2">
-          <SparklesIcon className="w-6 h-6" />
-        </div>
-        <div className="text-center ">{t("plugin:noGroups")}</div>
-        <div className="mt-2 text-sm text-center ">{t("plugin:noGroupsDesc")}</div>
-        <button onClick={createGroup} className="flex items-center mt-2 cursor-pointer mod-cta">
-          <PlusIcon className="w-4 h-4 mr-1" />
-          <div className="cursor-pointer">{t("new_group")}</div>
-        </button>
-      </div>
-    ) : (
-      <span>"not possible"</span>
-    );
-  }
-
-  function PublicGroups() {
-    return (
-      <div className={`${className} flex flex-col relative`}>
-        <div className="sticky top-0 left-0 right-0 z-10 flex items-center w-full h-8 px-2 text-xs bg-obs-primary">
-          <div
-            className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
-            onClick={() => displayUserGroups()}
-          >
-            <ArrowNarrowLeftIcon className="w-4 h-4" /> <span className="py-0">{t("back")}</span>
-          </div>
-        </div>
-        <div className="flex flex-col space-y-1px w-xl">
-          {groups!.map((group: Group) => {
-            return <SekundPublicGroupSummary key={group._id.toString()} group={group} displayGroup={displayGroup} />;
-          })}
-        </div>
-      </div>
-    );
-  }
-
-  function Groups() {
-    return showPublicGroups ? <PublicGroups /> : <UserGroups />;
-  }
-
   return (
     <PeoplesContext.Provider value={peoplesProviderState}>
       <NotesContext.Provider value={notesProviderState}>
@@ -240,10 +204,11 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
                     className="flex items-center p-1 space-x-1 border rounded-md cursor-pointer mr-2px dark:border-obs-modal text-normal"
                     onClick={() => displayUserGroups()}
                   >
-                    <ArrowNarrowLeftIcon className="w-4 h-4" /> <span className="py-0">{t("back")}</span>
+                    <ArrowNarrowLeftIcon className="w-4 h-4" /> <span className="py-0">{t("myGroups")}</span>
                   </div>
                 </div>
                 <div className="flex flex-col space-y-1px w-xl">
+                  <div className="flex items-center justify-center h-8">{t("joinAPublicGroup")}</div>
                   {groups!.map((group: Group) => {
                     return <SekundPublicGroupSummary key={group._id.toString()} group={group} displayGroup={displayGroup} />;
                   })}

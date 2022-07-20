@@ -47,6 +47,7 @@ module.exports = {
         accent: "var(--color-bg-accent)",
         "accent-inverted": "var(--color-text-accent)",
         secondary: "var(--color-bg-secondary)",
+        warning: "#FA9B49",
       },
       ringColor: {
         primary: "var(--color-bg-primary)",

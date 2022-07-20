@@ -5,9 +5,10 @@ import { useAppContext } from "@/state/AppContext";
 import { CogIcon, UserCircleIcon, XIcon } from "@heroicons/react/solid";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
-import React, { KeyboardEvent, useRef, useState } from "react";
+import React, { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import mime from "@/helpers/extName";
+import posthog from "posthog-js";
 
 type Props = {
   close: () => void;
@@ -40,6 +41,7 @@ export default function SekundSettings({ close }: Props) {
   const personalPageField = useRef<any>();
   const bioArea = useRef<any>();
   const fileInput = useRef<any>();
+  const consentInput = useRef<any>();
 
   const [state, setState] = useState<State>({
     avatarImage: userProfile.current.image,
@@ -87,6 +89,20 @@ export default function SekundSettings({ close }: Props) {
   function saveName(evt: KeyboardEvent) {
     if (evt.code === "Enter") {
       saveNameValue();
+    }
+  }
+
+  function saveConsentValue() {
+    if (consentInput.current) {
+      const consent = consentInput.current.checked;
+      userProfile.current.consentedToTrackBehaviouralDataInOrderToImproveTheProduct = consent;
+      UsersService.instance.saveUser(userProfile.current);
+      if (!consent) {
+        posthog.opt_out_capturing();
+      } else {
+        posthog.opt_in_capturing();
+        appState.plugin!.startCapturing();
+      }
     }
   }
 
@@ -421,6 +437,21 @@ export default function SekundSettings({ close }: Props) {
             ) : (
               <div className="w-full py-2 text-center text-obs-muted">{t("describeYourself")}</div>
             )}
+          </section>
+          <section className="p-2 mt-2 hover:bg-obs-secondary flex flex-col space-y-2">
+            <div className="flex justify-between">
+              <div className="text-lg">{t("applicationUsage")}</div>
+            </div>
+            <div className="flex justify-between">
+              <span>{t("consentOrNot")}</span>
+              <input
+                type="checkbox"
+                defaultChecked={userProfile.current.consentedToTrackBehaviouralDataInOrderToImproveTheProduct}
+                ref={consentInput}
+                onChange={saveConsentValue}
+              ></input>
+            </div>
+            <div className="text-sm">{t("consentDesc")}</div>
           </section>
           <section className="p-2 mt-2 mb-8 hover:bg-obs-secondary">
             <div className="flex justify-between">

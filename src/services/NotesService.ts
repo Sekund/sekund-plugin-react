@@ -6,6 +6,7 @@ import ServerlessService from "@/services/ServerlessService";
 import SekundPluginReact from "@/main";
 import ObjectID from "bson-objectid";
 import { isUnread } from "@/utils";
+import posthog from "posthog-js";
 
 export default class NotesService extends ServerlessService {
   private static _instance: NotesService;
@@ -44,6 +45,8 @@ export default class NotesService extends ServerlessService {
   }
 
   async addPublicLink(noteId: ObjectID) {
+    posthog.capture("Added a public link");
+    console.log("add public link captured");
     return await callFunction(this.plugin, "addPublicLink", [noteId]);
   }
 
@@ -60,10 +63,12 @@ export default class NotesService extends ServerlessService {
   }
 
   async addSharingPeople(noteId: ObjectID, people: People) {
+    posthog.capture("Shared a post with someone");
     return await callFunction(this.plugin, "addSharingPeople", [noteId, people._id]);
   }
 
   async addSharingGroup(noteId: ObjectID, group: Group) {
+    posthog.capture("Shared a post with a group");
     return await callFunction(this.plugin, "addSharingGroup", [noteId, group._id]);
   }
 
@@ -89,6 +94,7 @@ export default class NotesService extends ServerlessService {
    * @param comment
    */
   async addNoteComment(noteId: ObjectID, comment: string, author: string, created: number) {
+    posthog.capture("Added a comment to a note");
     return await callFunction(this.plugin, "addComment", [noteId, comment, author, created]);
   }
 

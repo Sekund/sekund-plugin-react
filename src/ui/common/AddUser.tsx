@@ -3,6 +3,7 @@ import { peopleAvatar } from "@/helpers/avatars";
 import PermissionsService from "@/services/PermissionsService";
 import UsersService from "@/services/UsersService";
 import { ArrowNarrowLeftIcon } from "@heroicons/react/solid";
+import posthog from "posthog-js";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -24,6 +25,7 @@ export default function AddUser({ usersService, permissionsService, done }: Prop
   }, []);
 
   async function sendRequest() {
+    posthog.capture("Searched a user");
     if (!usersService) {
       usersService = UsersService.instance;
     }
@@ -31,6 +33,7 @@ export default function AddUser({ usersService, permissionsService, done }: Prop
     if (nameOrEmailField.current) {
       const foundUser: People = await usersService.findUserByNameOrEmail(nameOrEmailField.current.value);
 
+      posthog.capture(foundUser ? "Found user" : "Searched user not found");
       setFound(foundUser);
       setHasMadeARequest(true);
 

@@ -23,10 +23,10 @@ import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
 import fr from "javascript-time-ago/locale/fr.json";
 import nl from "javascript-time-ago/locale/nl.json";
-import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
+import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TFile, TFolder } from "obsidian";
+import posthog from "posthog-js";
 import React from "react";
 import * as Realm from "realm-web";
-import mime from "@/helpers/extName";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);
@@ -70,6 +70,8 @@ export default class SekundPluginReact extends Plugin {
   private offlineListener?: EventListener;
   private onlineListener?: EventListener;
   private notesListenerId = "";
+  private postHogApiKey: string | undefined;
+  private postHogApiHost: string | undefined;
 
   async onload() {
     await this.loadSettings();
@@ -203,6 +205,8 @@ export default class SekundPluginReact extends Plugin {
       const subdomains = anonymousUser.mongoClient("mongodb-atlas").db("meta").collection("subdomains");
       const record = await subdomains.findOne({ subdomain });
       if (record) {
+        this.postHogApiKey = record.postHogApiKey;
+        this.postHogApiHost = record.postHogApiHost;
         this.updateMetaDocuments(anonymousUser);
         return record.app_id;
       }
@@ -210,6 +214,21 @@ export default class SekundPluginReact extends Plugin {
       return "noSuchSubdomain";
     } else {
       return "unknownError";
+    }
+  }
+
+  public async startCapturing() {
+    const user = this.authenticatedUsers[this.settings.subdomain];
+    if (user && this.postHogApiHost && this.postHogApiKey && user.customData.consentedToTrackBehaviouralDataInOrderToImproveTheProduct) {
+      posthog.init(this.postHogApiKey, {
+        api_host: this.postHogApiHost,
+        loaded: () => {
+          posthog.identify(user.customData.email as string);
+          posthog.people.set({ email: user.customData.email });
+          posthog.opt_in_capturing();
+          console.log(`starting capturing data for ${user.customData.email} now.`);
+        },
+      });
     }
   }
 
@@ -307,6 +326,7 @@ export default class SekundPluginReact extends Plugin {
 
         if (user) {
           this.authenticatedUsers[this.settings.subdomain] = user;
+          this.startCapturing();
 
           try {
             new UsersService(this);

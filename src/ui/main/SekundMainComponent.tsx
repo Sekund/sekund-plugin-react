@@ -8,6 +8,7 @@ import { useAppContext } from "@/state/AppContext";
 import { AppActionKind, filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { AccentedBadge } from "@/ui/common/Badges";
+import DataCollectionConsentCTA from "@/ui/common/DataCollectionConsentCTA";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
 import SekundContacts from "@/ui/contacts/SekundContacts";
 import { SekundGroupsComponent } from "@/ui/groups/SekundGroupsComponent";
@@ -16,7 +17,7 @@ import { SekundNoteComponent } from "@/ui/note/SekundNoteComponent";
 import { SekundPeoplesComponent } from "@/ui/peoples/SekundPeoplesComponent";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { touch, makeid } from "@/utils";
+import { makeid, touch } from "@/utils";
 import { CloudUploadIcon, CogIcon, InboxInIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
@@ -50,6 +51,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   const [sharingPermissionRequests, setSharingPermissionRequests] = useState<SharingPermission[]>([]);
   const [sharingPermissions, setSharingPermissions] = useState<SharingPermission[]>([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [showConsentCTA, setShowConsentCTA] = useState(false);
   const [showPermissions, setShowPermissions] = useState(false);
   const [viewType, setViewType] = useState<ViewType>("home");
   const scrollPositions = useRef({ home: 0, groups: 0, peoples: 0 });
@@ -86,6 +88,10 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
     fetchUnread();
     loadPermissions();
+
+    if (appState.userProfile.consentedToTrackBehaviouralDataInOrderToImproveTheProduct === undefined) {
+      setShowConsentCTA(true);
+    }
 
     return () => {
       eventsWatcher?.removeEventListener(permissionsListenerId);
@@ -139,6 +145,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
         </div>
       ) : null}
       <div ref={sekundMainComponentRoot} className="absolute inset-0 grid h-full" style={{ gridTemplateRows: "auto 1fr auto" }}>
+        {showConsentCTA ? <DataCollectionConsentCTA dismiss={() => setShowConsentCTA(false)} /> : null}
         <div className={`flex items-center justify-between w-full py-1`}>
           <div className="flex flex-col items-center mt-1 ml-2">
             <div className="flex items-center" onClick={showViewTypes}>

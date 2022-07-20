@@ -4,6 +4,7 @@ import GroupsService from "@/services/GroupsService";
 import { useAppContext } from "@/state/AppContext";
 import { EyeIcon, LogoutIcon, PlusIcon } from "@heroicons/react/solid";
 import { AvatarGroup } from "@mui/material";
+import posthog from "posthog-js";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 type Props = {
@@ -59,6 +60,7 @@ export default function SekundPublicGroupSummary({ group, displayGroup }: Props)
   async function join() {
     const updtGroup = { ...group, peoples: [...group.peoples, userProfile] };
     await GroupsService.instance.upsertGroup(updtGroup);
+    posthog.capture("Joined public group", { groupName: updtGroup.name });
     setLocalGroup(updtGroup);
   }
 

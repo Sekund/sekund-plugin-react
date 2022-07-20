@@ -158,5 +158,11 @@
     "yourPersonalPage": "Votre page personnelle",
     "readingTime": "Lecture {{val, number}} min.",
     "myGroups": "Mes groupes",
-    "joinAPublicGroup": "Rejoignez un groupe public"
+    "joinAPublicGroup": "Rejoignez un groupe public",
+    "consentInvite": "Dans le but d'améliorer ce plugin, me permettez-vous de mesurer la manière dont vous utilisez certaines fonctionnalités? Vous pourrez vous désengager à tout moment et vos données seront effacées.",
+    "sure": "Bien sûr!",
+    "noWay": "Pas question!",
+    "applicationUsage": "Utilisation du plugin",
+    "consentOrNot": "D'accord/pas d'accord",
+    "consentDesc": "En cochant la case ci-dessus, vous marquez votre consentement à ce que certaines données sur l'usage que vous faites de ce plugin soient envoyées à son auteur, dans le seul but d'améliorer son fonctionnement."
 }

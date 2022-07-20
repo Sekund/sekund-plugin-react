@@ -147,7 +147,7 @@ const withConnectionStatus = (props: Props) => (WrappedComponent: any) => (moreP
             case "allGood":
               return <WrappedComponent {...props} />;
             case "connecting":
-              setTimeout(() => setRetryVisible(true), 5000);
+              setTimeout(() => setRetryVisible(true), 15000);
               return (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8">
                   <div className="flex justify-center mb-2 animate-pulse">

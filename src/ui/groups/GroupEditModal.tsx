@@ -13,6 +13,7 @@ import AddUser from "@/ui/common/AddUser";
 import { makeid } from "@/utils";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
+import posthog from "posthog-js";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -70,6 +71,7 @@ export default function GroupEditModal({ open, closeDialog, group, userId }: Pro
     const selectElement = selectInput.current as HTMLSelectElement;
     const selectedUser = await PeoplesService.instance.getPeople(selectElement.value);
     setLocalGroup({ ...localGroup, peoples: [...localGroup.peoples, selectedUser] });
+    posthog.capture("Added user to group");
     selectElement.value = "none";
   }
 

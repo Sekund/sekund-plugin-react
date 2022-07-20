@@ -158,5 +158,11 @@
     "yourPersonalPage": "Your personal page",
     "readingTime": "Reading time {{val, number}} min.",
     "myGroups": "My groups",
-    "joinAPublicGroup": "Join a public group"
+    "joinAPublicGroup": "Join a public group",
+    "consentInvite": "In order for me to improve this plugin, do you allow me to track the way you are using some of its features? You will always be able to opt out and your data will be deleted.",
+    "sure": "Sure!",
+    "noWay": "No Way!",
+    "applicationUsage": "Plugin usage",
+    "consentOrNot": "Consent/Do not consent",
+    "consentDesc": "By ticking the above checkbox, you agree to send some usage data to the author of this plugin in the sole purpose of improving user experience."
 }

@@ -46,12 +46,20 @@ export default class NotesService extends ServerlessService {
 
   async addPublicLink(noteId: ObjectID) {
     posthog.capture("Added a public link");
-    console.log("add public link captured");
     return await callFunction(this.plugin, "addPublicLink", [noteId]);
   }
 
   async removePublicLink(noteId: ObjectID) {
     return await callFunction(this.plugin, "removePublicLink", [noteId]);
+  }
+
+  async publish(noteId: ObjectID) {
+    posthog.capture("Published blog post");
+    return await callFunction(this.plugin, "publish", [noteId]);
+  }
+
+  async unpublish(noteId: ObjectID) {
+    return await callFunction(this.plugin, "unpublish", [noteId]);
   }
 
   async removeSharingPeople(noteId: ObjectID, people: People) {

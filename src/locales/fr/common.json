@@ -164,5 +164,9 @@
     "noWay": "Pas question!",
     "applicationUsage": "Utilisation du plugin",
     "consentOrNot": "D'accord/pas d'accord",
-    "consentDesc": "En cochant la case ci-dessus, vous marquez votre consentement à ce que certaines données sur l'usage que vous faites de ce plugin soient envoyées à son auteur, dans le seul but d'améliorer son fonctionnement."
+    "consentDesc": "En cochant la case ci-dessus, vous marquez votre consentement à ce que certaines données sur l'usage que vous faites de ce plugin soient envoyées à son auteur, dans le seul but d'améliorer son fonctionnement.",
+    "post": "Article",
+    "publish": "Publier",
+    "unpublish": "Dépublier",
+    "openBlogPostDesc": "Consulter votre article"
 }

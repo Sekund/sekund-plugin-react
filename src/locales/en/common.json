@@ -164,5 +164,9 @@
     "noWay": "No Way!",
     "applicationUsage": "Plugin usage",
     "consentOrNot": "Consent/Do not consent",
-    "consentDesc": "By ticking the above checkbox, you agree to send some usage data to the author of this plugin in the sole purpose of improving user experience."
+    "consentDesc": "By ticking the above checkbox, you agree to send some usage data to the author of this plugin in the sole purpose of improving user experience.",
+    "post": "Post",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "openBlogPostDesc": "Open blog post"
 }

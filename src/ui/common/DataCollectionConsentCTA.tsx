@@ -2,7 +2,6 @@ import { avatarImage } from "@/helpers/avatars";
 import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import ObjectID from "bson-objectid";
-import posthog from "posthog-js";
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 

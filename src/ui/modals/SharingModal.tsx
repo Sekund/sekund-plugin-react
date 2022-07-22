@@ -30,6 +30,7 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
   const [sharingGroupsOptions, setSharingGroupsOptions] = useState<SelectOption[]>([]);
   const [sharingPeoplesOptions, setSharingPeoplesOptions] = useState<SelectOption[]>([]);
   const [hasPublicLink, setHasPublicLink] = useState<boolean>(note.hasPublicLink!!);
+  const [isPublished, setIsPublished] = useState<boolean>(note.isPublished!!);
   const selectInput = useRef<any>();
   const shade = useRef<any>();
   const [addUser, setAddUser] = useState(false);
@@ -128,30 +129,66 @@ export default function SharingModal({ open, setOpen, note, userId }: Props) {
     setHasPublicLink(false);
   }
 
+  async function publish() {
+    await NotesService.instance.publish(note._id);
+    note.isPublished = true;
+    setIsPublished(true);
+  }
+
+  async function unpublish() {
+    await NotesService.instance.unpublish(note._id);
+    note.isPublished = false;
+    setIsPublished(false);
+  }
+
   function SharingOptions() {
     return (
       <>
         <div className="text-lg font-medium leading-6 text-primary">{t("plugin:setSharingOptions")}</div>
-        <div className="max-w-xl mt-2 text-sm text-secondary">
+        <div className="max-w-xl mt-2 text-sm text-secondary flex items-center space-x-2">
+          {isPublished ? (
+            <div className="flex items-center space-x-1 overflow-hidden">
+              <button
+                className="flex items-center underline mr-0 overflow-hidden"
+                aria-label={t("openBlogPostDesc")}
+                onClick={() =>
+                  window.open(
+                    `http://localhost:3000/blogs/${userProfile.name ? slugify(userProfile.name) : userProfile._id}/posts/${note._id}/${slugify(
+                      note.title.replace(".md", "").toLowerCase()
+                    )}`
+                  )
+                }
+              >
+                <span className="truncate">{t("post")}</span>
+                <ExternalLinkIcon className="flex-shrink-0 w-4 h-4" />
+              </button>
+              <button aria-label={t("unpublish")} className="flex items-center underline" onClick={() => unpublish()}>
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <button className="flex items-center mr-0" onClick={() => publish()}>
+              <span>{t("publish")}</span>
+            </button>
+          )}
+          {"   "}
           {hasPublicLink ? (
-            <div className="flex items-center space-x-1">
-              <span>{t("plugin:publicLink")}:</span>
+            <div className="flex items-center space-x-1 overflow-hidden">
               <a
                 className="flex items-center underline"
                 href={`https://public.sekund.org/${note._id}/${slugify(note.title.replace(".md", "").toLowerCase())}`}
               >
-                <span>{t("plugin:open")}</span>
-                <ExternalLinkIcon className="w-4 h-4" />
+                <span className="truncate">{t("plugin:publicLink")}</span>
+                <ExternalLinkIcon className="flex-shrink-0 w-4 h-4" />
               </a>
               <a className="flex items-center underline" onClick={() => removePublicLink()}>
-                <span>{t("plugin:remove")}</span>
-                <TrashIcon className="w-4 h-4" />
+                <span className="capitalize">{t("plugin:remove")}</span>
+                <XIcon className="flex-shrink-0 w-4 h-4" />
               </a>
             </div>
           ) : (
-            <a className="flex items-center" onClick={() => createPublicLink()}>
-              <span>{t("plugin:createPublicLink")}</span>
-              <PlusIcon className="w-4 h-4" />
+            <a className="flex items-center overflow-hidden" onClick={() => createPublicLink()}>
+              <span className="underline truncate">{t("plugin:createPublicLink")}</span>
             </a>
           )}
         </div>

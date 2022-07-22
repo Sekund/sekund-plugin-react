@@ -21,6 +21,7 @@ export interface Note {
   backlinksCount: number;
   pinned: boolean;
   hasPublicLink?: boolean;
+  isPublished?: boolean;
 
   comments: NoteComment[];
 

@@ -168,5 +168,17 @@
     "post": "Post",
     "publish": "Publish",
     "unpublish": "Unpublish",
-    "openBlogPostDesc": "Open blog post"
+    "openBlogPostDesc": "Open blog post",
+    "title": "Title",
+    "subtitle": "Subtitle",
+    "description": "Description",
+    "coverImage": "Cover image",
+    "publicLinkDesc": "A public link allows you to share a note with anyone on the web. Your note will however not be published on your blog or on any group it might be shared with",
+    "seePost": "See post",
+    "publishDesc": "Publish your note and it will be visible on your blog",
+    "editMetadata": "Edit Metadata",
+    "editMetadataDesc": "You need to set your post's cover image, title, subtitle, description,...",
+    "OKletsDoIt": "OK, let's do it!",
+    "emptyCarousel": "Please include at least one image in your post, so you can specify it as your cover image. A cover image is necessary for sharing on social media.",
+    "carouselDesc": "Please select an image above. A cover image is necessary for sharing on social media."
 }

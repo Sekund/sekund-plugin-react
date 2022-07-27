@@ -168,5 +168,17 @@
     "post": "Article",
     "publish": "Publier",
     "unpublish": "Dépublier",
-    "openBlogPostDesc": "Consulter votre article"
+    "openBlogPostDesc": "Consulter votre article",
+    "title": "Titre",
+    "subtitle": "Sous-titre",
+    "description": "Description",
+    "coverImage": "Image de couverture",
+    "publicLinkDesc": "Un lien public permet de partager une note avec n'importe qui sur le web. Votre note ne sera cependant pas publiée sur votre blog ou dans n'importe groupe où vous l'auriez partagée.",
+    "seePost": "Voir l'article",
+    "publishDesc": "Publiez votre note, elle sera visible sur votre blog",
+    "editMetadata": "Éditer les métadonnées",
+    "editMetadataDesc": "Vous devez encore spécifier image de couverture, titre, sous-titre, description...",
+    "OKletsDoIt": "Allonz-y!",
+    "emptyCarousel": "Veuillez insérer au moins une image dans votre article, de façon à pouvoir spécifier votre image de couverture. Une image de couverture est nécessaire pour le partage sur les réseaux sociaux.",
+    "carouselDesc": "Veuillez sélectionner une image ci-dessus. Une image de couverture est nécessaire pour le partage sur les réseaux sociaux."
 }

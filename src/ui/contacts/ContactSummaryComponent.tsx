@@ -156,7 +156,7 @@ export default function PermissionSummaryComponent({ sharingPermission, setStatu
         <ItemAvatar />
       </div>
       <div className="flex items-center justify-between w-full space-x-2 overflow-hidden">
-        <div className="flex flex-col flex-grow overflow-hidden">
+        <div className="flex flex-col overflow-hidden grow">
           <Message />
         </div>
         <div className="flex-shrink-0">

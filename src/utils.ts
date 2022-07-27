@@ -22,6 +22,13 @@ export function setGeneralState(dispatchers: Array<React.Dispatch<AppAction>>, g
   dispatchers.forEach((appDispatch) => appDispatch({ type: AppActionKind.SetGeneralState, payload: gState }));
 }
 
+export function endsWithAny(string: string, ...suffixes: string[]) {
+  for (let suffix of suffixes) {
+    if (string.endsWith(suffix)) return true;
+  }
+  return false;
+}
+
 export function setCurrentNoteState(
   dispatchers: Array<React.Dispatch<AppAction>>,
   nState: NoteState | undefined | null,

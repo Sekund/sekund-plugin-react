@@ -5,7 +5,6 @@ import { callFunction } from "@/services/ServiceUtils";
 import ServerlessService from "@/services/ServerlessService";
 import SekundPluginReact from "@/main";
 import ObjectID from "bson-objectid";
-import { isUnread } from "@/utils";
 import posthog from "posthog-js";
 
 export default class NotesService extends ServerlessService {
@@ -21,6 +20,15 @@ export default class NotesService extends ServerlessService {
 
   async getNote(noteId: string): Promise<Note | undefined> {
     return await callFunction(this.plugin, "getNote", [noteId]);
+  }
+
+  async updateNote(noteId: ObjectID, update: any): Promise<void> {
+    const notes = this.notesColl();
+    await notes.updateOne({ _id: noteId }, update);
+  }
+
+  async noteImages(userId: string, noteId: string): Promise<string[]> {
+    return await callFunction(this.plugin, "noteImages", [`${userId}/${noteId}`]);
   }
 
   notesColl() {

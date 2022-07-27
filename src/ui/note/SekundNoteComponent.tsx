@@ -3,8 +3,7 @@ import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatc
 import { useAppContext } from "@/state/AppContext";
 import GlobalState from "@/state/GlobalState";
 import Loader from "@/ui/common/LoaderComponent";
-import SharingModal from "@/ui/modals/SharingModal";
-import NoteComments from "@/ui/note/NoteComments";
+import NoteMetadataComponent from "@/ui/note/NoteMetadataComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid } from "@/utils";
 import { CheckIcon, CloudDownloadIcon, ShareIcon, TrashIcon } from "@heroicons/react/solid";
@@ -24,7 +23,6 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
   const { fileSynced, publishing, fetching, updating } = appState.currentNoteState;
   const { t } = useTranslation(["common", "plugin"]);
   const { remoteNote, currentFile } = appState;
-  const [showSharingModal, setShowSharingModal] = useState(false);
   const { userProfile } = appState;
 
   useEffect(() => {
@@ -46,12 +44,6 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         }
       }
     })();
-  }
-
-  function maybeShowSharingModal() {
-    if (remoteNote && isOwnNote(remoteNote)) {
-      setShowSharingModal(true);
-    }
   }
 
   function isSharedNote() {
@@ -143,14 +135,6 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     );
   }
 
-  function renderSharingDialog() {
-    if (showSharingModal && remoteNote) {
-      return <SharingModal userId={userProfile._id} open={showSharingModal} setOpen={setShowSharingModal} note={remoteNote}></SharingModal>;
-    } else {
-      return null;
-    }
-  }
-
   function isOwnNote(note: Note) {
     if (note.userId && note.userId.equals) {
       return note.userId.equals(userProfile._id);
@@ -208,21 +192,13 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     mainPanel = (
       <>
         {remoteNote && !isSharing(remoteNote) ? (
-          <div className="flex flex-col items-center justify-center w-full h-full p-2">
-            <div className="flex flex-col items-center justify-center w-full h-full">
-              <span className={`p-2 mb-2 text-xs text-center ${footerTextColor}`}>{t("plugin:shareDesc")}</span>
-              <button className="mod-cta" onClick={() => setShowSharingModal(true)}>
-                {t("plugin:Share")}
-              </button>
-            </div>
-          </div>
+          <NoteMetadataComponent note={remoteNote} view="sharing" />
         ) : (
-          <NoteComments note={remoteNote} />
+          <NoteMetadataComponent note={remoteNote} />
         )}
         <div className={`absolute bottom-0 left-0 right-0 flex flex-col py-1 bg-obs-primary-alt ${footerTextColor}`}>
           <div className="flex items-center justify-between px-2 text-sm">{children}</div>
         </div>
-        {renderSharingDialog()}
       </>
     );
   }
@@ -233,11 +209,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
         <div className="flex justify-between space-x-2">
           {currentFile ? (
             <div className="flex items-center space-x-1 overflow-hidden">
-              <span
-                className="flex items-center overflow-hidden cursor-pointer text-obs-normal"
-                onClick={remoteNote && isOwnNote(remoteNote) ? maybeShowSharingModal : undefined}
-              >
-                {remoteNote && isOwnNote(remoteNote) ? <ShareIcon className="flex-shrink-0 w-4 h-4 mr-1"></ShareIcon> : null}
+              <span className="flex items-center overflow-hidden cursor-pointer text-obs-normal">
                 <span className="truncate">{currentFile?.name.replace(/\.md/, "")}</span>
                 {remoteNote && isOwnNote(remoteNote) ? (
                   <span className="flex items-center flex-shrink-0" onClick={handleUnpublish}>
@@ -261,7 +233,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
           </div>
         </div>
       </div>
-      <div className="flex-grow h-full mt-8 overflow-auto">{mainPanel}</div>
+      <div className="relative flex-grow h-full mt-8 overflow-auto">{mainPanel}</div>
     </div>
   );
 };

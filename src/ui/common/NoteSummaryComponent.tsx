@@ -20,10 +20,9 @@ type Props = {
   noteSummary: Note;
   context: ViewType;
   handleNoteClicked: (note: Note) => void;
-  setShowSharingModal: (b: boolean) => void;
 };
 
-export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context, setShowSharingModal }: Props) {
+export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context }: Props) {
   const { i18n, t } = useTranslation();
   const { appState } = useAppContext();
 
@@ -165,21 +164,9 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
         </div>
       );
     }
-    children.push(
-      <a key="sharing.edit" className="flex items-center ml-1">
-        <ShareIcon aria-label={t("plugin:setSharingOptions")} className="w-4 h-4 text-obs-normal" />
-      </a>
-    );
     if (note && isOwnNote(note) && children.length > 1) {
       return (
-        <div
-          key="sharing.share"
-          onClick={(evt) => {
-            setShowSharingModal(true);
-            evt.stopPropagation();
-          }}
-          className="flex items-center flex-shrink-0 cursor-pointer"
-        >
+        <div key="sharing.share" className="flex items-center flex-shrink-0 cursor-pointer">
           {children}
         </div>
       );

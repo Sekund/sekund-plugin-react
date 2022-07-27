@@ -11,6 +11,9 @@ export interface Note {
   firstPublished: number;
   lastPublished: number;
   title: string;
+  subtitle?: string;
+  description?: string;
+  coverImage?: string;
   path: string;
   content: string;
   userId: ObjectID;

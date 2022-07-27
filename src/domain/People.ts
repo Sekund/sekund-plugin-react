@@ -17,5 +17,5 @@ export interface People {
   shared?: number;
   unreadSharing?: number;
   unreadShared?: number;
-  consentedToTrackBehaviouralDataInOrderToImproveTheProduct: boolean;
+  consentedToTrackBehaviouralDataInOrderToImproveTheProduct?: boolean;
 }

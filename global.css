@@ -112,3 +112,8 @@
 .sekund .emoji-mart-scroll + .emoji-mart-bar {
 	display: none;
 }
+
+.sekund textarea,
+.sekund input {
+	padding: 0.25rem 0.5rem;
+}

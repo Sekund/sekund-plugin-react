@@ -249,10 +249,12 @@ export default class NoteSyncService extends ServerlessService {
       const links = this.plugin.app.metadataCache.resolvedLinks[file.path];
       const assets = this.fileRefsIntersectingResolvedLinks(this.findInclusions(content), links);
       const fileStat = await this.fsAdapter.stat(normalizePath(file.path));
+      const remoteNote = GlobalState.instance.appState.remoteNote;
+      const title = remoteNote && remoteNote.title ? remoteNote.title : file.name.replace(".md", "");
       await callFunction(this.plugin, "upsertNote", [
         {
           path: file.path,
-          title: file.name,
+          title,
           content,
           created: fileStat && fileStat.ctime > 0 ? fileStat.ctime : fileStat?.mtime,
           modified: fileStat?.mtime,

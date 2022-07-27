@@ -35,7 +35,7 @@ export type MainComponentProps = {
 
 export type ViewType = "home" | "peoples" | "groups";
 
-const usePrevious = <T extends unknown>(value: T): T | undefined => {
+export const usePrevious = <T extends unknown>(value: T): T | undefined => {
   const ref = useRef<T>();
   useEffect(() => {
     ref.current = value;
@@ -155,7 +155,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("yourNotes")}
-                className={`flex items-center px-2 mr-0 space-x-2 rounded-none text-obs-muted  ${
+                className={`flex items-center px-2 mr-0 space-x-2 rounded-none text-obs-muted hover:opacity-100  ${
                   viewType === "home" ? "opacity-100" : "opacity-50"
                 } cursor-pointer`}
               >
@@ -180,7 +180,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("yourContactsNotes")}
-                className={`flex items-center pr-2 mr-0 space-x-2 rounded-none text-obs-muted ${
+                className={`flex items-center pr-2 mr-0 space-x-2 rounded-none text-obs-muted hover:opacity-100 ${
                   viewType === "peoples" ? "opacity-100" : "opacity-50"
                 } cursor-pointer`}
               >
@@ -205,7 +205,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
                   setShowViews(false);
                 }}
                 aria-label={t("groupNotes")}
-                className={`flex items-center mr-0 space-x-2 rounded-none text-obs-muted ${
+                className={`flex items-center mr-0 space-x-2 rounded-none text-obs-muted hover:opacity-100 ${
                   viewType === "groups" ? "opacity-100" : "opacity-50"
                 } cursor-pointer`}
               >

@@ -19,9 +19,10 @@ import CommentReducer, { CommentActionKind, initialCommentState } from "@/state/
 
 type Props = {
   note: Note;
+  className: string;
 };
 
-export default function NoteComments({ note }: Props) {
+export default function NoteComments({ note, className }: Props) {
   const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation(["common", "plugin"]);
   const { userProfile, plugin, remoteNote } = appState;
@@ -168,7 +169,7 @@ export default function NoteComments({ note }: Props) {
   const { preview, commentText } = commentState;
 
   return (
-    <div className="px-2 mt-1 mb-16">
+    <div className={`max-w-xl w-full px-2 mt-1 mb-16 ${className}`}>
       <div className="sm:col-span-2">
         <div className="flex items-center justify-between">
           <label htmlFor="message" className="flex items-center h-10 space-x-2 text-obs-muted">

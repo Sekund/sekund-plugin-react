@@ -64,7 +64,6 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
   useEffect(() => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
-    eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
       new SekundEventListener(["note.addComment", "note.removeComment", "note.rename", "note.metadataUpdate"], async (fullDocument: any) => {

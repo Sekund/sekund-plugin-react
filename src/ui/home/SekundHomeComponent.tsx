@@ -36,27 +36,30 @@ export const SekundHomeComponent = ({ notesService, className, fetchUnread }: Ho
   }, []);
 
   async function watchEvents() {
-    if (!appState.plugin) {
+    if (watching.current) {
       return;
     }
-    const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
-    if (notes) {
-      try {
-        const cursor = resumeToken.current ? notes.watch({ resumeAfter: resumeToken.current }) : notes.watch();
-        watching.current = true;
-        for await (const change of cursor) {
-          resumeToken.current = change._id;
-          switch (change.operationType) {
-            case "delete":
-            case "insert":
-              await fetchNotes();
-              await fetchUnread();
-              break;
+    if (appState.plugin && appState.plugin.user) {
+      const notes = appState.plugin.user.mongoClient("mongodb-atlas").db(appState.plugin.settings.subdomain).collection("notes");
+      if (notes) {
+        try {
+          const cursor = resumeToken.current ? notes.watch({ resumeAfter: resumeToken.current }) : notes.watch();
+          watching.current = true;
+          for await (const change of cursor) {
+            resumeToken.current = change._id;
+            switch (change.operationType) {
+              case "delete":
+              case "insert":
+                await fetchNotes();
+                await fetchUnread();
+                break;
+            }
           }
+          watching.current = true;
+        } catch (err) {
+          setTimeout(() => watchEvents(), 5000);
+          watching.current = false;
         }
-        watching.current = false;
-      } catch (err) {
-        watching.current = false;
       }
     }
   }

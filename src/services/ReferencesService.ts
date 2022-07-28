@@ -51,20 +51,22 @@ export default class ReferencesService extends ServerlessService {
     if (this.watching) {
       return;
     }
-    const events = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.settings.subdomain).collection("references");
-    if (events) {
-      try {
-        const cursor = this.resumeToken ? events.watch({ resumeAfter: this.resumeToken }) : events.watch();
-        for await (const change of cursor) {
-          this.resumeToken = change._id;
-          this.populateReferencesCache();
-          console.log("done reloading all note references");
+    if (this.plugin && this.plugin.user) {
+      const events = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.settings.subdomain).collection("references");
+      if (events) {
+        try {
+          const cursor = this.resumeToken ? events.watch({ resumeAfter: this.resumeToken }) : events.watch();
+          for await (const change of cursor) {
+            this.resumeToken = change._id;
+            this.populateReferencesCache();
+            console.log("done reloading all note references");
+          }
+          this.watching = true;
+        } catch (err) {
+          this.watching = false;
+          setTimeout(() => this.watchEvents(), 5000);
+          console.log("error watching note references", err);
         }
-        this.watching = true;
-      } catch (err) {
-        this.watching = false;
-        setTimeout(this.watchEvents, 5000);
-        console.log("error watching note references", err);
       }
     }
   }

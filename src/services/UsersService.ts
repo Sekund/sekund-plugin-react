@@ -24,21 +24,25 @@ export default class UsersService extends ServerlessService {
     if (this.watching) {
       return;
     }
-    const events = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.settings.subdomain).collection("users");
-    if (events) {
-      try {
-        const cursor = this.resumeToken ? events.watch({ resumeAfter: this.resumeToken }) : events.watch();
-        for await (const change of cursor) {
-          this.resumeToken = change._id;
-          this.populateUsersCache();
-          console.log("done reloading all users");
+    if (this.plugin && this.plugin.user) {
+      const users = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.settings.subdomain).collection("users");
+      if (users) {
+        try {
+          const cursor = this.resumeToken ? users.watch({ resumeAfter: this.resumeToken }) : users.watch();
+          for await (const change of cursor) {
+            this.resumeToken = change._id;
+            this.populateUsersCache();
+            console.log("done reloading all users");
+          }
+          this.watching = true;
+        } catch (err) {
+          this.watching = false;
+          setTimeout(() => this.watchEvents(), 5000);
+          console.log("error watching users", err);
         }
-        this.watching = true;
-      } catch (err) {
-        this.watching = false;
-        setTimeout(this.watchEvents, 5000);
-        console.log("error watching users", err);
       }
+    } else {
+      console.log("users collection undefined");
     }
   }
 

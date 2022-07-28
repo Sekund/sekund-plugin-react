@@ -28,30 +28,33 @@ export default class EventsWatcherService extends ServerlessService {
     if (this.watching) {
       return;
     }
-    const events = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.settings.subdomain).collection("events");
-    if (events) {
-      try {
-        const cursor = this.resumeToken ? events.watch({ resumeAfter: this.resumeToken }) : events.watch();
-        this.watching = true;
-        for await (const change of cursor) {
-          this.resumeToken = change._id;
-          switch (change.operationType) {
-            case "insert": {
-              const { fullDocument } = change;
-              for (const listener of Object.values(this.listeners)) {
-                for (const evtType of listener.eventTypes) {
-                  if (fullDocument.type === evtType) {
-                    listener.callback(fullDocument);
+    if (this.plugin && this.plugin.user) {
+      const events = this.plugin.user.mongoClient("mongodb-atlas").db(this.plugin.settings.subdomain).collection("events");
+      if (events) {
+        try {
+          const cursor = this.resumeToken ? events.watch({ resumeAfter: this.resumeToken }) : events.watch();
+          this.watching = true;
+          for await (const change of cursor) {
+            this.resumeToken = change._id;
+            switch (change.operationType) {
+              case "insert": {
+                const { fullDocument } = change;
+                for (const listener of Object.values(this.listeners)) {
+                  for (const evtType of listener.eventTypes) {
+                    if (fullDocument.type === evtType) {
+                      listener.callback(fullDocument);
+                    }
                   }
                 }
+                break;
               }
-              break;
             }
           }
+          this.watching = true;
+        } catch (err) {
+          setTimeout(() => this.watchEvents(), 5000);
+          this.watching = false;
         }
-        this.watching = false;
-      } catch (err) {
-        this.watching = false;
       }
     }
   }

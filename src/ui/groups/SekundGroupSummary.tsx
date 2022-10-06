@@ -19,10 +19,9 @@ type Props = {
   editGroup: (group: Group) => void;
   displayGroup: (group: Group) => void;
   handleNoteClicked: (note: Note) => void;
-  fetchUnread: () => Promise<void>;
 };
 
-export default function SekundGroupSummary({ group, editGroup, displayGroup, handleNoteClicked, fetchUnread }: Props) {
+export default function SekundGroupSummary({ group, editGroup, displayGroup, handleNoteClicked }: Props) {
   const { t } = useTranslation();
   const expandedRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
@@ -60,7 +59,6 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
       listenerId,
       new SekundEventListener(["modifySharingGroups", "note.delete"], async () => {
         await fetchGroupNotes();
-        await fetchUnread();
       })
     );
     return () => {

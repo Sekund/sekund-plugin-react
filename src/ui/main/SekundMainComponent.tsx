@@ -68,7 +68,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       const savedScrollPosition = scrollPositions.current[viewType];
       viewRef.current.scrollTop = savedScrollPosition ? scrollPositions.current[viewType] : 0;
     }, 10);
-    const betterProps = { ...props, fetchUnread };
+    const betterProps = { ...props };
     return (
       <>
         <SekundHomeComponent className={`${viewType !== "home" ? "hidden" : ""}`} {...betterProps} />
@@ -81,10 +81,18 @@ export const SekundMainComponent = (props: MainComponentProps) => {
   useEffect(() => {
     const listenerId = makeid(5);
     const permissionsListenerId = makeid(5);
+    const unreadNotesListenerId = makeid(5);
+
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadPermissions));
     eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
+    eventsWatcher?.addEventListener(
+      unreadNotesListenerId,
+      new SekundEventListener(["unreadChanged"], () => {
+        fetchUnread();
+      })
+    );
 
     fetchUnread();
     loadPermissions();
@@ -94,6 +102,7 @@ export const SekundMainComponent = (props: MainComponentProps) => {
     }
 
     return () => {
+      eventsWatcher?.removeEventListener(unreadNotesListenerId);
       eventsWatcher?.removeEventListener(permissionsListenerId);
       eventsWatcher?.removeEventListener(listenerId);
     };
@@ -112,7 +121,6 @@ export const SekundMainComponent = (props: MainComponentProps) => {
       // the currently open note
       await touch(appDispatch, updtNote);
     }
-    fetchUnread();
   }
 
   async function fetchUnread() {

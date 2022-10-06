@@ -21,9 +21,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     getPublicGroups: () => args.groups,
   } as PeoplesService;
 
-  const fetchUnread = async () => {};
-
-  const InjectedHomeComponent = SekundGroupsComponentHOC({ view: wrapper, peoplesService, fetchUnread, syncDown: (id: ObjectID) => {} });
+  const InjectedHomeComponent = SekundGroupsComponentHOC({ view: wrapper, peoplesService, syncDown: (id: ObjectID) => {} });
 
   return <InjectedHomeComponent />;
 };

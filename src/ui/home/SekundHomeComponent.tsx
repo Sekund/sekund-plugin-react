@@ -15,10 +15,9 @@ export type HomeComponentProps = {
   view: { addAppDispatch: Function };
   notesService: NotesService | undefined;
   syncDown: (id: ObjectID, userId: string) => void;
-  fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundHomeComponent = ({ notesService, className, fetchUnread }: HomeComponentProps) => {
+export const SekundHomeComponent = ({ notesService, className }: HomeComponentProps) => {
   const { t } = useTranslation(["common", "plugin"]);
   const { appState, appDispatch } = useAppContext();
   const [notesState, notesDispatch] = useReducer(NotesReducer, initialNotesState);
@@ -51,7 +50,6 @@ export const SekundHomeComponent = ({ notesService, className, fetchUnread }: Ho
               case "delete":
               case "insert":
                 await fetchNotes();
-                await fetchUnread();
                 break;
             }
           }

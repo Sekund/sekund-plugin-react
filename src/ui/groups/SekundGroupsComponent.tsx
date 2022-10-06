@@ -23,10 +23,9 @@ export type GroupsComponentProps = {
   view: { addAppDispatch: Function };
   peoplesService: PeoplesService | undefined;
   syncDown: (id: ObjectID, userId: string) => void;
-  fetchUnread: () => Promise<void>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fetchUnread }: GroupsComponentProps) => {
+export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: GroupsComponentProps) => {
   const { appState, appDispatch } = useAppContext();
   const { t } = useTranslation();
   const [peoplesState, peoplesDispatch] = useReducer(PeoplesReducer, initialPeoplesState);
@@ -113,7 +112,6 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
       listenerId,
       new SekundEventListener(["group.add", "group.upsert", "group.delete"], async () => {
         showPublicGroups ? await fetchUserGroups() : await fetchPublicGroups();
-        await fetchUnread();
       })
     );
     return () => {
@@ -175,7 +173,6 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
                 return (
                   <SekundGroupSummary
                     key={group._id.toString()}
-                    fetchUnread={fetchUnread}
                     group={group}
                     handleNoteClicked={noteClicked}
                     editGroup={editGroup}
@@ -237,7 +234,6 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className, fet
                         return (
                           <SekundGroupSummary
                             key={group._id.toString()}
-                            fetchUnread={fetchUnread}
                             group={group}
                             handleNoteClicked={noteClicked}
                             editGroup={editGroup}

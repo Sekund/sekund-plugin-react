@@ -95,9 +95,16 @@
   .sekund .m-2 {
     margin: 0.5rem
   }
+  .sekund .m-3 {
+    margin: 0.75rem
+  }
   .sekund .mx-auto {
     margin-left: auto;
     margin-right: auto
+  }
+  .sekund .-mx-2 {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem
   }
   .sekund .my-2 {
     margin-top: 0.5rem;
@@ -110,6 +117,14 @@
   .sekund .my-12 {
     margin-top: 3rem;
     margin-bottom: 3rem
+  }
+  .sekund .-my-1 {
+    margin-top: -0.25rem;
+    margin-bottom: -0.25rem
+  }
+  .sekund .-my-1\.5 {
+    margin-top: -0.375rem;
+    margin-bottom: -0.375rem
   }
   .sekund .mt-1 {
     margin-top: 0.25rem
@@ -168,6 +183,9 @@
   .sekund .ml-2 {
     margin-left: 0.5rem
   }
+  .sekund .ml-3 {
+    margin-left: 0.75rem
+  }
   .sekund .inline-block {
     display: inline-block
   }
@@ -215,6 +233,9 @@
   }
   .sekund .h-24 {
     height: 6rem
+  }
+  .sekund .h-32 {
+    height: 8rem
   }
   .sekund .h-4px {
     height: 4px
@@ -264,8 +285,17 @@
   .sekund .max-w-xs {
     max-width: 20rem
   }
+  .sekund .max-w-md {
+    max-width: 28rem
+  }
+  .sekund .max-w-lg {
+    max-width: 32rem
+  }
   .sekund .max-w-xl {
     max-width: 36rem
+  }
+  .sekund .flex-1 {
+    flex: 1 1 0%
   }
   .sekund .flex-shrink-0 {
     flex-shrink: 0
@@ -510,6 +540,10 @@
     --tw-bg-opacity: 1;
     background-color: rgba(254, 226, 226, var(--tw-bg-opacity))
   }
+  .sekund .bg-yellow-50 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 251, 235, var(--tw-bg-opacity))
+  }
   .sekund .bg-yellow-600 {
     --tw-bg-opacity: 1;
     background-color: rgba(217, 119, 6, var(--tw-bg-opacity))
@@ -545,6 +579,10 @@
   .sekund .bg-secondary {
     background-color: var(--color-bg-secondary)
   }
+  .sekund .hover\:bg-yellow-100:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(254, 243, 199, var(--tw-bg-opacity))
+  }
   .sekund .hover\:bg-obs-primary:hover {
     background-color: var(--background-primary)
   }
@@ -556,6 +594,10 @@
   }
   .sekund .fill-current {
     fill: currentColor
+  }
+  .sekund .object-contain {
+    -o-object-fit: contain;
+       object-fit: contain
   }
   .sekund .p-1 {
     padding: 0.25rem
@@ -600,6 +642,10 @@
   .sekund .py-3 {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem
+  }
+  .sekund .py-1\.5 {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem
   }
   .sekund .pt-1 {
     padding-top: 0.25rem
@@ -675,6 +721,9 @@
   .sekund .capitalize {
     text-transform: capitalize
   }
+  .sekund .italic {
+    font-style: italic
+  }
   .sekund .leading-4 {
     line-height: 1rem
   }
@@ -695,6 +744,10 @@
   .sekund .text-yellow-600 {
     --tw-text-opacity: 1;
     color: rgba(217, 119, 6, var(--tw-text-opacity))
+  }
+  .sekund .text-yellow-800 {
+    --tw-text-opacity: 1;
+    color: rgba(146, 64, 14, var(--tw-text-opacity))
   }
   .sekund .text-green-500 {
     --tw-text-opacity: 1;
@@ -765,6 +818,21 @@
     --tw-ring-color: rgba(59, 130, 246, 0.5);
     --tw-ring-offset-shadow: 0 0 #0000;
     --tw-ring-shadow: 0 0 #0000
+  }
+  .sekund .focus\:ring-2:focus {
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)
+  }
+  .sekund .focus\:ring-yellow-600:focus {
+    --tw-ring-opacity: 1;
+    --tw-ring-color: rgba(217, 119, 6, var(--tw-ring-opacity))
+  }
+  .sekund .focus\:ring-offset-2:focus {
+    --tw-ring-offset-width: 2px
+  }
+  .sekund .focus\:ring-offset-yellow-50:focus {
+    --tw-ring-offset-color: #fffbeb
   }
   .sekund .filter {
     --tw-blur: var(--tw-empty,/*!*/ /*!*/);
@@ -886,6 +954,11 @@
 
 .sekund .emoji-mart-scroll + .emoji-mart-bar {
   display: none;
+}
+
+.sekund textarea,
+.sekund input {
+  padding: 0.25rem 0.5rem;
 }
 
 @media (min-width: 640px) {

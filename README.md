@@ -1,5 +1,7 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/X8X3C08KJ)
 
+# This plugin won't receive any more updates. It is, in other words, in need of a maintainer. If you think you could be that person, please contact its author.
+
 ## Obsidian Social Plugin
 
 ![screenshot-full](screenshot-full.png)

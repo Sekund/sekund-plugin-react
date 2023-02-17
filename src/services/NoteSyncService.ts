@@ -18,7 +18,7 @@ import {
 import { isSharedNoteFile, setCurrentNoteState, wait } from "@/utils";
 import { encode } from "base64-arraybuffer";
 import ObjectID from "bson-objectid";
-import { DataAdapter, normalizePath, TFile, Vault } from "obsidian";
+import { DataAdapter, normalizePath, TAbstractFile, TFile, Vault } from "obsidian";
 
 export default class NoteSyncService extends ServerlessService {
   private static _instance: NoteSyncService;
@@ -106,8 +106,16 @@ export default class NoteSyncService extends ServerlessService {
     }
   }
 
-  async getNoteByPath(path: string, userId?: string): Promise<Note | undefined> {
-    return await callFunction(this.plugin, "getNoteByPath", [path, userId]);
+  async getNoteByPath(path: string): Promise<Note | undefined> {
+    const file: TAbstractFile | null = this.vault.getAbstractFileByPath(normalizePath(path));
+    if (file && isSharedNoteFile(file)) {
+      const dirs = file.path.split("/");
+      const userId = dirs[1];
+      console.log("getNoteByPath", dirs.splice(0, 2).join("/"), userId);
+      return await callFunction(this.plugin, "getNoteByPath", [dirs.splice(0, 2).join("/"), userId]);
+    } else {
+      return await callFunction(this.plugin, "getNoteByPath", [path]);
+    }
   }
 
   async getNoteById(id: ObjectID): Promise<Note | undefined> {

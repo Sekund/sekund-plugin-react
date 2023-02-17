@@ -32,17 +32,15 @@ export default function CommentComponent({ editMode, setEditMode, commentId, web
   }, [commentState]);
 
   function handleKeydown(e: KeyboardEvent) {
-    if (e.code === "Enter") {
-      if (!e.shiftKey) {
-        if (textarea.current) {
-          updateText(textarea.current.value, true);
-          textarea.current.value = "";
-          if (textarea.current.parentNode) {
-            (textarea.current.parentNode as HTMLElement).dataset.replicatedValue = "";
-          }
+    if (e.code === "Enter" && e.shiftKey) {
+      if (textarea.current) {
+        updateText(textarea.current.value, true);
+        textarea.current.value = "";
+        if (textarea.current.parentNode) {
+          (textarea.current.parentNode as HTMLElement).dataset.replicatedValue = "";
         }
-        setEditMode(false);
       }
+      setEditMode(false);
     }
     if (e.code === "Escape") {
       if (textarea.current) {
@@ -72,6 +70,7 @@ export default function CommentComponent({ editMode, setEditMode, commentId, web
         <div className="grow-wrap">
           <textarea
             ref={textarea}
+            rows={6}
             onInput={() => autoexpand(commentId)}
             id={commentId}
             onKeyDown={(e: any) => handleKeydown(e)}

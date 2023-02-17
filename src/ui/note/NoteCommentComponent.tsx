@@ -6,9 +6,8 @@ import CommentContext, { useCommentContext } from "@/state/CommentContext";
 import CommentReducer, { CommentActionKind, initialCommentState } from "@/state/CommentReducer";
 import CommentComponent from "@/ui/note/CommentComponent";
 import { Popover } from "@headlessui/react";
-import { DotsHorizontalIcon, EmojiHappyIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
+import { DotsHorizontalIcon, PencilIcon, TrashIcon } from "@heroicons/react/outline";
 import { ChatIcon } from "@heroicons/react/solid";
-import { Picker } from "emoji-mart";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTimeAgo from "react-time-ago";
@@ -27,9 +26,7 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
   const [editMode, setEditMode] = useState(false);
   const [userComment, setUserComment] = useState<string | null>(null);
   const area = useRef<HTMLDivElement>(null);
-  const [emojis, setEmojis] = useState(false);
   const [commentState, commentDispatch] = useReducer(CommentReducer, initialCommentState);
-  const picker = useRef<any>();
   const commentProviderState = {
     commentState,
     commentDispatch,
@@ -37,21 +34,6 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
 
   const guestId = userProfile?._id;
   const popoverButtonRef = useRef<any>();
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (picker.current && event.target && !picker.current.contains(event.target as any)) {
-        setEmojis(false);
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [picker]);
 
   useEffect(() => {
     commentDispatch({ type: CommentActionKind.SetCommentText, payload: { text: comment.text, commit: false } });
@@ -81,52 +63,36 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
     popoverButtonRef?.current?.click();
   }
 
-  function insertEmoji(emoji: any) {
-    commentDispatch({ type: CommentActionKind.SetEmoji, payload: emoji });
-    setEmojis(false);
-  }
-
   function commentActions(noteComment: NoteComment) {
     if (!guestId) {
       return null;
     }
     if ((noteComment.author && noteComment.author._id && noteComment.author._id.equals(guestId)) || noteComment.isWeb) {
       return (
-        <Popover className="flex items-center flex-shrink-0 ">
-          <Popover.Button
-            ref={popoverButtonRef}
-            className="flex items-center justify-center w-4 h-4 rounded-full cursor-pointer max-h-4 max-w-4 hover:bg-primary"
+        <div className="flex space-x-2">
+          <a
+            onClick={() => {
+              deleteComment(noteComment.created, noteComment.updated);
+              clickPopover();
+            }}
+            className="flex items-center px-1 py-1 space-x-2 rounded-lg"
           >
-            <DotsHorizontalIcon style={{ minWidth: "1rem" }}></DotsHorizontalIcon>
-          </Popover.Button>
-
-          <Popover.Panel className="relative rounded-lg cursor-pointer bg-obs-primary-alt">
-            <div className="absolute z-30 flex flex-col px-2 py-2 space-y-2 text-sm rounded-lg leading-2 text-primary bg-obs-primary-alt">
-              <a
-                onClick={() => {
-                  deleteComment(noteComment.created, noteComment.updated);
-                  clickPopover();
-                }}
-                className="flex items-center px-1 py-1 space-x-2 rounded-lg"
-              >
-                <TrashIcon className="w-5 h-5" />
-                <span>{t("Delete")}</span>
-              </a>
-              {noteComment.isWeb ? null : (
-                <a
-                  onClick={() => {
-                    setEditMode(true);
-                    clickPopover();
-                  }}
-                  className="flex items-center px-1 py-1 space-x-2 rounded-lg"
-                >
-                  <PencilIcon className="w-5 h-5" />
-                  <span>{t("Edit")}</span>
-                </a>
-              )}
-            </div>
-          </Popover.Panel>
-        </Popover>
+            <TrashIcon className="w-5 h-5" />
+            <span>{t("Delete")}</span>
+          </a>
+          {noteComment.isWeb ? null : (
+            <a
+              onClick={() => {
+                setEditMode(true);
+                clickPopover();
+              }}
+              className="flex items-center px-1 py-1 space-x-2 rounded-lg"
+            >
+              <PencilIcon className="w-5 h-5" />
+              <span>{t("Edit")}</span>
+            </a>
+          )}
+        </div>
       );
     }
   }
@@ -169,35 +135,6 @@ export default function NoteCommentComponent({ comment, removeLocalComment, edit
             webComment={comment.isWeb ? comment : undefined}
           />
         </CommentContext.Provider>
-
-        {!preview && editMode ? (
-          <div className="justify-between relative">
-            <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer text-obs-muted hover:text-obs-normal" onClick={() => setEmojis(true)} />
-            <div className="flex items-center justify-end w-full mt-2 text-xs nowrap">
-              <span className="nowrap">Press: </span>
-              <span className="p-1 truncate rounded-md bg-primary text-primary">␛</span>
-              <span className="truncate"> to cancel, </span>
-              <span className="p-1 truncate rounded-md bg-primary text-primary">⇧-Enter</span>
-              <span className="truncate"> for newline, </span>
-              <span className="p-1 truncate rounded-md bg-primary text-primary">Enter</span>
-              <span className="truncate"></span>
-              <span className="truncate"> to save.</span>
-            </div>
-            {emojis ? (
-              <div className="absolute z-40 top-2" ref={picker}>
-                <Picker
-                  theme={appState.isDark ? "dark" : "light"}
-                  set="apple"
-                  perLine={8}
-                  emojiSize={20}
-                  showPreview={false}
-                  color={"#009688"}
-                  onSelect={(emoji) => insertEmoji(emoji)}
-                />
-              </div>
-            ) : null}
-          </div>
-        ) : null}
       </div>
     </div>
   );

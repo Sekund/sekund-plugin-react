@@ -11,9 +11,6 @@ import NoteCommentComponent from "@/ui/note/NoteCommentComponent";
 import { dispatch, makeid } from "@/utils";
 import React, { Fragment, useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Picker } from "emoji-mart";
-import "emoji-mart/css/emoji-mart.css";
-import { EmojiHappyIcon } from "@heroicons/react/outline";
 import CommentContext from "@/state/CommentContext";
 import CommentReducer, { CommentActionKind, initialCommentState } from "@/state/CommentReducer";
 
@@ -34,9 +31,6 @@ export default function NoteComments({ note, className }: Props) {
     commentDispatch,
   };
 
-  const [emojis, setEmojis] = useState(false);
-  const picker = useRef<any>();
-
   const [localComments, setLocalComments] = useState<Array<NoteComment>>(remoteNote?.comments || []);
 
   useEffect(() => {
@@ -48,21 +42,6 @@ export default function NoteComments({ note, className }: Props) {
       eventsWatcher?.removeEventListener(listenerId);
     };
   }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (picker.current && event.target && !picker.current.contains(event.target as any)) {
-        setEmojis(false);
-      }
-    }
-
-    // Bind the event listener
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [picker]);
 
   function reloadNote(evt: any) {
     (async () => {
@@ -155,11 +134,6 @@ export default function NoteComments({ note, className }: Props) {
     textarea.value = "";
   }
 
-  function insertEmoji(emoji: any) {
-    commentDispatch({ type: CommentActionKind.SetEmoji, payload: emoji });
-    setEmojis(false);
-  }
-
   useEffect(() => {
     if (commentState.commentText.commit) {
       addComment();
@@ -169,7 +143,7 @@ export default function NoteComments({ note, className }: Props) {
   const { preview, commentText } = commentState;
 
   return (
-    <div className={`max-w-xl w-full px-2 mt-1 mb-16 ${className}`}>
+    <div className={`w-full px-2 mt-1 mb-16 ${className}`}>
       <div className="sm:col-span-2">
         <div className="flex items-center justify-between">
           <label htmlFor="message" className="flex items-center h-10 space-x-2 text-obs-muted">
@@ -186,23 +160,9 @@ export default function NoteComments({ note, className }: Props) {
           <CommentComponent editMode={true} setEditMode={(b) => {}} commentId="sekund-comment" />
         </CommentContext.Provider>
       </div>
-      <div className="relative flex items-center justify-between">
-        {emojis ? (
-          <div className="absolute z-40 top-2" ref={picker}>
-            <Picker
-              theme={appState.isDark ? "dark" : "light"}
-              set="apple"
-              perLine={8}
-              emojiSize={20}
-              showPreview={false}
-              color={"#009688"}
-              onSelect={(emoji) => insertEmoji(emoji)}
-            />
-          </div>
-        ) : null}
+      <div className="relative flex items-center flex-end">
         {preview ? null : (
           <>
-            <EmojiHappyIcon className="w-6 h-6 m-1 cursor-pointer text-obs-muted hover:text-obs-normal" onClick={() => setEmojis(true)} />
             <div className="flex justify-end w-full mt-2">
               <button
                 className={`mr-2 ${commentText.text === "" ? "text-obs-faint" : "text-obs-normal"}`}

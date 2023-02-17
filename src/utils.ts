@@ -2,7 +2,7 @@ import { Note } from "@/domain/Note";
 import NotesService from "@/services/NotesService";
 import { AppAction, AppActionKind, GeneralState, NoteState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
-import { TFile, TFolder } from "obsidian";
+import { TAbstractFile, TFile, TFolder } from "obsidian";
 import React, { Dispatch } from "react";
 import * as Realm from "realm-web";
 
@@ -57,7 +57,7 @@ export function cssProp(name: string) {
 
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
-export function isSharedNoteFile(file: TFile): boolean {
+export function isSharedNoteFile(file: TAbstractFile): boolean {
   return file.path.startsWith(GlobalState.instance.appState.plugin?.settings.sekundFolderPath || "__sekund__");
 }
 

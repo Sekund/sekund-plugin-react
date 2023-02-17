@@ -12,6 +12,7 @@ import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
+import DiscussionBlock from "@/ui/blocks/DiscussionBlock";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import SekundView from "@/ui/SekundView";
@@ -26,6 +27,7 @@ import nl from "javascript-time-ago/locale/nl.json";
 import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TFile, TFolder } from "obsidian";
 import posthog from "posthog-js";
 import React from "react";
+import ReactDOM from "react-dom";
 import * as Realm from "realm-web";
 
 TimeAgo.addDefaultLocale(en);
@@ -66,6 +68,7 @@ export default class SekundPluginReact extends Plugin {
   settings: SekundPluginSettings = new SekundPluginSettings();
   private viewDispatchers: { [key: string]: React.Dispatch<AppAction> } = {};
   private registeredEvents = false;
+  private registeredMDCodeBlockProcessors = false;
   private authenticatedUsers: { [subdomain: string]: Realm.User | null } = {};
   private offlineListener?: EventListener;
   private onlineListener?: EventListener;
@@ -98,6 +101,22 @@ export default class SekundPluginReact extends Plugin {
     });
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.removeEventListener(this.notesListenerId);
+  }
+
+  public registerMarkdownCodeBlockProcessors() {
+    this.registerMarkdownCodeBlockProcessor("sekund", async (source: string, el: HTMLElement, ctx: any) => {
+      setTimeout(async () => {
+        console.log("source: ", source);
+        if (source.trim().startsWith("discussion")) {
+          const notePath = ctx.sourcePath;
+          const note = await NoteSyncService.instance.getNoteByPath(notePath);
+          if (note) {
+            const root = ReactDOM.render(<DiscussionBlock note={note} />, el);
+            ctx.addChild(root);
+          }
+        }
+      }, 200);
+    });
   }
 
   public disconnect() {
@@ -355,6 +374,10 @@ export default class SekundPluginReact extends Plugin {
             // this.registerEvent(this.app.vault.on('delete',
             // this.handleDelete));
             this.registeredEvents = true;
+          }
+
+          if (!this.registeredMDCodeBlockProcessors) {
+            this.registerMarkdownCodeBlockProcessors();
           }
 
           // delay calling the backend for a bit as it seems to result in

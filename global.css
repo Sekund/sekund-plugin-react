@@ -4,6 +4,10 @@
 
 	font-family: "Arial", "Helvetica", sans-serif;
 
+	&.content {
+		font-family: var(--font-family-preview);
+	}
+
 	@layer base {
 		--gray-4: #2a2e3b;
 		--gray-3: #474c59;

@@ -12,6 +12,7 @@ import UsersService from "@/services/UsersService";
 import { AppAction, AppActionKind, GeneralState } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
+import ContactIndexBlock from "@/ui/blocks/ContactIndexBlock";
 import DiscussionBlock from "@/ui/blocks/DiscussionBlock";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
@@ -114,6 +115,14 @@ export default class SekundPluginReact extends Plugin {
             const root = ReactDOM.render(<DiscussionBlock note={note} />, el);
             ctx.addChild(root);
           }
+        } else if (source.trim().startsWith("contact-index")) {
+          const contactId = source.trim().split(" ")[1];
+          if (contactId) {
+            const root = ReactDOM.render(<ContactIndexBlock contactId={contactId} />, el);
+            ctx.addChild(root);
+          }
+        } else if (source.trim().startsWith("group-index")) {
+          const groupId = source.trim().split(" ")[1];
         }
       }, 200);
     });

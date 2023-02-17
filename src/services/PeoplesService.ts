@@ -123,7 +123,7 @@ export default class PeoplesService extends ServerlessService {
     return peopleData;
   }
 
-  async getPeople(pid: string): Promise<People> {
+  async getPeople(pid: string, includeNotes = false): Promise<People> {
     const { user, sharingNotes, sharedNotes } = await callFunction(this.plugin, "people", [pid]);
 
     const people = {
@@ -135,6 +135,11 @@ export default class PeoplesService extends ServerlessService {
       sharing: sharingNotes.length,
       shared: sharedNotes.length,
     } as People;
+
+    if (includeNotes) {
+      people.sharingNotes = sharingNotes;
+      people.sharedNotes = sharedNotes;
+    }
 
     return people;
   }

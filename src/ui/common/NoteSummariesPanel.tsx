@@ -1,5 +1,4 @@
 import { Note } from "@/domain/Note";
-import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import Loader from "@/ui/common/LoaderComponent";
 import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
@@ -14,10 +13,8 @@ type Props = {
 
 export default function NoteSummariesPanel({ handleNoteClicked, className, context, loading }: Props) {
   const { notesState } = useNotesContext();
-  const { appState } = useAppContext();
 
-  const { notes, note } = notesState;
-  const { userProfile } = appState;
+  const { notes } = notesState;
 
   if (loading) {
     return (

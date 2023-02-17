@@ -154,7 +154,10 @@ export default class NoteSyncService extends ServerlessService {
           noteFile.stat.mtime = note.modified;
         }
         setCurrentNoteState(this.plugin.dispatchers, ownNote ? OWN_NOTE_UPTODATE : SHARED_NOTE_UPTODATE, noteFile, note);
-        this.plugin.app.workspace.getMostRecentLeaf().openFile(noteFile);
+        const workspace = this.plugin.app.workspace;
+        if (workspace.activeLeaf) {
+          workspace.createLeafBySplit(workspace.activeLeaf, "vertical").openFile(noteFile);
+        }
       } else {
         console.log("ERROR: Could not open file ", noteFile);
       }

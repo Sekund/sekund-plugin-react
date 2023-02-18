@@ -14,6 +14,7 @@ import GlobalState from "@/state/GlobalState";
 import { OWN_NOTE_OUTDATED } from "@/state/NoteStates";
 import ContactIndexBlock from "@/ui/blocks/ContactIndexBlock";
 import DiscussionBlock from "@/ui/blocks/DiscussionBlock";
+import GroupIndexBlock from "@/ui/blocks/GroupIndexBlock";
 import { addIcons } from "@/ui/icons";
 import SekundMainView from "@/ui/main/SekundMainView";
 import SekundView from "@/ui/SekundView";
@@ -123,6 +124,10 @@ export default class SekundPluginReact extends Plugin {
           }
         } else if (source.trim().startsWith("group-index")) {
           const groupId = source.trim().split(" ")[1];
+          if (groupId) {
+            const root = ReactDOM.render(<GroupIndexBlock groupId={groupId} />, el);
+            ctx.addChild(root);
+          }
         }
       }, 200);
     });

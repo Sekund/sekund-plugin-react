@@ -8,12 +8,10 @@ import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
-import AddUser from "@/ui/common/AddUser";
-import { ExternalLinkIcon, PlusIcon, TrashIcon, XIcon } from "@heroicons/react/solid";
+import { XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import slugify from "slugify";
 
 type Props = {
   note: Note;

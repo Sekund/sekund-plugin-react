@@ -70,13 +70,13 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
     const editAllowed = group.userId.equals(userProfile._id);
     return (
       <div
-        className="flex items-center p-1 ml-1 space-x-1 overflow-hidden cursor-pointer flex-shrink-0"
+        className="flex items-center flex-shrink-0 p-1 ml-1 space-x-1 overflow-hidden cursor-pointer"
         onClick={editAllowed ? () => editGroup(group) : () => displayGroup(group)}
       >
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>
-        <AdjustmentsIcon className="w-4 h-4 flex-shrink-0" />
+        <AdjustmentsIcon className="flex-shrink-0 w-4 h-4" />
       </div>
     );
   }
@@ -102,7 +102,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
           key={group._id.toString()}
           className="flex items-center justify-between w-full mx-auto cursor-pointer bg-obs-primary-alt hover:bg-obs-primary"
         >
-          <div className="flex items-center px-3 py-2 space-x-2 text-sm cursor-pointer overflow-hidden" onClick={toggleExpanded}>
+          <div className="flex items-center px-3 py-2 space-x-2 overflow-hidden text-sm cursor-pointer" onClick={toggleExpanded}>
             <div className="flex">{groupAvatar(group, 10, badge())}</div>
             <div className="truncate text-md text-primary hover:underline">{group.name}</div>
           </div>

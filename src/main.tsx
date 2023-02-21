@@ -16,7 +16,8 @@ import ContactIndexBlock from "@/ui/blocks/ContactIndexBlock";
 import DiscussionBlock from "@/ui/blocks/DiscussionBlock";
 import GroupIndexBlock from "@/ui/blocks/GroupIndexBlock";
 import { addIcons } from "@/ui/icons";
-import SekundMainView from "@/ui/main/SekundMainView";
+// import SekundMainView from "@/ui/main/SekundMainView";
+import MainView from "@/ui/v2/MainView";
 import SekundView from "@/ui/SekundView";
 import { FolderSuggest } from "@/ui/settings/FolderSuggest";
 import { Constructor, dispatch, getApiKeyConnection, isSharedNoteFile, makeid, setCurrentNoteState, setGeneralState } from "@/utils";
@@ -89,7 +90,7 @@ export default class SekundPluginReact extends Plugin {
       this.showPane(MAIN_VIEW_TYPE);
     });
 
-    this.registerViews([{ type: MAIN_VIEW_TYPE, View: SekundMainView }]);
+    this.registerViews([{ type: MAIN_VIEW_TYPE, View: MainView }]);
 
     this.app.workspace.onLayoutReady(async () => {
       this.refreshPanes();
@@ -422,15 +423,7 @@ export default class SekundPluginReact extends Plugin {
 
   public readonly handleFileOpen = async (file: TFile | null): Promise<void> => {
     if (file) {
-      const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-      if (view) {
-        if (isSharedNoteFile(file)) {
-          const state = view.leaf.getViewState();
-          state.state.mode = "preview";
-          view.leaf.setViewState(state);
-        }
-        NoteSyncService.instance.compareNotes(file);
-      }
+      NoteSyncService.instance.compareNotes(file);
     }
   };
 

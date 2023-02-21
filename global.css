@@ -123,3 +123,7 @@
 .sekund input {
 	padding: 0.25rem 0.5rem;
 }
+
+.workspace-leaf-content[data-type="sekund-main-view"] .view-content {
+	padding: 0;
+}

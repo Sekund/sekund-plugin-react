@@ -1,5 +1,4 @@
 @tailwind components;
-@tailwind base;
 @tailwind utilities;
 
 font-family: "Arial", "Helvetica", sans-serif;
@@ -8,7 +7,7 @@ font-family: "Arial", "Helvetica", sans-serif;
 	font-family: var(--font-family-preview);
 }
 
-@layer base {
+@layer utilities {
 	--gray-4: #2a2e3b;
 	--gray-3: #474c59;
 	--gray-2: #636976;
@@ -22,6 +21,10 @@ font-family: "Arial", "Helvetica", sans-serif;
 	--white-3: #ebe8e6;
 	--white-2: #e3dedd;
 	--white-1: #d9d3d2;
+}
+
+.sekund .border-b-\[1px\] {
+	border-bottom-style: solid;
 }
 
 .sekund .ulink a {

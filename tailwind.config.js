@@ -1,4 +1,5 @@
 module.exports = {
+  important: ".sekund",
   content: ["**/*.tsx", "src/**/*.tsx"],
   darkMode: "class", // or 'media' or 'class'
   theme: {

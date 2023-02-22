@@ -7,7 +7,7 @@
 		"prettier-format": "prettier --config .prettierrc.js *.tsx --write",
 		"lint": "eslint . --ext .ts,.tsx",
 		"dev": "rollup --config rollup.config.js -w",
-		"build": "export environment=production && rollup --config rollup.config.js && terser main.js > release/main.js && postcss global.css -o release/styles.css",
+		"build": "export environment=production && rollup --config rollup.config.js && terser main.js > release/main.js && ./tailwindcss -i global.css -o release/styles.css",
 		"build:css": "./tailwindcss -i global.css -o styles.css",
 		"storybook": "start-storybook -s public -p 6006",
 		"build-storybook": "build-storybook -s public",

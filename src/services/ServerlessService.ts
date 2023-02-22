@@ -1,5 +1,9 @@
 import SekundPluginReact from "@/main";
 
 export default abstract class ServerlessService {
-  constructor(protected plugin: SekundPluginReact) {}
+  protected plugin: SekundPluginReact;
+
+  constructor(p: SekundPluginReact) {
+    this.plugin = p;
+  }
 }

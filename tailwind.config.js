@@ -1,5 +1,5 @@
 module.exports = {
-  purge: { enabled: process.env.environment === "production", content: ["**/*.tsx", "src/**/*.tsx"] },
+  content: ["**/*.tsx", "src/**/*.tsx"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {

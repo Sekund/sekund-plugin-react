@@ -1,5 +1,6 @@
 .sekund {
 	@tailwind components;
+	@tailwind base;
 	@tailwind utilities;
 
 	font-family: "Arial", "Helvetica", sans-serif;

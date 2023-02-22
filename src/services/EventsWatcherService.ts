@@ -61,5 +61,11 @@ export default class EventsWatcherService extends ServerlessService {
 }
 
 export class SekundEventListener {
-  constructor(public eventTypes: string[], public callback: Function) {}
+  public eventTypes: string[];
+  public callback: Function;
+
+  constructor(et: string[], cb: Function) {
+    this.eventTypes = et;
+    this.callback = cb;
+  }
 }

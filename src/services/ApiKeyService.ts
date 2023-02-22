@@ -1,7 +1,11 @@
 import { hashCode } from "@/utils";
 
 export default class ApiKeyService {
-  constructor(private user: Realm.User) {}
+  private user: Realm.User;
+
+  constructor(u: Realm.User) {
+    this.user = u;
+  }
 
   async ensureApiKey(vaultName: string) {
     // always re-create the api key associated with this vault

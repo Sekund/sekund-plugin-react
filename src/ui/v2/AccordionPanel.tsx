@@ -8,20 +8,17 @@ type Props = {
   children: React.ReactNode;
   icon: React.ReactNode;
   title: React.ReactNode;
+  className: string;
 };
 
-export default function AccordionPanel({ open, id, title, icon, children, setOpen }: Props) {
+export default function AccordionPanel({ className, open, id, title, icon, children, setOpen }: Props) {
   function toggle() {
     setOpen(id);
   }
 
   return (
-    <div className="flex flex-col w-full">
-      <div
-        onClick={toggle}
-        className="p-2 cursor-pointer hover:bg-obs-secondary bg-obs-tertiary border-obs-modal"
-        style={{ borderBottom: "1px solid" }}
-      >
+    <div className={`${className} flex flex-col w-full`}>
+      <div onClick={toggle} className={`p-2 cursor-pointer border-b-[1px] hover:bg-obs-secondary bg-obs-tertiary border-obs-modal`}>
         <div className="flex items-center justify-between">
           {title}
           <div className="flex items-center space-x-2">
@@ -32,6 +29,7 @@ export default function AccordionPanel({ open, id, title, icon, children, setOpe
       </div>
 
       <Transition
+        className="relative h-full"
         show={open}
         enter="transition duration-300 ease-out"
         enterFrom="transform opacity-0"
@@ -40,7 +38,7 @@ export default function AccordionPanel({ open, id, title, icon, children, setOpe
         leaveFrom="transform opacity-100"
         leaveTo="transform opacity-0"
       >
-        <div>{children}</div>
+        {children}
       </Transition>
     </div>
   );

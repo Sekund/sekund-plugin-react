@@ -8,10 +8,10 @@ import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
-import NoActiveFile from "@/ui/v2/NoActiveFile";
+import NoActiveFile from "@/ui/v2/common/NoActiveFile";
 import { XIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
-import React, { ReactChild, ReactChildren, useEffect, useRef, useState } from "react";
+import React, { ReactChild, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -37,7 +37,6 @@ export default function NoteSharing({ userId, syncUp, unpublish, active }: Props
 
   useEffect(() => {
     if (active && generalState === "allGood") {
-      console.log("activating the note sharing component");
       loadOptions();
     }
   }, [active]);
@@ -66,9 +65,9 @@ export default function NoteSharing({ userId, syncUp, unpublish, active }: Props
 
   async function removePeople(p: People) {
     if (!note) return;
-    await NotesService.instance.removeSharingPeople(note._id, p);
     note.sharing.peoples = note.sharing?.peoples?.filter((people) => people._id !== p._id);
     setSharing({ ...note.sharing });
+    await NotesService.instance.removeSharingPeople(note._id, p);
   }
 
   async function addSelectedUserOrGroup() {
@@ -79,16 +78,17 @@ export default function NoteSharing({ userId, syncUp, unpublish, active }: Props
       const people = await PeoplesService.instance.getPeople(id);
       if (!people) return;
       if (note.sharing?.peoples?.find((p) => p._id.equals(people._id))) return;
-      await NotesService.instance.addSharingPeople(note._id, people);
       note.sharing?.peoples?.push(people);
+      setSharing({ ...note.sharing });
+      await NotesService.instance.addSharingPeople(note._id, people);
     } else {
       const group = await GroupsService.instance.fetchGroup(id);
       if (!group) return;
       if (note.sharing?.groups?.find((g) => g._id.equals(group._id))) return;
-      await NotesService.instance.addSharingGroup(note._id, group);
       note.sharing?.groups?.push(group);
+      setSharing({ ...note.sharing });
+      await NotesService.instance.addSharingGroup(note._id, group);
     }
-    setSharing({ ...note.sharing });
     selectElement.value = "none";
   }
 

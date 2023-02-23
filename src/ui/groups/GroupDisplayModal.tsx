@@ -37,22 +37,21 @@ export default function GroupDisplayModal({ open, closeDialog, group }: Props) {
     setTeamMembers(confirmedContacts);
   }
 
-  function members() {
-    const children: JSX.Element[] = [];
-    const closeButtonClasses = "rounded-md cursor-pointer hover:text-secondary focus:outline-none w-4 h-4 m-2";
+  function Members() {
     const { peoples } = localGroup;
-    peoples.forEach((p) =>
-      children.push(
-        <div
-          key={p._id ? p._id.toString() : p.name || makeid(5)}
-          className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary"
-        >
-          {peopleAvatar(p, 6)}
-          <span className="ml-2 truncate">{`${p.name || p.email}`}</span>
-        </div>
-      )
+    return (
+      <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "250px" }}>
+        {peoples.map((p) => (
+          <div
+            key={p._id ? p._id.toString() : p.name || makeid(5)}
+            className="flex items-center py-1 pl-2 pr-1 mb-1 mr-1 truncate rounded-md bg-obs-tertiary"
+          >
+            {peopleAvatar(p, 6)}
+            <span className="ml-2 truncate">{`${p.name || p.email}`}</span>
+          </div>
+        ))}
+      </div>
     );
-    return children;
   }
 
   async function leaveGroup() {
@@ -72,7 +71,7 @@ export default function GroupDisplayModal({ open, closeDialog, group }: Props) {
       }}
       className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-obs-cover"
     >
-      <div className="relative inline-block w-full max-w-xs p-6 px-4 pt-5 pb-4 text-left rounded-lg sm:my-8 bg-obs-primary">
+      <div className="relative inline-block w-full h-full p-6 px-4 pt-5 pb-4 text-left sm:my-8 bg-obs-primary">
         <div className="absolute top-0 right-0 z-50 pt-4 pr-4 sm:block">
           <div
             className="flex flex-col justify-center rounded-md cursor-pointer bg-primary hover:text-obs-muted focus:outline-none"
@@ -86,24 +85,26 @@ export default function GroupDisplayModal({ open, closeDialog, group }: Props) {
           <div>
             <div className="text-lg font-medium leading-6 text-primary">{localGroup.name}</div>
           </div>
-          <div className="max-w-xl mt-4 text-sm text-secondary">
-            <p>{t("plugin:groupMembers")}:</p>
-          </div>
-          <div className="flex flex-wrap mt-5 overflow-auto sm:mt-6 text-secondary" style={{ maxHeight: "250px" }}>
-            {members()}
-          </div>
-          <div className="flex items-center justify-center mt-4">
-            {localGroup.userId.equals(userProfile._id) ? null : (
-              <button className="flex items-center justify-center mr-0" onClick={leaveGroup} type="button">
-                {t("leaveThisGroup")}
-                <LogoutIcon className="w-4 h-4" />
-              </button>
-            )}
-          </div>
-          <div className="flex items-center justify-end mt-4">
-            <button className="mr-0" onClick={() => closeDialog()} type="button">
-              {t("cancel")}
-            </button>
+          <div className="flex flex-col items-center justify-center w-full h-full">
+            <div className="max-w-xs">
+              <div className="mt-4 text-sm text-secondary">
+                <p>{t("plugin:groupMembers")}:</p>
+              </div>
+              <Members />
+              <div className="flex items-center justify-center mt-4">
+                {localGroup.userId.equals(userProfile._id) ? null : (
+                  <button className="flex items-center justify-center mr-0" onClick={leaveGroup} type="button">
+                    {t("leaveThisGroup")}
+                    <LogoutIcon className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center justify-end mt-6">
+                <button className="mr-0" onClick={() => closeDialog()} type="button">
+                  {t("cancel")}
+                </button>
+              </div>
+            </div>
           </div>
         </>
       </div>

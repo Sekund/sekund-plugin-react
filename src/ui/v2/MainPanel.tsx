@@ -1,8 +1,10 @@
+import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import AddUser from "@/ui/common/AddUser";
+import GroupEditModal from "@/ui/groups/GroupEditModal";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import AccordionPanel from "@/ui/v2/AccordionPanel";
 import ContactsMgmt from "@/ui/v2/contacts/ContactsMgmt";
@@ -23,11 +25,24 @@ export type MainPanelProps = {
   unpublish: () => void;
 };
 
+export type ContactsMgmtCallbacks = {
+  addUser: () => void;
+  showSettings: () => void;
+  createGroup: (refresh: () => void) => void;
+  closeGroupEditDialog: () => void;
+  displayPerson: () => void;
+  displayGroup: () => void;
+  editPerson: () => void;
+  editGroup: (group: Group, refresh: () => void) => void;
+};
+
 export const MainPanel = (props: MainPanelProps) => {
   const { appState } = useAppContext();
   const { userProfile } = appState;
   const [showSettings, setShowSettings] = useState(false);
   const [addUser, setAddUser] = useState(false);
+  const [showGroupEditModal, setShowGroupEditModal] = useState(false);
+  const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
 
   const [map, setMap] = useState<{ [key: string]: boolean }>({
     notifications: false,
@@ -53,6 +68,51 @@ export const MainPanel = (props: MainPanelProps) => {
       }
     });
     setMap(updtMap);
+  }
+
+  const callbacks: ContactsMgmtCallbacks = {
+    addUser: () => {
+      setAddUser(true);
+    },
+    showSettings: () => {
+      setShowSettings(true);
+    },
+    createGroup: (refresh: () => void) => {
+      setCurrentGroup(null);
+      setShowGroupEditModal(true);
+      refresh();
+    },
+    closeGroupEditDialog: () => {
+      setShowGroupEditModal(false);
+    },
+    displayPerson: () => {
+      // TODO
+    },
+    displayGroup: () => {
+      // TODO
+    },
+    editPerson: () => {
+      // TODO
+    },
+    editGroup: (group: Group, refresh: () => void) => {
+      setCurrentGroup(group);
+      setShowGroupEditModal(true);
+    },
+  };
+
+  function GroupEditDialog() {
+    if (showGroupEditModal) {
+      return (
+        <GroupEditModal
+          userId={appState.userProfile._id}
+          open={showGroupEditModal}
+          closeDialog={callbacks.closeGroupEditDialog}
+          group={currentGroup}
+        />
+      );
+    } else {
+      return null;
+    }
   }
 
   function allAccordionsAreClosed() {
@@ -89,7 +149,7 @@ export const MainPanel = (props: MainPanelProps) => {
           id={AccordionIds.Contacts}
           open={map[AccordionIds.Contacts]}
         >
-          <ContactsMgmt active={map[AccordionIds.Contacts]} addUser={() => setAddUser(true)} showSettings={() => setShowSettings(true)} {...props} />
+          <ContactsMgmt active={map[AccordionIds.Contacts]} callbacks={callbacks} {...props} />
         </AccordionPanel>
         <AccordionPanel
           className={map[AccordionIds.Share] ? "flex-grow" : "flex-shrink-0"}
@@ -118,6 +178,7 @@ export const MainPanel = (props: MainPanelProps) => {
           <AddUser done={() => setAddUser(false)} />
         </div>
       ) : null}
+      {showGroupEditModal ? <GroupEditDialog /> : null}
     </>
   );
 };

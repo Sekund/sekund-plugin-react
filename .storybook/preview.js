@@ -54,7 +54,7 @@ export const parameters = {
       verticalTab: {
         name: "Obsidian Vertical Tab",
         styles: {
-          width: "300px",
+          width: "340px",
           height: "100%",
         },
       },

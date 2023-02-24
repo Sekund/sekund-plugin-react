@@ -186,7 +186,7 @@ export const MainPanel = (props: MainPanelProps) => {
         </AccordionPanel>
 
         {allAccordionsAreClosed() ? (
-          <a className="mt-8 text-center cursor-pointer hover:underline" href="https://sekund.io/docs">
+          <a className="mt-8 text-center cursor-pointer hover:underline" href="https://sekund-www.vercel.app/roadmap">
             Documentation
           </a>
         ) : null}

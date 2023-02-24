@@ -9,10 +9,10 @@ import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 type Props = {
   group: Group;
-  displayGroup: (group: Group) => void;
+  // displayGroup: (group: Group) => void;
 };
 
-export default function SekundPublicGroupSummary({ group, displayGroup }: Props) {
+export default function SekundPublicGroupSummary({ group }: Props) {
   const { t } = useTranslation();
   const expandedRef = useRef(false);
   const [expanded, setExpanded] = useState(false);
@@ -39,7 +39,7 @@ export default function SekundPublicGroupSummary({ group, displayGroup }: Props)
 
   function GroupMembers(): JSX.Element {
     return (
-      <div className="flex items-center p-1 ml-1 space-x-1 overflow-hidden cursor-pointer" onClick={() => displayGroup(localGroup)}>
+      <div className="flex items-center p-1 ml-1 space-x-1 overflow-hidden cursor-pointer">
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>

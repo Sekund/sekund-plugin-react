@@ -1,5 +1,6 @@
 import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
+import { People } from "@/domain/People";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
@@ -7,10 +8,11 @@ import AddUser from "@/ui/common/AddUser";
 import GroupEditModal from "@/ui/groups/GroupEditModal";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import AccordionPanel from "@/ui/v2/AccordionPanel";
+import ContactEditModal from "@/ui/v2/contacts/ContactEditModal";
 import ContactsMgmt from "@/ui/v2/contacts/ContactsMgmt";
 import NoteSharing from "@/ui/v2/sharing/NoteSharing";
 import withConnectionStatus from "@/ui/withConnectionStatus";
-import { BellIcon, GlobeAltIcon, ShareIcon, UsersIcon } from "@heroicons/react/solid";
+import { BellIcon, ShareIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import * as React from "react";
 import { useState } from "react";
@@ -30,10 +32,11 @@ export type ContactsMgmtCallbacks = {
   showSettings: () => void;
   createGroup: (refresh: () => void) => void;
   closeGroupEditDialog: () => void;
-  displayPerson: () => void;
-  displayGroup: () => void;
-  editPerson: () => void;
+  editPerson: (person: People, refresh: () => void) => void;
+  closeContactDisplayModal: () => void;
   editGroup: (group: Group, refresh: () => void) => void;
+  openGroupIndex: (group: Group) => void;
+  openPersonIndex: (person: People) => void;
 };
 
 export const MainPanel = (props: MainPanelProps) => {
@@ -43,6 +46,8 @@ export const MainPanel = (props: MainPanelProps) => {
   const [addUser, setAddUser] = useState(false);
   const [showGroupEditModal, setShowGroupEditModal] = useState(false);
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
+  const [showContactDisplayModal, setShowContactDisplayModal] = useState(false);
+  const [currentPerson, setCurrentPerson] = useState<People | null>(null);
 
   const [map, setMap] = useState<{ [key: string]: boolean }>({
     notifications: false,
@@ -85,18 +90,28 @@ export const MainPanel = (props: MainPanelProps) => {
     closeGroupEditDialog: () => {
       setShowGroupEditModal(false);
     },
-    displayPerson: () => {
-      // TODO
+    editPerson: (person: People, refresh: () => void) => {
+      setCurrentPerson(person);
+      setShowContactDisplayModal(true);
     },
-    displayGroup: () => {
-      // TODO
-    },
-    editPerson: () => {
-      // TODO
+    closeContactDisplayModal: () => {
+      setShowContactDisplayModal(false);
     },
     editGroup: (group: Group, refresh: () => void) => {
       setCurrentGroup(group);
       setShowGroupEditModal(true);
+    },
+    openGroupIndex: async (group: Group) => {
+      console.log("openGroupIndex", group);
+      if (appState.plugin) {
+        appState.plugin.openIndexFile("group", group._id.toString());
+      }
+    },
+    openPersonIndex: (person: People) => {
+      console.log("openPersonIndex", person);
+      if (appState.plugin) {
+        appState.plugin.openIndexFile("contact", person._id.toString());
+      }
     },
   };
 
@@ -110,6 +125,14 @@ export const MainPanel = (props: MainPanelProps) => {
           group={currentGroup}
         />
       );
+    } else {
+      return null;
+    }
+  }
+
+  function ContactEditDialog() {
+    if (showContactDisplayModal && currentPerson) {
+      return <ContactEditModal closeDialog={callbacks.closeContactDisplayModal} person={currentPerson} />;
     } else {
       return null;
     }
@@ -179,6 +202,7 @@ export const MainPanel = (props: MainPanelProps) => {
         </div>
       ) : null}
       {showGroupEditModal ? <GroupEditDialog /> : null}
+      {showContactDisplayModal ? <ContactEditDialog /> : null}
     </>
   );
 };

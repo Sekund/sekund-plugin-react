@@ -1,6 +1,5 @@
 import { People } from "@/domain/People";
 import { peopleAvatar } from "@/helpers/avatars";
-import { useAppContext } from "@/state/AppContext";
 import { AdjustmentsIcon } from "@heroicons/react/solid";
 import React from "react";
 
@@ -11,8 +10,6 @@ type Props = {
 };
 
 export default function SekundPeopleSummary({ person, editPerson, displayPerson }: Props) {
-  const { appState } = useAppContext();
-
   return (
     <div className="flex flex-col" style={{ borderRight: "none", borderLeft: "none" }}>
       <div

@@ -81,7 +81,7 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
     loadContacts();
   }
 
-  const { displayPerson, displayGroup, editPerson, editGroup, showSettings, addUser, createGroup } = callbacks;
+  const { editPerson, editGroup, showSettings, addUser, createGroup, openGroupIndex, openPersonIndex } = callbacks;
 
   function UserContacts() {
     return (
@@ -92,15 +92,15 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
               <SekundGroupSummary
                 key={contact.data._id.toString()}
                 group={contact.data as Group}
+                displayGroup={() => openGroupIndex(contact.data as Group)}
                 editGroup={() => editGroup(contact.data as Group, loadContacts)}
-                displayGroup={displayGroup}
               />
             ) : (
               <SekundPersonSummary
                 key={contact.data._id.toString()}
                 person={contact.data as People}
-                displayPerson={displayPerson}
-                editPerson={editPerson}
+                displayPerson={() => openPersonIndex(contact.data as People)}
+                editPerson={() => editPerson(contact.data as People, loadContacts)}
               />
             );
           })}
@@ -128,7 +128,7 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
       <div className="absolute inset-0 flex flex-col">
         <div className="flex flex-col flex-grow overflow-auto space-y-1px">
           {publicGroups.map((group: Group) => (
-            <SekundPublicGroupSummary key={group._id.toString()} group={group} displayGroup={displayGroup} />
+            <SekundPublicGroupSummary key={group._id.toString()} group={group} />
           ))}
         </div>
         <div className="grid flex-shrink-0 grid-cols-2 p-2 gap-y-2">

@@ -17,7 +17,7 @@ type Props = {
   group: Group;
 };
 
-export default function GroupDisplayModal({ open, closeDialog, group }: Props) {
+export default function ContactEditModal({ open, closeDialog, group }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const shade = useRef<any>();
   const { userProfile } = useAppContext().appState;

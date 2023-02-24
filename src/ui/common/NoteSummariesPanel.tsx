@@ -3,7 +3,7 @@ import { useNotesContext } from "@/state/NotesContext";
 import Loader from "@/ui/common/LoaderComponent";
 import NoteSummaryComponent from "@/ui/common/NoteSummaryComponent";
 import { ViewType } from "@/ui/main/SekundMainComponent";
-import React, { useState } from "react";
+import React from "react";
 
 type Props = {
   handleNoteClicked: (note: Note) => void;

@@ -207,7 +207,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
                 <div className="flex flex-col space-y-1px w-xl">
                   <div className="flex items-center justify-center h-8">{t("joinAPublicGroup")}</div>
                   {groups!.map((group: Group) => {
-                    return <SekundPublicGroupSummary key={group._id.toString()} group={group} displayGroup={displayGroup} />;
+                    return <SekundPublicGroupSummary key={group._id.toString()} group={group} />;
                   })}
                 </div>
               </div>

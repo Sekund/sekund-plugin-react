@@ -27,7 +27,7 @@ import en from "javascript-time-ago/locale/en.json";
 import es from "javascript-time-ago/locale/es.json";
 import fr from "javascript-time-ago/locale/fr.json";
 import nl from "javascript-time-ago/locale/nl.json";
-import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TFile, TFolder } from "obsidian";
+import { App, MarkdownView, Modal, normalizePath, Plugin, PluginSettingTab, Setting, TFile, TFolder, WorkspaceLeaf } from "obsidian";
 import posthog from "posthog-js";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -132,6 +132,38 @@ export default class SekundPluginReact extends Plugin {
         }
       }, 200);
     });
+  }
+
+  public async openIndexFile(type: "contact" | "group", id: string) {
+    const vault = this.app.vault;
+    const { sekundFolderPath } = this.settings;
+    const path = type === "contact" ? `${sekundFolderPath}/${id}/index.md` : `${sekundFolderPath}/${id}.md`;
+    let file = vault.getAbstractFileByPath(path);
+    if (!file) {
+      if (type === "contact" && !vault.getAbstractFileByPath(`${sekundFolderPath}/${id}`)) {
+        await vault.createFolder(`${sekundFolderPath}/${id}`);
+      }
+      const backticks = "```";
+      file = await vault.create(
+        path,
+        `${backticks}sekund
+${type}-index ${id}
+${backticks}
+
+`
+      );
+    }
+    if (file && file instanceof TFile) {
+      const leaves = this.app.workspace.getLeavesOfType("markdown");
+      let leaf: WorkspaceLeaf;
+      if (leaves.length > 0) {
+        leaf = this.app.workspace.createLeafBySplit(leaves[0], "vertical", true);
+      } else {
+        leaf = this.app.workspace.getLeaf(true);
+      }
+      leaf.openFile(file, { active: false });
+      leaf.setViewState({ type: "markdown" });
+    }
   }
 
   public disconnect() {

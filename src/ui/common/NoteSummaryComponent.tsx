@@ -11,10 +11,8 @@ import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { isUnread, makeid } from "@/utils";
-import { ChatAlt2Icon, EyeIcon, LinkIcon, ShareIcon } from "@heroicons/react/solid";
+import { ChatAlt2Icon, EyeIcon } from "@heroicons/react/solid";
 import React, { MouseEvent, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import ReactTimeAgo from "react-time-ago";
 
 type Props = {
   noteSummary: Note;
@@ -23,7 +21,6 @@ type Props = {
 };
 
 export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, context }: Props) {
-  const { i18n, t } = useTranslation();
   const { appState } = useAppContext();
 
   const { notesState, notesDispatch } = useNotesContext();
@@ -191,7 +188,7 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
           <div>{note && isSharing(note) ? sharing(note.sharing) : null}</div>
         </div>
         <div className="flex items-center justify-between">
-          <ReactTimeAgo className="text-obs-muted" date={+note.updated} locale={i18n.language} />
+          <div className="text-obs-muted">{new Date(note.updated).toLocaleDateString()}</div>
           <div className="flex items-center space-x-1">
             {/* {note.refCount && note.refCount > 0 ? (
               <div key="refCount" className="flex items-center space-x-2">

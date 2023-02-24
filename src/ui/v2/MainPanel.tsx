@@ -1,10 +1,17 @@
 import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
 import { People } from "@/domain/People";
+import { SharingPermission } from "@/domain/SharingPermission";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
 import PeoplesService from "@/services/PeoplesService";
+import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
+import { filterNoteOutOfUnreadNotes, AppActionKind } from "@/state/AppReducer";
+import GlobalState from "@/state/GlobalState";
 import AddUser from "@/ui/common/AddUser";
+import { AccentedBadge } from "@/ui/common/Badges";
+import DataCollectionConsentCTA from "@/ui/common/DataCollectionConsentCTA";
 import GroupEditModal from "@/ui/groups/GroupEditModal";
 import SekundSettings from "@/ui/settings/SekundSettings";
 import AccordionPanel from "@/ui/v2/AccordionPanel";
@@ -12,7 +19,9 @@ import ContactEditModal from "@/ui/v2/contacts/ContactEditModal";
 import ContactsMgmt from "@/ui/v2/contacts/ContactsMgmt";
 import NoteSharing from "@/ui/v2/sharing/NoteSharing";
 import withConnectionStatus from "@/ui/withConnectionStatus";
+import { makeid, touch } from "@/utils";
 import { BellIcon, ShareIcon, UsersIcon } from "@heroicons/react/solid";
+import Notifications from "@/ui/v2/notifications/Notifications";
 import ObjectID from "bson-objectid";
 import * as React from "react";
 import { useState } from "react";
@@ -40,7 +49,7 @@ export type ContactsMgmtCallbacks = {
 };
 
 export const MainPanel = (props: MainPanelProps) => {
-  const { appState } = useAppContext();
+  const { appState, appDispatch } = useAppContext();
   const { userProfile } = appState;
   const [showSettings, setShowSettings] = useState(false);
   const [addUser, setAddUser] = useState(false);
@@ -48,6 +57,9 @@ export const MainPanel = (props: MainPanelProps) => {
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [showContactDisplayModal, setShowContactDisplayModal] = useState(false);
   const [currentPerson, setCurrentPerson] = useState<People | null>(null);
+  const [sharingPermissionRequests, setSharingPermissionRequests] = useState<SharingPermission[]>([]);
+  const [sharingPermissions, setSharingPermissions] = useState<SharingPermission[]>([]);
+  const [showConsentCTA, setShowConsentCTA] = useState(false);
 
   const [map, setMap] = useState<{ [key: string]: boolean }>({
     notifications: false,
@@ -61,6 +73,57 @@ export const MainPanel = (props: MainPanelProps) => {
     Contacts = "contacts",
     Share = "share",
     Publish = "publish",
+  }
+
+  React.useEffect(() => {
+    const listenerId = makeid(5);
+    const permissionsListenerId = makeid(5);
+    const unreadNotesListenerId = makeid(5);
+
+    const eventsWatcher = EventsWatcherService.instance;
+    eventsWatcher?.watchEvents();
+    eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadPermissions));
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
+    eventsWatcher?.addEventListener(
+      unreadNotesListenerId,
+      new SekundEventListener(["unreadChanged"], () => {
+        fetchUnread();
+      })
+    );
+
+    fetchUnread();
+    loadPermissions();
+
+    if (appState.userProfile.consentedToTrackBehaviouralDataInOrderToImproveTheProduct === undefined) {
+      setShowConsentCTA(true);
+    }
+
+    return () => {
+      eventsWatcher?.removeEventListener(unreadNotesListenerId);
+      eventsWatcher?.removeEventListener(permissionsListenerId);
+      eventsWatcher?.removeEventListener(listenerId);
+    };
+  }, []);
+
+  async function loadPermissions() {
+    const permissions = await PermissionsService.instance.getPermissions();
+    setSharingPermissionRequests(permissions.filter((p) => p.status === "requested" && p.userId.equals(appState.userProfile._id)));
+    setSharingPermissions(permissions);
+  }
+
+  async function filterIncomingChanges(fullDocument: any) {
+    const updtNote: Note = fullDocument.data;
+    if (GlobalState.instance.appState.remoteNote && updtNote._id.equals(GlobalState.instance.appState.remoteNote._id)) {
+      // immediately update read timestamp if the notification pertains to
+      // the currently open note
+      await touch(appDispatch, updtNote);
+    }
+  }
+
+  async function fetchUnread() {
+    const unreadNotes = await NotesService.instance.getUnreadNotes();
+    const { remoteNote } = GlobalState.instance.appState;
+    const filteredUnreadNotes = remoteNote ? filterNoteOutOfUnreadNotes(unreadNotes, remoteNote._id) : unreadNotes;
   }
 
   function setOpen(id: string) {
@@ -142,18 +205,34 @@ export const MainPanel = (props: MainPanelProps) => {
     return Object.values(map).every((value) => !value);
   }
 
+  function NotificationsTitle() {
+    return (
+      <AccentedBadge
+        badgeContent={6}
+        overlap="circular"
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <div className="mr-2 text-base">Notifications</div>
+      </AccentedBadge>
+    );
+  }
+
   return (
     <>
       <div className="absolute inset-0 flex flex-col overflow-hidden">
+        {showConsentCTA ? <DataCollectionConsentCTA dismiss={() => setShowConsentCTA(false)} /> : null}
         <AccordionPanel
           className={map[AccordionIds.Notifications] ? "flex-grow" : "flex-shrink-0"}
-          title="Notifications"
+          title={<NotificationsTitle />}
           icon={<BellIcon className="w-4 h-4" />}
           setOpen={setOpen}
           id={AccordionIds.Notifications}
           open={map[AccordionIds.Notifications]}
         >
-          Notifications
+          <Notifications />
         </AccordionPanel>
         {/* <AccordionPanel
         title="Blog"

@@ -129,7 +129,7 @@ export default function NoteSharing({ userId, syncUp, unpublish, active }: Props
     }
   }
 
-  function shares() {
+  function Shares() {
     const children: JSX.Element[] = [];
     const closeButtonClasses = "rounded-md cursor-pointer hover:text-secondary focus:outline-none w-4 h-4 m-2";
     const { groups, peoples } = sharing;
@@ -169,7 +169,9 @@ export default function NoteSharing({ userId, syncUp, unpublish, active }: Props
   function SharingOptions() {
     return (
       <div className="flex flex-col p-2">
-        <div className="my-2 text-secondary">{shares()}</div>
+        <div className="my-2 text-secondary">
+          <Shares />
+        </div>
         <div className="w-full overflow-hidden truncate">
           <select ref={selectInput} className="min-w-full pl-2 pr-4 truncate dropdown" onChange={addSelectedUserOrGroup}>
             <option key="none" value="none">

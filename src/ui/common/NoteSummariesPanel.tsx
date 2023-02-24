@@ -28,11 +28,13 @@ export default function NoteSummariesPanel({ handleNoteClicked, className, conte
     return (
       <div className={`flex flex-col w-full`}>
         <div className={`${className} flex flex-col w-full overflow-auto space-y-1`}>
-          {notes?.map((note: Note) => (
-            <React.Fragment key={note._id.toString()}>
-              <NoteSummaryComponent context={context} noteSummary={note} handleNoteClicked={handleNoteClicked} />
-            </React.Fragment>
-          ))}
+          {notes
+            ?.sort((a, b) => b.updated - a.updated)
+            .map((note: Note) => (
+              <React.Fragment key={note._id.toString()}>
+                <NoteSummaryComponent context={context} noteSummary={note} handleNoteClicked={handleNoteClicked} />
+              </React.Fragment>
+            ))}
         </div>
       </div>
     );

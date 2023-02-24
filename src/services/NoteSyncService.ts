@@ -92,6 +92,7 @@ export default class NoteSyncService extends ServerlessService {
       // let's not sync files when opened from the file system
       // const dirs = file.path.split("/");
       // this.syncDown(dirs.splice(2).join("/"), dirs[1]);
+      setCurrentNoteState(this.plugin.dispatchers, SHARED_NOTE_UPTODATE, file, null);
     } else {
       setCurrentNoteState(this.plugin.dispatchers, OWN_NOTE_FETCHING, file, null);
 

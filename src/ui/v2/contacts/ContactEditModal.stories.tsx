@@ -1,4 +1,5 @@
 import { People } from "@/domain/People";
+import { SharingPermission } from "@/domain/SharingPermission";
 import { someone } from "@/mockdata/PeoplesMock";
 import AppContext from "@/state/AppContext";
 import AppReducer, { initialAppState } from "@/state/AppReducer";
@@ -30,7 +31,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   return (
     <AppContext.Provider value={appProviderState}>
       <div className="sekund">
-        <ContactEditModal closeDialog={() => {}} person={someone} />
+        <ContactEditModal permission={{} as SharingPermission} closeDialog={() => {}} person={someone} />
       </div>
     </AppContext.Provider>
   );

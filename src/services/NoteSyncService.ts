@@ -31,6 +31,10 @@ export default class NoteSyncService extends ServerlessService {
     return NoteSyncService._instance;
   }
 
+  static set instance(instance: NoteSyncService) {
+    NoteSyncService._instance = instance;
+  }
+
   constructor(plugin: SekundPluginReact) {
     super(plugin);
     this.fsAdapter = plugin.app.vault.adapter;

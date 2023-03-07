@@ -18,6 +18,10 @@ export default class PeoplesService extends ServerlessService {
     return PeoplesService._instance;
   }
 
+  static set instance(instance: PeoplesService) {
+    PeoplesService._instance = instance;
+  }
+
   async getUserGroups(): Promise<Group[]> {
     return callFunction(this.plugin, "getGroups");
   }

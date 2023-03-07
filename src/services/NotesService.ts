@@ -14,8 +14,12 @@ export default class NotesService extends ServerlessService {
     NotesService._instance = this;
   }
 
-  static get instance() {
+  static get instance(): NotesService {
     return NotesService._instance;
+  }
+
+  static set instance(instance: NotesService) {
+    NotesService._instance = instance;
   }
 
   async getNote(noteId: string): Promise<Note | undefined> {

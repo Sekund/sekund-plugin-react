@@ -12,14 +12,26 @@ import { Note } from "@/domain/Note";
 import ObjectID from "bson-objectid";
 import React from "react";
 import { TFile } from "obsidian";
+import PermissionsService from "@/services/PermissionsService";
+import { SharingPermission } from "@/domain/SharingPermission";
 
 export default {
   title: "Sekund/Contacts (v2)",
   component: MainPanel,
 } as ComponentMeta<typeof MainPanel>;
 
+const contacts = peoples.slice(7, peoples.length - 7)
+const me = peoples[0]
+const incoming1 = peoples[1]
+const incoming2 = peoples[2]
+const outgoing1 = peoples[3]
+const outgoing2 = peoples[4]
+const blocked1 = peoples[5]
+const blocked2 = peoples[6]
+
 const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
-  const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale);
+  console.log("initializing wrapper with user: " + me.name)
+  const wrapper = new AppStateWrapper(args.gState, args.nState, args.note, args.localFile, locale, me);
   const peoplesService = {
     getUserGroups: () => args.groups,
     getPeoples: () => args.peoples,
@@ -27,11 +39,16 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   const notesService = {
     getNotes: (oldest: number, limit: number) => args.notes,
   } as NotesService;
+  const permissionsService = {
+    getPermissions: () => args.permissions,
+  } as PermissionsService;
+
+  NotesService.instance = notesService;
+  PeoplesService.instance = peoplesService;
+  PermissionsService.instance = permissionsService;
 
   const InjectedMainPanel = MainPanelHOC({
     view: wrapper,
-    peoplesService,
-    notesService,
     unpublish: () => {},
     syncUp: () => {},
     noLocalFile: (note: Note) => {},
@@ -43,47 +60,69 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
 
 const now = Date.now();
 
-const groups = [
-  {
-    _id: new ObjectID(),
-    name: "Pads lovers",
-    created: now,
-    updated: now,
-    peoples: [
-      new ObjectID("6150c1ef14be465c39539ccf"),
-      new ObjectID("6171606afc13ae1f35000008"),
-      new ObjectID("6171606afc13ae1f3500000a"),
-      new ObjectID("6171606afc13ae1f3500000e"),
-    ],
-    userId: new ObjectID("6150c1ef14be465c39539ccf"),
-  },
-  {
-    _id: new ObjectID(),
-    name: "Pernambuco",
-    created: now,
-    updated: now,
-    peoples: [new ObjectID("6150c1ef14be465c39539ccf"), new ObjectID("6171606afc13ae1f35000005"), new ObjectID("6171606afc13ae1f35000003")],
-    userId: new ObjectID("6171606afc13ae1f35000003"),
-  },
-].map((g) => ({ ...g, peoples: g.peoples.map((p) => users.filter((u: any) => u._id.equals(p))[0]) }));
-
 export const SharedNote = Template.bind({});
 SharedNote.args = {
   gState: "allGood",
   nState: { published: true, fileSynced: true },
   notes,
-  peoples,
-  groups,
+  peoples: contacts,
+  permissions: [
+    {
+      _id: new ObjectID(),
+      userId: me._id, // target user id
+      userInfo: me, // target user info
+      user: incoming1, // requesting user info
+      created: now,
+      updated: now,
+      status: "requested",
+    } as SharingPermission,
+    {
+      _id: new ObjectID(),
+      userId: me._id, // target user id
+      userInfo: me, // target user info
+      user: incoming2, // requesting user info
+      created: now,
+      updated: now,
+      status: "requested",
+    } as SharingPermission,
+    {
+      _id: new ObjectID(),
+      userId: me._id, // target user id
+      userInfo: me, // target user info
+      user: blocked1, // requesting user info
+      created: now,
+      updated: now,
+      status: "blocked",
+    } as SharingPermission,
+    {
+      _id: new ObjectID(),
+      userId: me._id, // target user id
+      userInfo: me, // target user info
+      user: blocked2, // requesting user info
+      created: now,
+      updated: now,
+      status: "blocked",
+    } as SharingPermission,
+    {
+      _id: new ObjectID(),
+      userId: outgoing1._id, // target user id
+      userInfo: outgoing1, // target user info
+      user: me, // requesting user info
+      created: now,
+      updated: now,
+      status: "requested",
+    } as SharingPermission,
+    {
+      _id: new ObjectID(),
+      userId: outgoing2._id, // target user id
+      userInfo: outgoing2, // target user info
+      user: me, // requesting user info
+      created: now,
+      updated: now,
+      status: "requested",
+    } as SharingPermission,
+  ],
+  groups : [],
   note: someNote,
   localFile: { path: "home/home.md", name: "Latour sur l'écologie et la lutte des classes" } as TFile,
-};
-
-export const NoActiveFile = Template.bind({});
-NoActiveFile.args = {
-  gState: "allGood",
-  nState: { published: true, fileSynced: true },
-  notes,
-  peoples,
-  groups,
-  note: someNote,
 };

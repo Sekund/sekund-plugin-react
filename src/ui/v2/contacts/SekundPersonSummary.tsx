@@ -1,6 +1,6 @@
 import { People } from "@/domain/People";
 import { peopleAvatar } from "@/helpers/avatars";
-import { AdjustmentsIcon } from "@heroicons/react/solid";
+import { InformationCircleIcon } from "@heroicons/react/outline";
 import React from "react";
 
 type Props = {
@@ -22,7 +22,7 @@ export default function SekundPeopleSummary({ person, editPerson, displayPerson 
             {person.name || person.email}
           </div>
         </div>
-        <AdjustmentsIcon onClick={() => editPerson(person)} className="flex-shrink-0 w-4 h-4 mr-1" />
+        <InformationCircleIcon onClick={() => editPerson(person)} className="flex-shrink-0 w-6 h-6 mr-1" />
       </div>
     </div>
   );

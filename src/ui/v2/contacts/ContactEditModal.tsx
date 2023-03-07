@@ -1,6 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { People } from "@/domain/People";
+import { PermissionRequestStatus, SharingPermission } from "@/domain/SharingPermission";
 import { peopleAvatar } from "@/helpers/avatars";
+import PermissionsService from "@/services/PermissionsService";
 import { GlobeAltIcon, XIcon } from "@heroicons/react/solid";
 import { LinkedIn, Twitter } from "@mui/icons-material";
 import React, { useRef } from "react";
@@ -9,11 +11,28 @@ import { useTranslation } from "react-i18next";
 type Props = {
   closeDialog: () => void;
   person: People;
+  permission: SharingPermission;
 };
 
-export default function ContactDisplayModal({ closeDialog, person: people }: Props) {
+export default function ContactDisplayModal({ closeDialog, person: people, permission }: Props) {
   const { t } = useTranslation(["common", "plugin"]);
   const shade = useRef<any>();
+
+  async function setStatus(sp: SharingPermission, status: PermissionRequestStatus) {
+    const permissionsService = PermissionsService.instance;
+    if (status === "rejected" || status === "blocked") {
+      const confirmed = confirm(t("areYouSure"));
+      if (confirmed) {
+        await permissionsService.setStatus(sp, status);
+      }
+    } else {
+      await permissionsService.setStatus(sp, status);
+    }
+  }
+
+  function handleClick(status: PermissionRequestStatus) {
+    setStatus(permission, status);
+  }
 
   return (
     <div
@@ -84,8 +103,10 @@ export default function ContactDisplayModal({ closeDialog, person: people }: Pro
             </div>
 
             <div className="flex items-center justify-center w-full h-full space-x-2">
-              <button className="mr-0 md-cta">Remove from contacts</button>
-              <button className="mr-0 md-cta">Ban</button>
+              <button className="mr-0 md-cta" onClick={() => handleClick("rejected")}>
+                Remove from contacts
+              </button>
+              <button className="mr-0 md-cta" onClick={() => handleClick("blocked")}>Ban</button>
             </div>
           </div>
         </>

@@ -23,6 +23,10 @@ export default class ReferencesService extends ServerlessService {
     return ReferencesService._instance;
   }
 
+  static set instance(instance: ReferencesService) {
+    ReferencesService._instance = instance;
+  }
+
   private async populateReferencesCache() {
     const allNoteReferences: string[] = await callFunction(this.plugin, "getNoteReferences");
     this.referencesCache = new Set<string>();

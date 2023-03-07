@@ -4,10 +4,9 @@ import { People } from "@/domain/People";
 import { SharingPermission } from "@/domain/SharingPermission";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
-import PeoplesService from "@/services/PeoplesService";
 import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
-import { filterNoteOutOfUnreadNotes, AppActionKind } from "@/state/AppReducer";
+import { filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import AddUser from "@/ui/common/AddUser";
 import { AccentedBadge } from "@/ui/common/Badges";
@@ -17,19 +16,19 @@ import SekundSettings from "@/ui/settings/SekundSettings";
 import AccordionPanel from "@/ui/v2/AccordionPanel";
 import ContactEditModal from "@/ui/v2/contacts/ContactEditModal";
 import ContactsMgmt from "@/ui/v2/contacts/ContactsMgmt";
+import Notifications from "@/ui/v2/notifications/Notifications";
 import NoteSharing from "@/ui/v2/sharing/NoteSharing";
+import UpdatesContext from "@/ui/v2/state/UpdatesContext";
+import UpdatesReducer, { initialUpdatesState, Update, UpdatesActionKind } from "@/ui/v2/state/UpdatesReducer";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
 import { BellIcon, ShareIcon, UsersIcon } from "@heroicons/react/solid";
-import Notifications from "@/ui/v2/notifications/Notifications";
 import ObjectID from "bson-objectid";
 import * as React from "react";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 
 export type MainPanelProps = {
   view: { addAppDispatch: Function };
-  peoplesService: PeoplesService | undefined;
-  notesService: NotesService | undefined;
   syncDown: (id: ObjectID, userId: string) => void;
   noLocalFile: (note: Note) => void;
   syncUp: () => void;
@@ -41,7 +40,7 @@ export type ContactsMgmtCallbacks = {
   showSettings: () => void;
   createGroup: (refresh: () => void) => void;
   closeGroupEditDialog: () => void;
-  editPerson: (person: People, refresh: () => void) => void;
+  editPerson: (person: People, permission: SharingPermission, refresh: () => void) => void;
   closeContactDisplayModal: () => void;
   editGroup: (group: Group, refresh: () => void) => void;
   openGroupIndex: (group: Group) => void;
@@ -57,9 +56,15 @@ export const MainPanel = (props: MainPanelProps) => {
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [showContactDisplayModal, setShowContactDisplayModal] = useState(false);
   const [currentPerson, setCurrentPerson] = useState<People | null>(null);
-  const [sharingPermissionRequests, setSharingPermissionRequests] = useState<SharingPermission[]>([]);
-  const [sharingPermissions, setSharingPermissions] = useState<SharingPermission[]>([]);
   const [showConsentCTA, setShowConsentCTA] = useState(false);
+  const [currentPermission, setCurrentPermission] = useState<SharingPermission | null>(null);
+
+  const [updatesState, updatesDispatch] = useReducer(UpdatesReducer, initialUpdatesState);
+  const updatesProviderState = {
+    updatesState,
+    updatesDispatch,
+  };
+  const { updates } = updatesState;
 
   const [map, setMap] = useState<{ [key: string]: boolean }>({
     notifications: false,
@@ -82,7 +87,6 @@ export const MainPanel = (props: MainPanelProps) => {
 
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadPermissions));
     eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
     eventsWatcher?.addEventListener(
       unreadNotesListenerId,
@@ -92,7 +96,6 @@ export const MainPanel = (props: MainPanelProps) => {
     );
 
     fetchUnread();
-    loadPermissions();
 
     if (appState.userProfile.consentedToTrackBehaviouralDataInOrderToImproveTheProduct === undefined) {
       setShowConsentCTA(true);
@@ -105,10 +108,14 @@ export const MainPanel = (props: MainPanelProps) => {
     };
   }, []);
 
-  async function loadPermissions() {
-    const permissions = await PermissionsService.instance.getPermissions();
-    setSharingPermissionRequests(permissions.filter((p) => p.status === "requested" && p.userId.equals(appState.userProfile._id)));
-    setSharingPermissions(permissions);
+  function addUpdate(data: Note | SharingPermission, type: "permissionRequest" | "permissionGranted" | "note") {
+    const update: Update = {
+      id: data._id.toString(),
+      data,
+      type,
+      time: data.updated,
+    };
+    updatesDispatch({ type: UpdatesActionKind.AddUpdate, update });
   }
 
   async function filterIncomingChanges(fullDocument: any) {
@@ -124,6 +131,9 @@ export const MainPanel = (props: MainPanelProps) => {
     const unreadNotes = await NotesService.instance.getUnreadNotes();
     const { remoteNote } = GlobalState.instance.appState;
     const filteredUnreadNotes = remoteNote ? filterNoteOutOfUnreadNotes(unreadNotes, remoteNote._id) : unreadNotes;
+    filteredUnreadNotes.all.forEach((n: Note) => {
+      addUpdate(n, "note");
+    });
   }
 
   function setOpen(id: string) {
@@ -153,8 +163,9 @@ export const MainPanel = (props: MainPanelProps) => {
     closeGroupEditDialog: () => {
       setShowGroupEditModal(false);
     },
-    editPerson: (person: People, refresh: () => void) => {
+    editPerson: (person: People, permission: SharingPermission, refresh: () => void) => {
       setCurrentPerson(person);
+      setCurrentPermission(permission);
       setShowContactDisplayModal(true);
     },
     closeContactDisplayModal: () => {
@@ -195,7 +206,7 @@ export const MainPanel = (props: MainPanelProps) => {
 
   function ContactEditDialog() {
     if (showContactDisplayModal && currentPerson) {
-      return <ContactEditModal closeDialog={callbacks.closeContactDisplayModal} person={currentPerson} />;
+      return <ContactEditModal permission={currentPermission!} closeDialog={callbacks.closeContactDisplayModal} person={currentPerson} />;
     } else {
       return null;
     }
@@ -206,9 +217,9 @@ export const MainPanel = (props: MainPanelProps) => {
   }
 
   function NotificationsTitle() {
-    return (
+    return updates.length > 0 ? (
       <AccentedBadge
-        badgeContent={6}
+        badgeContent={updates.length}
         overlap="circular"
         anchorOrigin={{
           vertical: "top",
@@ -217,6 +228,8 @@ export const MainPanel = (props: MainPanelProps) => {
       >
         <div className="mr-2 text-base">Notifications</div>
       </AccentedBadge>
+    ) : (
+      <div className="mr-2 text-base text-obs-faint">Notifications</div>
     );
   }
 
@@ -232,7 +245,9 @@ export const MainPanel = (props: MainPanelProps) => {
           id={AccordionIds.Notifications}
           open={map[AccordionIds.Notifications]}
         >
-          <Notifications />
+          <UpdatesContext.Provider value={updatesProviderState}>
+            <Notifications />
+          </UpdatesContext.Provider>
         </AccordionPanel>
         {/* <AccordionPanel
         title="Blog"

@@ -17,6 +17,10 @@ export default class PermissionsService extends ServerlessService {
     return PermissionsService._instance;
   }
 
+  static set instance(instance: PermissionsService) {
+    PermissionsService._instance = instance;
+  }
+
   async getPermissions(): Promise<SharingPermission[]> {
     const permissions = await callFunction(this.plugin, "permissions");
     return permissions.map((p: any) => {

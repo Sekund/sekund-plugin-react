@@ -1,7 +1,7 @@
 import { Group } from "@/domain/Group";
 import { groupAvatar, peopleAvatar } from "@/helpers/avatars";
 import { useAppContext } from "@/state/AppContext";
-import { AdjustmentsIcon } from "@heroicons/react/solid";
+import { InformationCircleIcon } from "@heroicons/react/outline";
 import { AvatarGroup } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -42,7 +42,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup }: P
         <AvatarGroup className="h-6" sx={{ height: 24 }}>
           {group.peoples.map((people) => peopleAvatar(people, 6))}
         </AvatarGroup>
-        <AdjustmentsIcon className="flex-shrink-0 w-4 h-4 mr-1" />
+        <InformationCircleIcon className="flex-shrink-0 w-6 h-6 mr-1" />
       </div>
     );
   }

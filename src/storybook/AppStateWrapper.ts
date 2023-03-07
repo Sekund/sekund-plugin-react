@@ -1,7 +1,7 @@
 import { Note } from "@/domain/Note";
+import { People } from "@/domain/People";
 import { AppContextType } from "@/state/AppContext";
 import { AppActionKind, AppState, GeneralState, NoteState } from "@/state/AppReducer";
-import ObjectID from "bson-objectid";
 import { TFile } from "obsidian";
 import React from "react";
 
@@ -11,14 +11,23 @@ export default class GeneralStateWrapper extends React.Component {
   private locale: string;
   private note: Note | null;
   private localFile: TFile | null;
+  private userProfile: People | undefined;
 
-  constructor(gState: GeneralState | null, nState: Partial<NoteState> | null, note: Note | null, localFile: TFile | null, locale: string) {
+  constructor(
+    gState: GeneralState | null,
+    nState: Partial<NoteState> | null,
+    note: Note | null,
+    localFile: TFile | null,
+    locale: string,
+    userProfile?: People
+  ) {
     super({});
     this.gState = gState;
     this.locale = locale;
     this.nState = nState;
     this.localFile = localFile;
     this.note = note;
+    this.userProfile = userProfile;
   }
 
   addAppDispatch(appContext: AppContextType) {
@@ -50,10 +59,10 @@ export default class GeneralStateWrapper extends React.Component {
         },
       });
     }
-    if (!appContext.appState.userProfile) {
+    if (!appContext.appState.userProfile._id) {
       appContext.appDispatch({
         type: AppActionKind.SetUserProfile,
-        payload: { _id: new ObjectID(), image: "avatars/1.jpeg", name: "Candide Kemmler", email: "hi@sekund.io" },
+        payload: this.userProfile,
       });
     }
   }

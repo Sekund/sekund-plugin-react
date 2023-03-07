@@ -1,12 +1,17 @@
 import { Group } from "@/domain/Group";
 import { People } from "@/domain/People";
+import { SharingPermission } from "@/domain/SharingPermission";
+import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import PeoplesService from "@/services/PeoplesService";
+import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
 import SekundPublicGroupSummary from "@/ui/groups/SekundPublicGroupSummary";
 import LinkButton from "@/ui/v2/common/LinkButton";
+import InactiveContactSummary from "@/ui/v2/contacts/InactiveContactSummary";
 import SekundGroupSummary from "@/ui/v2/contacts/SekundGroupSummary";
 import SekundPersonSummary from "@/ui/v2/contacts/SekundPersonSummary";
 import { ContactsMgmtCallbacks } from "@/ui/v2/MainPanel";
+import { makeid } from "@/utils";
 import { ArrowLeftIcon, PlusIcon, SearchIcon, UserCircleIcon } from "@heroicons/react/solid";
 import { ArrowRightAlt } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
@@ -17,32 +22,63 @@ type Props = {
   callbacks: ContactsMgmtCallbacks;
 };
 
-type Contact = {
-  type: "group" | "people";
-  name: string;
-  data: People | Group;
-};
+type Contact =
+  | {
+      type: "people";
+      name: string;
+      data: People;
+      permission: SharingPermission;
+    }
+  | {
+      type: "group";
+      name: string;
+      data: Group;
+    }
+  | {
+      type: "pending";
+      name: string;
+      data: SharingPermission;
+    };
 
 export default function ContactsMgmt({ active, peoplesService, callbacks }: Props) {
   const { appState } = useAppContext();
   const { generalState } = appState;
+
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [publicGroups, setPublicGroups] = useState<Group[]>([]);
   const [showPublicGroups, setShowPublicGroups] = useState(false);
+  const [contactRequests, setContactRequests] = useState<SharingPermission[]>([]);
+  const [blockedContacts, setBlockedContacts] = useState<SharingPermission[]>([]);
+
+  const { userProfile } = appState;
 
   useEffect(() => {
+    const permissionsListenerId = makeid(5);
+    const eventsWatcher = EventsWatcherService.instance;
     if (active && generalState === "allGood") {
+      eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadContacts));
+      
       loadContacts();
     }
-  }, [active]);
+    return () => {
+      eventsWatcher?.removeEventListener(permissionsListenerId);
+    };
+}, [active]);
+
+  function isIncomingRequest(sharingPermission: SharingPermission) {
+    return sharingPermission.status === "requested" && sharingPermission.userId.equals(userProfile._id);
+  }
 
   async function loadContacts() {
     if (!peoplesService) {
       peoplesService = PeoplesService.instance;
     }
 
+    console.log("loading contacts, I am ", userProfile.name || userProfile.email || "unknown");
+
     const groups = await peoplesService.getUserGroups();
     const peoples = await peoplesService.getPeoples();
+    const permissions = await PermissionsService.instance.getPermissions();
 
     const contacts: Contact[] = [];
     groups.forEach((group) => {
@@ -57,7 +93,17 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
         type: "people",
         name: people.name || people.email!,
         data: people,
+        permission: permissions.find((p) => p.userId.equals(people._id))!,
       });
+    });
+    permissions.forEach((p) => {
+      if (p.status === "requested" && !isIncomingRequest(p)) {
+        contacts.push({
+          type: "pending",
+          name: p.userInfo.name || p.userInfo.email!,
+          data: p,
+        });
+      }
     });
 
     // sort contacts by name
@@ -65,6 +111,9 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
       return a.name.localeCompare(b.name);
     });
     setContacts(contacts);
+
+    setContactRequests(permissions.filter((p) => p.status === "requested" && isIncomingRequest(p)));
+    setBlockedContacts(permissions.filter((p) => p.status === "blocked"));
   }
 
   async function loadPublicGroups() {
@@ -81,29 +130,74 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
     loadContacts();
   }
 
+  function ContactRequests() {
+    return (
+      <>
+        <div className="py-1 text-center">Contact Requests</div>
+        <div className="divide-x-0 divide-y divide-solid divide-obs-modal">
+          {contactRequests.map((sharingPermission: SharingPermission) => (
+            <InactiveContactSummary key={sharingPermission._id.toString()} sharingPermission={sharingPermission} />
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  function BlockedContacts() {
+    return (
+      <>
+        <div className="py-1 text-center">Blocked Contacts</div>
+        <div className="divide-x-0 divide-y divide-solid divide-obs-modal">
+          {blockedContacts.map((sharingPermission: SharingPermission) => (
+            <InactiveContactSummary key={sharingPermission._id.toString()} sharingPermission={sharingPermission} />
+          ))}
+        </div>
+      </>
+    );
+  }
+
+  function InactiveContacts({ status }: { status: "pending" | "blocked" }) {
+    return <div className={`${status === "pending" ? "" : "mt-8"}`}>{status === "pending" ? <ContactRequests /> : <BlockedContacts />}</div>;
+  }
+
   const { editPerson, editGroup, showSettings, addUser, createGroup, openGroupIndex, openPersonIndex } = callbacks;
+
+  function ContactSummary(contact: Contact) {
+    switch (contact.type) {
+      case "group":
+        return (
+          <SekundGroupSummary
+            key={contact.data._id.toString()}
+            group={contact.data as Group}
+            displayGroup={() => openGroupIndex(contact.data as Group)}
+            editGroup={() => editGroup(contact.data as Group, loadContacts)}
+          />
+        );
+      case "people":
+        return (
+          <SekundPersonSummary
+            key={contact.data._id.toString()}
+            person={contact.data as People}
+            displayPerson={() => openPersonIndex(contact.data as People)}
+            editPerson={() => editPerson(contact.data as People, contact.permission, loadContacts)}
+          />
+        );
+      case "pending":
+        return <InactiveContactSummary key={contact.data._id.toString()} sharingPermission={contact.data as SharingPermission} />;
+    }
+  }
 
   function UserContacts() {
     return (
       <div className="absolute inset-0 flex flex-col">
-        <div className="flex flex-col flex-grow overflow-auto space-y-1px">
+        <div className="flex flex-col flex-grow overflow-auto">
+          {contactRequests.length > 0 ? <InactiveContacts status={"pending"} /> : null}
+
           {contacts.map((contact: Contact) => {
-            return contact.type === "group" ? (
-              <SekundGroupSummary
-                key={contact.data._id.toString()}
-                group={contact.data as Group}
-                displayGroup={() => openGroupIndex(contact.data as Group)}
-                editGroup={() => editGroup(contact.data as Group, loadContacts)}
-              />
-            ) : (
-              <SekundPersonSummary
-                key={contact.data._id.toString()}
-                person={contact.data as People}
-                displayPerson={() => openPersonIndex(contact.data as People)}
-                editPerson={() => editPerson(contact.data as People, loadContacts)}
-              />
-            );
+            return ContactSummary(contact);
           })}
+
+          {blockedContacts.length > 0 ? <InactiveContacts status="blocked" /> : null}
         </div>
         <div className="grid flex-shrink-0 grid-cols-2 p-2 gap-y-2">
           <LinkButton icon={<PlusIcon className="w-4 h-4" />} onClick={() => createGroup(loadContacts)}>

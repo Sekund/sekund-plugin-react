@@ -12,6 +12,7 @@ import { Note } from "@/domain/Note";
 import ObjectID from "bson-objectid";
 import React from "react";
 import { TFile } from "obsidian";
+import PermissionsService from "@/services/PermissionsService";
 
 export default {
   title: "Sekund/Sharing (v2)",
@@ -27,11 +28,16 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   const notesService = {
     getNotes: (oldest: number, limit: number) => args.notes,
   } as NotesService;
+  const permissionsService = {
+    getPermissions: () => args.permissions,
+  } as PermissionsService;
+
+  NotesService.instance = notesService;
+  PeoplesService.instance = peoplesService;
+  PermissionsService.instance = permissionsService;
 
   const InjectedMainPanel = MainPanelHOC({
     view: wrapper,
-    peoplesService,
-    notesService,
     unpublish: () => {},
     syncUp: () => {},
     noLocalFile: (note: Note) => {},

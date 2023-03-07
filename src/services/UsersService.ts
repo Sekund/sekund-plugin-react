@@ -58,6 +58,10 @@ export default class UsersService extends ServerlessService {
     return UsersService._instance;
   }
 
+  static set instance(instance: UsersService) {
+    UsersService._instance = instance;
+  }
+
   getUserInfo(userId: string): PeopleId {
     return this.usersCache[userId];
   }

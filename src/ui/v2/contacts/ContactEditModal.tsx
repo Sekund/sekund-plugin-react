@@ -9,8 +9,7 @@ import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  closeDialog: () => void;
-  person: People;
+  closeDialog: () => void;  person: People;
   permission: SharingPermission;
 };
 

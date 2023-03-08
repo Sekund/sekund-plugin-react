@@ -4,7 +4,7 @@ import notes, { someNote } from "@/mockdata/NotesMock";
 import peoples from "@/mockdata/PeoplesMock";
 import users from "@/mockdata/Users";
 
-import MainPanelHOC, { MainPanel } from "../MainPanel";
+import MainPanelWrapperHOC, { MainPanelWrapper } from "../MainPanelWrapper";
 import AppStateWrapper from "@/storybook/AppStateWrapper";
 import PeoplesService from "@/services/PeoplesService";
 import NotesService from "@/services/NotesService";
@@ -17,8 +17,8 @@ import { SharingPermission } from "@/domain/SharingPermission";
 
 export default {
   title: "Sekund/Contacts (v2)",
-  component: MainPanel,
-} as ComponentMeta<typeof MainPanel>;
+  component: MainPanelWrapper,
+} as ComponentMeta<typeof MainPanelWrapper>;
 
 const contacts = peoples.slice(7, peoples.length - 7)
 const me = peoples[0]
@@ -47,7 +47,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
   PeoplesService.instance = peoplesService;
   PermissionsService.instance = permissionsService;
 
-  const InjectedMainPanel = MainPanelHOC({
+  const InjectedMainPanelWrapper = MainPanelWrapperHOC({
     view: wrapper,
     unpublish: () => {},
     syncUp: () => {},
@@ -55,7 +55,7 @@ const Template: ComponentStory<any> = (args, { globals: { locale } }) => {
     syncDown: (id: ObjectID, userId: string) => {},
   });
 
-  return <InjectedMainPanel />;
+  return <InjectedMainPanelWrapper />;
 };
 
 const now = Date.now();

@@ -6,6 +6,7 @@ import { MAIN_VIEW_ICON, MAIN_VIEW_TYPE } from "@/_constants";
 import ObjectID from "bson-objectid";
 import React from "react";
 import ReactDOM from "react-dom";
+import MainPanelWrapper from "@/ui/v2/MainPanelWrapper";
 
 export default class MainView extends SekundView {
   getViewType(): string {
@@ -46,7 +47,7 @@ export default class MainView extends SekundView {
       unpublish: this.unpublish,
       noLocalFile: this.noLocalFile,
     } as MainPanelProps;
-    const InjectedMainPanel = MainPanel(props);
+    const InjectedMainPanel = MainPanelWrapper(props);
     ReactDOM.render(<InjectedMainPanel />, this.containerEl.children[1]);
     this.plugin.updateOnlineStatus();
   }

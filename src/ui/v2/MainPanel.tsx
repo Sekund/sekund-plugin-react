@@ -1,26 +1,18 @@
-import { Group } from "@/domain/Group";
 import { Note } from "@/domain/Note";
-import { People } from "@/domain/People";
 import { SharingPermission } from "@/domain/SharingPermission";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import NotesService from "@/services/NotesService";
-import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
 import { filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
-import AddUser from "@/ui/common/AddUser";
 import { AccentedBadge } from "@/ui/common/Badges";
-import DataCollectionConsentCTA from "@/ui/common/DataCollectionConsentCTA";
-import GroupEditModal from "@/ui/groups/GroupEditModal";
-import SekundSettings from "@/ui/settings/SekundSettings";
 import AccordionPanel from "@/ui/v2/AccordionPanel";
-import ContactEditModal from "@/ui/v2/contacts/ContactEditModal";
 import ContactsMgmt from "@/ui/v2/contacts/ContactsMgmt";
+import { ContactsMgmtCallbacks } from "@/ui/v2/MainPanelWrapper";
 import Notifications from "@/ui/v2/notifications/Notifications";
 import NoteSharing from "@/ui/v2/sharing/NoteSharing";
 import UpdatesContext from "@/ui/v2/state/UpdatesContext";
 import UpdatesReducer, { initialUpdatesState, Update, UpdatesActionKind } from "@/ui/v2/state/UpdatesReducer";
-import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
 import { BellIcon, ShareIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
@@ -35,29 +27,9 @@ export type MainPanelProps = {
   unpublish: () => void;
 };
 
-export type ContactsMgmtCallbacks = {
-  addUser: () => void;
-  showSettings: () => void;
-  createGroup: (refresh: () => void) => void;
-  closeGroupEditDialog: () => void;
-  editPerson: (person: People, permission: SharingPermission, refresh: () => void) => void;
-  closeContactDisplayModal: () => void;
-  editGroup: (group: Group, refresh: () => void) => void;
-  openGroupIndex: (group: Group) => void;
-  openPersonIndex: (person: People) => void;
-};
-
-export const MainPanel = (props: MainPanelProps) => {
+export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmtCallbacks) {
   const { appState, appDispatch } = useAppContext();
   const { userProfile } = appState;
-  const [showSettings, setShowSettings] = useState(false);
-  const [addUser, setAddUser] = useState(false);
-  const [showGroupEditModal, setShowGroupEditModal] = useState(false);
-  const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
-  const [showContactDisplayModal, setShowContactDisplayModal] = useState(false);
-  const [currentPerson, setCurrentPerson] = useState<People | null>(null);
-  const [showConsentCTA, setShowConsentCTA] = useState(false);
-  const [currentPermission, setCurrentPermission] = useState<SharingPermission | null>(null);
 
   const [updatesState, updatesDispatch] = useReducer(UpdatesReducer, initialUpdatesState);
   const updatesProviderState = {
@@ -96,10 +68,6 @@ export const MainPanel = (props: MainPanelProps) => {
     );
 
     fetchUnread();
-
-    if (appState.userProfile.consentedToTrackBehaviouralDataInOrderToImproveTheProduct === undefined) {
-      setShowConsentCTA(true);
-    }
 
     return () => {
       eventsWatcher?.removeEventListener(unreadNotesListenerId);
@@ -148,70 +116,6 @@ export const MainPanel = (props: MainPanelProps) => {
     setMap(updtMap);
   }
 
-  const callbacks: ContactsMgmtCallbacks = {
-    addUser: () => {
-      setAddUser(true);
-    },
-    showSettings: () => {
-      setShowSettings(true);
-    },
-    createGroup: (refresh: () => void) => {
-      setCurrentGroup(null);
-      setShowGroupEditModal(true);
-      refresh();
-    },
-    closeGroupEditDialog: () => {
-      setShowGroupEditModal(false);
-    },
-    editPerson: (person: People, permission: SharingPermission, refresh: () => void) => {
-      setCurrentPerson(person);
-      setCurrentPermission(permission);
-      setShowContactDisplayModal(true);
-    },
-    closeContactDisplayModal: () => {
-      setShowContactDisplayModal(false);
-    },
-    editGroup: (group: Group, refresh: () => void) => {
-      setCurrentGroup(group);
-      setShowGroupEditModal(true);
-    },
-    openGroupIndex: async (group: Group) => {
-      console.log("openGroupIndex", group);
-      if (appState.plugin) {
-        appState.plugin.openIndexFile("group", group._id.toString());
-      }
-    },
-    openPersonIndex: (person: People) => {
-      console.log("openPersonIndex", person);
-      if (appState.plugin) {
-        appState.plugin.openIndexFile("contact", person._id.toString());
-      }
-    },
-  };
-
-  function GroupEditDialog() {
-    if (showGroupEditModal) {
-      return (
-        <GroupEditModal
-          userId={appState.userProfile._id}
-          open={showGroupEditModal}
-          closeDialog={callbacks.closeGroupEditDialog}
-          group={currentGroup}
-        />
-      );
-    } else {
-      return null;
-    }
-  }
-
-  function ContactEditDialog() {
-    if (showContactDisplayModal && currentPerson) {
-      return <ContactEditModal permission={currentPermission!} closeDialog={callbacks.closeContactDisplayModal} person={currentPerson} />;
-    } else {
-      return null;
-    }
-  }
-
   function allAccordionsAreClosed() {
     return Object.values(map).every((value) => !value);
   }
@@ -235,21 +139,19 @@ export const MainPanel = (props: MainPanelProps) => {
 
   return (
     <>
-      <div className="absolute inset-0 flex flex-col overflow-hidden">
-        {showConsentCTA ? <DataCollectionConsentCTA dismiss={() => setShowConsentCTA(false)} /> : null}
-        <AccordionPanel
-          className={map[AccordionIds.Notifications] ? "flex-grow" : "flex-shrink-0"}
-          title={<NotificationsTitle />}
-          icon={<BellIcon className="w-4 h-4" />}
-          setOpen={setOpen}
-          id={AccordionIds.Notifications}
-          open={map[AccordionIds.Notifications]}
-        >
-          <UpdatesContext.Provider value={updatesProviderState}>
-            <Notifications />
-          </UpdatesContext.Provider>
-        </AccordionPanel>
-        {/* <AccordionPanel
+      <AccordionPanel
+        className={map[AccordionIds.Notifications] ? "flex-grow" : "flex-shrink-0"}
+        title={<NotificationsTitle />}
+        icon={<BellIcon className="w-4 h-4" />}
+        setOpen={setOpen}
+        id={AccordionIds.Notifications}
+        open={map[AccordionIds.Notifications]}
+      >
+        <UpdatesContext.Provider value={updatesProviderState}>
+          <Notifications />
+        </UpdatesContext.Provider>
+      </AccordionPanel>
+      {/* <AccordionPanel
         title="Blog"
         icon={<GlobeAltIcon className="w-4 h-4" />}
         setOpen={setOpen}
@@ -258,47 +160,32 @@ export const MainPanel = (props: MainPanelProps) => {
       >
         Blog
       </AccordionPanel> */}
-        <AccordionPanel
-          className={map[AccordionIds.Contacts] ? "flex-grow" : "flex-shrink-0"}
-          title="Contacts"
-          icon={<UsersIcon className="w-4 h-4" />}
-          setOpen={setOpen}
-          id={AccordionIds.Contacts}
-          open={map[AccordionIds.Contacts]}
-        >
-          <ContactsMgmt active={map[AccordionIds.Contacts]} callbacks={callbacks} {...props} />
-        </AccordionPanel>
-        <AccordionPanel
-          className={map[AccordionIds.Share] ? "flex-grow" : "flex-shrink-0"}
-          title="Share"
-          icon={<ShareIcon className="w-4 h-4" />}
-          setOpen={setOpen}
-          id={AccordionIds.Share}
-          open={map[AccordionIds.Share]}
-        >
-          <NoteSharing active={map[AccordionIds.Share]} userId={userProfile._id} {...props} />
-        </AccordionPanel>
+      <AccordionPanel
+        className={map[AccordionIds.Contacts] ? "flex-grow" : "flex-shrink-0"}
+        title="Contacts"
+        icon={<UsersIcon className="w-4 h-4" />}
+        setOpen={setOpen}
+        id={AccordionIds.Contacts}
+        open={map[AccordionIds.Contacts]}
+      >
+        <ContactsMgmt active={map[AccordionIds.Contacts]} callbacks={callbacks} {...props} />
+      </AccordionPanel>
+      <AccordionPanel
+        className={map[AccordionIds.Share] ? "flex-grow" : "flex-shrink-0"}
+        title="Share"
+        icon={<ShareIcon className="w-4 h-4" />}
+        setOpen={setOpen}
+        id={AccordionIds.Share}
+        open={map[AccordionIds.Share]}
+      >
+        <NoteSharing active={map[AccordionIds.Share]} userId={userProfile._id} {...props} />
+      </AccordionPanel>
 
-        {allAccordionsAreClosed() ? (
-          <a className="mt-8 text-center cursor-pointer hover:underline" href="https://sekund-www.vercel.app/roadmap">
-            Documentation
-          </a>
-        ) : null}
-      </div>
-      {showSettings ? (
-        <div className="absolute inset-0 z-30 grid h-full overflow-hidden bg-obs-primary">
-          <SekundSettings close={() => setShowSettings(false)} />
-        </div>
+      {allAccordionsAreClosed() ? (
+        <a className="mt-8 text-center cursor-pointer hover:underline" href="https://sekund-www.vercel.app/roadmap">
+          Documentation
+        </a>
       ) : null}
-      {addUser ? (
-        <div className="absolute inset-0 z-30 grid h-full overflow-hidden bg-obs-primary">
-          <AddUser done={() => setAddUser(false)} />
-        </div>
-      ) : null}
-      {showGroupEditModal ? <GroupEditDialog /> : null}
-      {showContactDisplayModal ? <ContactEditDialog /> : null}
     </>
-  );
-};
-
-export default (props: MainPanelProps) => withConnectionStatus(props)(MainPanel);
+  )
+}

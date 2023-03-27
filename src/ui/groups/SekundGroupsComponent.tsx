@@ -5,6 +5,7 @@ import PeoplesService from "@/services/PeoplesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState } from "@/state/NotesReducer";
+import { UpdateKey } from "@/state/NotificationsReducer";
 import PeoplesContext from "@/state/PeoplesContext";
 import PeoplesReducer, { initialPeoplesState, PeoplesActionKind } from "@/state/PeoplesReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
@@ -110,7 +111,7 @@ export const SekundGroupsComponent = ({ peoplesService, syncDown, className }: G
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["group.add", "group.upsert", "group.delete"], async () => {
+      new SekundEventListener([UpdateKey.GROUP_ADD, UpdateKey.GROUP_UPSERT, UpdateKey.GROUP_DELETE], async () => {
         showPublicGroups ? await fetchUserGroups() : await fetchPublicGroups();
       })
     );

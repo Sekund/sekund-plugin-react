@@ -1,5 +1,6 @@
 import SekundPluginReact from "@/main";
 import ServerlessService from "@/services/ServerlessService";
+import { UpdateKey } from "@/state/NotificationsReducer";
 
 export default class EventsWatcherService extends ServerlessService {
   private static _instance: EventsWatcherService;
@@ -61,10 +62,10 @@ export default class EventsWatcherService extends ServerlessService {
 }
 
 export class SekundEventListener {
-  public eventTypes: string[];
+  public eventTypes: UpdateKey[];
   public callback: Function;
 
-  constructor(et: string[], cb: Function) {
+  constructor(et: UpdateKey[], cb: Function) {
     this.eventTypes = et;
     this.callback = cb;
   }

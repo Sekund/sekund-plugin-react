@@ -7,5 +7,5 @@ export interface NoteComment {
   updated: number;
   isWeb?: boolean;
   authorName?: string;
-  authorEmail?: string;
+  authorEmail: string;
 }

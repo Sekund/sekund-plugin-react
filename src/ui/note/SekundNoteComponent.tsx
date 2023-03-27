@@ -2,6 +2,7 @@ import { isSharing, Note } from "@/domain/Note";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
 import { useAppContext } from "@/state/AppContext";
 import GlobalState from "@/state/GlobalState";
+import { UpdateKey } from "@/state/NotificationsReducer";
 import Loader from "@/ui/common/LoaderComponent";
 import NoteMetadataComponent from "@/ui/note/NoteMetadataComponent";
 import withConnectionStatus from "@/ui/withConnectionStatus";
@@ -29,7 +30,7 @@ export const SekundNoteComponent = ({ syncUp, syncDown, unpublish }: Props) => {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["updateNote"], reloadNote));
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener([UpdateKey.NOTE_UPDATE], reloadNote));
     return () => {
       eventsWatcher?.removeEventListener(listenerId);
     };

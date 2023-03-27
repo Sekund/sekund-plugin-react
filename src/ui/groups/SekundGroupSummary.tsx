@@ -6,6 +6,7 @@ import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
+import { UpdateKey } from "@/state/NotificationsReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import { makeid } from "@/utils";
 import { AdjustmentsIcon } from "@heroicons/react/solid";
@@ -57,7 +58,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup, han
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["modifySharingGroups", "note.delete"], async () => {
+      new SekundEventListener([UpdateKey.MODIFY_SHARING_GROUPS, UpdateKey.NOTE_DELETE], async () => {
         await fetchGroupNotes();
       })
     );

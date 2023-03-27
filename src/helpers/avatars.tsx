@@ -55,6 +55,13 @@ const StyledBadge = styled(BadgeUnstyled)`
 `;
 
 export function peopleAvatar(people: PeopleId, size: number, badge?: number) {
+  if (!people || !people._id) {
+    return (
+      <Avatar aria-label={'n/a'} className={`h-${size} w-${size} flex-shrink-0`} alt='n/a'>
+        N/A
+      </Avatar>
+    );
+  }
   let identifier: string = (people.name ? people.name : people.email) || "";
   if (people.bio) {
     identifier += "\n" + people.bio;

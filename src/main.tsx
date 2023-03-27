@@ -32,6 +32,8 @@ import posthog from "posthog-js";
 import React from "react";
 import ReactDOM from "react-dom";
 import * as Realm from "realm-web";
+import NotificationsService from "@/services/NotificationsService";
+import { UpdateKey } from "@/state/NotificationsReducer";
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(fr);
@@ -402,6 +404,7 @@ ${backticks}
             new GroupsService(this);
             new PermissionsService(this);
             new EventsWatcherService(this);
+            new NotificationsService(this);
             // new ReferencesService(this);
 
             this.watchNotes();
@@ -446,7 +449,7 @@ ${backticks}
     eventsWatcher?.watchEvents();
     eventsWatcher?.addEventListener(
       this.notesListenerId,
-      new SekundEventListener(["note.rename"], (fullDocument: any) => {
+      new SekundEventListener([UpdateKey["note.rename"]], (fullDocument: any) => {
         const updtNote: Note = fullDocument.data;
         NoteSyncService.instance.renameSharedNote(updtNote);
       })

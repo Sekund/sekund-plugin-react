@@ -23,7 +23,7 @@ export default function SekundGroupSummary({ group, editGroup, displayGroup }: P
   //   eventsWatcher?.watchEvents();
   //   eventsWatcher?.addEventListener(
   //     listenerId,
-  //     new SekundEventListener(["modifySharingGroups", "note.delete"], async () => {
+  //     new SekundEventListener([UpdateKey["modifySharingGroups"], UpdateKey["note.delete"]], async () => {
   //       await fetchGroupNotes();
   //     })
   //   );

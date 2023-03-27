@@ -4,6 +4,7 @@ import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
 import NotesContext from "@/state/NotesContext";
 import NotesReducer, { initialNotesState, NotesActionKind } from "@/state/NotesReducer";
+import { UpdateKey } from "@/state/NotificationsReducer";
 import NoteSummariesPanel from "@/ui/common/NoteSummariesPanel";
 import withConnectionStatus from "@/ui/withConnectionStatus";
 import { makeid, touch } from "@/utils";
@@ -42,7 +43,7 @@ export const SekundPeoplesComponent = ({ className, notesService, syncDown }: Pe
     const eventsWatcher = EventsWatcherService.instance;
 
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listListenerId, new SekundEventListener(["modifySharingPeoples", "note.delete"], reloadList));
+    eventsWatcher?.addEventListener(listListenerId, new SekundEventListener([UpdateKey.MODIFY_SHARING_PEOPLE, UpdateKey.NOTE_DELETE], reloadList));
     return () => {
       eventsWatcher?.removeEventListener(listListenerId);
     };

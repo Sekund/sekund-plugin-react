@@ -1,9 +1,6 @@
 import { Note } from "@/domain/Note";
-import { SharingPermission } from "@/domain/SharingPermission";
 import EventsWatcherService, { SekundEventListener } from "@/services/EventsWatcherService";
-import NotesService from "@/services/NotesService";
 import { useAppContext } from "@/state/AppContext";
-import { filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
 import { AccentedBadge } from "@/ui/common/Badges";
 import AccordionPanel from "@/ui/v2/AccordionPanel";
@@ -11,13 +8,14 @@ import ContactsMgmt from "@/ui/v2/contacts/ContactsMgmt";
 import { ContactsMgmtCallbacks } from "@/ui/v2/MainPanelWrapper";
 import Notifications from "@/ui/v2/notifications/Notifications";
 import NoteSharing from "@/ui/v2/sharing/NoteSharing";
-import UpdatesContext from "@/ui/v2/state/UpdatesContext";
-import UpdatesReducer, { initialUpdatesState, Update, UpdatesActionKind } from "@/ui/v2/state/UpdatesReducer";
 import { makeid, touch } from "@/utils";
 import { BellIcon, ShareIcon, UsersIcon } from "@heroicons/react/solid";
 import ObjectID from "bson-objectid";
 import * as React from "react";
 import { useReducer, useState } from "react";
+import NotificationsService from "@/services/NotificationsService";
+import NotificationsReducer, { initialNotificationsState, NotificationActionKind, UpdateKey } from "@/state/NotificationsReducer";
+import NotificationsContext from "@/state/NotificationsContext";
 
 export type MainPanelProps = {
   view: { addAppDispatch: Function };
@@ -31,12 +29,12 @@ export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmt
   const { appState, appDispatch } = useAppContext();
   const { userProfile } = appState;
 
-  const [updatesState, updatesDispatch] = useReducer(UpdatesReducer, initialUpdatesState);
-  const updatesProviderState = {
-    updatesState,
-    updatesDispatch,
+  const [notificationsState, notificationsDispatch] = useReducer(NotificationsReducer, initialNotificationsState);
+  const notificationsProviderState = {
+    notificationsState,
+    notificationsDispatch,
   };
-  const { updates } = updatesState;
+  const { notifications } = notificationsState;
 
   const [map, setMap] = useState<{ [key: string]: boolean }>({
     notifications: false,
@@ -55,36 +53,26 @@ export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmt
   React.useEffect(() => {
     const listenerId = makeid(5);
     const permissionsListenerId = makeid(5);
-    const unreadNotesListenerId = makeid(5);
+    const notificationsListenerId = makeid(5);
 
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener([UpdateKey["note.addComment"]], filterIncomingChanges));
     eventsWatcher?.addEventListener(
-      unreadNotesListenerId,
-      new SekundEventListener(["unreadChanged"], () => {
-        fetchUnread();
+      notificationsListenerId,
+      new SekundEventListener([UpdateKey["unreadChanged"]], () => {
+        getNotifications();
       })
     );
 
-    fetchUnread();
+    getNotifications();
 
     return () => {
-      eventsWatcher?.removeEventListener(unreadNotesListenerId);
+      eventsWatcher?.removeEventListener(notificationsListenerId);
       eventsWatcher?.removeEventListener(permissionsListenerId);
       eventsWatcher?.removeEventListener(listenerId);
     };
   }, []);
-
-  function addUpdate(data: Note | SharingPermission, type: "permissionRequest" | "permissionGranted" | "note") {
-    const update: Update = {
-      id: data._id.toString(),
-      data,
-      type,
-      time: data.updated,
-    };
-    updatesDispatch({ type: UpdatesActionKind.AddUpdate, update });
-  }
 
   async function filterIncomingChanges(fullDocument: any) {
     const updtNote: Note = fullDocument.data;
@@ -95,13 +83,13 @@ export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmt
     }
   }
 
-  async function fetchUnread() {
-    const unreadNotes = await NotesService.instance.getUnreadNotes();
+  async function getNotifications() {
+    const notifications = await NotificationsService.instance.getNotifications();
     const { remoteNote } = GlobalState.instance.appState;
-    const filteredUnreadNotes = remoteNote ? filterNoteOutOfUnreadNotes(unreadNotes, remoteNote._id) : unreadNotes;
-    filteredUnreadNotes.all.forEach((n: Note) => {
-      addUpdate(n, "note");
-    });
+    // const filteredUnreadNotes = remoteNote ? filterOutCurrentNote(notifications, remoteNote._id) : unreadNotes;
+    // filteredUnreadNotes.all.forEach((n: Note) => {
+    //   addUpdate(n, "note");
+    // });
   }
 
   function setOpen(id: string) {
@@ -121,9 +109,9 @@ export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmt
   }
 
   function NotificationsTitle() {
-    return updates.length > 0 ? (
+    return notifications.length > 0 ? (
       <AccentedBadge
-        badgeContent={updates.length}
+        badgeContent={notifications.length}
         overlap="circular"
         anchorOrigin={{
           vertical: "top",
@@ -147,9 +135,9 @@ export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmt
         id={AccordionIds.Notifications}
         open={map[AccordionIds.Notifications]}
       >
-        <UpdatesContext.Provider value={updatesProviderState}>
+        <NotificationsContext.Provider value={notificationsProviderState}>
           <Notifications />
-        </UpdatesContext.Provider>
+        </NotificationsContext.Provider>
       </AccordionPanel>
       {/* <AccordionPanel
         title="Blog"
@@ -187,5 +175,5 @@ export default function MainPanel(props: MainPanelProps, callbacks: ContactsMgmt
         </a>
       ) : null}
     </>
-  )
+  );
 }

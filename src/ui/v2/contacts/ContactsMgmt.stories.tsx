@@ -2,7 +2,6 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import "/global.css";
 import notes, { someNote } from "@/mockdata/NotesMock";
 import peoples from "@/mockdata/PeoplesMock";
-import users from "@/mockdata/Users";
 
 import MainPanelWrapperHOC, { MainPanelWrapper } from "../MainPanelWrapper";
 import AppStateWrapper from "@/storybook/AppStateWrapper";

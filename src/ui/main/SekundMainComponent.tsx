@@ -7,6 +7,7 @@ import PermissionsService from "@/services/PermissionsService";
 import { useAppContext } from "@/state/AppContext";
 import { AppActionKind, filterNoteOutOfUnreadNotes } from "@/state/AppReducer";
 import GlobalState from "@/state/GlobalState";
+import { UpdateKey } from "@/state/NotificationsReducer";
 import { AccentedBadge } from "@/ui/common/Badges";
 import DataCollectionConsentCTA from "@/ui/common/DataCollectionConsentCTA";
 import { HeightAdjustable, HeightAdjustableHandle } from "@/ui/common/HeightAdjustable";
@@ -85,11 +86,11 @@ export const SekundMainComponent = (props: MainComponentProps) => {
 
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadPermissions));
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment"], filterIncomingChanges));
+    eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener([UpdateKey.PERMISSIONS_CHANGED], loadPermissions));
+    eventsWatcher?.addEventListener(listenerId, new SekundEventListener([UpdateKey.NOTE_ADD_COMMENT], filterIncomingChanges));
     eventsWatcher?.addEventListener(
       unreadNotesListenerId,
-      new SekundEventListener(["unreadChanged"], () => {
+      new SekundEventListener([UpdateKey.NOTE_UNREAD_CHANGED], () => {
         fetchUnread();
       })
     );

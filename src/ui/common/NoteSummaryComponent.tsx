@@ -9,6 +9,7 @@ import UsersService from "@/services/UsersService";
 import { useAppContext } from "@/state/AppContext";
 import { useNotesContext } from "@/state/NotesContext";
 import { NotesActionKind } from "@/state/NotesReducer";
+import { UpdateKey } from "@/state/NotificationsReducer";
 import { ViewType } from "@/ui/main/SekundMainComponent";
 import { isUnread, makeid } from "@/utils";
 import { ChatAlt2Icon, EyeIcon } from "@heroicons/react/solid";
@@ -63,12 +64,15 @@ export default function NoteSummaryComponent({ noteSummary, handleNoteClicked, c
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.addEventListener(
       listenerId,
-      new SekundEventListener(["note.addComment", "note.removeComment", "note.rename", "note.metadataUpdate"], async (fullDocument: any) => {
-        const updtNote: Note = fullDocument.data;
-        if (note._id.equals(updtNote._id)) {
-          updateNote(updtNote);
+      new SekundEventListener(
+        [UpdateKey.NOTE_ADD_COMMENT, UpdateKey.NOTE_REMOVE_COMMENT, UpdateKey.NOTE_RENAME, UpdateKey.NOTE_METADATA_UPDATE],
+        async (fullDocument: any) => {
+          const updtNote: Note = fullDocument.data;
+          if (note._id.equals(updtNote._id)) {
+            updateNote(updtNote);
+          }
         }
-      })
+      )
     );
     return () => {
       eventsWatcher?.removeEventListener(listenerId);

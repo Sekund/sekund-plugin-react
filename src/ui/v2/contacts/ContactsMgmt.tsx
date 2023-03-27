@@ -16,6 +16,7 @@ import { ArrowLeftIcon, PlusIcon, SearchIcon, UserCircleIcon } from "@heroicons/
 import { ArrowRightAlt } from "@mui/icons-material";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
+import { UpdateKey } from "@/state/NotificationsReducer";
 
 type Props = {
   peoplesService?: PeoplesService;
@@ -66,14 +67,14 @@ export default function ContactsMgmt({ active, peoplesService, callbacks }: Prop
     const permissionsListenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     if (active && generalState === "allGood") {
-      eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener(["permissions.changed"], loadContacts));
+      eventsWatcher?.addEventListener(permissionsListenerId, new SekundEventListener([UpdateKey["permissions.changed"]], loadContacts));
 
       loadContacts();
     }
 
     if (scrollable.current) {
       setTimeout(() => {
-        scrollable.current?.addEventListener("scroll", handleScroll, { passive: true })
+        scrollable.current?.addEventListener("scroll", handleScroll, { passive: true });
       }, 1000);
     }
     return () => {

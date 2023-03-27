@@ -13,6 +13,7 @@ import React, { Fragment, useEffect, useReducer, useRef, useState } from "react"
 import { useTranslation } from "react-i18next";
 import CommentContext from "@/state/CommentContext";
 import CommentReducer, { CommentActionKind, initialCommentState } from "@/state/CommentReducer";
+import { UpdateKey } from "@/state/NotificationsReducer";
 
 type Props = {
   note: Note;
@@ -37,7 +38,10 @@ export default function NoteComments({ note, className }: Props) {
     const listenerId = makeid(5);
     const eventsWatcher = EventsWatcherService.instance;
     eventsWatcher?.watchEvents();
-    eventsWatcher?.addEventListener(listenerId, new SekundEventListener(["note.addComment", "note.removeComment", "note.editComment"], reloadNote));
+    eventsWatcher?.addEventListener(
+      listenerId,
+      new SekundEventListener([UpdateKey.NOTE_ADD_COMMENT, UpdateKey.NOTE_REMOVE_COMMENT, UpdateKey.NOTE_EDIT_COMMENT], reloadNote)
+    );
     return () => {
       eventsWatcher?.removeEventListener(listenerId);
     };
@@ -77,6 +81,7 @@ export default function NoteComments({ note, className }: Props) {
         {
           text: commentState.commentText.text,
           author: userProfile,
+          authorEmail: userProfile.email || "",
           created: now,
           updated: now,
         },
